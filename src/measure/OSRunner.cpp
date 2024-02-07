@@ -792,7 +792,7 @@ namespace measure {
       if (script_argument.required()) {
         switch (script_argument.type().value()) {
           case OSArgumentType::Boolean:
-            if (bool b_ = getBoolArgumentValue(script_argument.name(), user_arguments)) {
+            if (getBoolArgumentValue(script_argument.name(), user_arguments)) {
               argument_values[script_argument.name()] = "true";
             } else {
               argument_values[script_argument.name()] = "false";
@@ -820,7 +820,7 @@ namespace measure {
         switch (script_argument.type().value()) {
           case OSArgumentType::Boolean:
             if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
-              if (bool b_ = *optB_) {
+              if (*optB_) {
                 argument_values[script_argument.name()] = "true";
               } else {
                 argument_values[script_argument.name()] = "false";
