@@ -427,7 +427,10 @@ endif()
 ###############################################################################
 # Conan
 
-find_package(Ruby)
+if(BUILD_RUBY_BINDINGS)
+  find_package(Ruby)
+  message("Ruby_INCLUDE_DIRS=${Ruby_INCLUDE_DIRS}")
+endif()
 find_package(pugixml)
 find_package(LibXslt)
 find_package(libxml2)
@@ -468,13 +471,9 @@ endmacro()
 
 ###############################################################################
 
-if(BUILD_RUBY_BINDINGS)
-  get_target_property(RUBY_INCLUDE_DIRS Ruby::Ruby INTERFACE_INCLUDE_DIRECTORIES)
-endif()
-
 # Export to Parent
 if(hasParent)
-  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+  set(Ruby_INCLUDE_DIRS "${Ruby_INCLUDE_DIRS}" PARENT_SCOPE)
 endif()
 
 ###############################################################################
@@ -846,8 +845,8 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d4c8d521f7bcb27248046b3023a9d835")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240207-darwin_arm64-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "931cfc6ce59def3a69b4cea8b23ce996")
        else()
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "dbcc97ba8d86ec602fba9df2d52bf5d0")

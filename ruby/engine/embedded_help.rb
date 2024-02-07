@@ -70,6 +70,14 @@ module Kernel
   $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin17'
   $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin18'
+  $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin19'
+  $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin20'
+  $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin21'
+  $LOAD_PATH << ':/ruby/3.2.0/x86_64-darwin22'
+  $LOAD_PATH << ':/ruby/3.2.0/arm64-darwin20'
+  $LOAD_PATH << ':/ruby/3.2.0/arm64-darwin21'
+  $LOAD_PATH << ':/ruby/3.2.0/arm64-darwin22'
+  $LOAD_PATH << ':/ruby/3.2.0/arm64-darwin23'
   $LOAD_PATH << ':/ruby/3.2.0/x64-mswin64_140'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
