@@ -555,16 +555,16 @@ class Specification < BasicSpecification
       test = /bundler\/gems/.match(tmp_loaded_from)
       if test
         @full_gem_path = ':' + (File.dirname tmp_loaded_from)
-        @full_gem_path.untaint
+        # @full_gem_path.untaint
         return @full_gem_path
       else
         @full_gem_path = joined
-        @full_gem_path.untaint
+        # @full_gem_path.untaint
         return @full_gem_path
       end
     else
       @full_gem_path = File.expand_path joined
-      @full_gem_path.untaint
+      # @full_gem_path.untaint
     end
     return @full_gem_path if File.directory? @full_gem_path
 
@@ -782,7 +782,7 @@ void locateEmbeddedGems(bool use_bundler) {
       if original_embedded_gems[spec.name]
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+          if File.exist?(File.join(lp, spec.name)) || File.exist?(File.join(lp, spec.name + '.rb')) || File.exist?(File.join(lp, spec.name + '.so'))
             $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
             do_activate = false
             break

@@ -150,7 +150,7 @@ def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePa
       if original_embedded_gems[spec.name]
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+          if File.exist?(File.join(lp, spec.name)) || File.exist?(File.join(lp, spec.name + '.rb')) || File.exist?(File.join(lp, spec.name + '.so'))
             $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
             do_activate = false
             break

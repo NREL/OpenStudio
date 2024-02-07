@@ -225,11 +225,11 @@ module Kernel
     end
 
     result = ""
-    if File.exists?(absolute_path)
+    if File.exist?(absolute_path)
       File.open(absolute_path, mode) do |file|
         result = file.read
       end
-    elsif File.exists?(path)
+    elsif File.exist?(path)
       File.open(path, mode) do |file|
         result = file.read
       end
@@ -784,7 +784,7 @@ module Find
             fs.reverse_each {|f|
               next if f == "." or f == ".."
               f = File.join(file, f)
-              ps.unshift f.untaint
+              ps.unshift f
             }
           end
         end
