@@ -514,7 +514,7 @@ class Specification < BasicSpecification
     _all << spec
     stubs << spec
     (@@stubs_by_name[spec.name] ||= []) << spec
-    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
+    @@stubs_by_name[spec.name].sort_by! { |s| s.version }
     _resort!(_all)
     _resort!(stubs)
   end
