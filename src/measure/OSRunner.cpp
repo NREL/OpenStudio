@@ -784,25 +784,20 @@ namespace measure {
     return result;
   }
 
-  std::map<std::string, std::string> OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments,
-                                                                 const std::map<std::string, OSArgument>& user_arguments) {
-    std::map<std::string, std::string> argument_values;
+  Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
+    Json::Value argument_values;
     OSArgumentType type;
     for (const OSArgument& script_argument : script_arguments) {
       if (script_argument.required()) {
         switch (script_argument.type().value()) {
           case OSArgumentType::Boolean:
-            if (getBoolArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = "true";
-            } else {
-              argument_values[script_argument.name()] = "false";
-            }
+            argument_values[script_argument.name()] = getBoolArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Double:
-            argument_values[script_argument.name()] = std::to_string(getDoubleArgumentValue(script_argument.name(), user_arguments));
+            argument_values[script_argument.name()] = getDoubleArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Integer:
-            argument_values[script_argument.name()] = std::to_string(getIntegerArgumentValue(script_argument.name(), user_arguments));
+            argument_values[script_argument.name()] = getIntegerArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::String:
             argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
@@ -819,38 +814,22 @@ namespace measure {
       } else {
         switch (script_argument.type().value()) {
           case OSArgumentType::Boolean:
-            if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
-              if (*optB_) {
-                argument_values[script_argument.name()] = "true";
-              } else {
-                argument_values[script_argument.name()] = "false";
-              }
-            }
+            argument_values[script_argument.name()] = getOptionalBoolArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Double:
-            if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = std::to_string(*optD_);
-            }
+            argument_values[script_argument.name()] = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Integer:
-            if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = std::to_string(*optI_);
-            }
+            argument_values[script_argument.name()] = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::String:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = *optS_;
-            }
+            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Choice:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = *optS_;
-            }
+            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
             break;
           case OSArgumentType::Path:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = *optS_;
-            }
+            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
             break;
           default:
             OS_ASSERT(false);

@@ -232,8 +232,7 @@ namespace measure {
                                                                                        const openstudio::Workspace& workspace);
 
     /** Call this method to retrieve the values of OSArguments of all types. */
-    std::map<std::string, std::string> getArgumentValues(std::vector<OSArgument>& script_arguments,
-                                                         const std::map<std::string, OSArgument>& user_arguments);
+    Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
 
     /** TODO */
     std::map<std::string, std::string> getFirstUpstreamMeasureForArgument(const std::string& argument_name);

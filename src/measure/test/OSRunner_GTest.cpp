@@ -184,7 +184,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
   EXPECT_EQ("Off", c);
 
-  std::map<std::string, std::string> argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
+  Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
 
   EXPECT_EQ("true", argumentValues["required_bool"]);
   EXPECT_EQ("false", argumentValues["required_bool2"]);
