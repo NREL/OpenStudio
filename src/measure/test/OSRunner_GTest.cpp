@@ -181,22 +181,24 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
 
+  EXPECT_FALSE(argumentValues["required_bool"].isNull());
   EXPECT_TRUE(argumentValues["required_bool"]);
+  EXPECT_FALSE(argumentValues["required_bool2"].isNull());
   EXPECT_FALSE(argumentValues["required_bool2"]);
-  EXPECT_EQ(Json::nullValue, argumentValues["optional_bool"]);
+  EXPECT_TRUE(argumentValues["optional_bool"].isNull());
 
   EXPECT_EQ(1.0, argumentValues["required_double"]);
   EXPECT_EQ(234892384234.39485923845834534, argumentValues["required_double2"]);
-  EXPECT_EQ(Json::nullValue, argumentValues["optional_double"]);
+  EXPECT_TRUE(argumentValues["optional_double"].isNull());
 
   EXPECT_EQ(2, argumentValues["required_integer"]);
-  EXPECT_EQ(Json::nullValue, argumentValues["optional_integer"]);
+  EXPECT_TRUE(argumentValues["optional_integer"].isNull());
 
   EXPECT_EQ("Value", argumentValues["required_string"]);
-  EXPECT_EQ(Json::nullValue, argumentValues["optional_string"]);
+  EXPECT_TRUE(argumentValues["optional_string"].isNull());
 
   EXPECT_EQ("Off", argumentValues["required_choice"]);
-  EXPECT_EQ(Json::nullValue, argumentValues["optional_choice"]);
+  EXPECT_TRUE(argumentValues["optional_choice"].isNull());
 }
 
 TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
