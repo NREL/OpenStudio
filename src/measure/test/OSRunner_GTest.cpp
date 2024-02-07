@@ -131,6 +131,10 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   OSArgument optionalDoubleArgument = OSArgument::makeDoubleArgument("optional_double", false);
   argumentVector.push_back(optionalDoubleArgument);
 
+  OSArgument optionalDoubleArgument2 = OSArgument::makeDoubleArgument("optional_double2", false);
+  EXPECT_TRUE(optionalDoubleArgument2.setValue(10.5));
+  argumentVector.push_back(optionalDoubleArgument2);
+
   OSArgument requiredIntegerArgument = OSArgument::makeIntegerArgument("required_integer", true);
   EXPECT_TRUE(requiredIntegerArgument.setValue(2));
   argumentVector.push_back(requiredIntegerArgument);
@@ -182,22 +186,24 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
 
   EXPECT_FALSE(argumentValues["required_bool"].isNull());
-  EXPECT_TRUE(argumentValues["required_bool"]);
+  EXPECT_TRUE(argumentValues["required_bool"].asBool());
   EXPECT_FALSE(argumentValues["required_bool2"].isNull());
-  EXPECT_FALSE(argumentValues["required_bool2"]);
+  EXPECT_FALSE(argumentValues["required_bool2"].asBool());
   EXPECT_TRUE(argumentValues["optional_bool"].isNull());
 
-  EXPECT_EQ(1.0, argumentValues["required_double"]);
-  EXPECT_EQ(234892384234.39485923845834534, argumentValues["required_double2"]);
+  EXPECT_EQ(1.0, argumentValues["required_double"].asDouble());
+  EXPECT_EQ(234892384234.39485923845834534, argumentValues["required_double2"].asDouble());
   EXPECT_TRUE(argumentValues["optional_double"].isNull());
+  EXPECT_FALSE(argumentValues["optional_double2"].isNull());
+  EXPECT_EQ(10.5, argumentValues["optional_double2"].asDouble());
 
-  EXPECT_EQ(2, argumentValues["required_integer"]);
+  EXPECT_EQ(2, argumentValues["required_integer"].asInt());
   EXPECT_TRUE(argumentValues["optional_integer"].isNull());
 
-  EXPECT_EQ("Value", argumentValues["required_string"]);
+  EXPECT_EQ("Value", argumentValues["required_string"].asString());
   EXPECT_TRUE(argumentValues["optional_string"].isNull());
 
-  EXPECT_EQ("Off", argumentValues["required_choice"]);
+  EXPECT_EQ("Off", argumentValues["required_choice"].asString());
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
 }
 
