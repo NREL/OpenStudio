@@ -814,22 +814,46 @@ namespace measure {
       } else {
         switch (script_argument.type().value()) {
           case OSArgumentType::Boolean:
-            argument_values[script_argument.name()] = getOptionalBoolArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optB_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           case OSArgumentType::Double:
-            argument_values[script_argument.name()] = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optD_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           case OSArgumentType::Integer:
-            argument_values[script_argument.name()] = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optI_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           case OSArgumentType::String:
-            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           case OSArgumentType::Choice:
-            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           case OSArgumentType::Path:
-            argument_values[script_argument.name()] = getOptionalStringArgumentValue(script_argument.name(), user_arguments);
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
             break;
           default:
             OS_ASSERT(false);
