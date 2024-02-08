@@ -16,13 +16,18 @@ endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
-# TODO
-FindValue(ruby_LIB_DIRS)
-set(MODULE_ROOT "${CURRENT_ruby_LIB_DIRS}")
+set(configs "RELEASE" "DEBUG" "RELWITHDEBINFO" "MINSIZEREL")
+foreach(_config ${configs})
+  message(DEBUG "Testing config=${config}")
+  set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_${_config}}")
+  if (NOT  "${MODULE_ROOT}" STREQUAL "")
+    message("Found Ruby package folder for config ${_config} at ${MODULE_ROOT}")
+    break()
+  endif()
+endforeach()
 
-set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_RELEASE}")
-if ("${MODULE_ROOT}" STREQUAL "")
-  set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_RELEASE}")
+if("${MODULE_ROOT}" STREQUAL "")
+  message(FATAL_ERROR "MODULE_ROOT for ruby not found")
 endif()
 
 message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
