@@ -234,11 +234,13 @@ namespace measure {
     /** Call this method to retrieve the values of OSArguments of all types. */
     Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
 
-    /** TODO */
-    std::map<std::string, std::string> getFirstUpstreamMeasureForArgument(const std::string& argument_name);
+    //
+    Json::Value getPastStepValuesForMeasure(const std::string& measure_name);
+    // {arg1 => val1, arg2 => val2, ...}
 
-    /** TODO */
-    std::map<std::string, std::string> getUpstreamMeasureArguments(const std::string& measure_name);
+    //
+    Json::Value getPastStepValuesForName(const std::string& step_name);
+    // {measure1 => val1, measure2 => val2, ...}
 
     //@}
 

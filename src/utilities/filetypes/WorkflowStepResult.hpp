@@ -104,9 +104,6 @@ class UTILITIES_API WorkflowStepValue
   /// get value as string
   std::string valueAsString() const;
 
-  /// get boolean/integer/double/string as string
-  std::string getValueAsString() const;
-
   //@}
   /** @name Setters */
   //@{

@@ -207,15 +207,15 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
 }
 
-TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
+TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
   WorkflowJSON workflow;
   OSRunner runner(workflow);
 
   std::vector<WorkflowStep> workflow_steps;
 
   MeasureStep step1("Step1");
-  step1.setArgument("Argument1", true);
-  step1.setArgument("Argument2", 5);
+  step1.setArgument("Argument1", 100);
+  step1.setArgument("Argument2", 200);
   workflow_steps.push_back(step1);
   WorkflowStepResult workflow_step_result1;
   EXPECT_FALSE(workflow_step_result1.measureName());
@@ -228,8 +228,8 @@ TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
   workflow_step_result1.addStepValue(stepValue2);
 
   MeasureStep step2("Step2");
-  step2.setArgument("Argument3", 342.3);
-  step2.setArgument("Argument4", false);
+  step2.setArgument("Argument3", 300);
+  step2.setArgument("Argument4", 400);
   workflow_steps.push_back(step2);
   WorkflowStepResult workflow_step_result2;
   EXPECT_FALSE(workflow_step_result2.measureName());
@@ -238,10 +238,10 @@ TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
   EXPECT_EQ("MeasureName2", workflow_step_result2.measureName().get());
   WorkflowStepValue stepValue3("StepValue3", 342.3);
   workflow_step_result2.addStepValue(stepValue3);
-  EXPECT_EQ("342.300000", stepValue3.getValueAsString());
+  EXPECT_EQ(342.3, stepValue3.valueAsDouble());
   WorkflowStepValue stepValue4("StepValue4", false);
   workflow_step_result2.addStepValue(stepValue4);
-  EXPECT_EQ("false", stepValue4.getValueAsString());
+  EXPECT_FALSE(stepValue4.valueAsBoolean());
   EXPECT_EQ(2, workflow_step_result2.stepValues().size());
   EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
   EXPECT_EQ(2, workflow.workflowSteps().size());
@@ -255,22 +255,45 @@ TEST_F(MeasureFixture, OSRunner_getUpstreamMeasureArguments) {
   ASSERT_TRUE(workflow_step_result2.stepResult());
   EXPECT_EQ(StepResult::Success, workflow_step_result2.stepResult().get());
 
-  std::map<std::string, std::string> measureArguments;
+  Json::Value stepValues;
 
-  measureArguments = runner.getUpstreamMeasureArguments("MeasureName1");
-  EXPECT_EQ(0, measureArguments.size());  // did not set step result
+  stepValues = runner.getPastStepValuesForMeasure("MeasureName1");
+  EXPECT_EQ(0, stepValues.size());  // did not set step result
 
-  measureArguments = runner.getUpstreamMeasureArguments("MeasureName2");
-  EXPECT_EQ(2, measureArguments.size());
+  stepValues = runner.getPastStepValuesForMeasure("MeasureName2");
+  EXPECT_EQ(2, stepValues.size());
 
-  bool a3 = (measureArguments.find("Argument3") == measureArguments.end());
-  EXPECT_TRUE(a3);
-  bool a4 = (measureArguments.find("Argument4") == measureArguments.end());
-  EXPECT_TRUE(a4);
-  bool sv1 = (measureArguments.find("StepValue1") == measureArguments.end());
-  EXPECT_TRUE(sv1);
-  bool sv2 = (measureArguments.find("StepValue2") == measureArguments.end());
-  EXPECT_TRUE(sv2);
-  EXPECT_EQ("342.300000", measureArguments["StepValue3"]);
-  EXPECT_EQ("false", measureArguments["StepValue4"]);
+  EXPECT_TRUE(stepValues["Argument3"].isNull());
+  EXPECT_TRUE(stepValues["Argument4"].isNull());
+  EXPECT_TRUE(stepValues["StepValue1"].isNull());
+  EXPECT_TRUE(stepValues["StepValue2"].isNull());
+  EXPECT_FALSE(stepValues["StepValue3"].isNull());
+  EXPECT_EQ(342.3, stepValues["StepValue3"].asDouble());
+  EXPECT_FALSE(stepValues["StepValue4"].isNull());
+  EXPECT_FALSE(stepValues["StepValue4"].asBool());
+
+  MeasureStep step3("Step3");
+  workflow_steps.push_back(step3);
+  WorkflowStepResult workflow_step_result3;
+  workflow_step_result3.setMeasureName("MeasureName3");
+  workflow_step_result3.setStepResult(StepResult::Success);
+  step3.setResult(workflow_step_result3);
+  WorkflowStepValue stepValue5("StepValue3", 20);
+  workflow_step_result3.addStepValue(stepValue5);
+  EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
+  EXPECT_EQ(3, workflow.workflowSteps().size());
+
+  stepValues = runner.getPastStepValuesForName("StepValue1");
+  EXPECT_EQ(0, stepValues.size());  // did not set step result
+
+  stepValues = runner.getPastStepValuesForName("StepValue3");
+  EXPECT_EQ(2, stepValues.size());
+
+  EXPECT_TRUE(stepValues["Step1"].isNull());
+  EXPECT_TRUE(stepValues["Step2"].isNull());
+  EXPECT_TRUE(stepValues["MeasureName1"].isNull());
+  EXPECT_FALSE(stepValues["MeasureName2"].isNull());
+  EXPECT_FALSE(stepValues["MeasureName3"].isNull());
+  EXPECT_EQ(342.3, stepValues["MeasureName2"].asDouble());
+  EXPECT_EQ(20, stepValues["MeasureName3"].asInt());
 }

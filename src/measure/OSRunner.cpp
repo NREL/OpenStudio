@@ -863,15 +863,8 @@ namespace measure {
     return argument_values;
   }
 
-  std::map<std::string, std::string> OSRunner::getFirstUpstreamMeasureForArgument(const std::string& argument_name) {
-    std::map<std::string, std::string> measure_name_value;
-
-    return measure_name_value;
-  }
-
-  std::map<std::string, std::string> OSRunner::getUpstreamMeasureArguments(const std::string& measure_name) {
-    std::map<std::string, std::string> measure_arguments;
-
+  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measure_name) {
+    Json::Value step_values;
     WorkflowJSON workflow_ = workflow();
     std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
     for (const WorkflowStep& workflow_step : workflow_steps) {
@@ -881,13 +874,49 @@ namespace measure {
         if (workflow_step_result_.get().value() == StepResult::Success) {
           if (istringEqual(measure_name, measure_name_.get())) {
             for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
-              measure_arguments[workflow_step_value.name()] = workflow_step_value.getValueAsString();
+              if (workflow_step_value.variantType() == VariantType::String) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsString();
+              } else if (workflow_step_value.variantType() == VariantType::Double) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsDouble();
+              } else if (workflow_step_value.variantType() == VariantType::Integer) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsInteger();
+              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsBoolean();
+              }
             }
           }
         }
       }
     }
-    return measure_arguments;
+    return step_values;
+  }
+
+  Json::Value OSRunner::getPastStepValuesForName(const std::string& step_name) {
+    Json::Value step_values;
+    WorkflowJSON workflow_ = workflow();
+    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
+    for (const WorkflowStep& workflow_step : workflow_steps) {
+      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
+        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
+        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
+        if (workflow_step_result_.get().value() == StepResult::Success) {
+          for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
+            if (istringEqual(step_name, workflow_step_value.name())) {
+              if (workflow_step_value.variantType() == VariantType::String) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsString();
+              } else if (workflow_step_value.variantType() == VariantType::Double) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsDouble();
+              } else if (workflow_step_value.variantType() == VariantType::Integer) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsInteger();
+              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsBoolean();
+              }
+            }
+          }
+        }
+      }
+    }
+    return step_values;
   }
 
   void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel) {
