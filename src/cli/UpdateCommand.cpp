@@ -154,5 +154,135 @@ end
     rubyEngine->exec(cmd);
   }
 
+  void executeRubyRepl(ScriptEngineInstance& rubyEngine) {
+
+    rubyEngine->exec("ARGV.clear");
+
+    const std::string cmd = R"ruby(
+require 'irb'
+require 'irb/lc/error'
+
+# ENV["IRB_LANG"] = "C"
+# puts "Reline encoding_system_needs: #{Reline.encoding_system_needs.name}"
+# puts "Reline::IOGate.encoding: #{Reline::IOGate.encoding}"
+
+# Workaround issue in line_editor.rb where it fails to read a full block
+# unicode character. Probably because of the way we embbed it in C++
+# The full block is \xe2\x96\x88
+ENV['RELINE_ALT_SCROLLBAR'] = "1"
+
+class Reline::LineEditor
+  def reset(prompt = '', encoding:)
+    @rest_height = (Reline::IOGate.get_screen_size.first - 1) - Reline::IOGate.cursor_pos.y
+    @screen_size = Reline::IOGate.get_screen_size
+    @screen_height = @screen_size.first
+    reset_variables(prompt, encoding: encoding)
+    Reline::IOGate.set_winch_handler do
+      @resized = true
+    end
+    if ENV.key?('RELINE_ALT_SCROLLBAR')
+      @full_block = '::'
+      @upper_half_block = "''"
+      @lower_half_block = '..'
+      @block_elem_width = 2
+    elsif Reline::IOGate.win?
+      @full_block = '█'
+      @upper_half_block = '▀'
+      @lower_half_block = '▄'
+      @block_elem_width = 1
+    elsif @encoding == Encoding::UTF_8
+      @full_block = '█'
+      @upper_half_block = '▀'
+      @lower_half_block = '▄'
+      @block_elem_width = Reline::Unicode.calculate_width('█')
+    else
+      @full_block = '::'
+      @upper_half_block = "''"
+      @lower_half_block = '..'
+      @block_elem_width = 2
+    end
+  end
+end
+
+module IRB # :nodoc:
+  class Locale
+
+    alias :original_load :load
+    alias :original_require :require
+
+    def require(file, priv = nil)
+      # puts "require: #{file}"
+      original_require(file, priv)
+    end
+
+    # Some shenanigans being done to detect localized files, and that relies ton File.readable? and co...
+    def load(file, priv=nil)
+      # puts "file=#{file}"
+      if file == 'irb/error.rb'
+        $".push file
+        @@loaded << 'irb/lc/error.rb'
+        return
+      end
+      original_load(file, priv)
+    end
+
+  end
+
+
+  def self.start_session(binding)
+    unless @__initialized
+      args = ARGV
+      ARGV.replace(ARGV.dup)
+      IRB.setup(nil)
+      # locale = @CONF[:LC_MESSAGES]
+      # p locale
+
+      ARGV.replace(args)
+      @__initialized = true
+    end
+
+    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+    # puts @CONF[:PROMPT_MODE]
+    os_version = "3.7.0" # OpenStudio::openStudioVersion
+    @CONF[:PROMPT][:OPENSTUDIO] = {
+      :PROMPT_I=>"(os #{os_version}) :%03n > ",
+      :PROMPT_S=>"(os #{os_version}) :%03n%l> ",
+      :PROMPT_C=>"(os #{os_version}) :%03n > ",
+      :PROMPT_N=>"(os #{os_version}) :%03n?> ",
+      :RETURN=>" => %s \n",
+      :AUTO_INDENT=>true
+    }
+    @CONF[:PROMPT_MODE] = :OPENSTUDIO
+    workspace = WorkSpace.new(binding)
+    input_method = IRB::RelineInputMethod.new
+    irb = Irb.new(workspace, input_method)
+
+
+    @CONF[:MAIN_CONTEXT] = irb.context
+
+    catch(:IRB_EXIT) do
+      irb.eval_input
+    end
+  end
+end
+
+IRB.start_session(binding)
+    )ruby";
+
+    rubyEngine->exec(cmd);
+  }
+
+  void executePythonRepl(ScriptEngineInstance& pythonEngine) {
+    const std::string cmd = R"python(
+import readline # optional, will allow Up/Down/History in the console
+import code
+variables = globals().copy()
+variables.update(locals())
+shell = code.InteractiveConsole(variables)
+shell.interact()
+    )python";
+    pythonEngine->exec(cmd);
+  }
+
 }  // namespace cli
 }  // namespace openstudio

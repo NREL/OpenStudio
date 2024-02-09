@@ -273,6 +273,16 @@ int main(int argc, char* argv[]) {
     });
     // }
 
+    // {
+    auto* ruby_repl_command = app.add_subcommand("interactive_ruby", "Executes a ruby REPL");
+    ruby_repl_command->callback([&rubyEngine] { openstudio::cli::executeRubyRepl(rubyEngine); });
+    // }
+
+    // {
+    auto* python_repl_command = app.add_subcommand("interactive_python", "Executes a python REPL");
+    python_repl_command->callback([&pythonEngine] { openstudio::cli::executePythonRepl(pythonEngine); });
+    // }
+
     [[maybe_unused]] auto* gem_listCommand = app.add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine]() {
       openstudio::cli::executeGemListCommand(rubyEngine);
     });
