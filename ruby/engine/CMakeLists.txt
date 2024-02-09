@@ -199,6 +199,20 @@ list(APPEND EMBEDDED_PATHS "measure_manager.rb")
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb")
 list(APPEND EMBEDDED_PATHS "measure_manager_server.rb")
 
+set(_contents "")
+foreach(_line ${FILES})
+   set(_contents "${_contents}${_line}\n")
+endforeach()
+file(WRITE "${PROJECT_BINARY_DIR}/embedded_files.txt" "${_contents}")
+set(_contents "")
+foreach(_line ${EMBEDDED_PATHS})
+   set(_contents "${_contents}${_line}\n")
+endforeach()
+file(WRITE "${PROJECT_BINARY_DIR}/embedded_paths.txt" "${_contents}")
+
+list(LENGTH FILES nFoundToEmbed)
+message("Total files to embed: ${nFoundToEmbed} files")
+
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT)
 
 set_source_files_properties(EmbeddedScripting.i
