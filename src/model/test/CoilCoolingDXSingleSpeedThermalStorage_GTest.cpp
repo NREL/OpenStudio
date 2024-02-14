@@ -50,6 +50,7 @@
 #include "../FanConstantVolume.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CoilHeatingWater.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
