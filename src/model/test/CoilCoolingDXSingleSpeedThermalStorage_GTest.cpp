@@ -954,7 +954,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACCo
 TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {
   Model m;
 
-  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+  CoilCoolingDXSingleSpeedThermalStorage dx(m);
 
   AirLoopHVAC airLoop(m);
 
