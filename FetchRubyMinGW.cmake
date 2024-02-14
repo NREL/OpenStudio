@@ -23,8 +23,9 @@ macro(FetchRubyMinGW)
 
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
       endif()
-
-      set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/Ruby-mingw-install/libx64-ucrt-ruby320.dll.a")
+      # TODO: I botched the tar.gz, it extracts to the root of the project_binary dir
+      set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/libx64-ucrt-ruby320.dll.a")
+      # set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/Ruby-mingw-install/libx64-ucrt-ruby320.dll.a")
     endif()
   endif()
 endmacro()
