@@ -100,12 +100,10 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageType("BADENUM"));
   EXPECT_EQ("Water", coilCoolingDXSingleSpeedThermalStorage.storageType());
 
-  // Glycol Concentration: Optional Object
-  EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setStorageType("EthyleneGlycol"));
-  EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.glycolConcentration());
+  // Glycol Concentration: Required Integer
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setGlycolConcentration(50));
   ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.glycolConcentration());
-  EXPECT_EQ(50, coilCoolingDXSingleSpeedThermalStorage.glycolConcentration().get());
+  EXPECT_EQ(50, coilCoolingDXSingleSpeedThermalStorage.glycolConcentration());
 
   // Fluid Storage Volume: Optional Double
   // Autosize

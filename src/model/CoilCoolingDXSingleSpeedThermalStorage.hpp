@@ -83,7 +83,7 @@ namespace model {
 
     std::string storageType() const;
 
-    boost::optional<int> glycolConcentration() const;
+    int glycolConcentration() const;
 
     boost::optional<double> fluidStorageVolume() const;
 
@@ -310,8 +310,6 @@ namespace model {
     bool setStorageType(const std::string& storageType);
 
     bool setGlycolConcentration(int glycolConcentration);
-
-    void resetGlycolConcentration();
 
     bool setFluidStorageVolume(double fluidStorageVolume);
 

@@ -308,8 +308,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<int> CoilCoolingDXSingleSpeedThermalStorage_Impl::glycolConcentration() const {
-      return getInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, true);
+    int CoilCoolingDXSingleSpeedThermalStorage_Impl::glycolConcentration() const {
+      boost::optional<int> value = getInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::fluidStorageVolume() const {
@@ -993,20 +995,9 @@ namespace model {
       return result;
     }
 
-    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setGlycolConcentration(boost::optional<int> glycolConcentration) {
-      bool result(false);
-      if (glycolConcentration) {
-        result = setInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, glycolConcentration.get());
-      } else {
-        resetGlycolConcentration();
-        result = true;
-      }
+    bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setGlycolConcentration(int glycolConcentration) {
+      const bool result = setInt(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, glycolConcentration);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetGlycolConcentration() {
-      bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::GlycolConcentration, "");
-      OS_ASSERT(result);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setFluidStorageVolume(double fluidStorageVolume) {
@@ -2186,7 +2177,7 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageType();
   }
 
-  boost::optional<int> CoilCoolingDXSingleSpeedThermalStorage::glycolConcentration() const {
+  int CoilCoolingDXSingleSpeedThermalStorage::glycolConcentration() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->glycolConcentration();
   }
 
@@ -2698,10 +2689,6 @@ namespace model {
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setGlycolConcentration(int glycolConcentration) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setGlycolConcentration(glycolConcentration);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetGlycolConcentration() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetGlycolConcentration();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setFluidStorageVolume(double fluidStorageVolume) {
