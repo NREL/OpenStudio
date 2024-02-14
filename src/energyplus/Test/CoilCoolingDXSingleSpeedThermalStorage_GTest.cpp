@@ -43,8 +43,6 @@
 #include "../../model/CurveQuadratic_Impl.hpp"
 #include "../../model/CurveTriquadratic.hpp"
 #include "../../model/CurveTriquadratic_Impl.hpp"
-// #include "../../model/WaterStorageTank.hpp"
-// #include "../../model/WaterStorageTank_Impl.hpp"
 
 #include "../../model/AirLoopHVAC.hpp"
 #include "../../model/AirLoopHVACUnitarySystem.hpp"

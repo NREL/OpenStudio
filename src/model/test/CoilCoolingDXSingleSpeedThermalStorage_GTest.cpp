@@ -36,6 +36,20 @@
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveTriquadratic.hpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVACUnitarySystem_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingWater.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -846,12 +860,170 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_HeatCoolFuelTypes) {
   testAppGFuelTypeEquality({}, coilCoolingDXSingleSpeedThermalStorage.appGHeatingFuelTypes());
 }
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingHVACComponent) {}
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingHVACComponent) {
+  {  // AirLoopHVACUnitarySystem
+    Model model;
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACComponent) {}
+    CoilCoolingDXSingleSpeedThermalStorage dx(model);
+    EXPECT_TRUE(dx.isRemovable());
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {}
+    AirLoopHVACUnitarySystem unitary(model);
+    EXPECT_TRUE(unitary.setCoolingCoil(dx));
+    ASSERT_TRUE(unitary.coolingCoil());
+    EXPECT_EQ(dx, unitary.coolingCoil().get());
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {}
+    ASSERT_TRUE(dx.containingHVACComponent());
+    EXPECT_EQ(unitary, dx.containingHVACComponent().get());
 
-TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {}
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    ASSERT_TRUE(unitary.coolingCoil());
+    EXPECT_EQ(dx, unitary.coolingCoil().get());
+  }
+
+  {  // CoilSystemCoolingDXHeatExchangerAssisted
+    Model model;
+
+    CoilCoolingDXSingleSpeedThermalStorage dx(model);
+    EXPECT_TRUE(dx.isRemovable());
+
+    CoilSystemCoolingDXHeatExchangerAssisted hx(model);
+    EXPECT_TRUE(hx.setCoolingCoil(dx));
+    EXPECT_EQ(dx, hx.coolingCoil());
+
+    ASSERT_TRUE(dx.containingHVACComponent());
+    EXPECT_EQ(hx, dx.containingHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, hx.coolingCoil());
+  }
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_containingZoneHVACComponent) {
+  {  // ZoneHVACPackagedTerminalAirConditioner
+    Model model;
+
+    CoilCoolingDXSingleSpeedThermalStorage dx(model);
+    EXPECT_TRUE(dx.isRemovable());
+    ScheduleCompact availabilitySchedule(model);
+    FanConstantVolume fan(model, availabilitySchedule);
+    CoilHeatingWater heatingCoil(model, availabilitySchedule);
+
+    ZoneHVACPackagedTerminalAirConditioner ptac(model, availabilitySchedule, fan, heatingCoil, dx);
+    EXPECT_EQ(dx, ptac.coolingCoil());
+
+    ASSERT_TRUE(dx.containingZoneHVACComponent());
+    EXPECT_EQ(ptac, dx.containingZoneHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, ptac.coolingCoil());
+  }
+
+  {  // ZoneHVACPackagedTerminalHeatPump
+    Model model;
+
+    CoilCoolingDXSingleSpeedThermalStorage dx(model);
+    EXPECT_TRUE(dx.isRemovable());
+    ScheduleCompact availabilitySchedule(model);
+    FanConstantVolume fan(model, availabilitySchedule);
+    CoilHeatingDXSingleSpeed heatingCoil(model);
+    CoilHeatingElectric supplementalHeatingCoil(model, availabilitySchedule);
+
+    ZoneHVACPackagedTerminalHeatPump pthp(model, availabilitySchedule, fan, heatingCoil, dx, supplementalHeatingCoil);
+    EXPECT_EQ(dx, pthp.coolingCoil());
+
+    ASSERT_TRUE(dx.containingZoneHVACComponent());
+    EXPECT_EQ(pthp, dx.containingZoneHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, pthp.coolingCoil());
+  }
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {
+  Model m;
+
+  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_FALSE(dx.airLoopHVAC());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_TRUE(dx.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  EXPECT_TRUE(dx.airLoopHVAC());
+
+  Node demandNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  EXPECT_FALSE(dx.addToNode(demandNode));
+  // 5u: inlet splitter node mixer outlet.
+  EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
+  EXPECT_TRUE(dx.airLoopHVAC());
+
+  EXPECT_TRUE(dx.removeFromLoop());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
+  EXPECT_FALSE(dx.airLoopHVAC());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_FALSE(dx.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(dx.addToNode(demandOutletNode));
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
+  Model model;
+
+  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+  auto dxClone = dx.clone(model).cast<CoilCoolingDXSingleSpeedThermalStorage>();
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+  dx.remove();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+  dxClone.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
+  Model model;
+
+  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+
+  AirLoopHVACUnitarySystem unitary(model);
+  EXPECT_TRUE(unitary.setCoolingCoil(dx));
+
+  ASSERT_TRUE(dx.containingHVACComponent());
+  EXPECT_EQ(unitary, dx.containingHVACComponent().get());
+
+  ASSERT_TRUE(unitary.coolingCoil());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+  // Cloning the unitary should clone the coolingCoil, but the clone of the DX should still share resources
+  auto unitaryClone = unitary.clone(model).cast<AirLoopHVACUnitarySystem>();
+  EXPECT_EQ(2u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
+  EXPECT_NE(dx, unitaryClone.coolingCoil().get());
+}
