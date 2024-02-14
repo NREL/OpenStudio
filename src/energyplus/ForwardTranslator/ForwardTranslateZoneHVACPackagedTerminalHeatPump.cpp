@@ -17,6 +17,8 @@
 #include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXSingleSpeedThermalStorage.hpp"
+#include "../../model/CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
