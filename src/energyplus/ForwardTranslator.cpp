@@ -3468,7 +3468,7 @@ namespace energyplus {
       // IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed,
 
       IddObjectType::OS_Coil_Cooling_DX_SingleSpeed,
-      IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage,
+      // IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage,
       IddObjectType::OS_Coil_Cooling_DX_TwoSpeed,
       IddObjectType::OS_Coil_Cooling_Water,
       IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,

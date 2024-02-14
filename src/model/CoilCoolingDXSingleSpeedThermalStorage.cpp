@@ -34,12 +34,8 @@
 #include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-// #include "Connection.hpp"
-// #include "Connection_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
-// #include "WaterStorageTank.hpp"
-// #include "WaterStorageTank_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -2041,6 +2037,8 @@ namespace model {
     OS_ASSERT(ok);
     ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
+    ok = setGlycolConcentration(0.0);
+    OS_ASSERT(ok);
     autosizeFluidStorageVolume();
     autosizeIceStorageCapacity();
     ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
@@ -2108,6 +2106,10 @@ namespace model {
     ok = setDischargeOnlyModeRatedCOP(3.0);  // IDD default
     OS_ASSERT(ok);
 
+    ok = setAncillaryElectricPower(0.0);
+    OS_ASSERT(ok);
+    ok = setColdWeatherOperationAncillaryPower(0.0);
+    OS_ASSERT(ok);
     autosizeCondenserDesignAirFlowRate();
     ok = setCondenserAirFlowSizingFactor(1.0);  // IDD default
     OS_ASSERT(ok);

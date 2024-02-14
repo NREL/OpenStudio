@@ -165,6 +165,9 @@ namespace energyplus {
 
     if (boost::optional<CoilCoolingDXSingleSpeed> coilCoolingDXSingleSpeed = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>()) {
       _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coilCoolingDXSingleSpeed.get());
+    } else if (boost::optional<CoilCoolingDXSingleSpeedThermalStorage> coilCoolingDXSingleSpeedThermalStorage =
+                 coolingCoil.optionalCast<CoilCoolingDXSingleSpeedThermalStorage>()) {
+      _coolingCoil = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(coilCoolingDXSingleSpeedThermalStorage.get());
     } else if (boost::optional<CoilCoolingDXVariableSpeed> coilCoolingDXVariableSpeed = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
       _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(coilCoolingDXVariableSpeed.get());
     } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =

@@ -38,9 +38,7 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-  // class Connection;
   class Curve;
-  // class WaterStorageTank;
 
   namespace detail {
 
@@ -91,13 +89,9 @@ namespace model {
 
     bool isFluidStorageVolumeAutosized() const;
 
-    boost::optional<double> autosizedFluidStorageVolume();
-
     boost::optional<double> iceStorageCapacity() const;
 
     bool isIceStorageCapacityAutosized() const;
-
-    boost::optional<double> autosizedIceStorageCapacity();
 
     boost::optional<double> storageCapacitySizingFactor() const;
 
@@ -109,15 +103,11 @@ namespace model {
 
     bool isRatedEvaporatorAirFlowRateAutosized() const;
 
-    boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
-
     bool coolingOnlyModeAvailable() const;
 
     boost::optional<double> coolingOnlyModeRatedTotalEvaporatorCoolingCapacity() const;
 
     bool isCoolingOnlyModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
-
-    boost::optional<double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
 
     double coolingOnlyModeRatedSensibleHeatRatio() const;
 
@@ -143,15 +133,11 @@ namespace model {
 
     bool isCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
 
-    boost::optional<double> autosizedCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
-
     double coolingAndChargeModeCapacitySizingFactor() const;
 
     boost::optional<double> coolingAndChargeModeRatedStorageChargingCapacity() const;
 
     bool isCoolingAndChargeModeRatedStorageChargingCapacityAutosized() const;
-
-    boost::optional<double> autosizedCoolingAndChargeModeRatedStorageChargingCapacity();
 
     double coolingAndChargeModeStorageCapacitySizingFactor() const;
 
@@ -191,15 +177,11 @@ namespace model {
 
     bool isCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacityAutosized() const;
 
-    boost::optional<double> autosizedCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
-
     double coolingAndDischargeModeEvaporatorCapacitySizingFactor() const;
 
     boost::optional<double> coolingAndDischargeModeRatedStorageDischargingCapacity() const;
 
     bool isCoolingAndDischargeModeRatedStorageDischargingCapacityAutosized() const;
-
-    boost::optional<double> autosizedCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
     double coolingAndDischargeModeStorageDischargeCapacitySizingFactor() const;
 
@@ -241,8 +223,6 @@ namespace model {
 
     bool isChargeOnlyModeRatedStorageChargingCapacityAutosized() const;
 
-    boost::optional<double> autosizedChargeOnlyModeRatedStorageChargingCapacity();
-
     double chargeOnlyModeCapacitySizingFactor() const;
 
     double chargeOnlyModeChargingRatedCOP() const;
@@ -256,8 +236,6 @@ namespace model {
     boost::optional<double> dischargeOnlyModeRatedStorageDischargingCapacity() const;
 
     bool isDischargeOnlyModeRatedStorageDischargingCapacityAutosized() const;
-
-    boost::optional<double> autosizedDischargeOnlyModeRatedStorageDischargingCapacity();
 
     double dischargeOnlyModeCapacitySizingFactor() const;
 
@@ -289,8 +267,6 @@ namespace model {
 
     bool isCondenserDesignAirFlowRateAutosized() const;
 
-    boost::optional<double> autosizedCondenserDesignAirFlowRate();
-
     double condenserAirFlowSizingFactor() const;
 
     std::string condenserType() const;
@@ -300,8 +276,6 @@ namespace model {
     boost::optional<double> evaporativeCondenserPumpRatedPowerConsumption() const;
 
     bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
-
-    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
 
     double basinHeaterCapacity() const;
 
@@ -676,6 +650,30 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<double> autosizedFluidStorageVolume();
+
+    boost::optional<double> autosizedIceStorageCapacity();
+
+    boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
+
+    boost::optional<double> autosizedCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
+
+    boost::optional<double> autosizedCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
+
+    boost::optional<double> autosizedCoolingAndChargeModeRatedStorageChargingCapacity();
+
+    boost::optional<double> autosizedCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
+
+    boost::optional<double> autosizedCoolingAndDischargeModeRatedStorageDischargingCapacity();
+
+    boost::optional<double> autosizedChargeOnlyModeRatedStorageChargingCapacity();
+
+    boost::optional<double> autosizedDischargeOnlyModeRatedStorageDischargingCapacity();
+
+    boost::optional<double> autosizedCondenserDesignAirFlowRate();
+
+    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption();
 
     //@}
    protected:

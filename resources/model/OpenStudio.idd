@@ -18874,7 +18874,7 @@ OS:CoilSystem:IntegratedHeatPump:AirSource,
 OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \memo Direct expansion (DX) cooling coil and condensing unit (includes electric compressor
        \memo and condenser fan), single-speed with packaged integrated thermal storage for cooling.
-       \min-fields 105
+       \min-fields 99
   A1 , \field Handle
        \type handle
        \required-field
@@ -18922,10 +18922,11 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \key R744
        \required-field
   N1,  \field Glycol Concentration
+       \required-field
        \type integer
        \minimum 0
        \maximum 100
-       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"       
+       \note Only used with either "PropyleneGlycol" or "EthyleneGlycol"
   N2 , \field Fluid Storage Volume
        \units m3
        \ip-units gal
@@ -18978,6 +18979,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N8 , \field Cooling Only Mode Rated Total Evaporator Cooling Capacity
        \note required field if Cooling Only Mode is available or if autocalculating sizes
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \autosizable
@@ -19064,6 +19066,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N11 ,\field Cooling And Charge Mode Rated Total Evaporator Cooling Capacity
        \note required field if Cooling And Charge Mode is available
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \autosizable
@@ -19079,6 +19082,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N13, \field Cooling And Charge Mode Rated Storage Charging Capacity
        \note required field if Cooling And Charge Mode is available
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \note net capacity including any internal devices
@@ -19229,6 +19233,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note required field if Cooling And Discharge Mode is available
        \type real
        \units W
+       \required-field
        \minimum 0.0
        \autosizable
        \note gross capacity excluding supply air fan heat
@@ -19243,6 +19248,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N20, \field Cooling And Discharge Mode Rated Storage Discharging Capacity
        \note required field if Cooling And Discharge Mode is available
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \note net capacity including any internal devices
@@ -19399,6 +19405,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N25, \field Charge Only Mode Rated Storage Charging Capacity
        \note required field if Charge Only  Mode is available
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \note net capacity including any internal devices
@@ -19442,6 +19449,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
   N28, \field Discharge Only Mode Rated Storage Discharging Capacity
        \note required field if Discharge Only Mode is available
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \note net capacity including any internal devices
@@ -19530,6 +19538,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \note ff = Fraction of the full load evaporator air flow
   N32, \field Ancillary Electric Power
        \type real
+       \required-field
        \units W
        \minimum 0.0
        \note controls and miscellaneous standby ancillary electric power draw, when available
@@ -19538,6 +19547,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \units C
   N34, \field Cold Weather Operation Ancillary Power
        \type real
+       \required-field
        \units W
        \minimum 0.0
   A56, \field Condenser Air Inlet Node

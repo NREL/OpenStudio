@@ -33,11 +33,9 @@
 #include "../CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
-// #include "../Connection.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveTriquadratic.hpp"
-// #include "../WaterStorageTank.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
