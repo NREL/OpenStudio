@@ -86,19 +86,33 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilCoolingDXSingleSpeedThermalStorage_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result(
-        "Cooling Coil Operating Mode Index", "Cooling Coil Total Cooling Rate", "Cooling Coil Total Cooling Energy",
-        "Cooling Coil Sensible Cooling Rate", "Cooling Coil Sensible Cooling Energy", "Cooling Coil Latent Cooling Rate",
-        "Cooling Coil Latent Cooling Energy", "Cooling Coil Electricity Rate", "Cooling Coil Electricity Energy", "Cooling Coil Runtime Fraction",
-        "Cooling Coil Cold Weather Protection Electricity Energy", "Cooling Coil Cold Weather Protection Electricity Rate",
-        "Cooling Coil Thermal Storage Mechanical Heat Transfer Rate", "Cooling Coil Thermal Storage Mechanical Heat Transfer Energy",
-        "Cooling Coil Thermal Storage Ambient Heat Transfer Rate", "Cooling Coil Thermal Storage Ambient Heat Transfer Energy",
-        "Cooling Coil Ice Thermal Storage End Fraction", "Cooling Coil Condenser Inlet Temperature",
-        "Cooling Coil Evaporative Condenser Water Volume", "Cooling Coil Evaporative Condenser Mains Supply Water Volume",
-        "Cooling Coil Evaporative Condenser Pump Electricity Rate", "Cooling Coil Evaporative Condenser Pump Electricity Energy",
-        "Cooling Coil Basin Heater Electricity Rate", "Cooling Coil Basin Heater Electricity Energy",
-        "Cooling Coil Thermal Storage Plant Heat Transfer Rate", "Cooling Coil Thermal Storage Plant Heat Transfer Energy",
-        "Cooling Coil Fluid Thermal Storage End Temperature");
+      static const std::vector<std::string> result{"Cooling Coil Operating Mode Index",
+                                                   "Cooling Coil Total Cooling Rate",
+                                                   "Cooling Coil Total Cooling Energy",
+                                                   "Cooling Coil Sensible Cooling Rate",
+                                                   "Cooling Coil Sensible Cooling Energy",
+                                                   "Cooling Coil Latent Cooling Rate",
+                                                   "Cooling Coil Latent Cooling Energy",
+                                                   "Cooling Coil Electricity Rate",
+                                                   "Cooling Coil Electricity Energy",
+                                                   "Cooling Coil Runtime Fraction",
+                                                   "Cooling Coil Cold Weather Protection Electricity Energy",
+                                                   "Cooling Coil Cold Weather Protection Electricity Rate",
+                                                   "Cooling Coil Thermal Storage Mechanical Heat Transfer Rate",
+                                                   "Cooling Coil Thermal Storage Mechanical Heat Transfer Energy",
+                                                   "Cooling Coil Thermal Storage Ambient Heat Transfer Rate",
+                                                   "Cooling Coil Thermal Storage Ambient Heat Transfer Energy",
+                                                   "Cooling Coil Ice Thermal Storage End Fraction",
+                                                   "Cooling Coil Condenser Inlet Temperature",
+                                                   "Cooling Coil Evaporative Condenser Water Volume",
+                                                   "Cooling Coil Evaporative Condenser Mains Supply Water Volume",
+                                                   "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+                                                   "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+                                                   "Cooling Coil Basin Heater Electricity Rate",
+                                                   "Cooling Coil Basin Heater Electricity Energy",
+                                                   "Cooling Coil Thermal Storage Plant Heat Transfer Rate",
+                                                   "Cooling Coil Thermal Storage Plant Heat Transfer Energy",
+                                                   "Cooling Coil Fluid Thermal Storage End Temperature"};
       return result;
     }
 
