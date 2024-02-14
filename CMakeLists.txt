@@ -600,6 +600,8 @@ if(MSVC)
     add_definitions(/wd4244)
   endif()
 
+  add_definitions(/wd4996) # TODO: temp; deprecated fmt/9.1.0 stuff
+
   # treat warnings as errors
   # DLM: only do this for our code, added in later
   # add_definitions(/WX)
