@@ -55,12 +55,13 @@ RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
 
   initRubyEngine();
 
+  fmt::print("initRubyEngine done\n");
   openstudio::ruby::initBasicRubyBindings();
+  fmt::print("initBasicRubyBindings done\n");
 
   auto rubymodule = rb_define_module("OpenStudio");
   rb_define_module_function(rubymodule, "init_rest_of_openstudio", initRestOfOpenStudio, 0);
-
-  ruby_set_argv(argc, argv);
+  fmt::print("initBasicRubyBindings done\n");
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
   // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?

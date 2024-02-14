@@ -59,6 +59,7 @@ void RubyEngine::initRubyEngine() {
 
   // rb_provide("rbconfig.so");
 
+  // TODO: we're doing stuff twice aren't we? Cf setupEmbeddedGems
   // Need embedded_help for requiring files out of the embedded system
   auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
 
@@ -75,6 +76,8 @@ void RubyEngine::initRubyEngine() {
     ruby_cleanup(1);
     throw;
   }
+
+  std::cout << "Done InitRubyEngine" << std::endl;
 }
 
 }  // namespace openstudio

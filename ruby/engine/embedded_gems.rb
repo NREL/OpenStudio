@@ -5,6 +5,8 @@
 
 def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, use_bundler, bundleWithoutGroups)
 
+  puts "setup_embedded_gems"
+
   # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell)
 
   ENV.delete('GEM_HOME') if ENV['GEM_HOME']

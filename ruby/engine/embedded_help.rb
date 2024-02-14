@@ -77,8 +77,8 @@ module Kernel
   # Change 3.2.2 to 3.2.0
   RUBY_V = (RUBY_VERSION.split('.')[0..1] + ['0']).join('.')
   # Debug
-  # puts "Initial load path:
-  # puts $LOAD_PATH
+  puts "Initial load path:"
+  puts $LOAD_PATH
 
   # TODO: double check and update platform-specific includes
   $LOAD_PATH << ':'
@@ -91,9 +91,9 @@ module Kernel
   $LOAD_PATH << ":/ruby/#{RUBY_V}"
   $LOAD_PATH << ":/ruby/#{RUBY_V}/#{RUBY_PLATFORM}"
 
-  # puts "==============="
-  # puts "New load path:"
-  # puts $LOAD_PATH
+  puts "==============="
+  puts "New load path:"
+  puts $LOAD_PATH
 
   # TODO: keep fallbacks?
   # $LOAD_PATH << ':/ruby/3.2.0'
@@ -686,6 +686,7 @@ class Dir
   end
 end
 
+puts "fileutils"
 require 'fileutils'
 module FileUtils
   class << self
@@ -770,6 +771,7 @@ module FileUtils
   end
 end
 
+puts "find"
 require 'find'
 module Find
   class << self
@@ -833,6 +835,7 @@ module Find
   end
 end
 
+puts "rbconfig"
 require 'rbconfig'
 
 module RbConfig

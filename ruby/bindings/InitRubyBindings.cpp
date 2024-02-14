@@ -710,6 +710,7 @@ void locateEmbeddedGems(bool use_bundler) {
 
   std::string initCmd = R"ruby(
 
+  puts "hello"
   Gem.paths.path << ':/ruby/3.2.0/gems/'
   Gem.paths.path << ':/ruby/3.2.0/bundler/gems/'
   Gem::Deprecate.skip = true
@@ -721,9 +722,13 @@ void locateEmbeddedGems(bool use_bundler) {
       if md = /specifications\/.*\.gemspec$/.match(f) ||
          md = /bundler\/.*\.gemspec$/.match(f)
         begin
+          puts "Found md=#{md}"
           spec = EmbeddedScripting::getFileAsString(f)
+          puts spec
           s = eval(spec)
+          puts "eval done"
           s.loaded_from = f
+          puts "loaded_from"
           # This is shenanigans because otherwise rubygems will think extensions are missing
           # But we are initing them manually so they are not missing
           # Here the missing_extensions? method is redefined for only this instance "s"
@@ -732,11 +737,14 @@ void locateEmbeddedGems(bool use_bundler) {
           end
           original_embedded_gems[s.name] = s
 
+          puts "before init_count"
           init_count = 0
           Gem::Specification.each {|x| init_count += 1}
 
           # if already have an equivalent spec this will be a no-op
+          puts "before add_spec"
           Gem::Specification.add_spec(s)
+          puts "after add_spec"
 
           post_count = 0
           Gem::Specification.each {|x| post_count += 1}
@@ -753,8 +761,11 @@ void locateEmbeddedGems(bool use_bundler) {
       end
     end
   rescue NameError => e
+    puts "Error: EmbeddedScripting not available"
     # EmbeddedScripting not available
   end
+
+  puts "I'm here"
 
   original_load_path = $LOAD_PATH.clone
   embedded_gems_to_activate = []
@@ -926,11 +937,16 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
                        const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath, const openstudio::path& bundleGemDirPath,
                        const std::string& bundleWithoutGroups) {
 
+  std::cout << "setupEmbeddedGems\n" << std::endl;
   initEmbeddedGems();
+  std::cout << "initEmbeddedGems\n" << std::endl;
   setupEmbeddedGemsClearEnvVars();
+  std::cout << "setupEmbeddedGemsClearEnvVars\n" << std::endl;
 
   addIncludeDirsToLoadPaths(includeDirs);
+  std::cout << "addIncludeDirsToLoadPaths\n" << std::endl;
   setGemPathDir(gemPathDirs);
+  std::cout << "setGemPathDir\n" << std::endl;
   setRubyEnvVarPath("GEM_HOME", gemHomeDir);
   bool use_bundler = false;
   if (!bundleGemFilePath.empty()) {
@@ -952,7 +968,9 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
     setRubyEnvVarPath("BUNDLE_WITHOUT", "test");
   }
 
+  std::cout << "before locateEmbeddedGems\n" << std::endl;
   locateEmbeddedGems(use_bundler);
+  std::cout << "locateEmbeddedGems\n" << std::endl;
 }
 
 void initRubyBindings() {
