@@ -13,7 +13,8 @@ conan install . --output-folder=../OS-build-release-v2 --build=missing -c tools.
 cd ../OS-build-release-v2
 . ./conanbuild.sh
 
-# Run cmake as usual, but do pass the CMAKE_TOOLCHAIN_FILE
+# Run cmake, but do pass the CMAKE_TOOLCHAIN_FILE
+#/OS-build-release-v2 %
 cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE:STRING=Release \
   -DBUILD_TESTING:BOOL=ON -DCPACK_BINARY_TGZ:BOOL=ON -DCPACK_BINARY_DEB:BOOL=ON \
   -DCPACK_BINARY_IFW:BOOL=OFF -DCPACK_BINARY_NSIS:BOOL=OFF -DCPACK_BINARY_RPM:BOOL=OFF -DCPACK_BINARY_STGZ:BOOL=OFF \
