@@ -36,17 +36,23 @@ glob_for_file_exts_and_prepare_for_embedded("${MODULE_ROOT}/lib" rubyFiles rubyE
 list(APPEND FILES ${rubyFiles})
 list(APPEND EMBEDDED_PATHS ${rubyEmbeddedPaths})
 
-set(GEMFILE_FILES "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
+set(GEMFILE_FILES
+  # "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec"
+  "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 foreach( _FILE ${GEMFILE_FILES} )
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-glob_for_file_exts_and_prepare_for_embedded("${OPENSTUDIO_GEMS_DIR}" gemFiles gemEmbeddedPaths
-  VERBOSE
-  EXTENSIONS rb data erb js css gif png html idf osm epw ddy stat csv json gemspec gz yml
-)
+# Note: from export-extensions.cmake
+list(LENGTH gemFiles _nFoundGemFiles)
+list(LENGTH gemEmbeddedPaths _nFoundGemsEmbeddedPaths)
+message("gemFiles=${_nFoundGemFiles}, gemEmbeddedPaths=${_nFoundGemsEmbeddedPaths}")
+# glob_for_file_exts_and_prepare_for_embedded("${OPENSTUDIO_GEMS_DIR}" gemFiles gemEmbeddedPaths
+#  VERBOSE
+#  EXTENSIONS rb data erb js css gif png html idf osm epw ddy stat csv json gemspec gz yml
+#)
 
 list(APPEND FILES ${gemFiles})
 list(APPEND EMBEDDED_PATHS ${gemEmbeddedPaths})
