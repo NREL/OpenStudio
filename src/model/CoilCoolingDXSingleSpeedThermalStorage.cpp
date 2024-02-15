@@ -1424,11 +1424,6 @@ namespace model {
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCoolingAndDischargeModeRatedStorageDischargingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity, "");
-      OS_ASSERT(result);
-    }
-
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity() {
       const bool result =
         setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedStorageDischargingCapacity, "autosize");
@@ -1718,11 +1713,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedSensibleHeatRatio,
                                     dischargeOnlyModeRatedSensibleHeatRatio);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetDischargeOnlyModeRatedSensibleHeatRatio() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedSensibleHeatRatio, "");
-      OS_ASSERT(result);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setDischargeOnlyModeRatedCOP(double dischargeOnlyModeRatedCOP) {
