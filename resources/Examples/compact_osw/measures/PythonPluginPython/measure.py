@@ -1,7 +1,6 @@
 import os, sys
 import openstudio
 import typing
-sys.path.append('C:/Python38/Lib/site-packages') # this should (needs to?) be same version as E+'s version
 import jinja2
 import tempfile
 
