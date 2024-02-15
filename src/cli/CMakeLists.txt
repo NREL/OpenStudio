@@ -244,6 +244,12 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
+  add_test(NAME OpenStudioCLI.Run_RubyPython
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_python_plugin.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
+
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.test_loglevel
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
