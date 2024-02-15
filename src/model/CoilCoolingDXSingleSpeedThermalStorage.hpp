@@ -319,13 +319,9 @@ namespace model {
 
     bool setIceStorageCapacity(double iceStorageCapacity);
 
-    void resetIceStorageCapacity();
-
     void autosizeIceStorageCapacity();
 
     bool setStorageCapacitySizingFactor(double storageCapacitySizingFactor);
-
-    void resetStorageCapacitySizingFactor();
 
     bool setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
 
@@ -340,8 +336,6 @@ namespace model {
     bool setCoolingOnlyModeAvailable(bool coolingOnlyModeAvailable);
 
     bool setCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity(double coolingOnlyModeRatedTotalEvaporatorCoolingCapacity);
-
-    void resetCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
 
     void autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
 
@@ -381,15 +375,11 @@ namespace model {
 
     bool setCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity(double coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity);
 
-    void resetCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
-
     void autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
 
     bool setCoolingAndChargeModeCapacitySizingFactor(double coolingAndChargeModeCapacitySizingFactor);
 
     bool setCoolingAndChargeModeRatedStorageChargingCapacity(double coolingAndChargeModeRatedStorageChargingCapacity);
-
-    void resetCoolingAndChargeModeRatedStorageChargingCapacity();
 
     void autosizeCoolingAndChargeModeRatedStorageChargingCapacity();
 
@@ -453,15 +443,11 @@ namespace model {
 
     bool setCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity(double coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity);
 
-    void resetCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
-
     void autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
 
     bool setCoolingAndDischargeModeEvaporatorCapacitySizingFactor(double coolingAndDischargeModeEvaporatorCapacitySizingFactor);
 
     bool setCoolingAndDischargeModeRatedStorageDischargingCapacity(double coolingAndDischargeModeRatedStorageDischargingCapacity);
-
-    void resetCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
     void autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity();
 
@@ -529,8 +515,6 @@ namespace model {
 
     bool setChargeOnlyModeRatedStorageChargingCapacity(double chargeOnlyModeRatedStorageChargingCapacity);
 
-    void resetChargeOnlyModeRatedStorageChargingCapacity();
-
     void autosizeChargeOnlyModeRatedStorageChargingCapacity();
 
     bool setChargeOnlyModeCapacitySizingFactor(double chargeOnlyModeCapacitySizingFactor);
@@ -549,15 +533,11 @@ namespace model {
 
     bool setDischargeOnlyModeRatedStorageDischargingCapacity(double dischargeOnlyModeRatedStorageDischargingCapacity);
 
-    void resetDischargeOnlyModeRatedStorageDischargingCapacity();
-
     void autosizeDischargeOnlyModeRatedStorageDischargingCapacity();
 
     bool setDischargeOnlyModeCapacitySizingFactor(double dischargeOnlyModeCapacitySizingFactor);
 
     bool setDischargeOnlyModeRatedSensibleHeatRatio(double dischargeOnlyModeRatedSensibleHeatRatio);
-
-    void resetDischargeOnlyModeRatedSensibleHeatRatio();
 
     bool setDischargeOnlyModeRatedCOP(double dischargeOnlyModeRatedCOP);
 
@@ -591,15 +571,11 @@ namespace model {
 
     bool setAncillaryElectricPower(double ancillaryElectricPower);
 
-    void resetAncillaryElectricPower();
-
     bool setColdWeatherOperationMinimumOutdoorAirTemperature(double coldWeatherOperationMinimumOutdoorAirTemperature);
 
     void resetColdWeatherOperationMinimumOutdoorAirTemperature();
 
     bool setColdWeatherOperationAncillaryPower(double coldWeatherOperationAncillaryPower);
-
-    void resetColdWeatherOperationAncillaryPower();
 
     bool setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate);
 

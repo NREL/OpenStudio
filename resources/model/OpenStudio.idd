@@ -18936,12 +18936,14 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \autosizable
   N3 , \field Ice Storage Capacity
        \units GJ
+       \required-field
        \type real
        \minimum> 0
        \note required field if Storage Type is Ice
        \autosizable
   N4 , \field Storage Capacity Sizing Factor
        \type real
+       \required-field
        \units hr
        \note If one of the previous two fields is set to autocalculate, this determines the storage capacity
        \note as a function of Cooling Only Mode Rated Total Evaporator Cooling Capacity

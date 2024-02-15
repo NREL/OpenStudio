@@ -1020,11 +1020,6 @@ namespace model {
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetIceStorageCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity, "");
-      OS_ASSERT(result);
-    }
-
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeIceStorageCapacity() {
       const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::IceStorageCapacity, "autosize");
       OS_ASSERT(result);
@@ -1034,11 +1029,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageCapacitySizingFactor, storageCapacitySizingFactor);
       OS_ASSERT(result);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetStorageCapacitySizingFactor() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageCapacitySizingFactor, "");
-      OS_ASSERT(result);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(
@@ -1079,11 +1069,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeRatedTotalEvaporatorCoolingCapacity,
                                     coolingOnlyModeRatedTotalEvaporatorCoolingCapacity);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeRatedTotalEvaporatorCoolingCapacity, "");
-      OS_ASSERT(result);
     }
 
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity() {
@@ -1199,11 +1184,6 @@ namespace model {
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity, "");
-      OS_ASSERT(result);
-    }
-
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity() {
       const bool result =
         setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity, "autosize");
@@ -1222,11 +1202,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity,
                                     coolingAndChargeModeRatedStorageChargingCapacity);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCoolingAndChargeModeRatedStorageChargingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndChargeModeRatedStorageChargingCapacity, "");
-      OS_ASSERT(result);
     }
 
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeCoolingAndChargeModeRatedStorageChargingCapacity() {
@@ -1426,12 +1401,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity,
                                     coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity() {
-      const bool result =
-        setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity, "");
-      OS_ASSERT(result);
     }
 
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity() {
@@ -1679,11 +1648,6 @@ namespace model {
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetChargeOnlyModeRatedStorageChargingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity, "");
-      OS_ASSERT(result);
-    }
-
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeChargeOnlyModeRatedStorageChargingCapacity() {
       const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ChargeOnlyModeRatedStorageChargingCapacity, "autosize");
       OS_ASSERT(result);
@@ -1735,11 +1699,6 @@ namespace model {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity,
                                     dischargeOnlyModeRatedStorageDischargingCapacity);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetDischargeOnlyModeRatedStorageDischargingCapacity() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::DischargeOnlyModeRatedStorageDischargingCapacity, "");
-      OS_ASSERT(result);
     }
 
     void CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizeDischargeOnlyModeRatedStorageDischargingCapacity() {
@@ -1859,11 +1818,6 @@ namespace model {
       return result;
     }
 
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetAncillaryElectricPower() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::AncillaryElectricPower, "");
-      OS_ASSERT(result);
-    }
-
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setColdWeatherOperationMinimumOutdoorAirTemperature(
       double coldWeatherOperationMinimumOutdoorAirTemperature) {
       const bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ColdWeatherOperationMinimumOutdoorAirTemperature,
@@ -1881,11 +1835,6 @@ namespace model {
       const bool result =
         setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ColdWeatherOperationAncillaryPower, coldWeatherOperationAncillaryPower);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetColdWeatherOperationAncillaryPower() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::ColdWeatherOperationAncillaryPower, "");
-      OS_ASSERT(result);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate) {
@@ -2055,10 +2004,12 @@ namespace model {
     OS_ASSERT(ok);
     ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
-    ok = setGlycolConcentration(0.0);
+    ok = setGlycolConcentration(0);
     OS_ASSERT(ok);
     autosizeFluidStorageVolume();
     autosizeIceStorageCapacity();
+    ok = setStorageCapacitySizingFactor(6.0);  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
     ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     autosizeRatedEvaporatorAirFlowRate();
@@ -2707,20 +2658,12 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setIceStorageCapacity(iceStorageCapacity);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetIceStorageCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetIceStorageCapacity();
-  }
-
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeIceStorageCapacity() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeIceStorageCapacity();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setStorageCapacitySizingFactor(double storageCapacitySizingFactor) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setStorageCapacitySizingFactor(storageCapacitySizingFactor);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetStorageCapacitySizingFactor() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetStorageCapacitySizingFactor();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(
@@ -2753,10 +2696,6 @@ namespace model {
     double coolingOnlyModeRatedTotalEvaporatorCoolingCapacity) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity(
       coolingOnlyModeRatedTotalEvaporatorCoolingCapacity);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity();
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeCoolingOnlyModeRatedTotalEvaporatorCoolingCapacity() {
@@ -2840,10 +2779,6 @@ namespace model {
       coolingAndChargeModeRatedTotalEvaporatorCoolingCapacity);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
-  }
-
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeCoolingAndChargeModeRatedTotalEvaporatorCoolingCapacity();
   }
@@ -2857,10 +2792,6 @@ namespace model {
     double coolingAndChargeModeRatedStorageChargingCapacity) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndChargeModeRatedStorageChargingCapacity(
       coolingAndChargeModeRatedStorageChargingCapacity);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndChargeModeRatedStorageChargingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndChargeModeRatedStorageChargingCapacity();
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeCoolingAndChargeModeRatedStorageChargingCapacity() {
@@ -3005,10 +2936,6 @@ namespace model {
       coolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
-  }
-
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeCoolingAndDischargeModeRatedTotalEvaporatorCoolingCapacity();
   }
@@ -3023,10 +2950,6 @@ namespace model {
     double coolingAndDischargeModeRatedStorageDischargingCapacity) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setCoolingAndDischargeModeRatedStorageDischargingCapacity(
       coolingAndDischargeModeRatedStorageDischargingCapacity);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetCoolingAndDischargeModeRatedStorageDischargingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetCoolingAndDischargeModeRatedStorageDischargingCapacity();
   }
 
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeCoolingAndDischargeModeRatedStorageDischargingCapacity() {
@@ -3189,10 +3112,6 @@ namespace model {
       chargeOnlyModeRatedStorageChargingCapacity);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetChargeOnlyModeRatedStorageChargingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetChargeOnlyModeRatedStorageChargingCapacity();
-  }
-
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeChargeOnlyModeRatedStorageChargingCapacity() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeChargeOnlyModeRatedStorageChargingCapacity();
   }
@@ -3231,10 +3150,6 @@ namespace model {
       dischargeOnlyModeRatedStorageDischargingCapacity);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeRatedStorageDischargingCapacity() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeRatedStorageDischargingCapacity();
-  }
-
   void CoilCoolingDXSingleSpeedThermalStorage::autosizeDischargeOnlyModeRatedStorageDischargingCapacity() {
     getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->autosizeDischargeOnlyModeRatedStorageDischargingCapacity();
   }
@@ -3247,10 +3162,6 @@ namespace model {
   bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeRatedSensibleHeatRatio(double dischargeOnlyModeRatedSensibleHeatRatio) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setDischargeOnlyModeRatedSensibleHeatRatio(
       dischargeOnlyModeRatedSensibleHeatRatio);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetDischargeOnlyModeRatedSensibleHeatRatio() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetDischargeOnlyModeRatedSensibleHeatRatio();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setDischargeOnlyModeRatedCOP(double dischargeOnlyModeRatedCOP) {
@@ -3319,10 +3230,6 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setAncillaryElectricPower(ancillaryElectricPower);
   }
 
-  void CoilCoolingDXSingleSpeedThermalStorage::resetAncillaryElectricPower() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetAncillaryElectricPower();
-  }
-
   bool CoilCoolingDXSingleSpeedThermalStorage::setColdWeatherOperationMinimumOutdoorAirTemperature(
     double coldWeatherOperationMinimumOutdoorAirTemperature) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setColdWeatherOperationMinimumOutdoorAirTemperature(
@@ -3335,10 +3242,6 @@ namespace model {
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setColdWeatherOperationAncillaryPower(double coldWeatherOperationAncillaryPower) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setColdWeatherOperationAncillaryPower(coldWeatherOperationAncillaryPower);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetColdWeatherOperationAncillaryPower() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetColdWeatherOperationAncillaryPower();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setCondenserDesignAirFlowRate(double condenserDesignAirFlowRate) {
