@@ -76,8 +76,6 @@ namespace model {
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
-
       virtual bool addToNode(Node& node) override;
 
       virtual ComponentType componentType() const override;

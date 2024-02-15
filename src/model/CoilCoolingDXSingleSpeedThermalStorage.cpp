@@ -40,22 +40,12 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
-#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
-#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
-#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem.hpp"
 #include "AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp"
-#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
-#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
-#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
-#include "ZoneHVACPackagedTerminalHeatPump.hpp"
-#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -168,76 +158,6 @@ namespace model {
         if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
           if (coolingCoil->handle() == this->handle()) {
             return airLoopHVACUnitarySystem;
-          }
-        }
-      }
-
-      // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
-      std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems =
-        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
-
-      for (const auto& bypassSystem : bypassSystems) {
-        if (boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil()) {
-          if (coolingCoil->handle() == this->handle()) {
-            return bypassSystem;
-          }
-        }
-      }
-
-      // AirLoopHVACUnitaryHeatPumpAirToAir
-
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
-
-      airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
-
-      for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
-        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return airLoopHVACUnitaryHeatPumpAirToAir;
-          }
-        }
-      }
-
-      // CoilSystemCoolingDXHeatExchangerAssisted
-      {
-        auto coilSystems = this->model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
-        for (const auto& coilSystem : coilSystems) {
-          if (coilSystem.coolingCoil().handle() == this->handle()) {
-            return coilSystem;
-          }
-        }
-      }
-
-      return boost::none;
-
-      return boost::none;
-    }
-
-    boost::optional<ZoneHVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingZoneHVACComponent() const {
-      // ZoneHVACPackagedTerminalAirConditioner
-
-      std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
-
-      zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
-
-      for (const auto& zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners) {
-        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return zoneHVACPackagedTerminalAirConditioner;
-          }
-        }
-      }
-
-      // ZoneHVACPackagedTerminalHeatPump
-
-      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
-
-      zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
-
-      for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
-        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
-          if (coil->handle() == this->handle()) {
-            return zoneHVACPackagedTerminalHeatPump;
           }
         }
       }
