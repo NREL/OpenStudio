@@ -10,6 +10,9 @@
 #include "SpaceLoadInstance_Impl.hpp"
 
 namespace openstudio {
+
+class FuelType;
+
 namespace model {
 
   class OtherEquipmentDefinition;
@@ -81,7 +84,7 @@ namespace model {
 
       void resetEndUseSubcategory();
 
-      bool setFuelType(const std::string& fuelType);
+      bool setFuelType(const FuelType& fuelType);
 
       void resetFuelType();
 

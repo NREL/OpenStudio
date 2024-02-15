@@ -134,7 +134,7 @@ namespace model {
 
       boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation() const;
 
-      boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const;
+      std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const;
 
       boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisRequired() const;
 
@@ -161,22 +161,6 @@ namespace model {
       bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const;
 
       boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName() const;
-
-      double maximumCyclingRate() const;
-
-      bool isMaximumCyclingRateDefaulted() const;
-
-      double heatPumpTimeConstant() const;
-
-      bool isHeatPumpTimeConstantDefaulted() const;
-
-      double fractionofOnCyclePowerUse() const;
-
-      bool isFractionofOnCyclePowerUseDefaulted() const;
-
-      double heatPumpFanDelayTime() const;
-
-      bool isHeatPumpFanDelayTimeDefaulted() const;
 
       double ancilliaryOnCycleElectricPower() const;
 
@@ -222,7 +206,7 @@ namespace model {
 
       void resetControlType();
 
-      bool setControllingZoneorThermostatLocation(const boost::optional<ThermalZone>& thermalZone);
+      bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
 
       void resetControllingZoneorThermostatLocation();
 
@@ -234,11 +218,11 @@ namespace model {
 
       void resetAvailabilitySchedule();
 
-      bool setSupplyFan(const boost::optional<HVACComponent>& supplyFan);
+      bool setSupplyFan(const HVACComponent& supplyFan);
 
       void resetSupplyFan();
 
-      bool setFanPlacement(boost::optional<std::string> fanPlacement);
+      bool setFanPlacement(const std::string& fanPlacement);
 
       void resetFanPlacement();
 
@@ -272,7 +256,7 @@ namespace model {
 
       void resetLatentLoadControl();
 
-      bool setSupplementalHeatingCoil(const boost::optional<HVACComponent>& supplementalHeatingCoil);
+      bool setSupplementalHeatingCoil(const HVACComponent& supplementalHeatingCoil);
 
       void resetSupplementalHeatingCoil();
 
@@ -318,43 +302,41 @@ namespace model {
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 
-      bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(
-        boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
+      bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
 
       void resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
 
-      bool setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+      bool setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(double supplyAirFlowRateWhenNoCoolingorHeatingisRequired);
 
       void resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
       void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
-      bool setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired(
-        boost::optional<double> supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired);
+      bool setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired(double supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired);
 
       void resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
 
       bool setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
-        boost::optional<double> fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+        double fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
 
       void resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
       bool setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
-        boost::optional<double> fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
+        double fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
 
       void resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
       bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired(
-        boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired);
+        double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired);
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
 
       bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
-        boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
+        double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
 
-      bool setMaximumSupplyAirTemperature(boost::optional<double> maximumSupplyAirTemperature);
+      bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
       void resetMaximumSupplyAirTemperature();
 
@@ -364,25 +346,9 @@ namespace model {
 
       void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 
-      bool setOutdoorDryBulbTemperatureSensorNodeName(boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName);
+      bool setOutdoorDryBulbTemperatureSensorNodeName(const std::string& outdoorDryBulbTemperatureSensorNodeName);
 
       void resetOutdoorDryBulbTemperatureSensorNodeName();
-
-      bool setMaximumCyclingRate(double maximumCyclingRate);
-
-      void resetMaximumCyclingRate();
-
-      bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
-
-      void resetHeatPumpTimeConstant();
-
-      bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
-
-      void resetFractionofOnCyclePowerUse();
-
-      bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
-
-      void resetHeatPumpFanDelayTime();
 
       bool setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower);
 
@@ -400,7 +366,7 @@ namespace model {
 
       // void resetMaximumTemperatureforHeatRecovery();
 
-      bool setDesignSpecificationMultispeedObject(const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace);
+      bool setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace);
 
       void resetDesignSpecificationMultispeedObject();
 

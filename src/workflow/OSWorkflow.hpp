@@ -13,8 +13,10 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../utilities/filetypes/RunOptions.hpp"
 
 #include <functional>
+#include <map>
 #include <memory>
 
 #define USE_RUBY_ENGINE 1
@@ -36,7 +38,7 @@ class OSWorkflow
   OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
   OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
 
-  void run();
+  bool run();
 
  private:
   REGISTER_LOGGER("openstudio.workflow.OSWorkflow");
@@ -55,6 +57,10 @@ class OSWorkflow
 
   // TODO: use a unique_ptr or an Instance?
   std::unique_ptr<workflow::util::TimerCollection> m_timers = nullptr;
+
+  // TODO: should problably store as json directly...
+  // { measureName : { arg_name: arg_value }}
+  std::map<std::string, std::map<std::string, openstudio::Variant>> output_attributes;
 
   bool m_no_simulation = false;
   bool m_post_process_only = false;
@@ -116,10 +122,22 @@ class OSWorkflow
 
   //@}
 
+  void initializeWeatherFileFromOSW();
+  void updateLastWeatherFileFromModel();
   void applyMeasures(MeasureType measureType, bool energyplus_output_requests = false);
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
   void saveOSMToRootDirIfDebug();
   void saveIDFToRootDirIfDebug();
+
+  // write output_attributes to the measure_attributes.json
+  void communicateMeasureAttributes() const;
+
+  /** Write results.json (same as the final measure_attributes.json but with sanitized keys)
+    * and if `absoluteRootDir (oswDir) / .. / analysis.json` is found, write the objectives.json */
+  void runExtractInputsAndOutputs() const;
+
+  // Zip and write data_point_out.osw
+  void communicateResults() const;
 };
 
 }  // namespace openstudio

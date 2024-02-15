@@ -17,6 +17,7 @@
 
 #include "RunCommand.hpp"
 #include "MeasureUpdateCommand.hpp"
+#include "measure/OSMeasureInfoGetter.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -57,21 +58,38 @@ int main(int argc, char* argv[]) {
   const std::string programName = std::move(args.front());
   args.erase(args.begin());
 
-  const bool is_labs = !args.empty() && (args[0] == "labs");
-  if (is_labs) {
+  const bool is_classic = !args.empty() && (args[0] == "classic");
+
+  if (is_classic) {
+    // The "classic" cli implementation will not be expecting the first arg
+    // to be the word classic so we need to remove the first arg
+    args.erase(args.begin());
+  } else {
     // Replace backward slashes with forward slashes... cf #4856
-    std::for_each(args.begin(), args.end(), [](auto& s) {
-      //std::replace(s.begin(), s.end(), '\\', '/');
-      boost::replace_all(s, "\\", "\\\\");
-    });
-    // fmt::print("Cleaned after slash replacement arguments: {}\n", args);
+    std::for_each(args.begin(), args.end(), [](auto& s) { boost::replace_all(s, "\\", "\\\\"); });
   }
 
   // ScriptEngineInstance will delay load the engines
   openstudio::ScriptEngineInstance rubyEngine("rubyengine", args);
   openstudio::ScriptEngineInstance pythonEngine("pythonengine", args);
 
-  if (is_labs) {
+  if (is_classic) {
+    fmt::print(fmt::fg(fmt::color::orange),
+               "┌{0:─^{2}}┐\n"
+               "│{1: ^{2}}│\n"
+               "└{0:─^{2}}┘",
+               "", "The `classic` command is deprecated and will be removed in a future release", 80);
+    fmt::print("\n");
+#if defined _WIN32
+    // Poor man's hack #4847
+    // Disable this logger, we have a duplicate in the ruby shared lib
+    openstudio::Logger::instance().standardOutLogger().disable();
+    openstudio::Logger::instance().standardErrLogger().disable();
+    // Avoid getting some messages during getOpenStudioModule() when we locate the DLL
+    openstudio::StringStreamLogSink sink;
+#endif
+    result = openstudio::rubyCLI(rubyEngine);
+  } else {
     CLI::App app{"openstudio"};
     app.name(programName);
 
@@ -88,17 +106,20 @@ int main(int argc, char* argv[]) {
       }
     }
 
-    // fmt::print("args={}\n", args);
-
-    fmt::print(fmt::fg(fmt::color::red),
-               "┌{0:─^{2}}┐\n"
-               "│{1: ^{2}}│\n"
-               "└{0:─^{2}}┘",
-               "", "The `labs` command is experimental - Do not use in production", 80);
-    fmt::print("\n");
     app.get_formatter()->column_width(35);
 
-    auto* const experimentalApp = app.add_subcommand("labs");
+    auto* const verboseOpt = app.add_flag_function(
+      "--verbose",
+      [](auto count) {
+        if (count == 1) {
+          fmt::print("Setting Log Level to Debug ({})\n", LogLevel::Debug);
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
+        } else if (count == 2) {
+          fmt::print("Setting Log Level to Trace ({})\n", LogLevel::Trace);
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
+        }
+      },
+      "Print the full log to STDOUT - sets verbosity to Debug if given once and Trace if given twice.");
 
     // specify string->value mappings
     const std::map<std::string, LogLevel> logLevelMap{
@@ -107,68 +128,70 @@ int main(int argc, char* argv[]) {
     };
     static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
 
-    experimentalApp
-      ->add_option_function<LogLevel>(
-        "-l,--loglevel",
-        [](const LogLevel& level) {
-          fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)], level);
-          openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
-        },
-        "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn]")
-      ->option_text("LEVEL")
-      ->transform(CLI::CheckedTransformer(logLevelMap, CLI::ignore_case));
+    auto* const logLevelOpt =
+      app
+        .add_option_function<LogLevel>(
+          "-l,--loglevel",
+          [](const LogLevel& level) {
+            fmt::print("Setting Log Level to {} ({})\n", logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)],
+                       std::to_string(level));
+            openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
+          },
+          "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn] Excludes: --verbose")
+        ->excludes(verboseOpt)
+        ->option_text("LEVEL")
+        ->transform(CLI::CheckedTransformer(logLevelMap, CLI::ignore_case));
+
+    verboseOpt->excludes(logLevelOpt);
 
     std::vector<std::string> executeRubyCmds;
-    CLI::Option* execRubyOption = experimentalApp
-                                    ->add_option("-e,--execute", executeRubyCmds,
-                                                 "Execute one line of Ruby script (may be used more than once). Returns after executing commands.")
+    CLI::Option* execRubyOption = app
+                                    .add_option("-e,--execute", executeRubyCmds,
+                                                "Execute one line of Ruby script (may be used more than once). Returns after executing commands.")
                                     ->option_text("CMD");
 
     std::vector<std::string> executePythonCmds;
-    CLI::Option* execPythonOption =
-      experimentalApp
-        ->add_option("-c,--pyexecute", executePythonCmds,
-                     "Execute one line of Python script (may be used more than once). Returns after executing commands.")
-        ->option_text("CMD");
+    CLI::Option* execPythonOption = app
+                                      .add_option("-c,--pyexecute", executePythonCmds,
+                                                  "Execute one line of Python script (may be used more than once). Returns after executing commands.")
+                                      ->option_text("CMD");
 
     // ========================== R U B Y    O P T I O N S ==========================
     std::vector<openstudio::path> includeDirs;
-    experimentalApp
-      ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
+    app.add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
       ->option_text("DIR")
       ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     std::vector<openstudio::path> gemPathDirs;
-    experimentalApp
-      ->add_option("--gem_path", gemPathDirs,
-                   "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
+    app
+      .add_option("--gem_path", gemPathDirs, "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
       ->option_text("DIR")
       ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path gemHomeDir;
-    experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
+    app.add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
       ->option_text("DIR")
       ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemFilePath;
-    experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
+    app.add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
       ->option_text("GEMFILE")
       ->check(CLI::ExistingFile)
       ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemDirPath;
-    experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
+    app.add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
       ->option_text("BUNDLE_PATH")
       ->check(CLI::ExistingDirectory)
       ->group(rubySpecificOptionsGroupName);
 
     // std::vector<std::string>
     std::string bundleWithoutGroups;
-    experimentalApp
-      ->add_option(
+    app
+      .add_option(
         "--bundle_without", bundleWithoutGroups,
         "Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like \"test development\"")
       ->option_text("WITHOUT_GROUPS")
@@ -179,9 +202,11 @@ int main(int argc, char* argv[]) {
     std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
                                                   &bundleWithoutGroups]() {
       rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+      rubyEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
+      rubyEngine->registerType<openstudio::measure::MeasureInfoBinding*>("openstudio::measure::MeasureInfoBinding *");
       // rubyEngine->registerType<std::string>("std::string");
       // rubyEngine->registerType<std::string*>("std::string *");
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
@@ -191,15 +216,15 @@ int main(int argc, char* argv[]) {
     // ========================== P Y T H O N    O P T I O N S ==========================
 
     std::vector<openstudio::path> pythonPathDirs;
-    experimentalApp
-      ->add_option("--python_path", pythonPathDirs,
-                   "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
+    app
+      .add_option("--python_path", pythonPathDirs,
+                  "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
       ->option_text("DIR")
       ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
 
     openstudio::path pythonHomeDir;
-    experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
+    app.add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
       ->option_text("DIR")
       ->check(CLI::ExistingDirectory)
       ->group(pythonSpecificOptionsGroupName);
@@ -208,6 +233,7 @@ int main(int argc, char* argv[]) {
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs]() {
       // pythonHomeDir is retrieved from (argc, argv) actually, as Py_SetPythonHome has to be called before Py_Initialize
       pythonEngine->setupPythonPath(pythonPathDirs);
+      pythonEngine->registerType<openstudio::measure::OSMeasure*>("openstudio::measure::OSMeasure *");
       pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
       pythonEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
       pythonEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
@@ -216,51 +242,52 @@ int main(int argc, char* argv[]) {
     pythonEngine.registerInitializationFunction(runSetupPythonPath);
 
     // {
-    auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+    auto* execute_ruby_scriptCommand = app.add_subcommand("execute_ruby_script", "Executes a ruby file");
     openstudio::filesystem::path rubyScriptPath;
-    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true)->check(CLI::ExistingFile);
-    // We can't do this because that means we can't pass extra **flags**
-    // std::vector<std::string> executeRubyScriptCommandArgs;
-    // execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-    //   ->required(false)
-    //   ->option_text("args");
-    execute_ruby_scriptCommand->allow_extras(true);
-    execute_ruby_scriptCommand->footer("You can pass extra arguments after the ruby file, they will be forwarded.");
-
-    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &execute_ruby_scriptCommand] {
-      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, execute_ruby_scriptCommand->remaining());
-    });
+    std::vector<std::string> ruby_fwd_args;
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to Ruby file")
+      ->option_text("RUBY_SCRIPT")
+      ->required(true)
+      ->check(CLI::ExistingFile);
+    execute_ruby_scriptCommand->add_option("args", ruby_fwd_args, "Extra Arguments forwarded to the Ruby script")->option_text("ARG ...");
+    execute_ruby_scriptCommand->positionals_at_end(true);
+    execute_ruby_scriptCommand->footer("Any additional arguments passed after the Ruby file are forwarded");
+    execute_ruby_scriptCommand->callback(
+      [&rubyScriptPath, &rubyEngine, &ruby_fwd_args] { openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, ruby_fwd_args); });
     // }
 
     // {
-    auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
+    auto* execute_python_scriptCommand = app.add_subcommand("execute_python_script", "Executes a python file");
     openstudio::filesystem::path pythonScriptPath;
-    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true)->check(CLI::ExistingFile);
+    std::vector<std::string> python_fwd_args;
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to Python file")
+      ->option_text("PYTHON_SCRIPT")
+      ->required(true)
+      ->check(CLI::ExistingFile);
+    execute_python_scriptCommand->add_option("args", python_fwd_args, "Extra Arguments forwarded to the Python script")->option_text("ARG ...");
+    execute_python_scriptCommand->positionals_at_end(true);
+    execute_python_scriptCommand->footer("You can pass extra arguments after the Python file, they will be forwarded.");
 
-    execute_python_scriptCommand->allow_extras(true);
-    execute_python_scriptCommand->footer("You can pass extra arguments after the python file, they will be forwarded.");
-
-    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &execute_python_scriptCommand] {
-      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, execute_python_scriptCommand->remaining());
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &python_fwd_args] {
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, python_fwd_args);
     });
     // }
 
-    [[maybe_unused]] auto* gem_listCommand =
-      experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine]() {
-        openstudio::cli::executeGemListCommand(rubyEngine);
-      });
+    [[maybe_unused]] auto* gem_listCommand = app.add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine]() {
+      openstudio::cli::executeGemListCommand(rubyEngine);
+    });
 
     // Not hidding any commands right now
-    // [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
+    // [[maybe_unused]] auto* list_commandsCommand = app.add_subcommand("list_commands", "Lists the entire set of available commands");
 
     // run command
-    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine);
+    openstudio::cli::setupRunOptions(&app, rubyEngine, pythonEngine);
 
     // update (model) command
-    // openstudio::cli::setupUpdateCommand(experimentalApp);
+    // openstudio::cli::setupUpdateCommand(&app);
     {
       bool keep = false;
-      auto* updateCommand = experimentalApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
+      auto* updateCommand = app.add_subcommand("update", "Updates OpenStudio Models to the current version");
       updateCommand->add_flag("-k,--keep", keep, "Keep original files");
 
       openstudio::filesystem::path updateOsmPath;
@@ -273,26 +300,34 @@ int main(int argc, char* argv[]) {
       });
     }
 
-    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine, pythonEngine);
+    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(&app, rubyEngine, pythonEngine);
 
     // ==========================  V E R S I O N ==========================
+    app.set_version_flag("-v,--version", openStudioLongVersion());
+
     [[maybe_unused]] auto* openstudio_versionCommand =
-      experimentalApp->add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")
-        ->group(versionGroupname)
-        ->callback([]() { fmt::print("{}\n", openStudioLongVersion()); });
+      app.add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")->group(versionGroupname)->callback([]() {
+        fmt::print("{}\n", openStudioLongVersion());
+      });
 
     [[maybe_unused]] auto* energyplus_versionCommand =
-      experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")
-        ->group(versionGroupname)
-        ->callback([]() { fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA()); });
+      app.add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")->group(versionGroupname)->callback([]() {
+        fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA());
+      });
     [[maybe_unused]] auto* ruby_versionCommand =
-      experimentalApp->add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->group(versionGroupname)->callback([&rubyEngine]() {
+      app.add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->group(versionGroupname)->callback([&rubyEngine]() {
         rubyEngine->exec("puts RUBY_VERSION");
       });
-    [[maybe_unused]] auto* python_versionCommand = experimentalApp->add_subcommand("python_version", "Returns the Python version used by the CLI")
-                                                     ->group(versionGroupname)
-                                                     ->callback([&pythonEngine]() { pythonEngine->exec("import sys; print(sys.version)"); });
+    [[maybe_unused]] auto* python_versionCommand =
+      app.add_subcommand("python_version", "Returns the Python version used by the CLI")->group(versionGroupname)->callback([&pythonEngine]() {
+        pythonEngine->exec("import sys; print(sys.version)");
+      });
 
+    // ====================================================================
+
+    // ========================== C L A S S I C ==========================
+    // This exists to document access to the classic implementation
+    app.add_subcommand("classic", "For backwards compatibility, invoke an older version of the OpenStudio CLI that does not support Python");
     // ====================================================================
 
     // CLI11_PARSE(app, argc, argv);
@@ -305,6 +340,12 @@ int main(int argc, char* argv[]) {
       app.parse(args);
     } catch (const CLI::ParseError& e) {
       return app.exit(e);
+    } catch (const std::exception& e) {
+      std::cout << e.what() << std::endl;
+      return 1;
+    } catch (...) {
+      std::cout << "OpenStudio encountered an unknown error" << std::endl;
+      return 1;
     }
 
     if (*execRubyOption) {
@@ -324,16 +365,6 @@ int main(int argc, char* argv[]) {
     // fmt::print("includeDirs={}\n", fmt::join(includeDirs, ","));
     // fmt::print("gemPathDirs={}\n", fmt::join(gemPathDirs, ","));
     // fmt::print("gemHomeDir={}\n", gemHomeDir);
-  } else {
-#if defined _WIN32
-    // Poor man's hack #4847
-    // Disable this logger, we have a duplicate in the ruby shared lib
-    openstudio::Logger::instance().standardOutLogger().disable();
-    openstudio::Logger::instance().standardErrLogger().disable();
-    // Avoid getting some messages during getOpenStudioModule() when we locate the DLL
-    openstudio::StringStreamLogSink sink;
-#endif
-    result = openstudio::rubyCLI(rubyEngine);
   }
 
   // Important to destroy RubyEngine and finalize Ruby at the right time

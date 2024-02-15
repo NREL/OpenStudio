@@ -36,6 +36,10 @@ namespace model {
     CurveLinear& operator=(const CurveLinear&) = default;
     CurveLinear& operator=(CurveLinear&&) = default;
 
+    // This is the default Part Load Fraction Correlation curve for Heat Pump coils added in E+ 23.2.0
+    static CurveLinear defaultHeatPumpCoilPLFCorrelationCurve(const Model& model, double maximumCyclingRatePerHour = 2.5,
+                                                              double heatPumpTimeConstantSeconds = 60.0);
+
     //@}
 
     static IddObjectType iddObjectType();

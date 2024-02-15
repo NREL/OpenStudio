@@ -96,6 +96,20 @@ namespace model {
 
       Curve electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve() const;
 
+      std::string controlType() const;
+
+      std::string flowMode() const;
+
+      double minimumPartLoadRatio() const;
+
+      double minimumSourceInletTemperature() const;
+
+      double maximumSourceInletTemperature() const;
+
+      boost::optional<Curve> minimumSupplyWaterTemperatureCurve() const;
+
+      boost::optional<Curve> maximumSupplyWaterTemperatureCurve() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -126,6 +140,24 @@ namespace model {
 
       bool setElectricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve(
         const Curve& electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve);
+
+      bool setControlType(const std::string& controlType);
+
+      bool setFlowMode(const std::string& flowMode);
+
+      bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
+
+      bool setMinimumSourceInletTemperature(double minimumSourceInletTemperature);
+
+      bool setMaximumSourceInletTemperature(double maximumSourceInletTemperature);
+
+      bool setMinimumSupplyWaterTemperatureCurve(const Curve& minimumSupplyWaterTemperatureCurve);
+
+      void resetMinimumSupplyWaterTemperatureCurve();
+
+      bool setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve);
+
+      void resetMaximumSupplyWaterTemperatureCurve();
 
       //@}
       /** @name Other */

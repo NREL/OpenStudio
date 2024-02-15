@@ -309,10 +309,8 @@ namespace energyplus {
     }
 
     // Supply Air Flow Rate Method When No Cooling or Heating is Required
-    s = modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
-    if (s) {
-      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateMethod, s.get());
-    }
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateMethod,
+                            modelObject.supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired());
 
     // Supply Air Flow Rate When No Cooling or Heating is Required
     if (modelObject.isSupplyAirFlowRateWhenNoCoolingorHeatingisRequiredAutosized()) {
@@ -368,30 +366,6 @@ namespace energyplus {
     s = modelObject.outdoorDryBulbTemperatureSensorNodeName();
     if (s) {
       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::OutdoorDryBulbTemperatureSensorNodeName, s.get());
-    }
-
-    // Maximum Cycling Rate
-    d = modelObject.maximumCyclingRate();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MaximumCyclingRate, d.get());
-    }
-
-    // Heat Pump Time Constant
-    d = modelObject.heatPumpTimeConstant();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpTimeConstant, d.get());
-    }
-
-    // Fraction of On-Cycle Power Use
-    d = modelObject.fractionofOnCyclePowerUse();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::FractionofOnCyclePowerUse, d.get());
-    }
-
-    // Heat Pump Fan Delay Time
-    d = modelObject.heatPumpFanDelayTime();
-    if (d) {
-      unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::HeatPumpFanDelayTime, d.get());
     }
 
     // Ancilliary On-Cycle Electric Power

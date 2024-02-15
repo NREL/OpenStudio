@@ -1,4 +1,4 @@
-  Version,23.1;
+  Version,23.2;
 
   Building,
     Building 1,              !- Name
@@ -480,6 +480,7 @@
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
     0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -789,6 +790,7 @@
     ,                        !- Outdoor Dry-Bulb Temperature to Turn On Compressor {C}
     5,                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     10,                      !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     Resistive,               !- Defrost Strategy
     Timed,                   !- Defrost Control
@@ -927,6 +929,7 @@
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
     0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -6389,9 +6392,9 @@
     Node 40,                 !- Air Inlet Node Name
     Node 41,                 !- Air Outlet Node Name
     Node 41,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 41 OS Default SPM,  !- Name
@@ -6692,6 +6695,7 @@
     ,                        !- Evaporative Condenser Air Flow Rate {m3/s}
     0.0,                     !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -6707,9 +6711,9 @@
     Node 28,                 !- Air Inlet Node Name
     Node 29,                 !- Air Outlet Node Name
     Node 29,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 29 OS Default SPM,  !- Name
@@ -6934,6 +6938,8 @@
     Autosize,                !- High Speed Rated Sensible Heat Ratio
     3,                       !- High Speed Gross Rated Cooling COP {W/W}
     Autosize,                !- High Speed Rated Air Flow Rate {m3/s}
+    ,                        !- High Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- High Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     ,                        !- Unit Internal Static Air Pressure {Pa}
     Node 91,                 !- Air Inlet Node Name
     Node 92,                 !- Air Outlet Node Name
@@ -6946,6 +6952,8 @@
     0.69,                    !- Low Speed Gross Rated Sensible Heat Ratio
     3,                       !- Low Speed Gross Rated Cooling COP {W/W}
     Autosize,                !- Low Speed Rated Air Flow Rate {m3/s}
+    ,                        !- Low Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Low Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     Curve Biquadratic 9,     !- Low Speed Total Cooling Capacity Function of Temperature Curve Name
     Curve Biquadratic 10,    !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
@@ -7298,6 +7306,8 @@
     Autosize,                !- High Speed Rated Sensible Heat Ratio
     3,                       !- High Speed Gross Rated Cooling COP {W/W}
     Autosize,                !- High Speed Rated Air Flow Rate {m3/s}
+    ,                        !- High Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- High Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     ,                        !- Unit Internal Static Air Pressure {Pa}
     Node 60,                 !- Air Inlet Node Name
     Node 61,                 !- Air Outlet Node Name
@@ -7310,6 +7320,8 @@
     0.69,                    !- Low Speed Gross Rated Sensible Heat Ratio
     3,                       !- Low Speed Gross Rated Cooling COP {W/W}
     Autosize,                !- Low Speed Rated Air Flow Rate {m3/s}
+    ,                        !- Low Speed 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- Low Speed 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     Curve Biquadratic 5,     !- Low Speed Total Cooling Capacity Function of Temperature Curve Name
     Curve Biquadratic 6,     !- Low Speed Energy Input Ratio Function of Temperature Curve Name
     ,                        !- Condenser Air Inlet Node Name
@@ -8901,7 +8913,7 @@
     Node 70,                 !- Boiler Water Outlet Node Name
     99,                      !- Water Outlet Upper Temperature Limit {C}
     ConstantFlow,            !- Boiler Flow Mode
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     1;                       !- Sizing Factor
 
   Curve:Biquadratic,
@@ -9092,7 +9104,7 @@
 
   PlantEquipmentList,
     Hot Water Loop 1 Heating Equipment List,  !- Name
-    DistrictHeating,         !- Equipment 1 Object Type
+    DistrictHeating:Water,   !- Equipment 1 Object Type
     District Heating;        !- Equipment 1 Name
 
   Sizing:Plant,
@@ -9167,12 +9179,12 @@
   Branch,
     Hot Water Loop 1 Supply Branch 2,  !- Name
     ,                        !- Pressure Drop Curve Name
-    DistrictHeating,         !- Component 1 Object Type
+    DistrictHeating:Water,   !- Component 1 Object Type
     District Heating,        !- Component 1 Name
     Node 113,                !- Component 1 Inlet Node Name
     Node 118;                !- Component 1 Outlet Node Name
 
-  DistrictHeating,
+  DistrictHeating:Water,
     District Heating,        !- Name
     Node 113,                !- Hot Water Inlet Node Name
     Node 118,                !- Hot Water Outlet Node Name
@@ -9831,7 +9843,7 @@
 
   UtilityCost:Tariff,
     Generic District Heating,!- Name
-    DistrictHeating:Facility,!- Output Meter Name
+    DistrictHeatingWater:Facility,  !- Output Meter Name
     MMBtu,                   !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -10149,13 +10161,13 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 2
     InteriorEquipment:DistrictHeating,  !- Variable or Meter 3 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 3
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 4 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 4 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 4
     Fans:DistrictHeating,    !- Variable or Meter 5 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 5
     Pumps:DistrictHeating,   !- Variable or Meter 6 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 6
-    Heating:DistrictHeating, !- Variable or Meter 7 Name
+    Heating:DistrictHeatingWater,  !- Variable or Meter 7 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 7
     Cooling:DistrictHeating, !- Variable or Meter 8 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 8
@@ -10253,7 +10265,7 @@
   Output:Table:Monthly,
     Building Energy Performance - District Heating Peak Demand,  !- Name
     2,                       !- Digits After Decimal
-    DistrictHeating:Facility,!- Variable or Meter 1 Name
+    DistrictHeatingWater:Facility,  !- Variable or Meter 1 Name
     Maximum,                 !- Aggregation Type for Variable or Meter 1
     InteriorLights:DistrictHeating,  !- Variable or Meter 2 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 2
@@ -10261,13 +10273,13 @@
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 3
     InteriorEquipment:DistrictHeating,  !- Variable or Meter 4 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 4
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 5 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 5 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 5
     Fans:DistrictHeating,    !- Variable or Meter 6 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 6
     Pumps:DistrictHeating,   !- Variable or Meter 7 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 7
-    Heating:DistrictHeating, !- Variable or Meter 8 Name
+    Heating:DistrictHeatingWater,  !- Variable or Meter 8 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 8
     Cooling:DistrictHeating, !- Variable or Meter 9 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 9
@@ -10320,5 +10332,5 @@
 
   Output:Meter,DistrictCooling:Facility,Timestep;
 
-  Output:Meter,DistrictHeating:Facility,Timestep;
+  Output:Meter,DistrictHeatingWater:Facility,Timestep;
 

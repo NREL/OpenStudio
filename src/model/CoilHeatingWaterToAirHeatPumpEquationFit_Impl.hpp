@@ -12,7 +12,7 @@
 namespace openstudio {
 namespace model {
 
-  class CurveQuadLinear;
+  class Curve;
 
   namespace detail {
 
@@ -87,9 +87,11 @@ namespace model {
 
       double ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const;
 
-      CurveQuadLinear heatingCapacityCurve() const;
+      Curve heatingCapacityCurve() const;
 
-      CurveQuadLinear heatingPowerConsumptionCurve() const;
+      Curve heatingPowerConsumptionCurve() const;
+
+      Curve partLoadFractionCorrelationCurve() const;
 
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
@@ -139,9 +141,11 @@ namespace model {
 
       bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
 
-      bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
+      bool setHeatingCapacityCurve(const Curve& heatingCapacityCurve);
 
-      bool setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve);
+      bool setHeatingPowerConsumptionCurve(const Curve& heatingPowerConsumptionCurve);
+
+      bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
       //@}
       /** @name Other */
@@ -151,6 +155,10 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingWaterToAirHeatPumpEquationFit");
+
+      boost::optional<Curve> optionalHeatingCapacityCurve() const;
+      boost::optional<Curve> optionalHeatingPowerConsumptionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
     };

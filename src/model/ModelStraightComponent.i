@@ -147,7 +147,8 @@ MODELOBJECT_TEMPLATES(CoolingTowerSingleSpeed);
 MODELOBJECT_TEMPLATES(CoolingTowerTwoSpeed);
 MODELOBJECT_TEMPLATES(CoolingTowerVariableSpeed);
 MODELOBJECT_TEMPLATES(DistrictCooling);
-MODELOBJECT_TEMPLATES(DistrictHeating);
+MODELOBJECT_TEMPLATES(DistrictHeatingWater);
+MODELOBJECT_TEMPLATES(DistrictHeatingSteam);
 MODELOBJECT_TEMPLATES(Duct);
 MODELOBJECT_TEMPLATES(EvaporativeCoolerDirectResearchSpecial);
 MODELOBJECT_TEMPLATES(EvaporativeCoolerIndirectResearchSpecial);
@@ -233,7 +234,8 @@ SWIG_MODELOBJECT(CoolingTowerSingleSpeed,1);
 SWIG_MODELOBJECT(CoolingTowerTwoSpeed,1);
 SWIG_MODELOBJECT(CoolingTowerVariableSpeed,1);
 SWIG_MODELOBJECT(DistrictCooling,1);
-SWIG_MODELOBJECT(DistrictHeating,1);
+SWIG_MODELOBJECT(DistrictHeatingWater,1);
+SWIG_MODELOBJECT(DistrictHeatingSteam,1);
 SWIG_MODELOBJECT(Duct,1);
 SWIG_MODELOBJECT(EvaporativeCoolerDirectResearchSpecial,1);
 SWIG_MODELOBJECT(EvaporativeCoolerIndirectResearchSpecial,1);
@@ -268,21 +270,10 @@ SWIG_MODELOBJECT(TemperingValve,1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed,1);
 SWIG_MODELOBJECT(WaterUseConnections,1);
 
-#if defined SWIGRUBY
-
-  // Provide alternative name for backwards compatibility between old=AirTerminalSingleDuctUncontrolled and new=AirTerminalSingleDuctConstantVolumeNoReheat
-  %init %{
-    // Alias class name, which allows instantion of new object
-    rb_eval_string("OpenStudio::Model::AirTerminalSingleDuctUncontrolled = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat");
-
-    // Provide get methods
-    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_AirTerminalSingleDuctUncontrolled) { OpenStudio::Model::toAirTerminalSingleDuctConstantVolumeNoReheat(self); } }");
-    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolled) { |handle| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheat(self, handle); } }");
-    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolleds) { OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheats(self); } }");
-    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledByName) { |name| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatByName(self, name); } }");
-    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledsByName) { |name, exactMatch| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatsByName(self, name, exactMatch); } }");
-  %}
-#endif
+// DEPRECATED
+// MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT(DistrictHeating, DistrictHeatingWater, 3, 7, 0)
+MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT(AirTerminalSingleDuctUncontrolled, AirTerminalSingleDuctConstantVolumeNoReheat, 2, 7, 0)
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

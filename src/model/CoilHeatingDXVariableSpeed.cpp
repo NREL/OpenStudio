@@ -335,6 +335,21 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
     }
 
+    boost::optional<Curve> CoilHeatingDXVariableSpeed_Impl::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName);
+    }
+
+    bool CoilHeatingDXVariableSpeed_Impl::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+      const bool result = setPointer(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve.handle());
+      return result;
+    }
+
+    void CoilHeatingDXVariableSpeed_Impl::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+      const bool result = setString(OS_Coil_Heating_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     ModelObject CoilHeatingDXVariableSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXVariableSpeed>();
 
@@ -357,6 +372,9 @@ namespace model {
       if (auto curve = defrostEnergyInputRatioFunctionofTemperatureCurve()) {
         children.push_back(curve.get());
       }
+      if (auto c_ = crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+        children.emplace_back(std::move(*c_));
+      }
       return children;
     }
 
@@ -367,7 +385,7 @@ namespace model {
     bool CoilHeatingDXVariableSpeed_Impl::addSpeed(const CoilHeatingDXVariableSpeedSpeedData& speed) {
       auto modelObjectList = speedDataList();
       if (modelObjectList) {
-        modelObjectList->addModelObject(speed);
+        return modelObjectList->addModelObject(speed);
       }
       return false;
     }
@@ -804,6 +822,18 @@ namespace model {
 
   void CoilHeatingDXVariableSpeed::autosizeResistiveDefrostHeaterCapacity() {
     getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->autosizeResistiveDefrostHeaterCapacity();
+  }
+
+  boost::optional<Curve> CoilHeatingDXVariableSpeed::crankcaseHeaterCapacityFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->crankcaseHeaterCapacityFunctionofTemperatureCurve();
+  }
+
+  bool CoilHeatingDXVariableSpeed::setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setCrankcaseHeaterCapacityFunctionofTemperatureCurve(curve);
+  }
+
+  void CoilHeatingDXVariableSpeed::resetCrankcaseHeaterCapacityFunctionofTemperatureCurve() {
+    getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
   }
 
   std::vector<CoilHeatingDXVariableSpeedSpeedData> CoilHeatingDXVariableSpeed::speeds() const {

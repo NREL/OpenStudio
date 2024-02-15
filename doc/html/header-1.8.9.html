@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta name="generator" content="Doxygen $doxygenversion"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>$projectname: $title - OpenStudio SDK Documentation</title>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="../../css/bootstrap.min.css" rel="stylesheet">
+<link href="search/search.css" rel="stylesheet">
+<script type="text/javascript" src="../../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX", "output/HTML-CSS"],
+  MathEvents: {
+    hover: 250
+  },
+  menuSettings: {
+    zoom: "Hover"
+  },
+  messageStyle: "none",
+  showMathMenu: false,
+  showMathMenuMSIE: false,
+  "HTML-CSS": {
+    imageFont: null,
+    preferredFont: null,
+    webFont: "Gyre-Pagella"
+  }
+});
+</script>
+<script type="text/javascript" src="../../js/MathJax.js"></script>
+<link href="../../css/$stylesheet" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+$(function() {
+  $('div.headertitle').addClass('page-header');
+  $('div.title').addClass('h1');
+
+  $('li.current').addClass('active');
+
+  // Disable iframe scrolling, except for search results
+  $('iframe').attr('scrolling', 'no');
+  $('#MSearchResults').attr('scrolling', 'yes');
+
+  $('#nav-path > ul').addClass('breadcrumb');
+
+  $('table.params').addClass('table');
+  $('div.ingroups').wrapInner('<small></small>');
+  $('div.levels').css('margin', '0.5em');
+  $('div.levels > span').addClass('btn btn-default btn-sm').css('margin-right', '0.25em');
+
+  $('table.directory').addClass('table table-striped');
+  var summary = $('<div />', {
+    'class': 'btn-group btn-group-sm'
+  });
+  $('div.summary > a').each(function() {
+    var text = $(this).text();
+    if (text == 'List of all members') text = 'List of all members, including inherited members';
+    summary.append('<a href="' + $(this).attr('href') + '" class="btn btn-default">' + $(this).text() + '</a>');
+  });
+  $('div.summary').html(summary);
+  $('div.summary > a').addClass('btn btn-default btn-sm');
+  $('#dynsection-0').addClass('btn btn-default');
+  $('#dynsection-0-trigger').remove();
+  $('#dynsection-0').prepend('<span id="dynsection-0-trigger" class="caret"></span>');
+  $('table.fieldtable').addClass('table');
+  $('.fragment').addClass('well');
+  $('.memitem').addClass('panel panel-default');
+  $('.memproto').addClass('panel-heading');
+  $('.memdoc').addClass('panel-body');
+  $('span.mlabel').addClass('label label-info');
+
+  $('table.memberdecls').addClass('table table-condensed');
+  $('[class^=memitem]').addClass('active');
+
+  $('div.ah').addClass('btn btn-default');
+  $('span.mlabels').addClass('pull-right');
+  $('table.mlabels').css('width', '100%');
+  $('td.mlabels-right').addClass('pull-right');
+
+  $('div.ttc').addClass('panel panel-info');
+  $('div.ttname').addClass('panel-heading');
+  $('div.ttdef,div.ttdoc,div.ttdeci').addClass('panel-body');
+
+  // Remove repetitive namespace links on Object Index page
+  if ($('div.title.h1').text() == 'Object Index') {
+    $('div.contents table td').each(function(index) {
+      var link = $(this).find('a:first-child');
+      if (link.hasClass('el')) {
+        $(this).html($(link)[0].outerHTML);
+      }
+    });
+  }
+
+  var title = $('div.title.h1');
+  title.text(title.text().substring(title.text().lastIndexOf(':') + 1));
+
+  $('td.entry span.icona').remove();
+
+  $('#MSearchField').addClass('form-control');
+
+  var filename = window.location.href.substr(window.location.href.lastIndexOf("/") + 1);
+  if (filename == 'index.html') {
+    $('li > a[href="index.html"]').parent().addClass('active');
+  } else {
+    $('#objects-dropdown').parent().addClass('active');
+    switch (filename) {
+      case 'annotated.html':
+        $('li > a[href="annotated.html"]').parent().addClass('active');
+        break;
+      case 'classes.html':
+        $('li > a[href="classes.html"]').parent().addClass('active');
+        break;
+      case 'inherits.html':
+        $('li > a[href="inherits.html"]').parent().addClass('active');
+        break;
+      case 'deprecated.html':
+        $('li > a[href="deprecated.html"]').parent().addClass('active');
+        break;
+    }
+  }
+
+  // Remove Additional Inherited Members table
+  $('a[name="inherited"]').closest('table').remove();
+
+  $('table.memberdecls tr').each(function() {
+    if ($(this).hasClass('inherit_header') || $(this).hasClass('inherit') || $(this).css('display') == 'none') {
+      $(this).remove();
+    } else if (!$(this).hasClass('active') && !$(this).hasClass('heading')) {
+      $(this).remove();
+    }
+  });
+  $('table.memberdecls tr').removeClass('active');
+
+  // Select 'Classes' search option
+  searchBox.OnSelectItem(1);
+
+  $('.SelectItem').click(function() {
+    $('#MSearchField').attr('placeholder', 'Search ' + $(this).text().substr(1));
+  });
+
+  $('.contents>p>code').text($('.contents>p>code').text().replace(/[<>]+/g, '"'));
+
+  // Automatically show 3rd display tier
+  var levels = $('div.levels');
+  if (levels.length) {
+    var length = $('div.levels>span').length;
+    var btnGroup = $('<div class="btn-group btn-group-sm">');
+    for (var i = 0; i < length; ++i) {
+      var btn = $('<button type="button" class="btn btn-default">' + (i + 1) + '</button>');
+      if (i + 1 == 3) $(btn).addClass('active');
+      (function() {
+        var it = i;
+        $(btn).click(function() {
+          toggleLevel(it + 1);
+          $(this).parent().children().removeClass('active');
+          $(this).addClass('active');
+        });
+      })();
+      btnGroup.append(btn);
+    }
+    $('div.levels').html('Detail Level: ');
+    $('div.levels').append(btnGroup);
+
+    toggleLevel(3);
+  }
+
+  // Hide Deprecated page if it doesn't exist
+  if ($('div.title.h1').text() != 'Deprecated List') {
+    console.log('Checking for deprecated.html');
+    $.get('deprecated.html')
+      .fail(function() {
+        $('a[href="deprecated.html"]').parent().prev('.divider').remove();
+        $('a[href="deprecated.html"]').parent().remove();
+      });
+  }
+
+  // Hide Object Hierarchy page if it doesn't exist
+  if ($('div.title.h1').text() != 'Object Hierarchy') {
+    console.log('Checking for inherits.html');
+    $.get('inherits.html')
+      .fail(function() {
+        $('a[href="inherits.html"]').parent().remove();
+      });
+  }
+
+  // Remove second alphabetical index
+  $('div.qindex').last().remove();
+});
+</script>
+</head>
+<body class="container">
+<div id="top">
+<div id="titlearea">
+  <table>
+    <tbody>
+      <tr style="height: 56px;">
+        <td id="projectlogo"><a href="index.html"><img alt="Logo" src="$projectlogo"/></a></td>
+        <td style="padding-left: 0.5em;"><div id="projectname">$projectname</div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="navbar navbar-default">
+  <ul class="nav navbar-nav">
+    <li><a href="index.html">Overview</a></li>
+    <li class="dropdown"> <a href="#" id="objects-dropdown" class="dropdown-toggle" data-toggle="dropdown">Objects <span class="caret"></span></a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="annotated.html"><span class='glyphicon glyphicon-list'></span> Object List</a></li>
+        <li><a href="classes.html"><span class='glyphicon glyphicon-book'></span> Object Index</a></li>
+        <li><a href="inherits.html"><span class='glyphicon glyphicon-transfer'></span> Object Hierarchy</a></li>
+        <li class="divider"></li>
+        <li><a href="deprecated.html"><span class='glyphicon glyphicon-trash'></span> Deprecated List</a></li>
+      </ul>
+    </li>
+  </ul>
+  <div class="navbar-form form-group pull-right" role="search">
+    <div id="MSearchBox" class="MSearchBoxInactive"> <span class="left"> <span id="MSearchSelect" class="glyphicon glyphicon-th-large" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"></span>
+      <input type="text" id="MSearchField" placeholder="Search Classes" autocomplete="off" accesskey="s" onfocus="searchBox.OnSearchFieldFocus(true)" onblur="searchBox.OnSearchFieldFocus(false)" onkeyup="searchBox.OnSearchFieldChange(event)" class="form-control">
+      </span> <span class="right"> <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><span class="glyphicon glyphicon-remove-circle" id="MSearchCloseImg"></span></a> </span> </div>
+  </div>
+</div>

@@ -142,7 +142,7 @@ namespace model {
       }
 
       if (!result) {
-        LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueName() << "'");
+        LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueDescription() << "'");
       }
 
       return result;
@@ -346,7 +346,7 @@ namespace model {
         }
 
         if (!value) {
-          LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueName() << "'");
+          LOG(Error, "Unknown consumption unit '" << consumptionUnit << "' for fuel type '" << fuelType.valueDescription() << "'");
         }
       }
 
@@ -376,7 +376,7 @@ namespace model {
         } else if (peakDemandUnit.get() == "W") {
           result = "Watts";
         } else {
-          LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << this->fuelType().valueName() << "'");
+          LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << this->fuelType().valueDescription() << "'");
         }
       }
       return result;
@@ -395,7 +395,7 @@ namespace model {
         } else if (peakDemandUnit.get() == "W") {
           result = 1;
         } else {
-          LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << fuelType.valueName() << "'");
+          LOG(Error, "Unknown peak demand unit '" << peakDemandUnit.get() << "' for fuel type '" << fuelType.valueDescription() << "'");
         }
       }
       return result;
@@ -610,7 +610,7 @@ namespace model {
           result.emplace_back("MBtu");
           break;
         default:
-          LOG_AND_THROW("Unknown fuel type '" + fuelType.valueName() + "'");
+          LOG_AND_THROW("Unknown fuel type '" + fuelType.valueDescription() + "'");
       }
 
       return result;
@@ -654,7 +654,7 @@ namespace model {
         case FuelType::EnergyTransfer:
           break;
         default:
-          LOG_AND_THROW("Unknown fuel type '" + fuelType.valueName() + "'");
+          LOG_AND_THROW("Unknown fuel type '" + fuelType.valueDescription() + "'");
       }
 
       return result;
@@ -1242,10 +1242,10 @@ namespace model {
   UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model) : ModelObject(UtilityBill::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::UtilityBill_Impl>());
 
-    bool test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
+    bool test = setString(OS_UtilityBillFields::FuelType, fuelType.valueDescription());
     if (!test) {
       remove();
-      LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueName() << ".");
+      LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueDescription() << ".");
     }
 
     std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();

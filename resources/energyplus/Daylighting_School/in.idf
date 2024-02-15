@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,23.1;
+  Version,23.2;
 
   Timestep,6;
 
@@ -1508,7 +1508,8 @@
     PSZ-AC:1_CoolCStandard10Ton_PLR,  !- Part Load Fraction Correlation Curve Name
     -25.0,                   !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
     ,                        !- Nominal Time for Condensate Removal to Begin {s}
-    ;                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ,                        !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+    ;                        !- Maximum Cycling Rate {cycles/hr}
 
   Curve:Biquadratic,
     PSZ-AC:1_CoolCStandard10Ton_CapFT,  !- Name

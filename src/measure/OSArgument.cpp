@@ -15,7 +15,10 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/functional/value_factory.hpp>
+#include <json/json.h>
 
+#include <json/value.h>
+#include <limits>
 #include <sstream>
 
 namespace openstudio {
@@ -1039,6 +1042,113 @@ namespace measure {
       argMap.insert(std::make_pair(arg.name(), arg.clone()));
     }
     return argMap;
+  }
+
+  Json::Value OSArgument::toJSON() const {
+    Json::Value root;
+    root["name"] = m_name;
+    // root["uid"] = openstudio::removeBraces(m_uuid);
+    // root["versionuuid"] = openstudio::removeBraces(m_versionUUID);
+    root["display_name"] = m_displayName;
+    if (m_description) {
+      root["description"] = *m_description;
+    }
+    root["type"] = m_type.valueName();
+    root["required"] = m_required;
+    root["model_dependent"] = m_modelDependent;
+
+    if (m_type == OSArgumentType::Boolean) {
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsBool();
+      }
+
+    } else if (m_type == OSArgumentType::Double) {
+      if (m_units) {
+        root["units"] = *m_units;
+      }
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsDouble();
+      }
+      if (hasDomain()) {
+        auto domain = domainAsDouble();
+        if (domain.size() != 2) {
+          LOG_AND_THROW("Domain for a double should be of size 2!");
+        }
+        auto& minValue = domain.front();
+        auto& maxValue = domain.back();
+        if (minValue != std::numeric_limits<double>::lowest()) {
+          root["min_value"] = minValue;
+        }
+        if (maxValue != std::numeric_limits<double>::max()) {
+          root["max_value"] = maxValue;
+        }
+      }
+
+    } else if (m_type == OSArgumentType::Quantity) {
+      // Note: This is heavily deprecated, and the std::variant can't contain it
+      if (m_units) {
+        root["units"] = *m_units;
+      }
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsDouble();
+      }
+
+    } else if (m_type == OSArgumentType::Integer) {
+      if (m_units) {
+        root["units"] = *m_units;
+      }
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsInteger();
+      }
+      if (hasDomain()) {
+        auto domain = domainAsInteger();
+        if (domain.size() != 2) {
+          LOG_AND_THROW("Domain for an integer should be of size 2!");
+        }
+        auto& minValue = domain.front();
+        auto& maxValue = domain.back();
+        if (minValue != std::numeric_limits<int>::lowest()) {
+          root["min_value"] = minValue;
+        }
+        if (maxValue != std::numeric_limits<int>::max()) {
+          root["max_value"] = maxValue;
+        }
+      }
+    } else if (m_type == OSArgumentType::String) {
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsString();
+      }
+    } else if (m_type == OSArgumentType::Choice) {
+      if (hasDefaultValue()) {
+        root["default_value"] = defaultValueAsString();
+      }
+      auto& choiceValues = root["choice_values"];
+      choiceValues = Json::arrayValue;  // Without this line, it's "null" (/nil in Ruby) if m_choices is empty, while old CLI had it as `[]`
+      for (const auto& choice : m_choices) {
+        choiceValues.append(choice);
+      }
+      auto& choiceDisplayNames = root["choice_display_names"];
+      choiceDisplayNames = Json::arrayValue;
+      for (const auto& choice : m_choiceDisplayNames) {
+        choiceDisplayNames.append(choice);
+      }
+
+    } else if (m_type == OSArgumentType::Path) {
+      if (hasDefaultValue()) {
+        root["default_value"] = openstudio::toString(defaultValueAsPath());
+      }
+
+    } else if (m_type == OSArgumentType::Separator) {
+      // No-op
+    } else {
+      LOG_AND_THROW("Unhandled type");
+    }
+
+    return root;
+  }
+
+  std::string OSArgument::toJSONString() const {
+    return toJSON().toStyledString();
   }
 
 }  // namespace measure

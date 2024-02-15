@@ -425,14 +425,14 @@ class TranslatorGenerator
   def gtestFtRtIncludes()
     result = String.new
 
-    result << "#include \"<gtest/gtest.h>\"\n"
+    result << "#include \<gtest/gtest.h>\n"
     result << "#include \"EnergyPlusFixture.hpp\"\n\n"
 
-    result << "#include \"ForwardTranslator.hpp\"\n"
-    result << "#include \"ReverseTranslator.hpp\"\n\n"
+    result << "#include \"../ForwardTranslator.hpp\"\n"
+    result << "#include \"../ReverseTranslator.hpp\"\n\n"
 
-    result << "#include \"../" << @className << ".hpp\"\n"
-    result << "#include \"../" << @className << "_Impl.hpp\"\n"
+    result << "#include \"../../model/" << @className << ".hpp\"\n"
+    result << "#include \"../../model/" << @className << "_Impl.hpp\"\n"
 
     preamble = "// TODO: Check the following class names against object getters and setters.\n"
 
@@ -440,8 +440,8 @@ class TranslatorGenerator
     @nonextensibleFields.each { |field|
       if field.isObjectList?
         result << preamble
-        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
-        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n"
+        result << "#include \"../../model/" << field.objectListClassName << ".hpp\"\n"
+        result << "#include \"../../model/" << field.objectListClassName << "_Impl.hpp\"\n"
         preamble = ""
       end
     }

@@ -16,6 +16,9 @@
 #include "Model.hpp"
 #include "CurveQuadLinear.hpp"
 #include "CurveQuadLinear_Impl.hpp"
+#include "CurveLinear.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -304,24 +307,58 @@ namespace model {
       return boost::none;
     }
 
-    CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCurve() const {
-      WorkspaceObject wo = getTarget(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName).get();
-      return wo.cast<CurveQuadLinear>();
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalHeatingCapacityCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName);
     }
 
-    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
-      bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
+    Curve CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingCapacityCurve() const {
+      boost::optional<Curve> value = optionalHeatingCapacityCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Heating Capacity Curve attached.");
+      }
+      return *value;
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingCapacityCurve(const Curve& heatingCapacityCurve) {
+      const bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName, heatingCapacityCurve.handle());
       return result;
     }
 
-    CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCurve() const {
-      WorkspaceObject wo = getTarget(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName).get();
-      return wo.cast<CurveQuadLinear>();
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalHeatingPowerConsumptionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName);
     }
 
-    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve) {
-      bool result =
+    Curve CoilHeatingWaterToAirHeatPumpEquationFit_Impl::heatingPowerConsumptionCurve() const {
+      boost::optional<Curve> value = optionalHeatingPowerConsumptionCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Heating Power Consumption Curve attached.");
+      }
+      return *value;
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setHeatingPowerConsumptionCurve(const Curve& heatingPowerConsumptionCurve) {
+      const bool result =
         setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName, heatingPowerConsumptionCurve.handle());
+      return result;
+    }
+
+    boost::optional<Curve> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::optionalPartLoadFractionCorrelationCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName);
+    }
+
+    Curve CoilHeatingWaterToAirHeatPumpEquationFit_Impl::partLoadFractionCorrelationCurve() const {
+      boost::optional<Curve> value = optionalPartLoadFractionCorrelationCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Part Load Fraction Correlation Curve attached.");
+      }
+      return *value;
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
+      const bool result = setPointer(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::PartLoadFractionCorrelationCurveName,
+                                     partLoadFractionCorrelationCurve.handle());
       return result;
     }
 
@@ -397,8 +434,8 @@ namespace model {
   }  // namespace detail
 
   // create a new CoilHeatingWaterToAirHeatPumpEquationFit object in the model's workspace
-  CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const CurveQuadLinear& heatingCapacityCurve,
-                                                                                     const CurveQuadLinear& heatingPowerConsumptionCurve)
+  CoilHeatingWaterToAirHeatPumpEquationFit::CoilHeatingWaterToAirHeatPumpEquationFit(const Model& model, const Curve& heatingCapacityCurve,
+                                                                                     const Curve& heatingPowerConsumptionCurve)
     : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
 
@@ -415,6 +452,14 @@ namespace model {
     OS_ASSERT(ok);
 
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+    OS_ASSERT(ok);
+
+    constexpr double maximumCyclingRatePerHour = 2.5;
+    constexpr double heatPumpTimeConstantSeconds = 60.0;
+    const CurveLinear plfCorrelation =
+      CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRatePerHour, heatPumpTimeConstantSeconds);
+
+    ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
     OS_ASSERT(ok);
   }
 
@@ -449,6 +494,14 @@ namespace model {
     heatingPowerConsumptionCurve.setCoefficient4y(-0.050682973);
     heatingPowerConsumptionCurve.setCoefficient5z(0.011385145);
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+    OS_ASSERT(ok);
+
+    constexpr double maximumCyclingRatePerHour = 2.5;
+    constexpr double heatPumpTimeConstantSeconds = 60.0;
+    const CurveLinear plfCorrelation =
+      CurveLinear::defaultHeatPumpCoilPLFCorrelationCurve(model, maximumCyclingRatePerHour, heatPumpTimeConstantSeconds);
+
+    ok = setPartLoadFractionCorrelationCurve(plfCorrelation);
     OS_ASSERT(ok);
   }
 
@@ -596,20 +649,28 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->autosizedRatedHeatingCapacity();
   }
 
-  CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve() const {
+  Curve CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve() const {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
   }
 
-  bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve) {
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCurve(const Curve& heatingCapacityCurve) {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setHeatingCapacityCurve(heatingCapacityCurve);
   }
 
-  CurveQuadLinear CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve() const {
+  Curve CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve() const {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
   }
 
-  bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCurve(const CurveQuadLinear& heatingPowerConsumptionCurve) {
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCurve(const Curve& heatingPowerConsumptionCurve) {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
+  }
+
+  Curve CoilHeatingWaterToAirHeatPumpEquationFit::partLoadFractionCorrelationCurve() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->partLoadFractionCorrelationCurve();
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve) {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
   }
 
   /// @cond
@@ -620,124 +681,144 @@ namespace model {
   // DEPRECATED
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient1() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient1Constant() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.coefficient1Constant();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient1Constant();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient1(double heatingCapacityCoefficient1) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient1Constant(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient1Constant(heatingCapacityCoefficient1);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient1Constant(heatingCapacityCoefficient1);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient2() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient2w() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.coefficient2w();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient2w();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient2(double heatingCapacityCoefficient2) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient2w(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient2w(heatingCapacityCoefficient2);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient2w(heatingCapacityCoefficient2);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient3() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient3x() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.coefficient3x();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient3x();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient3(double heatingCapacityCoefficient3) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient3x(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient3x(heatingCapacityCoefficient3);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient3x(heatingCapacityCoefficient3);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient4() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient4y() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.coefficient4y();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient4y();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient4(double heatingCapacityCoefficient4) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient4y(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient4y(heatingCapacityCoefficient4);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient4y(heatingCapacityCoefficient4);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCoefficient5() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().coefficient5z() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.coefficient5z();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient5z();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingCapacityCoefficient5(double heatingCapacityCoefficient5) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingCapacityCurve().setCoefficient5z(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
-    return curve.setCoefficient5z(heatingCapacityCoefficient5);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingCapacityCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient5z(heatingCapacityCoefficient5);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient1() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient1Constant() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.coefficient1Constant();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient1Constant();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient1(double heatingPowerConsumptionCoefficient1) {
     DEPRECATED_AT_MSG(3, 2, 0,
                       "Use "
                       "CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient1Constant(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.setCoefficient1Constant(heatingPowerConsumptionCoefficient1);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient1Constant(heatingPowerConsumptionCoefficient1);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient2() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient2w() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.coefficient2w();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient2w();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient2(double heatingPowerConsumptionCoefficient2) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient2w(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.setCoefficient2w(heatingPowerConsumptionCoefficient2);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient2w(heatingPowerConsumptionCoefficient2);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient3() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient3x() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.coefficient3x();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient3x();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient3(double heatingPowerConsumptionCoefficient3) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient3x(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.setCoefficient3x(heatingPowerConsumptionCoefficient3);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient3x(heatingPowerConsumptionCoefficient3);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient4() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient4y() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.coefficient4y();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient4y();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient4(double heatingPowerConsumptionCoefficient4) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient4y(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.setCoefficient4y(heatingPowerConsumptionCoefficient4);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient4y(heatingPowerConsumptionCoefficient4);
   }
 
   double CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCoefficient5() const {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().coefficient5z() instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.coefficient5z();
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->coefficient5z();
   }
 
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setHeatingPowerConsumptionCoefficient5(double heatingPowerConsumptionCoefficient5) {
     DEPRECATED_AT_MSG(3, 2, 0, "Use CoilHeatingWaterToAirHeatPumpEquationFit::heatingPowerConsumptionCurve().setCoefficient5z(double) instead.");
-    CurveQuadLinear curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
-    return curve.setCoefficient5z(heatingPowerConsumptionCoefficient5);
+    Curve curve = getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->heatingPowerConsumptionCurve();
+    boost::optional<CurveQuadLinear> curveQuadLinear = curve.optionalCast<CurveQuadLinear>();
+    return curveQuadLinear->setCoefficient5z(heatingPowerConsumptionCoefficient5);
   }
 
   /// @endcond

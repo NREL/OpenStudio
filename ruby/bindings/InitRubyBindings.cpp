@@ -356,6 +356,80 @@ module Ruleset
   end
 
 end # module Ruleset
+
+module Measure
+class RubyMeasureInfoBinding < OpenStudio::Measure::MeasureInfoBinding
+  def initialize
+    super() # needed
+    @info = nil
+  end
+  def setMeasureInfo(info)
+    @info = info
+  end
+  def measure_info
+    @info
+  end
+  def error
+    @info.error.to_s
+  end
+  def measureType
+    @info.measureType.valueName.to_s
+  end
+  def className
+    @info.className.to_s
+  end
+  def name
+    @info.name.to_s
+  end
+  def description
+    @info.description.to_s
+  end
+  def taxonomy
+    @info.taxonomy.to_s
+  end
+  def modelerDescription
+    @info.modelerDescription.to_s
+  end
+  def arguments
+    @info.arguments.map{|a| a.toJSON()}
+  end
+  def outputs
+    @info.outputs.map{|a| a.toJSON()}
+  end
+  def get_binding
+    result = binding()
+    return result
+  end
+  def renderFile(readme_in_path)
+    require 'erb'
+    begin
+      readme_out_path = File.join(File.dirname(readme_in_path), File.basename(readme_in_path, File.extname(readme_in_path)))
+      readme_in = File.read(readme_in_path)
+      renderer = ERB.new(readme_in)
+      b = get_binding()
+      readme_out = renderer.result(b)
+    rescue => e
+      exception_msg = "Failed to Render ERB file: #{e.class}: #{e.message}\nTraceback:\n"
+      exception_msg += e.backtrace.join("\n")
+      STDERR.puts exception_msg
+      # info = OpenStudio::Measure::OSMeasureInfo.new(exception_msg)
+      return false # @info
+    end
+    # write README.md file
+    File.open(readme_out_path, 'w') do |file|
+      file << readme_out
+      # make sure data is written to the disk one way or the other
+      begin
+        file.fsync
+      rescue StandardError
+        file.flush
+      end
+    end
+    return true #  @info
+  end
+end
+end # module Measure
+
 end # module OpenStudio
 
 module OpenStudio

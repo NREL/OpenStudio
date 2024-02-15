@@ -65,6 +65,12 @@ namespace model {
 
     double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity() const;
 
+    double maximumCyclingRate() const;
+
+    double latentCapacityTimeConstant() const;
+
+    double fanDelayTime() const;
+
     Curve energyPartLoadFractionCurve() const;
 
     // boost::optional<std::string> condenserAirInletNodeName() const;
@@ -76,6 +82,8 @@ namespace model {
     bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
 
     double crankcaseHeaterCapacity() const;
+
+    boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
 
     double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
@@ -110,6 +118,12 @@ namespace model {
     bool setInitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity(
       double initialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity);
 
+    bool setMaximumCyclingRate(double maximumCyclingRate);
+
+    bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+
+    bool setFanDelayTime(double fanDelayTime);
+
     bool setEnergyPartLoadFractionCurve(const Curve& curve);
 
     // bool setCondenserAirInletNodeName(const std::string& condenserAirInletNodeName);
@@ -123,6 +137,10 @@ namespace model {
     void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
 
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+
+    bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+
+    void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 

@@ -9,6 +9,11 @@
 
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../BoilerHotWater.hpp"
+#include "../Curve.hpp"
+#include "../CurveLinear.hpp"
+#include "../CurveQuadLinear.hpp"
+#include "../PlantLoop.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -79,4 +84,40 @@ TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   EXPECT_EQ(1.0, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.2));
   EXPECT_EQ(1.2, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
+
+  // Heating Capacity Curve Name: Required Object
+  CurveQuadLinear heatingCapacityCurve(model);
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setHeatingCapacityCurve(heatingCapacityCurve));
+  EXPECT_EQ(heatingCapacityCurve, coilHeatingWaterToAirHPEquationFit.heatingCapacityCurve());
+
+  // Heating Power Consumption Curve Name: Required Object
+  CurveQuadLinear heatingPowerConsumptionCurve(model);
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve));
+  EXPECT_EQ(heatingPowerConsumptionCurve, coilHeatingWaterToAirHPEquationFit.heatingPowerConsumptionCurve());
+
+  // Part Load Fraction Correlation Curve Name: Required Object
+  CurveLinear partLoadFractionCorrelationCurve(model);
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve));
+  EXPECT_EQ(partLoadFractionCorrelationCurve, coilHeatingWaterToAirHPEquationFit.partLoadFractionCorrelationCurve());
+}
+
+TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_HeatCoolFuelTypes) {
+  Model m;
+  CoilHeatingWaterToAirHeatPumpEquationFit coil(m);
+
+  PlantLoop p(m);
+  BoilerHotWater b(m);
+  EXPECT_TRUE(p.addSupplyBranchForComponent(b));
+  EXPECT_TRUE(b.setFuelType("Propane"));
+
+  EXPECT_EQ(ComponentType(ComponentType::Heating), coil.componentType());
+  EXPECT_EQ(0, coil.coolingFuelTypes().size());
+  testFuelTypeEquality({FuelType::Electricity}, coil.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::HeatPump}, coil.appGHeatingFuelTypes());
+
+  // Also get from plant loop
+  EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+  EXPECT_EQ(ComponentType(ComponentType::Heating), coil.componentType());
+  EXPECT_EQ(0, coil.coolingFuelTypes().size());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, coil.appGHeatingFuelTypes());
 }

@@ -13,6 +13,8 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
     class DistrictCooling_Impl;
@@ -28,6 +30,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
+    // The capacityFractionSchedule is defaulted to alwaysOnContinuousSchedule
     explicit DistrictCooling(const Model& model);
 
     virtual ~DistrictCooling() = default;
@@ -53,6 +56,8 @@ namespace model {
 
     bool isNominalCapacityAutosized() const;
 
+    Schedule capacityFractionSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -60,6 +65,8 @@ namespace model {
     bool setNominalCapacity(double nominalCapacity);
 
     void autosizeNominalCapacity();
+
+    bool setCapacityFractionSchedule(Schedule& schedule);
 
     //@}
     /** @name Other */

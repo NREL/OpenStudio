@@ -13,10 +13,10 @@ namespace openstudio {
 
 namespace model {
 
-  class Schedule;
-  class Curve;
-  class CoilHeatingDXMultiSpeedStageData;
   class AirflowNetworkEquivalentDuct;
+  class CoilHeatingDXMultiSpeedStageData;
+  class Curve;
+  class Schedule;
 
   namespace detail {
 
@@ -61,6 +61,8 @@ namespace model {
 
     double crankcaseHeaterCapacity() const;
 
+    boost::optional<Curve> crankcaseHeaterCapacityFunctionofTemperatureCurve() const;
+
     double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
     boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
@@ -98,6 +100,9 @@ namespace model {
     void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
     bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+
+    bool setCrankcaseHeaterCapacityFunctionofTemperatureCurve(const Curve& curve);
+    void resetCrankcaseHeaterCapacityFunctionofTemperatureCurve();
 
     bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 

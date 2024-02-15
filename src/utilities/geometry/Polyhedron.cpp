@@ -104,13 +104,15 @@ Vector3d Surface3dEdge::asVector() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const Surface3dEdge& edge) {
-  os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count()
-     << ", firstSurface=" << edge.firstSurfaceName();
+  os << "Surface3dEdge: start=" << edge.start() << ", end=" << edge.end() << ", count=" << edge.count() << ", firstSurface='"
+     << edge.firstSurfaceName() << "'";
   return os;
 }
 
 Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t t_surfNum)
   : vertices(std::move(t_vertices)), name(std::move(t_name)), surfNum(t_surfNum) {
+
+  edges.reserve(vertices.size());
   for (auto it = vertices.begin(); it != vertices.end(); ++it) {
 
     auto itnext = std::next(it);
@@ -118,8 +120,21 @@ Surface3d::Surface3d(std::vector<Point3d> t_vertices, std::string t_name, size_t
       itnext = std::begin(vertices);
     }
 
-    edges.emplace_back(*it, *itnext, t_name, t_surfNum);
+    edges.emplace_back(*it, *itnext, name, surfNum);
   }
+}
+
+std::ostream& operator<<(std::ostream& os, const Surface3d& surface3d) {
+  os << "Surface3d ";
+  if (!surface3d.name.empty()) {
+    os << "'" << surface3d.name << "' ";
+  }
+  os << "= [\n";
+  for (const auto& pt : surface3d.vertices) {
+    os << "  " << pt << ",\n";
+  }
+  os << "]";
+  return os;
 }
 
 bool Surface3d::operator<(const Surface3d& rhs) const {
@@ -227,11 +242,9 @@ void Polyhedron::performEdgeMatching() {
 
   m_hasAnySurfaceWithIncorrectOrientation = false;
 
+  // We use **Combinations** (rather than Permutations) to avoid traversing unnecessarily
   for (size_t i = 0; i < m_surfaces.size(); ++i) {
-    for (size_t j = 0; j < m_surfaces.size(); ++j) {
-      if (i == j) {
-        continue;
-      }
+    for (size_t j = i + 1; j < m_surfaces.size(); ++j) {
       auto& surface1 = m_surfaces[i];
       auto& surface2 = m_surfaces[j];
       for (Surface3dEdge& edge1 : surface1.edges) {
@@ -251,6 +264,22 @@ void Polyhedron::performEdgeMatching() {
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  // #5002 - special case to find edges that are used to "cut" in to a surface to remove an interior hole
+  // we allow these edges to double count the first surface since they bound the same surface on two sides
+  for (auto& surface : m_surfaces) {
+    auto& edges = surface.edges;
+    for (size_t i = 0; i < edges.size(); ++i) {
+      for (size_t j = i + 1; j < edges.size(); ++j) {
+        if ((edges[i].count() == 1) && (edges[j].count() == 1) && (edges[i] == edges[j]) && edges[i].reverseEqual(edges[j])) {
+          // appendSurface will allow use to check edge.count() later to check if count == 2.
+          // All edges must be count == 2 in an Enclosed Polyhedron
+          edges[i].appendSurface(surface);
+          edges[j].appendSurface(surface);
         }
       }
     }
@@ -490,6 +519,10 @@ double Polyhedron::calcDivergenceTheoremVolume() const {
     volume -= plane.d() * area.get() / 3.0;
   }
   return volume;
+}
+
+std::vector<Surface3d> Polyhedron::surface3ds() const {
+  return m_surfaces;
 }
 
 }  // namespace openstudio

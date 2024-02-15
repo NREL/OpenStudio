@@ -7,12 +7,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Use ccache is available, has to be before "project()"
-find_program(CCACHE_PROGRAM ccache)
+# Use ccache if available, has to be before "project()"
+find_program(CCACHE_PROGRAM NAMES ccache sccache)
 if(CCACHE_PROGRAM)
-  # Support Unix Makefiles and Ninja
-  message(STATUS "Using CCACHE")
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+  # Support: Unix Makefiles and Ninja only
+  # RULE_LAUNCH_COMPILE is an internal variable and makes RC compilation fail on windows, hence why we use the C/CXX COMPILER_LAUNCHER instead
+  message(STATUS "${CCACHE_PROGRAM} found and enabled")
+  set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_PROGRAM} CACHE FILEPATH "CXX compiler cache used")
+  set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE_PROGRAM} CACHE FILEPATH "C compiler cache used")
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
@@ -159,7 +161,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "alpha")
+set(PROJECT_VERSION_PRERELEASE "")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -190,17 +192,17 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 23)
-set(ENERGYPLUS_VERSION_MINOR 1)
+set(ENERGYPLUS_VERSION_MINOR 2)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "87ed9199d4")
+set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.1.0")
+set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
 
-set(ENERGYPLUS_REPO "NREL")
+set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -377,8 +379,9 @@ if(APPLE)
   # This appears to be a legacy choice by the cmake developers, and seems out of place,
   # so the OpenStudio project will use the library suffix ".dylib"
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
-  add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
-  #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
+  # TODO: remove when bumping Boost to 1.81+, cf https://github.com/NREL/OpenStudio/issues/4978
+  add_definitions(-DBOOST_NO_CXX98_FUNCTION_BASE)
+  add_definitions(-D_HAS_AUTO_PTR_ETC=0)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -389,10 +392,8 @@ endif()
 if(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   endif()
 endif()
 
@@ -624,27 +625,27 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 2ec00bf06bbb42e99a2729ff7a94abc2)
+      set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 64b5913b5ddc30994cabbde6c77e9a3d)
+      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH c9a18e5a8a55896a0a7021682f877d52)
+    set(ENERGYPLUS_EXPECTED_HASH 0edcf8a13c7f0e05b65e1559cb7624cd)
     set(ENERGYPLUS_PLATFORM "Linux-CentOS7.9.2009-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
       if (ARCH MATCHES "arm64")
-        set(ENERGYPLUS_EXPECTED_HASH ff3a9dc87e8968dfbae2a06e8fc2609b)
+        set(ENERGYPLUS_EXPECTED_HASH 363c537aff1f9c664192451139a85964)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH 2779ce9359645bab86dab966a7c0fc26)
+        set(ENERGYPLUS_EXPECTED_HASH 773dc61ddb6f3dc633ac4df0bdaa3337)
       endif()
     elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH 9a05e2e53fb47eb2fd090db232b57fe2)
+      set(ENERGYPLUS_EXPECTED_HASH b8644c02e287e3ffee89023e98ac5a13)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH 8b185399bd50d8e5abc4c7e15b048f94)
+      message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-${ARCH}")
   endif()
@@ -678,11 +679,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH da343f2355b6a9730ed44439e2cba184)
+    set(ENERGYPLUS_EXPECTED_HASH 7fbc694629ba6abbe400854661ebe1ae)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 5f39f1f18af288384a5580a3a7cef6ab)
+    set(ENERGYPLUS_EXPECTED_HASH 379929e4c46e3d22d79f37b905e56a0e)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -742,6 +743,7 @@ endif()
 
 # Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 
 # Radiance
 if(UNIX)
@@ -827,25 +829,25 @@ if(BUILD_CLI)
   set(USE_OPENSTUDIO_GEMS_PR FALSE)
   if (USE_OPENSTUDIO_GEMS_PR)
     set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
-    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-51")
+    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-67")
   endif()
 
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "27ca992c6e5fe5347a7e342eb5b91511")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d4c8d521f7bcb27248046b3023a9d835")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-darwin.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b6bf19e6958bd41be9788a7f16fd7f27")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "dbcc97ba8d86ec602fba9df2d52bf5d0")
        endif()
      else()
        if (ARCH MATCHES "arm64")
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "979a8839facf2fa1c4096dcbae39ddc2")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0628a7304d82540b24e2be3583e27a57")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-linux.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "957681cb4f3b5cf8ad95103a5fae9a72")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cfa0c61a158ee0404a3c37d24a0a2af0")
        endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
@@ -853,8 +855,8 @@ if(BUILD_CLI)
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20230427-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e82889c296b7b76eb1f7b3fc7e22d2aa")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e94254443a04d6d5b4d0b9dab499816e")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -1086,19 +1088,31 @@ mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 # Doxygen
 if(BUILD_DOCUMENTATION)
-  # need doxygen
-  find_package(Doxygen REQUIRED)
+  # need doxygen, 1.8.7...<1.8.9 is what it's tested on
+  find_package(Doxygen REQUIRED) # Should we do `REQUIRED` dot here?
+  if(DOXYGEN_VERSION VERSION_LESS 1.8.7 OR DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.8.9)
+    message(AUTHOR_WARNING "Found Doxygen version ${DOXYGEN_VERSION}: the historically tested range is 1.8.7...<1.8.9 so it's possible the resulting documentation (CSS or search feature in particular) will be broken (some tests have been conducted with 1.10.0)")
+  endif()
 
-  # if have dot you have more options
-  #if(DOXYGEN_DOT_FOUND)
+  # at 1.9.5: searchLabel removed
+  # at 1.10.0: js was modernized, using let and not var
+  set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch")
+  if(DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.10.0)
+    set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search-1.10.0.js.patch")
+  elseif(DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.9.5)
+    set(DOXYGEN_SEARCH_PATCH_FILE "${PROJECT_SOURCE_DIR}/doc/patch/search-1.9.5.js.patch")
+  endif()
 
-  #endif()
+  set(DOXYGEN_HTML_HEADER "${PROJECT_SOURCE_DIR}/doc/html/header.html")
+  if (DOXYGEN_VERSION VERSION_GREATER_EQUAL 1.8.9)
+    set(DOXYGEN_HTML_HEADER "${PROJECT_SOURCE_DIR}/doc/html/header-1.8.9.html") # Adds searchdata.js
+  endif()
 
   configure_file(${PROJECT_SOURCE_DIR}/doc/index.html ${PROJECT_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
-  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
-  list(APPEND doxygen_directories utilities/idd shared_gui_components)
+  # Add the idd files to the documentation list as a separate entry
+  list(APPEND doxygen_directories utilities/idd)
 
   # Remove directories we don't want documentation generated for
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
@@ -1137,7 +1151,7 @@ if(BUILD_DOCUMENTATION)
       COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
       COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
       COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
-      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${DOXYGEN_SEARCH_PATCH_FILE}"
       DEPENDS openstudio_doc_resources
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
@@ -1201,7 +1215,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_6_0_20230509.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_7_0_20231117.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
@@ -1317,7 +1331,6 @@ if (BUILD_CLI)
   install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 endif()
 
-get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
 file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
 file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")

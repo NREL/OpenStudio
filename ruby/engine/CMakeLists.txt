@@ -287,4 +287,18 @@ elseif(UNIX)
   )
 endif()
 
+if(BUILD_TESTING)
+  set(rubyengine_test_depends
+    openstudio_scriptengine
+    openstudiolib
+    CONAN_PKG::fmt
+  )
+
+  set(rubyengine_test_src
+    test/RubyEngine_GTest.cpp
+  )
+
+  CREATE_TEST_TARGETS(rubyengine "${rubyengine_test_src}" "${rubyengine_test_depends}")
+endif()
+
 install(TARGETS rubyengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")

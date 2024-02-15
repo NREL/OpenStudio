@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>bad_measure</name>
+  <uid>812d3ebf-c89b-4b93-b400-110ca060b2bb</uid>
+  <version_id>4b3097c0-9874-4478-8e7f-45fa952a91eb</version_id>
+  <version_modified>2023-11-10T10:59:53Z</version_modified>
+  <xml_checksum>EB1A0C08</xml_checksum>
+  <class_name>BadMeasure</class_name>
+  <display_name>Bad Measure</display_name>
+  <description></description>
+  <modeler_description>The arguments method calls another_method which does a raise ValueError</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>0.11.5</identifier>
+        <min_compatible>0.11.5</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>D22AC6AC</checksum>
+    </file>
+  </files>
+</measure>

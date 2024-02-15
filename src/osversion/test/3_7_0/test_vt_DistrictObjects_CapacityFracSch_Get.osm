@@ -1,0 +1,33 @@
+
+OS:Version,
+  {3220cf3b-b622-4432-a01f-8129277bdf83}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:Schedule:Constant,
+  {3a8f5b14-be9c-4b56-9af6-a512d996db0d}, !- Handle
+  Always On Continuous,                   !- Name
+  {9848b957-db73-4f36-bf2d-8f8b9d2fec51}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {9848b957-db73-4f36-bf2d-8f8b9d2fec51}, !- Handle
+  Fractional,                             !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  ;                                       !- Unit Type
+
+OS:DistrictHeating,
+  {9f2ae70e-ede6-447f-91ba-79690910dfc1}, !- Handle
+  District Heating 1,                     !- Name
+  ,                                       !- Hot Water Inlet Node Name
+  ,                                       !- Hot Water Outlet Node Name
+  1000;                                   !- Nominal Capacity {W}
+
+OS:DistrictCooling,
+  {ffb9ee58-0d18-4825-ba40-0f1d841445f0}, !- Handle
+  District Cooling 1,                     !- Name
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  1000;                                   !- Nominal Capacity {W}
+

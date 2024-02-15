@@ -62,31 +62,52 @@ class UTILITIES_API RunOptions
   /// Serialize to JSON formatted string
   std::string string() const;
 
+  /** Print debugging messages, defaults to false */
   bool debug() const;
+  bool isDebugDefaulted() const;
   bool setDebug(bool debug);
   void resetDebug();
 
+  /** Create, export and run using epjson format. Default is false */
   bool epjson() const;
+  bool isEpjsonDefaulted() const;
   bool setEpjson(bool epjson);
   void resetEpjson();
 
+  /** Speeds up workflow by skipping steps not needed for running simulations, defaults to false */
   bool fast() const;
+  bool isFastDefaulted() const;
   bool setFast(bool fast);
   void resetFast();
 
   bool preserveRunDir() const;
-  bool setPreserveRunDir(bool preserve);
+  bool isPreserveRunDirDefaulted() const;
+  bool setPreserveRunDir(bool preserveRunDir);
   void resetPreserveRunDir();
 
+  /** Skips the call to the EnergyPlus ExpandObjects program, defaults to false */
   bool skipExpandObjects() const;
-  bool setSkipExpandObjects(bool skip);
+  bool isSkipExpandObjectsDefaulted() const;
+  bool setSkipExpandObjects(bool skipExpandObjects);
   void resetSkipExpandObjects();
 
+  /** Does not add add default output requests to EnergyPlus input if true.
+    * Requests from reporting measures are added in either case, defaults to false */
   bool skipEnergyPlusPreprocess() const;
-  bool setSkipEnergyPlusPreprocess(bool skip);
+  bool isSkipEnergyPlusPreprocessDefaulted() const;
+  bool setSkipEnergyPlusPreprocess(bool skipEnergyPlusPreprocess);
   void resetSkipEnergyPlusPreprocess();
 
+  /** Skips creating the data_point.zip file. Setting to `true` can cause issues with workflows expecting .zip files to signal completion
+    * (e.g., OpenStudio Analysis Framework), defaults to false */
+  bool skipZipResults() const;
+  bool isSkipZipResultsDefaulted() const;
+  bool setSkipZipResults(bool skipZipResults);
+  void resetSkipZipResults();
+
+  /** Remove unnecessary files during post processing, defaults to true */
   bool cleanup() const;
+  bool isCleanupDefaulted() const;
   bool setCleanup(bool cleanup);
   void resetCleanup();
 
@@ -101,6 +122,9 @@ class UTILITIES_API RunOptions
   ForwardTranslatorOptions forwardTranslatorOptions() const;
   bool setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions);
   void resetForwardTranslatorOptions();
+
+  /* Any non-defaulted value from other is brought over */
+  void overrideValuesWith(const RunOptions& other);
 
  protected:
   // get the impl

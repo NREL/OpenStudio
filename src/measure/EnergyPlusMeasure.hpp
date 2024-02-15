@@ -55,7 +55,7 @@ namespace measure {
     //@}
 
    protected:
-    EnergyPlusMeasure() = default;
+    EnergyPlusMeasure();
 
    private:
     REGISTER_LOGGER("openstudio.measure.EnergyPlusMeasure");

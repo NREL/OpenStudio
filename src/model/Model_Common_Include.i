@@ -92,6 +92,19 @@
   %}
   %enddef
 
+  %define MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT_EXTENSION(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+  %init %{
+    rb_eval_string("OpenStudio::Model::" #_oldName " = OpenStudio::Model::" #_newName "");
+
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_oldName ") { OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::to" #_newName "(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName ") { |handle| OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName');OpenStudio::Model::get" #_newName "(self, handle); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName "s) { OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::get" #_newName "s(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName "ByName) { |name| OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::get" #_newName "ByName(self, name); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_oldName "sByName) { |name, exactMatch| OpenStudio::logFree(OpenStudio::Warn, 'openstudio.model._oldName', 'Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName'); OpenStudio::Model::get" #_newName "sByName(self, name, exactMatch); } }");
+  %}
+  %enddef
+
+
 #elif defined SWIGCSHARP
 
   // should be able to do something here as C# supports partial classes
@@ -178,31 +191,59 @@
 
 #elif defined SWIGPYTHON
 
+    %pythoncode %{
+# Import common modules
+import typing
+import warnings
+%}
   // Let's use monkey-patching via unbound functions
 
   %define MODELOBJECT_EXTENSION(_name)
   %pythoncode %{
     def _to_##_name(self) -> Optional##_name:
+        """Try to cast the ModelObject to a _name.
+
+        :return: An Optional _name.
+        """
         return to##_name(self)
     openstudioutilitiesidf.IdfObject.to_##_name = _to_##_name
 
-    def _get##_name(self, t_handle: "UUID") -> Optional##_name:
+    def _get##_name(self, t_handle: typing.Union[openstudioutilitiescore.UUID, str]) -> Optional##_name:
+        """Try to get an object of type _name referenced by its handle.
+
+        :param t_handle: The object's handle
+        :return: An Optional _name.
+        """
+        if isinstance(t_handle, str):
+            t_handle = openstudioutilitiescore.toUUID(t_handle)
         return get##_name(self, t_handle)
     Model.get##_name = _get##_name
 
-    def _get##_name(self, t_handle_str: str) -> Optional##_name:
-        return get##_name(self, openstudioutilitiescore.toUUID(t_handle_str))
-    Model.get##_name = _get##_name
-
     def _get##_name##s(self) -> _name##Vector:
+        """Get a vector of all objects of type _name in the model.
+
+        :return: A vector of _name.
+        """
         return get##_name##s(self)
     Model.get##_name##s = _get##_name##s
 
     def _get##_name##ByName(self, t_name: str) -> Optional##_name:
+        """Try to get an object of type _name that has this specific name (case-insentive).
+
+        :param t_name: The object's name
+        :return: An Optional _name.
+        """
         return get##_name##ByName(self, t_name)
     Model.get##_name##ByName = _get##_name##ByName
 
     def _get##_name##sByName(self, t_name: str, t_exactMatch: bool) -> _name##Vector:
+        """Returns all objects of type _name named t_name (case insensitive).
+
+        :param t_name: The object's name
+        :param t_exactMatch: if false, will return all objects with name or name plus an integer suffix
+
+        :return: A vector of matches.
+        """
         return get##_name##sByName(self, t_name, t_exactMatch)
     Model.get##_name##sByName = _get##_name##sByName
   %}
@@ -211,14 +252,26 @@
   %define UNIQUEMODELOBJECT_EXTENSION(_name)
   %pythoncode %{
     def _to_##_name(self) -> Optional##_name:
+        """Try to cast the ModelObject to a _name.
+
+        :return: An Optional _name.
+        """
         return to##_name(self)
     openstudioutilitiesidf.IdfObject.to_##_name = _to_##_name
 
     def _get##_name(self) -> _name:
+        """Get or instantiate a UniqueModelObject of type _name.
+
+        :return: An existing _name or a newly instantiated one.
+        """
         return get##_name(self)
     Model.get##_name = _get##_name
 
     def _getOptional##_name(self) -> Optional##_name:
+        """Return a UniqueModelObject of type _name only if it's already present in the Model.
+
+        :return: An Optional _name.
+        """
         return getOptional##_name(self)
     Model.getOptional##_name = _getOptional##_name
   %}
@@ -231,6 +284,86 @@
     openstudioutilitiesidf.IdfExtensibleGroup.to_##_name = _to_##_name
   %}
   %enddef
+
+  %define MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT_EXTENSION(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+  %pythoncode %{
+
+    _oldName = _newName
+
+    def _to_##_oldName(self) -> Optional##_newName:
+        """Try to cast the ModelObject to a _newName.
+
+        :return: An Optional _newName.
+
+        .. deprecated:: _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch
+           Use :meth:`"IdfObject.to_##_newName"`.
+        """
+        warnings.warn("_oldName was deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.", category=FutureWarning)
+        openstudioutilitiescore.logFree(openstudioutilitiescore.Warn, "openstudio.model._oldName", "Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.")
+        return to##_newName(self)
+    openstudioutilitiesidf.IdfObject.to_##_oldName = _to_##_oldName
+
+    def _get##_oldName(self, t_handle: typing.Union[openstudioutilitiescore.UUID, str]) -> Optional##_newName:
+        """Try to get an object of type _newName referenced by its handle.
+
+        :param t_handle: The object's handle
+        :return: An Optional _newName.
+
+        .. deprecated:: _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch
+           Use :meth:`"Model.get##_newName"`.
+        """
+        warnings.warn("_oldName was deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.", category=FutureWarning)
+        if isinstance(t_handle, str):
+            t_handle = openstudioutilitiescore.toUUID(t_handle)
+        openstudioutilitiescore.logFree(openstudioutilitiescore.Warn, "openstudio.model._oldName", "Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.")
+        return get##_newName(self, t_handle)
+    Model.get##_oldName = _get##_oldName
+
+    def _get##_oldName##s(self) -> _newName##Vector:
+        """Get a vector of all objects of type _newName in the model.
+
+        :return: A vector of _newName.
+
+        .. deprecated:: _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch
+           Use :meth:`"Model.get##_newName##s"`.
+        """
+        warnings.warn("_oldName was deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.", category=FutureWarning)
+        openstudioutilitiescore.logFree(openstudioutilitiescore.Warn, "openstudio.model._oldName", "Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.")
+        return get##_newName##s(self)
+    Model.get##_oldName##s = _get##_oldName##s
+
+    def _get##_oldName##ByName(self, t_name: str) -> Optional##_newName:
+        """Try to get an object of type _newName that has this specific name (case-insentive).
+
+        :param t_name: The object's name
+        :return: An Optional _newName.
+
+        .. deprecated:: _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch
+           Use :meth:`"Model.get##_newName##ByName"`.
+        """
+        warnings.warn("_oldName was deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.", category=FutureWarning)
+        openstudioutilitiescore.logFree(openstudioutilitiescore.Warn, "openstudio.model._oldName", "Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.")
+        return get##_newName##ByName(self, t_name)
+    Model.get##_oldName##ByName = _get##_oldName##ByName
+
+    def _get##_oldName##sByName(self, t_name: str, t_exactMatch: bool) -> _newName##Vector:
+        """Returns all objects of type _newName named t_name (case insensitive).
+
+        :param t_name: The object's name
+        :param t_exactMatch: if false, will return all objects with name or name plus an integer suffix
+
+        :return: A vector of matches.
+
+        .. deprecated:: _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch
+           Use :meth:`"Model.get##_newName##sByName"`.
+        """
+        warnings.warn("_oldName was deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.", category=FutureWarning)
+        openstudioutilitiescore.logFree(openstudioutilitiescore.Warn, "openstudio.model._oldName", "Deprecated at _deprecatedAtVersionMajor._deprecatedAtVersionMinor._deprecatedAtVersionPatch, use _newName.")
+        return get##_newName##sByName(self, t_name, t_exactMatch)
+    Model.get##_oldName##sByName = _get##_oldName##sByName
+  %}
+  %enddef
+
 #else
 
   #define MODELOBJECT_EXTENSION(_name)
@@ -390,5 +523,14 @@
   #endif
 %enddef
 
+%define MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+  #if defined SWIGRUBY
+    MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT_EXTENSION(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+  #endif
+
+  #if defined SWIGPYTHON
+    MODELOBJECT_ALIAS_CLASS_DEPRECATED_AT_EXTENSION(_oldName, _newName, _deprecatedAtVersionMajor, _deprecatedAtVersionMinor, _deprecatedAtVersionPatch)
+  #endif
+%enddef
 
 #endif //MODEL_I

@@ -21,9 +21,10 @@ namespace energyplus {
 
     auto modelObject = m_model.getUniqueModelObject<EnvironmentalImpactFactors>();
 
-    // District Heating Efficiency: Optional Double
-    if (boost::optional<double> _districtHeatingEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingEfficiency)) {
-      modelObject.setDistrictHeatingEfficiency(_districtHeatingEfficiency.get());
+    // District Heating Water Efficiency: Optional Double
+    if (boost::optional<double> _districtHeatingWaterEfficiency =
+          workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingWaterEfficiency)) {
+      modelObject.setDistrictHeatingWaterEfficiency(_districtHeatingWaterEfficiency.get());
     }
 
     // District Cooling COP: Optional Double
@@ -31,9 +32,10 @@ namespace energyplus {
       modelObject.setDistrictCoolingCOP(_districtCoolingCOP.get());
     }
 
-    // Steam Conversion Efficiency: Optional Double
-    if (boost::optional<double> _steamConversionEfficiency = workspaceObject.getDouble(EnvironmentalImpactFactorsFields::SteamConversionEfficiency)) {
-      modelObject.setSteamConversionEfficiency(_steamConversionEfficiency.get());
+    // District Heating Steam Conversion Efficiency: Optional Double
+    if (boost::optional<double> _districtHeatingSteamConversionEfficiency =
+          workspaceObject.getDouble(EnvironmentalImpactFactorsFields::DistrictHeatingSteamConversionEfficiency)) {
+      modelObject.setDistrictHeatingSteamConversionEfficiency(_districtHeatingSteamConversionEfficiency.get());
     }
 
     // Total Carbon Equivalent Emission Factor From N2O: Optional Double

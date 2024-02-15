@@ -135,11 +135,9 @@ namespace energyplus {
       idfObject.setString(Boiler_HotWaterFields::BoilerFlowMode, s.get());
     }
 
-    // ParasiticElectricLoad
+    // OnCycleParasiticElectricLoad
 
-    if ((value = modelObject.parasiticElectricLoad())) {
-      idfObject.setDouble(Boiler_HotWaterFields::ParasiticElectricLoad, value.get());
-    }
+    idfObject.setDouble(Boiler_HotWaterFields::OnCycleParasiticElectricLoad, modelObject.onCycleParasiticElectricLoad());
 
     // SizingFactor
 
@@ -151,6 +149,10 @@ namespace energyplus {
     if ((s = modelObject.endUseSubcategory())) {
       idfObject.setString(Boiler_HotWaterFields::EndUseSubcategory, s.get());
     }
+
+    // OffCycleParasiticFuelLoad
+
+    idfObject.setDouble(Boiler_HotWaterFields::OffCycleParasiticFuelLoad, modelObject.offCycleParasiticFuelLoad());
 
     return boost::optional<IdfObject>(idfObject);
   }

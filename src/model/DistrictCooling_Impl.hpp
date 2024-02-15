@@ -13,6 +13,8 @@ namespace openstudio {
 
 namespace model {
 
+  class Schedule;
+
   namespace detail {
 
     /** DistrictCooling_Impl is a StraightComponent_Impl that is the implementation class for DistrictCooling.*/
@@ -44,6 +46,8 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual bool addToNode(Node& node) override;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
@@ -53,6 +57,8 @@ namespace model {
       virtual std::vector<FuelType> heatingFuelTypes() const override;
       virtual std::vector<AppGFuelType> appGHeatingFuelTypes() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -61,21 +67,23 @@ namespace model {
 
       bool isNominalCapacityAutosized() const;
 
-      boost::optional<double> autosizedNominalCapacity() const;
+      Schedule capacityFractionSchedule() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool addToNode(Node& node) override;
+      bool setNominalCapacity(double nominalCapacity);
+
+      void autosizeNominalCapacity();
+
+      bool setCapacityFractionSchedule(Schedule& schedule);
 
       //@}
       /** @name Other */
       //@{
 
-      bool setNominalCapacity(boost::optional<double> nominalCapacity);
-
-      void autosizeNominalCapacity();
+      boost::optional<double> autosizedNominalCapacity() const;
 
       //@}
 

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>stack_level_too_deep_measure</name>
+  <uid>22222222-c89b-4b93-b400-220ca060b2bb</uid>
+  <version_id>c2e1967b-0672-4e80-84fd-9204e701f10a</version_id>
+  <version_modified>2023-11-10T14:04:04Z</version_modified>
+  <xml_checksum>4EDA3A53</xml_checksum>
+  <class_name>StackLevelTooDeepMeasure</class_name>
+  <display_name>Stack Level Too Deep Measure</display_name>
+  <description></description>
+  <modeler_description>The arguments method calls an infinitely recursive function</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.4.1</identifier>
+        <min_compatible>3.4.1</min_compatible>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>C952AC5B</checksum>
+    </file>
+  </files>
+</measure>

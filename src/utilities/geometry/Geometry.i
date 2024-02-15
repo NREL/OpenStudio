@@ -169,6 +169,14 @@
   }
 }
 
+%extend openstudio::Surface3d {
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
 %extend openstudio::Transformation {
 
   std::string __str__() const {

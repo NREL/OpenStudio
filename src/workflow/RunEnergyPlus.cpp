@@ -212,7 +212,7 @@ void OSWorkflow::runEnergyPlus() {
         // bp::child c(cmd, bp::std_out > is);
         bp::child c(runDirResults.energyPlusExe, inIDF.filename(), bp::std_out > is);
         while (c.running() && std::getline(is, line)) {
-          stdout_ofs << line;
+          stdout_ofs << openstudio::ascii_trim_right(line) << '\n';  // Fix for windows...
           if (m_show_stdout) {
             fmt::print("{}\n", line);
           }
@@ -224,7 +224,7 @@ void OSWorkflow::runEnergyPlus() {
       detailedTimeBlock("Running EnergyPlus", [&cmd, &result] { result = std::system(cmd.c_str()); });
     }
 
-    LOG(Info, "EnergyPlus returned " << result << "'");
+    LOG(Info, "EnergyPlus returned '" << result << "'");
     if (result != 0) {
       LOG(Warn, "EnergyPlus returned a non-zero exit code (" << result << "). Check the stdout-energyplus log");
     }
@@ -245,7 +245,7 @@ void OSWorkflow::runEnergyPlus() {
         // TODO: add a channel filter on the logger to avoid catching all the debug statements in the ErrorFile class
         const openstudio::energyplus::ErrorFile errFile(errPath);
         std::string status = errFile.completedSuccessfully() ? "Completed Successfully" : "Failed";
-        fmt::print("EnergyPlus {} with ", status);
+        fmt::print("RunEnergyPlus: {} with ", status);
         fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
         fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
         fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());

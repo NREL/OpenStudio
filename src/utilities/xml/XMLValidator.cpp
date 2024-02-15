@@ -477,8 +477,10 @@ XMLValidator XMLValidator::gbxmlValidator() {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
   const bool quiet = true;
-  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
-  return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
+  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver7.03.xsd", openstudio::toString(tmpDir), quiet);
+  auto validator = XMLValidator(tmpDir / "GreenBuildingXML_Ver7.03.xsd");
+  validator.m_tempDir = tmpDir;
+  return validator;
 }
 
 XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, const VersionString& schemaVersion) {
@@ -510,7 +512,9 @@ XMLValidator XMLValidator::bclXMLValidator(openstudio::BCLXMLType bclXMLType, co
 
   const bool quiet = true;
   ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/bcl/{}", schemaName), openstudio::toString(tmpDir), quiet);
-  return XMLValidator(tmpDir / schemaName);
+  auto validator = XMLValidator(tmpDir / schemaName);
+  validator.m_tempDir = tmpDir;
+  return validator;
 }
 
 }  // namespace openstudio

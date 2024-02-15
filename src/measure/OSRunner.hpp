@@ -274,6 +274,11 @@ namespace measure {
 
     void resetLanguagePreference();
 
+    /** Whether registerInfo, registerWarning, registerError, registerInitialCondition, registerFinalCondition and registerAsNotApplicable
+      * also LOG an actual message */
+    bool registerMsgAlsoLogs() const;
+    void setRegisterMsgAlsoLogs(bool registerMsgAlsoLogs);
+
    private:
     REGISTER_LOGGER("openstudio.measure.OSRunner");
 
@@ -289,6 +294,8 @@ namespace measure {
     std::string m_languagePreference;
 
     bool m_halted;
+
+    bool m_registerMsgAlsoLogs = false;
 
     // current data
     WorkflowStepResult m_result;

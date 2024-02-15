@@ -7,9 +7,12 @@
 #include "LogSink_Impl.hpp"
 
 #include "Logger.hpp"
+#include "LogMessage.hpp"
 
 #include <boost/log/support/regex.hpp>
 #include <boost/log/expressions.hpp>
+#include <boost/phoenix/bind.hpp>
+#include <boost/log/support/date_time.hpp>
 
 namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
@@ -19,7 +22,50 @@ namespace openstudio {
 
 namespace detail {
 
-  LogSink_Impl::LogSink_Impl() : m_mutex{}, m_threadId{}, m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())} {}
+  // Custom severity level formatting function
+  std::string formatter_severity_upcase(boost::log::value_ref<LogLevel> const& logLevel_) {
+    static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+    LogLevel logLevel = Trace;
+    if (logLevel_) {
+      // if (auto logLevel_ = rec[expr::attr<LogLevel>("Severity")]) {
+      logLevel = logLevel_.get();
+    }
+
+    return std::string{logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]};
+  }
+
+  LogSink_Impl::LogSink_Impl()
+    : m_sink{boost::shared_ptr<LogSinkBackend>(new LogSinkBackend())},
+      // set formatting, seems like you have to call this after the stream is added
+      // DLM@20110701: would like to format Severity as string but can't figure out how to do it
+      // because you can't overload operator<< for an enum type
+      // this seems to suggest this should work: http://www.edm2.com/0405/enumeration.html
+      m_formatter{expr::stream << "[" << expr::attr<LogChannel>("Channel") << "] <" << expr::attr<LogLevel>("Severity") << "> " << expr::smessage} {}
+
+  void LogSink_Impl::setFormatter(const boost::log::formatter& fmter) {
+    std::unique_lock l{m_mutex};
+    m_formatter = fmter;
+    m_sink->set_formatter(m_formatter);
+  }
+
+  void LogSink_Impl::useWorkflowGemFormatter(bool use, bool include_channel) {
+    std::unique_lock l{m_mutex};
+    if (use) {
+      Logger::instance().addTimeStampToLogger();
+      if (include_channel) {
+        m_formatter = expr::stream << "[" << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%H:%M:%S.%f") << " "
+                                   << boost::phoenix::bind(&formatter_severity_upcase, expr::attr<LogLevel>("Severity")) << "] "
+                                   << "[" << expr::attr<LogChannel>("Channel") << "] " << expr::smessage;
+      } else {
+        m_formatter = expr::stream << "[" << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%H:%M:%S.%f") << " "
+                                   << boost::phoenix::bind(&formatter_severity_upcase, expr::attr<LogLevel>("Severity")) << "] " << expr::smessage;
+      }
+
+    } else {
+      m_formatter = expr::stream << "[" << expr::attr<LogChannel>("Channel") << "] <" << expr::attr<LogLevel>("Severity") << "> " << expr::smessage;
+    }
+    m_sink->set_formatter(m_formatter);
+  }
 
   bool LogSink_Impl::isEnabled() const {
     return Logger::instance().findSink(m_sink);
@@ -123,12 +169,7 @@ namespace detail {
 
     m_sink->locked_backend()->add_stream(os);
 
-    // set formatting, seems like you have to call this after the stream is added
-    // DLM@20110701: would like to format Severity as string but can't figure out how to do it
-    // because you can't overload operator<< for an enum type
-    // this seems to suggest this should work: http://www.edm2.com/0405/enumeration.html
-    m_sink->set_formatter(expr::stream << "[" << expr::attr<LogChannel>("Channel") << "] <" << expr::attr<LogLevel>("Severity") << "> "
-                                       << expr::smessage);
+    m_sink->set_formatter(m_formatter);
 
     //m_sink->locked_backend()->set_formatter(fmt::stream
     //  << "[" << fmt::attr< LogChannel >("Channel")
@@ -242,6 +283,14 @@ void LogSink::setStream(boost::shared_ptr<std::ostream> os) {
 
 boost::shared_ptr<LogSinkBackend> LogSink::sink() const {
   return m_impl->sink();
+}
+
+void LogSink::useWorkflowGemFormatter(bool use, bool include_channel) {
+  m_impl->useWorkflowGemFormatter(use, include_channel);
+}
+
+void LogSink::setFormatter(const boost::log::formatter& fmter) {
+  m_impl->setFormatter(fmter);
 }
 
 }  // namespace openstudio

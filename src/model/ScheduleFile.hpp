@@ -86,6 +86,10 @@ namespace model {
 
     boost::optional<CSVFile> csvFile() const;
 
+    bool translateFileWithRelativePath() const;
+
+    bool isTranslateFileWithRelativePathDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -120,9 +124,16 @@ namespace model {
 
     /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
+    bool setTranslateFileWithRelativePath(bool translateFileWithRelativePath);
+
+    void resetTranslateFileWithRelativePath();
+
     //@}
     /** @name Other */
     //@{
+
+    // Depending on the value of 'Translate File With Relative Path', returns an absolute or a relative path
+    openstudio::path translatedFilePath() const;
 
     //@}
    protected:

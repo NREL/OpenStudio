@@ -69,6 +69,8 @@ namespace cli {
     cmd += fmt::format(R"(
 begin
   require '{}'
+rescue SystemExit
+  # puts "help was called"
 rescue Exception => e
   puts
   puts "Error: #{{e.message}}"
@@ -104,8 +106,10 @@ sys.argv.append("{}")
     }
     cmd += fmt::format(R"python(
 import importlib.util
-spec = importlib.util.spec_from_file_location('__main__', r'{}')
+module_name = '__main__'
+spec = importlib.util.spec_from_file_location(module_name, r'{}')
 module = importlib.util.module_from_spec(spec)
+sys.modules[module_name] = module
 spec.loader.exec_module(module)
 )python",
                        pythonScriptPath.generic_string());

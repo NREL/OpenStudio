@@ -72,6 +72,15 @@ namespace energyplus {
       idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::InitialMoistureEvaporationRateDividedbySteadyStateACLatentCapacity, value.get());
     }
 
+    // Maximum Cycling Rate
+    idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MaximumCyclingRate, modelObject.maximumCyclingRate());
+
+    // Latent Capacity Time Constnat
+    idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::LatentCapacityTimeConstant, modelObject.latentCapacityTimeConstant());
+
+    // Fan Delay Time
+    idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::FanDelayTime, modelObject.fanDelayTime());
+
     // EnergyPartLoadFractionCurveName
     {
       auto curve = modelObject.energyPartLoadFractionCurve();
@@ -97,6 +106,12 @@ namespace energyplus {
     // CrankcaseHeaterCapacity
     if ((value = modelObject.crankcaseHeaterCapacity())) {
       idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacity, value.get());
+    }
+
+    if (auto crankCurve_ = modelObject.crankcaseHeaterCapacityFunctionofTemperatureCurve()) {
+      if (auto curve_ = translateAndMapModelObject(*crankCurve_)) {
+        idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::CrankcaseHeaterCapacityFunctionofTemperatureCurveName, curve_->nameString());
+      }
     }
 
     // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
@@ -159,6 +174,11 @@ namespace energyplus {
       if ((value = speed.referenceUnitRatedAirFlowRate())) {
         eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedReferenceUnitRatedAirFlowRate, value.get());
       }
+
+      eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                   speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+      eg.setDouble(Coil_Cooling_DX_VariableSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                   speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
 
       // SpeedReferenceUnitRatedCondenserAirFlowRate
       if ((value = speed.referenceUnitRatedCondenserAirFlowRate())) {

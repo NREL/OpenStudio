@@ -124,6 +124,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-2-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V23-1-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V23-2-0.sql
   utilities/xml/base.xml
   utilities/xml/hpxml_with_error.xml
   utilities/xml/schema/HPXML.xsd
@@ -334,6 +335,9 @@ SET(gbxml_resources_src
   gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
   gbxml/TropicBird_BEM_4_2018.xml
   gbxml/TropicBird.xml
+  gbxml/11_Jay_St.xml
+  gbxml/A00.xml
+  gbxml/Building_Central_Conceptual_Model.xml
 )
 
 # update the resources
@@ -414,3 +418,6 @@ CREATE_SRC_GROUPS("${airflow_resources_src}")
 file(COPY "Examples" DESTINATION .)
 # And install
 install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+
+# Copy it for testing
+file(COPY "workflow" DESTINATION .)

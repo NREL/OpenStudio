@@ -159,6 +159,30 @@ TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
   EXPECT_TRUE(openstudio::filesystem::is_regular_file(expectedPath));
 }
 
+TEST_F(XMLValidatorFixture, XMLValidator_bclXMLValidator_Cleanup) {
+  openstudio::path tmpDir;
+  {
+    auto xmlValidator = XMLValidator::bclXMLValidator(BCLXMLType::MeasureXML, VersionString(3, 1));
+    tmpDir = xmlValidator.schemaPath().parent_path();
+    EXPECT_TRUE(openstudio::filesystem::exists(tmpDir));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(tmpDir));
+  }
+  // #5076 - XMLValidator's dtor should clean up the tmpDir
+  EXPECT_FALSE(openstudio::filesystem::exists(tmpDir)) << "Expected tmpDir to be deleted: " << tmpDir;
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_gbxmlValidator_Cleanup) {
+  openstudio::path tmpDir;
+  {
+    auto xmlValidator = XMLValidator::gbxmlValidator();
+    tmpDir = xmlValidator.schemaPath().parent_path();
+    EXPECT_TRUE(openstudio::filesystem::exists(tmpDir));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(tmpDir));
+  }
+  // #5076 - XMLValidator's dtor should clean up the tmpDir
+  EXPECT_FALSE(openstudio::filesystem::exists(tmpDir)) << "Expected tmpDir to be deleted: " << tmpDir;
+}
+
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
   const auto& [filename, n_warnings, n_errors] = GetParam();
 
@@ -190,7 +214,9 @@ INSTANTIATE_TEST_SUITE_P(XMLValidatorFixture, GbXMLValidatorParametrizedFixture,
                                            std::make_tuple("gbxml/seb.xml", 0, 16), std::make_tuple("gbxml/simpleBox_vasari.xml", 0, 27),
                                            std::make_tuple("gbxml/TestCube.xml", 0, 8), std::make_tuple("gbxml/TestCubeAlternateUnits.xml", 0, 8),
                                            std::make_tuple("gbxml/TestSchedules.xml", 0, 16), std::make_tuple("gbxml/TropicBird.xml", 0, 110),
-                                           std::make_tuple("gbxml/TwoStoryOffice_Trane.xml", 0, 236), std::make_tuple("gbxml/ZNETH.xml", 0, 204)),
+                                           std::make_tuple("gbxml/TwoStoryOffice_Trane.xml", 0, 236), std::make_tuple("gbxml/ZNETH.xml", 0, 204),
+                                           std::make_tuple("gbxml/11_Jay_St.xml", 0, 0), std::make_tuple("gbxml/A00.xml", 0, 0),
+                                           std::make_tuple("gbxml/Building_Central_Conceptual_Model.xml", 0, 3)),
                          [](const testing::TestParamInfo<GbXMLValidatorParametrizedFixture::ParamType>& info) {
                            auto filename = std::get<0>(info.param);
                            std::replace_if(

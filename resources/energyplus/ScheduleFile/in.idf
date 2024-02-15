@@ -1,4 +1,4 @@
-  Version,23.1;
+  Version,23.2;
 
   Timestep,4;
 
@@ -3583,6 +3583,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -3598,9 +3599,9 @@
     Node 19,                 !- Air Inlet Node Name
     Node 20,                 !- Air Outlet Node Name
     Node 20,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 20 OS Default SPM,  !- Name
@@ -3910,6 +3911,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -3925,9 +3927,9 @@
     Node 31,                 !- Air Inlet Node Name
     Node 32,                 !- Air Outlet Node Name
     Node 32,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 32 OS Default SPM,  !- Name
@@ -4237,6 +4239,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -4252,9 +4255,9 @@
     Node 43,                 !- Air Inlet Node Name
     Node 44,                 !- Air Outlet Node Name
     Node 44,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 44 OS Default SPM,  !- Name
@@ -4564,6 +4567,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -4579,9 +4583,9 @@
     Node 55,                 !- Air Inlet Node Name
     Node 56,                 !- Air Outlet Node Name
     Node 56,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 56 OS Default SPM,  !- Name
@@ -4891,6 +4895,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -4906,9 +4911,9 @@
     Node 67,                 !- Air Inlet Node Name
     Node 68,                 !- Air Outlet Node Name
     Node 68,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 68 OS Default SPM,  !- Name
@@ -5218,6 +5223,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -5233,9 +5239,9 @@
     Node 79,                 !- Air Inlet Node Name
     Node 80,                 !- Air Outlet Node Name
     Node 80,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 80 OS Default SPM,  !- Name
@@ -5545,6 +5551,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -5560,9 +5567,9 @@
     Node 91,                 !- Air Inlet Node Name
     Node 92,                 !- Air Outlet Node Name
     Node 92,                 !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 92 OS Default SPM,  !- Name
@@ -5872,6 +5879,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -5887,9 +5895,9 @@
     Node 103,                !- Air Inlet Node Name
     Node 104,                !- Air Outlet Node Name
     Node 104,                !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 104 OS Default SPM, !- Name
@@ -6199,6 +6207,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -6214,9 +6223,9 @@
     Node 115,                !- Air Inlet Node Name
     Node 116,                !- Air Outlet Node Name
     Node 116,                !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 116 OS Default SPM, !- Name
@@ -6526,6 +6535,7 @@
     Autosize,                !- Evaporative Condenser Air Flow Rate {m3/s}
     Autosize,                !- Evaporative Condenser Pump Rated Power Consumption {W}
     0,                       !- Crankcase Heater Capacity {W}
+    ,                        !- Crankcase Heater Capacity Function of Temperature Curve Name
     0,                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
     ,                        !- Supply Water Storage Tank Name
     ,                        !- Condensate Collection Water Storage Tank Name
@@ -6541,9 +6551,9 @@
     Node 127,                !- Air Inlet Node Name
     Node 128,                !- Air Outlet Node Name
     Node 128,                !- Temperature Setpoint Node Name
-    0,                       !- Parasitic Electric Load {W}
+    0,                       !- On Cycle Parasitic Electric Load {W}
     ,                        !- Part Load Fraction Correlation Curve Name
-    0;                       !- Parasitic Fuel Load {W}
+    0;                       !- Off Cycle Parasitic Fuel Load {W}
 
   SetpointManager:MixedAir,
     Node 128 OS Default SPM, !- Name
@@ -6798,13 +6808,13 @@
     SumOrAverage,            !- Aggregation Type for Variable or Meter 2
     InteriorEquipment:DistrictHeating,  !- Variable or Meter 3 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 3
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 4 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 4 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 4
     Fans:DistrictHeating,    !- Variable or Meter 5 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 5
     Pumps:DistrictHeating,   !- Variable or Meter 6 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 6
-    Heating:DistrictHeating, !- Variable or Meter 7 Name
+    Heating:DistrictHeatingWater,  !- Variable or Meter 7 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 7
     Cooling:DistrictHeating, !- Variable or Meter 8 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 8
@@ -6902,7 +6912,7 @@
   Output:Table:Monthly,
     Building Energy Performance - District Heating Peak Demand,  !- Name
     2,                       !- Digits After Decimal
-    DistrictHeating:Facility,!- Variable or Meter 1 Name
+    DistrictHeatingWater:Facility,  !- Variable or Meter 1 Name
     Maximum,                 !- Aggregation Type for Variable or Meter 1
     InteriorLights:DistrictHeating,  !- Variable or Meter 2 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 2
@@ -6910,13 +6920,13 @@
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 3
     InteriorEquipment:DistrictHeating,  !- Variable or Meter 4 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 4
-    ExteriorEquipment:DistrictHeating,  !- Variable or Meter 5 Name
+    ExteriorEquipment:DistrictHeatingWater,  !- Variable or Meter 5 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 5
     Fans:DistrictHeating,    !- Variable or Meter 6 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 6
     Pumps:DistrictHeating,   !- Variable or Meter 7 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 7
-    Heating:DistrictHeating, !- Variable or Meter 8 Name
+    Heating:DistrictHeatingWater,  !- Variable or Meter 8 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 8
     Cooling:DistrictHeating, !- Variable or Meter 9 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 9
@@ -6975,7 +6985,7 @@
 
   Output:Meter,DistrictCooling:Facility,Timestep;
 
-  Output:Meter,DistrictHeating:Facility,Timestep;
+  Output:Meter,DistrictHeatingWater:Facility,Timestep;
 
   Output:Variable,*,Site Outdoor Air Wetbulb Temperature,Timestep;
 

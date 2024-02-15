@@ -182,13 +182,13 @@ namespace gbxml {
     gbXMLElement.append_attribute("xmlns:xhtml") = "http://www.w3.org/1999/xhtml";
     gbXMLElement.append_attribute("xmlns:xsi") = "http://www.w3.org/2001/XMLSchema-instance";
     gbXMLElement.append_attribute("xmlns:xsd") = "http://www.w3.org/2001/XMLSchema";
-    gbXMLElement.append_attribute("xsi:schemaLocation") = "http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd";
+    gbXMLElement.append_attribute("xsi:schemaLocation") = "http://www.gbxml.org/schema http://gbxml.org/schema/7-03/GreenBuildingXML_Ver7.03.xsd";
     gbXMLElement.append_attribute("temperatureUnit") = "C";
     gbXMLElement.append_attribute("lengthUnit") = "Meters";
     gbXMLElement.append_attribute("areaUnit") = "SquareMeters";
     gbXMLElement.append_attribute("volumeUnit") = "CubicMeters";
     gbXMLElement.append_attribute("useSIUnitsForResults") = "true";
-    gbXMLElement.append_attribute("version") = "6.01";
+    gbXMLElement.append_attribute("version") = "7.03";
     gbXMLElement.append_attribute("SurfaceReferenceLocation") = "Centerline";
 
     // translateFacility is responsible to translate Surfaces, and calls translateBuilding, which is responsible to translate spaces

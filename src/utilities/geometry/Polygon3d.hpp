@@ -27,11 +27,11 @@ class UTILITIES_API Polygon3d
   // Constructs a polygon with an outer path and one or more inner paths
   Polygon3d(const Point3dVector& outerPath, const Point3dVectorVector& innerPaths);
 
-  // Copy and move operators are implicitly declared (Rule of 1)
-  // Polygon3d(const Polygon3d& other) = default;
-  // Polygon3d(Polygon3d&& other) = default;
-  // Polygon3d& operator=(const Polygon3d&) = default;
-  // Polygon3d& operator=(Polygon3d&&) = default;
+  // Copy and move operators are implicitly declared (Rule of 1), but we want the copy ctor for SWIG so we have to define all of them
+  Polygon3d(const Polygon3d& other) = default;
+  Polygon3d(Polygon3d&& other) noexcept = default;
+  Polygon3d& operator=(const Polygon3d&) = default;
+  Polygon3d& operator=(Polygon3d&&) noexcept = default;
   // ~Polygon3d() noexcept = default;
 
   // Assigns an outer path for the polygon

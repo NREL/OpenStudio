@@ -110,7 +110,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyLocalEnvironment) {
     ASSERT_TRUE(wo_extSf_);
     EXPECT_EQ(wo_extSf_->iddObject().type(), IddObjectType::BuildingSurface_Detailed);
 
-    EXPECT_EQ(shadingSch.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName).get());
+    EXPECT_EQ(shadingSch.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::SunlitFractionScheduleName).get());
 
     EXPECT_EQ(sp.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName).get());
     auto wo_sp_ = wo_localEnv.getTarget(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName);
@@ -139,7 +139,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyLocalEnvironment) {
     ASSERT_TRUE(wo_extSf_);
     EXPECT_EQ(wo_extSf_->iddObject().type(), IddObjectType::FenestrationSurface_Detailed);
 
-    EXPECT_EQ(shadingSch.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName).get());
+    EXPECT_EQ(shadingSch.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::SunlitFractionScheduleName).get());
 
     EXPECT_EQ(sp.nameString(), wo_localEnv.getString(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName).get());
     auto wo_sp_ = wo_localEnv.getTarget(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName);
@@ -206,7 +206,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfacePropertyLocalEnvironment) {
   auto externalShadingSch = w.addObject(IdfObject(IddObjectType::Schedule_Constant)).get();
   externalShadingSch.setName("externalShadingSch");
   EXPECT_TRUE(externalShadingSch.setDouble(Schedule_ConstantFields::HourlyValue, 0.5));
-  EXPECT_TRUE(wo_localEnv.setPointer(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName, externalShadingSch.handle()));
+  EXPECT_TRUE(wo_localEnv.setPointer(SurfaceProperty_LocalEnvironmentFields::SunlitFractionScheduleName, externalShadingSch.handle()));
 
   EXPECT_TRUE(wo_localEnv.setPointer(SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName, wo_sf.handle()));
 

@@ -1,0 +1,131 @@
+
+OS:Version,
+  {33071ded-2315-4908-99af-ab183bb0c205}, !- Handle
+  3.6.1;                                  !- Version Identifier
+
+OS:HeatPump:PlantLoop:EIR:Heating,
+  {a44033ba-0e68-4b7f-96b1-070c5072cdbc}, !- Handle
+  Heat Pump Plant Loop EIR Heating 1,     !- Name
+  ,                                       !- Load Side Inlet Node Name
+  ,                                       !- Load Side Outlet Node Name
+  AirSource,                              !- Condenser Type
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  ,                                       !- Companion Heat Pump Name
+  Autosize,                               !- Load Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Source Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Reference Capacity {W}
+  7.5,                                    !- Reference Coefficient of Performance {W/W}
+  1,                                      !- Sizing Factor
+  {0532b92b-8926-4477-885d-c8e094088ed1}, !- Capacity Modifier Function of Temperature Curve Name
+  {1e69a32e-47fd-4dc8-a960-70a19d98cb92}, !- Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+  {20c68188-c744-4f92-b7a3-e744e67b4eae}; !- Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+
+OS:Curve:Biquadratic,
+  {0532b92b-8926-4477-885d-c8e094088ed1}, !- Handle
+  Curve Biquadratic 1,                    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature;                            !- Input Unit Type for Y
+
+OS:Curve:Biquadratic,
+  {1e69a32e-47fd-4dc8-a960-70a19d98cb92}, !- Handle
+  Curve Biquadratic 2,                    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature;                            !- Input Unit Type for Y
+
+OS:Curve:Quadratic,
+  {20c68188-c744-4f92-b7a3-e744e67b4eae}, !- Handle
+  HeatEIRfPLR,                            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:HeatPump:PlantLoop:EIR:Cooling,
+  {42986a97-3f97-4537-a758-720c86b7a317}, !- Handle
+  Heat Pump Plant Loop EIR Cooling 1,     !- Name
+  ,                                       !- Load Side Inlet Node Name
+  ,                                       !- Load Side Outlet Node Name
+  AirSource,                              !- Condenser Type
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  ,                                       !- Companion Heat Pump Name
+  Autosize,                               !- Load Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Source Side Reference Flow Rate {m3/s}
+  Autosize,                               !- Reference Capacity {W}
+  7.5,                                    !- Reference Coefficient of Performance {W/W}
+  1,                                      !- Sizing Factor
+  {a60237b3-76b8-4399-a7a4-d2a8e55b6d03}, !- Capacity Modifier Function of Temperature Curve Name
+  {691e3725-6804-4c01-91c5-853bdb27d116}, !- Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+  {6467d34e-e8fe-4bf7-a42b-bf4a51585284}; !- Electric Input to Output Ratio Modifier Function of Part Load Ratio Curve Name
+
+OS:Curve:Biquadratic,
+  {a60237b3-76b8-4399-a7a4-d2a8e55b6d03}, !- Handle
+  Curve Biquadratic 3,                    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature;                            !- Input Unit Type for Y
+
+OS:Curve:Biquadratic,
+  {691e3725-6804-4c01-91c5-853bdb27d116}, !- Handle
+  Curve Biquadratic 4,                    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35,                                     !- Maximum Value of y
+  ,                                       !- Minimum Curve Output
+  ,                                       !- Maximum Curve Output
+  Temperature,                            !- Input Unit Type for X
+  Temperature;                            !- Input Unit Type for Y
+
+OS:Curve:Quadratic,
+  {6467d34e-e8fe-4bf7-a42b-bf4a51585284}, !- Handle
+  CoolEIRfPLR,                            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+

@@ -72,7 +72,7 @@ namespace energyplus {
       alreadyGotLine = false;
       boost::smatch matches;
 
-      LOG(Debug, "Parsing ErrorFile Line '" << line << "'");
+      // LOG(Trace, "Parsing ErrorFile Line '" << line << "'");
 
       // parse the file
       if (boost::regex_search(line, matches, warningOrError)) {
@@ -102,7 +102,7 @@ namespace energyplus {
           }
         }
 
-        LOG(Trace, "Error parsed: " << warningOrErrorString);
+        // LOG(Trace, "Error parsed: " << warningOrErrorString);
 
         // correctly sort warnings and errors
         try {
@@ -121,7 +121,7 @@ namespace energyplus {
           }
 
         } catch (...) {
-          LOG(Error, "Unknown warning or error level '" << warningOrErrorType << "'");
+          LOG(Error, "Unknown warning or error level '" << warningOrErrorType << "' for line '" << line << "'");
         }
 
       } else if (boost::regex_match(line, completedSuccessful) || boost::regex_match(line, groundTempCompletedSuccessful)) {

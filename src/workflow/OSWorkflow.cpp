@@ -19,6 +19,7 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/FileLogSink.hpp"
+#include "../utilities/core/Json.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/data/Variant.hpp"
 #include "../utilities/filetypes/WorkflowStep.hpp"
@@ -30,9 +31,11 @@
 #include <fmt/chrono.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <json/json.h>
 
 #include <array>
 #include <chrono>
+#include <limits>
 #include <string_view>
 #include <stdexcept>
 
@@ -58,6 +61,8 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     pythonEngine(python),
 #endif
     workflowJSON(oswPath) {
+
+  runner.setRegisterMsgAlsoLogs(true);
 }
 
 OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
@@ -75,6 +80,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
 
+  runner.setRegisterMsgAlsoLogs(true);
+
   if (m_add_timings) {
     m_timers = std::make_unique<workflow::util::TimerCollection>();
   }
@@ -87,16 +94,67 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   if (!runOpt_) {
     workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
   } else {
-    auto ori_ftOptions = runOpt_->forwardTranslatorOptions();
-    workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
     // user supplied CLI flags trump everything
-    ori_ftOptions.overrideValuesWith(t_workflowRunOptions.runOptions.forwardTranslatorOptions());
-    workflowJSON.runOptions()->setForwardTranslatorOptions(ori_ftOptions);
+    runOpt_->overrideValuesWith(t_workflowRunOptions.runOptions);
   }
 
   if (workflowJSON.runOptions()->debug()) {
     fmt::print("workflowJSON={}\n", workflowJSON.string());
   }
+}
+
+void OSWorkflow::initializeWeatherFileFromOSW() {
+  LOG(Debug, "Initialize the weather file from osw");
+  auto epwPath_ = workflowJSON.weatherFile();
+
+  if (epwPath_) {
+    LOG(Debug, "Search for weather file defined by osw " << epwPath_.get());
+    auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+    if (!epwFullPath_) {
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+    }
+    if (!epwFullPath_) {
+      throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+    }
+
+    epwPath = epwFullPath_.get();
+
+    if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
+      model::WeatherFile::setWeatherFile(model, epwFile_.get());
+      runner.setLastEpwFilePath(epwPath);
+    } else {
+      LOG(Warn, "Could not load weather file from " << epwPath_.get());
+    }
+  } else {
+    LOG(Debug, "No weather file specified in OSW, looking in model");
+    updateLastWeatherFileFromModel();
+    if (epwPath.empty()) {
+      LOG(Warn, "No valid weather file defined in either the osm or osw.");
+    }
+  }
+}
+
+void OSWorkflow::updateLastWeatherFileFromModel() {
+  LOG(Debug, "Find model's weather file and update LastEpwFilePath");
+  if (auto epwFile_ = model.weatherFile()) {
+    if (auto epwPath_ = epwFile_->path()) {
+      LOG(Debug, "Search for weather file " << epwPath_.get());
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+      if (!epwFullPath_) {
+        auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+      }
+      if (!epwFullPath_) {
+        throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+      }
+
+      epwPath = epwFullPath_.get();
+      runner.setLastEpwFilePath(epwPath);
+
+      return;
+    }
+  }
+
+  LOG(Debug, "Weather file is not defined by the model");
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
@@ -158,27 +216,71 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   LOG(Info, "Saved IDF as " << savePath);
 }
 
-void OSWorkflow::run() {
+void standardFormatterWithStringSeverity(boost::log::record_view const& rec, boost::log::formatting_ostream& strm) {
 
+  static constexpr std::array<std::string_view, 6> logLevelStrs = {"Trace", "Debug", "Info", "Warn", "Error", "Fatal"};
+  // static constexpr std::array<std::string_view, 6> logLevelStrs = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+
+  LogLevel logLevel = Trace;
+  if (auto logLevel_ = boost::log::extract<LogLevel>("Severity", rec)) {
+    logLevel = logLevel_.get();
+  }
+
+  // if (auto pt_ = boost::log::extract<boost::posix_time::ptime>("TimeStamp", rec)) {
+  //  // TimeStamp as  [%H:%M:%S.%f]
+  //   strm << "[" << boost::posix_time::to_simple_string(pt_.get().time_of_day()) << "] ";
+  // }
+  strm << "[" << boost::log::extract<LogChannel>("Channel", rec) << "] <"  //
+       << logLevelStrs[static_cast<size_t>(logLevel) - static_cast<size_t>(LogLevel::Trace)]
+       << "> "
+       // Finally, the record message
+       << rec[boost::log::expressions::smessage];
+}
+
+bool OSWorkflow::run() {
+
+  // If the user passed something like `openstudio --loglevel Trace run --debug -w workflow.osw`, we retain the Trace
+  LogLevel oriLogLevel = openstudio::Logger::instance().standardOutLogger().logLevel().value_or(Warn);
+  LogLevel targetLogLevel = oriLogLevel;
+  if (workflowJSON.runOptions()->debug() && oriLogLevel > Debug) {
+    targetLogLevel = Debug;
+  }
+
+  openstudio::Logger::instance().addTimeStampToLogger();  // Needed for run.log formatting
+  openstudio::Logger::instance().standardOutLogger().setFormatter(&standardFormatterWithStringSeverity);
+
+  // TODO: ideally we want stdErr logger to always receive Error and Fatal
+  // and stdOut logger should receive all the others. This is definitely doable (cf LogSink::updateFilter) but now is not the time.
   if (!m_show_stdout) {
-    openstudio::Logger::instance().standardOutLogger().disable();
-  } else if (workflowJSON.runOptions()->debug()) {
-    openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Error);  // Still show errors
+  } else if (oriLogLevel != targetLogLevel) {
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(targetLogLevel);
   }
 
   // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
   bool hasDeletedRunDir = false;
   auto runDirPath = workflowJSON.absoluteRunDir();
-  if (!workflowJSON.runOptions()->preserveRunDir()) {
+
+  if (runDirPath == workflowJSON.oswDir()) {
+    workflowJSON.runOptions()->setPreserveRunDir(true);
+  }
+
+  if (!workflowJSON.runOptions()->preserveRunDir() && !m_post_process_only) {
     // We don't have a run_dir argument anyways
     if (openstudio::filesystem::is_directory(runDirPath)) {
       hasDeletedRunDir = true;
       openstudio::filesystem::remove_all(runDirPath);
     }
+  }
+  if (!openstudio::filesystem::is_directory(runDirPath)) {
     openstudio::filesystem::create_directory(runDirPath);
   }
+
   FileLogSink logFile(runDirPath / "run.log");
-  logFile.setLogLevel(Debug);
+  constexpr bool use_workflow_gem_fmt = true;
+  constexpr bool include_channel = true;  // or workflowJSON.runOptions()->debug();
+  logFile.useWorkflowGemFormatter(use_workflow_gem_fmt, include_channel);
+  logFile.setLogLevel(targetLogLevel);
 
   if (hasDeletedRunDir) {
     LOG(Debug, "Removing existing run directory: " << runDirPath);
@@ -312,32 +414,51 @@ void OSWorkflow::run() {
     jobMap.at("Cleanup").selected = false;
   }
 
+  std::string lastFatalError;
+
   for (auto& [jobName, jobInfo] : jobMap) {
     LOG(Debug, fmt::format("{} - selected = {}\n", jobName, jobInfo.selected));
     if (jobInfo.selected) {
-      timeJob(jobInfo.jobFun, std::string{jobName});
+      try {
+        timeJob(jobInfo.jobFun, std::string{jobName});
+      } catch (std::exception& e) {
+        if (m_add_timings) {
+          m_timers->tockCurrentTimer();
+        }
+        lastFatalError = fmt::format("Found error in state '{}' with message: '{}'", jobName, e.what());
+        LOG(Error, lastFatalError);
+        // Allow continuing anyways if it fails in reporting measures
+        if (jobName != "ReportingMeasures") {
+          state = State::Errored;
+          break;
+        }
+      }
     } else {
       LOG(Info, "Skipping job " << jobName);
     }
   }
 
-  // Save final IDF
-  if (m_add_timings) {
-    m_timers->newTimer("Save IDF");
-  }
-  workspace_->save(runDirPath / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
-  if (m_add_timings) {
-    m_timers->tockCurrentTimer();
-  }
-
-  if (!workflowJSON.runOptions()->fast()) {
+  // TODO: Is this really necessary? Seems like it's done before already (in RunPreProcess)
+  if (workspace_) {
+    // Save final IDF
     if (m_add_timings) {
-      m_timers->newTimer("Zip datapoint");
+      m_timers->newTimer("Save IDF");
     }
-    openstudio::workflow::util::zipResults(runDirPath);
+    workspace_->save(runDirPath / "in.idf", true);
     if (m_add_timings) {
       m_timers->tockCurrentTimer();
     }
+  }
+
+  if (!workflowJSON.runOptions()->fast()) {
+    communicateResults();
+  }
+
+  if (!lastFatalError.empty()) {
+    // Because we allow RunReportingMeasures to fail so the workflow continues with the RunPostProcess / RunCleanup
+    // but we still want to return a failure
+    state = State::Errored;
+    fmt::print(stderr, "Failed to run workflow. Last Error:\n  {}\n", lastFatalError);
   }
 
   if (state == State::Errored) {
@@ -377,12 +498,178 @@ void OSWorkflow::run() {
     OS_ASSERT(file.is_open());
     file << fmt::format("Finished Workflow {}\n", std::chrono::system_clock::now());
     file.close();
+    state = State::Finished;
   }
 
   if (m_add_timings) {
     fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
-
     // TODO: create profile.json in the run folder
   }
+
+  return (state == State::Finished);
 }
+
+Json::Value outputAttributesToJSON(const std::map<std::string, std::map<std::string, openstudio::Variant>>& output_attributes,
+                                   bool sanitize = false) {
+  Json::Value root(Json::objectValue);
+  for (const auto& [oriMeasureName, argMap] : output_attributes) {
+    const std::string measureName = sanitize ? openstudio::workflow::util::sanitizeKey(oriMeasureName) : oriMeasureName;
+    Json::Value measureValues(Json::objectValue);
+    for (const auto& [oriArgName, variantValue] : argMap) {
+      const std::string argName = sanitize ? openstudio::workflow::util::sanitizeKey(oriArgName) : oriArgName;
+      if (variantValue.variantType() == VariantType::String) {
+        measureValues[argName] = variantValue.valueAsString();
+      } else if (variantValue.variantType() == VariantType::Double) {
+        measureValues[argName] = variantValue.valueAsDouble();
+      } else if (variantValue.variantType() == VariantType::Integer) {
+        measureValues[argName] = variantValue.valueAsInteger();
+      } else if (variantValue.variantType() == VariantType::Boolean) {
+        measureValues[argName] = variantValue.valueAsBoolean();
+      }
+    }
+
+    root[measureName] = measureValues;
+  }
+  return root;
+}
+
+void OSWorkflow::communicateMeasureAttributes() const {
+
+  const Json::Value root = outputAttributesToJSON(output_attributes, false);
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "  ";
+
+  const std::string result = Json::writeString(wbuilder, root);
+
+  auto jsonPath = workflowJSON.absoluteRunDir() / "measure_attributes.json";
+  openstudio::filesystem::ofstream file(jsonPath);
+  OS_ASSERT(file.is_open());
+  file << result;
+  file.close();
+}
+
+void OSWorkflow::runExtractInputsAndOutputs() const {
+  const Json::Value results = outputAttributesToJSON(output_attributes, true);
+  Json::StreamWriterBuilder wbuilder;
+  wbuilder["indentation"] = "  ";
+
+  {
+    const std::string result = Json::writeString(wbuilder, results);
+
+    auto jsonPath = workflowJSON.absoluteRunDir() / "results.json";
+    openstudio::filesystem::ofstream file(jsonPath);
+    OS_ASSERT(file.is_open());
+    file << result;
+    file.close();
+  }
+
+  const auto osa_abs_path = workflowJSON.absoluteRootDir().parent_path() / "analysis.json";
+  if (!openstudio::filesystem::is_regular_file(osa_abs_path)) {
+    return;
+  }
+
+  std::ifstream ifs(openstudio::toSystemFilename(osa_abs_path));
+
+  Json::CharReaderBuilder rbuilder;
+  std::string formattedErrors;
+
+  Json::Value analysis_json;
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &analysis_json, &formattedErrors);
+  if (!parsingSuccessful) {
+    LOG_AND_THROW("OSA Analysis JSON '" << toString(osa_abs_path) << "' cannot be processed, " << formattedErrors);
+  }
+
+  if (!openstudio::checkKeyAndType(analysis_json, "analysis", Json::objectValue)) {
+    return;
+  }
+
+  if (!openstudio::checkKeyAndType(analysis_json["analysis"], "output_variables", Json::arrayValue)) {
+    return;
+  }
+
+  Json::Value objectiveFunctions(Json::objectValue);
+
+  auto& outputVars = analysis_json["analysis"]["output_variables"];
+  for (const auto& variable : outputVars) {
+    if (openstudio::checkKeyAndType(variable, "objective_function", Json::booleanValue) && variable["objective_function"].asBool()) {
+      assertKeyAndType(variable, "name", Json::stringValue);
+      assertKeyAndType(variable, "objective_function_index", Json::intValue);
+      const std::string name = variable["name"].asString();
+      const int idx = variable["objective_function_index"].asInt() + 1;
+
+      LOG(Info, "Looking for objective function " << name);
+
+      // Splitting on a `.` feels very unrealiable
+      const size_t pos = name.find('.');
+      if (pos == std::string::npos) {
+        LOG(Warn, "Objective function name='" << name << "' does not contain a dot (`.`)");
+        continue;
+      }
+      const std::string measureName = name.substr(0, pos);
+      const std::string argName = name.substr(pos + 1);
+      if (results.isMember(measureName) && results[measureName].isMember(argName)) {
+        objectiveFunctions[fmt::format("objective_function_{}", idx)] = results[measureName][argName];
+
+        if (openstudio::checkKeyAndType(variable, "objective_function_target", Json::realValue)) {
+          LOG(Info, "Found objective function target for " << name);
+          objectiveFunctions[fmt::format("objective_function_target_{}", idx)] = variable["objective_function_target"].asDouble();
+        }
+
+        if (openstudio::checkKeyAndType(variable, "scaling_factor", Json::realValue)) {
+          LOG(Info, "Found scaling factor for " << name);
+          objectiveFunctions[fmt::format("scaling_factor_{}", idx)] = variable["scaling_factor"].asDouble();
+        }
+
+        if (openstudio::checkKeyAndType(variable, "objective_function_group", Json::realValue)) {
+          LOG(Info, "Found objective function group for " << name);
+          objectiveFunctions[fmt::format("objective_function_group_{}", idx)] = variable["objective_function_group"].asDouble();
+        }
+
+      } else {
+        LOG(Warn, "No results for objective function " << name);
+        objectiveFunctions[fmt::format("objective_function_{}", idx)] = std::numeric_limits<double>::max();
+        objectiveFunctions[fmt::format("objective_function_target_{}", idx)] = Json::nullValue;
+        objectiveFunctions[fmt::format("scaling_factor_{}", idx)] = Json::nullValue;
+        objectiveFunctions[fmt::format("objective_function_group_{}", idx)] = Json::nullValue;
+      }
+    }
+  }
+
+  {
+    const std::string objectives = Json::writeString(wbuilder, objectiveFunctions);
+
+    auto objectivesJsonPath = workflowJSON.absoluteRunDir() / "objectives.json";
+    openstudio::filesystem::ofstream file(objectivesJsonPath);
+    OS_ASSERT(file.is_open());
+    file << objectives;
+    file.close();
+  }
+}
+
+void OSWorkflow::communicateResults() const {
+  if (!workflowJSON.runOptions()->skipZipResults()) {
+    if (m_add_timings) {
+      m_timers->newTimer("Zip datapoint");
+    }
+    openstudio::workflow::util::zipResults(workflowJSON.absoluteRunDir());
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
+
+  const Json::Value root = outputAttributesToJSON(output_attributes, true);
+  Json::StreamWriterBuilder wbuilder;
+  // mimic the old StyledWriter behavior:
+  wbuilder["indentation"] = "  ";
+
+  const std::string result = Json::writeString(wbuilder, root);
+
+  auto jsonPath = workflowJSON.absoluteRunDir() / "data_point_out.json";
+  openstudio::filesystem::ofstream file(jsonPath);
+  OS_ASSERT(file.is_open());
+  file << result;
+  file.close();
+}
+
 }  // namespace openstudio

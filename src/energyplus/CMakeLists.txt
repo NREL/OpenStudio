@@ -144,7 +144,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp
-  ForwardTranslator/ForwardTranslateDistrictHeating.cpp
+  ForwardTranslator/ForwardTranslateDistrictHeatingWater.cpp
+  ForwardTranslator/ForwardTranslateDistrictHeatingSteam.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
@@ -682,6 +683,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/AvailabilityManagerHybridVentilation_GTest.cpp
+  Test/BoilerHotWater_GTest.cpp
   Test/Building_GTest.cpp
   Test/ChillerElectricASHRAE205_GTest.cpp
   Test/CentralHeatPumpSystem_GTest.cpp
@@ -694,12 +696,20 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
+  Test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
+  Test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   Test/CoilHeatingDXMultiSpeed_GTest.cpp
+  Test/CoilHeatingDXSingleSpeed_GTest.cpp
+  Test/CoilHeatingDXVariableSpeed_GTest.cpp
   Test/CoilHeatingElectricMultiStage_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilHeatingGasMultiStage_GTest.cpp
+  Test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
+  Test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/CoilUserDefined_GTest.cpp
+  Test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  Test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
@@ -748,6 +758,7 @@ set(${target_name}_test_src
   Test/LifeCycleCost_GTest.cpp
   Test/LifeCycleCostParameters_GTest.cpp
   Test/Lights_GTest.cpp
+  Test/LoadProfilePlant_GTest.cpp
   Test/Luminaire_GTest.cpp
   Test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
   Test/MaterialPropertyPhaseChange_GTest.cpp

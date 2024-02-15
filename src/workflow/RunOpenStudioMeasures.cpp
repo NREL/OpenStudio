@@ -32,6 +32,7 @@ void OSWorkflow::runOpenStudioMeasures() {
     });
   }
 
+  communicateMeasureAttributes();
   saveOSMToRootDirIfDebug();
 }
 

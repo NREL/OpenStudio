@@ -92,7 +92,7 @@ namespace boost {
 
   template <class T>
   class optional {
-    #if defined(SWIGRUBY)
+    #ifdef SWIGRUBY
       %alias isNull "empty?";
     #endif
 
@@ -102,9 +102,7 @@ namespace boost {
     optional(const T& t);
     optional(const boost::optional<T>& t);
     void reset();
-#ifndef SWIGPYTHON
     operator bool() const;
-#endif
     //bool operator!() const; // SWIG ignores this
 //    T get();
 //    T* operator->();
@@ -112,11 +110,17 @@ namespace boost {
     bool is_initialized() const;
 
     %extend {
-      bool isNull() {
+      bool isNull() const {
         return !(self->is_initialized());
       }
 
-      T get() {
+#ifdef SWIGPYTHON
+      bool empty() const {
+        return !(self->is_initialized());
+      }
+#endif
+
+      T get() const {
         if (self->is_initialized())
         {
           return self->get();
@@ -127,7 +131,6 @@ namespace boost {
       void set(const T &t) {
         (*self) = t;
       }
-
     }
   };
 

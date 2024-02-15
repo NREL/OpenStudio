@@ -16,6 +16,10 @@
 
 #include <variant>
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace measure {
 
@@ -365,6 +369,9 @@ OPENSTUDIO_ENUM( OSDomainType,
     /** Returns this argument's default value printed to string, if possible. If there is no default
    *  value, the string will be .empty(). */
     std::string printDefaultValue() const;
+
+    Json::Value toJSON() const;
+    std::string toJSONString() const;
 
     //@}
    private:

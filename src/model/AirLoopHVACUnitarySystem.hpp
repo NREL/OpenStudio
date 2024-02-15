@@ -142,7 +142,7 @@ namespace model {
     boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate Method" **/
-    boost::optional<std::string> supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const;
+    std::string supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
     boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisRequired() const;
@@ -176,21 +176,21 @@ namespace model {
 
     boost::optional<std::string> outdoorDryBulbTemperatureSensorNodeName() const;
 
-    double maximumCyclingRate() const;
+    OS_DEPRECATED(3, 7, 0) double maximumCyclingRate() const;
 
-    bool isMaximumCyclingRateDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isMaximumCyclingRateDefaulted() const;
 
-    double heatPumpTimeConstant() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpTimeConstant() const;
 
-    bool isHeatPumpTimeConstantDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpTimeConstantDefaulted() const;
 
-    double fractionofOnCyclePowerUse() const;
+    OS_DEPRECATED(3, 7, 0) double fractionofOnCyclePowerUse() const;
 
-    bool isFractionofOnCyclePowerUseDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isFractionofOnCyclePowerUseDefaulted() const;
 
-    double heatPumpFanDelayTime() const;
+    OS_DEPRECATED(3, 7, 0) double heatPumpFanDelayTime() const;
 
-    bool isHeatPumpFanDelayTimeDefaulted() const;
+    OS_DEPRECATED(3, 7, 0) bool isHeatPumpFanDelayTimeDefaulted() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Ancillary On-Cycle Electric Power" **/
     double ancilliaryOnCycleElectricPower() const;
@@ -244,16 +244,26 @@ namespace model {
 
     void resetSupplyAirFanOperatingModeSchedule();
 
+    /** Sets the Heating Coil. If the "Supply Air Flow Rate Method During Heating Operation" was "None", switch to "SupplyAirFlowRate"
+      * and autosize the "Supply Air Flow Rate During Heating Operation" field */
     bool setHeatingCoil(const HVACComponent& heatingCoil);
 
+    /** This will switch the "Supply Air Flow Rate Method During Heating Operation" to "None" and clear all heating flow fields
+      * If the Unitary is left with no coils, the "Supply Air Flow Rate Method When No Heating Or Cooling" is also set to None
+      * and all NoCoolHeat flow fields are reset */
     void resetHeatingCoil();
 
     bool setDXHeatingCoilSizingRatio(double dXHeatingCoilSizingRatio);
 
     void resetDXHeatingCoilSizingRatio();
 
+    /** Sets the Cooling Coil. If the "Supply Air Flow Rate Method During Cooling Operation" was "None", switch to "SupplyAirFlowRate"
+      * and autosize the "Supply Air Flow Rate During Cooling Operation" field */
     bool setCoolingCoil(const HVACComponent& coolingCoil);
 
+    /** This will switch the "Supply Air Flow Rate Method During Cooling Operation" to "None" and clear all cooling flow fields
+      * If the Unitary is left with no coils, the "Supply Air Flow Rate Method When No Heating Or Cooling" is also set to None
+      * and all NoCoolHeat flow fields are reset */
     void resetCoolingCoil();
 
     bool setUseDOASDXCoolingCoil(bool useDOASDXCoolingCoil);
@@ -276,71 +286,93 @@ namespace model {
 
     void resetSupplementalHeatingCoil();
 
+    // During Cooling
+
+    /** Sets the field and switches "Supply Air Flow Rate Method During Cooling Operation" (coolingSAFMethod) to "SupplyAirFlowRate" */
+    bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
+    /** Sets the field and switches the coolingSAFMethod to "SupplyAirFlowRate" */
+    void autosizeSupplyAirFlowRateDuringCoolingOperation();
+
+    /** Sets the field and switches the coolingSAFMethod to "FlowPerFloorArea" */
+    bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
+
+    /** Sets the field and switches the coolingSAFMethod to "FractionOfAutosizedCoolingValue" */
+    bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
+
+    /** Sets the field and switches the coolingSAFMethod to "FlowPerCoolingCapacity" */
+    bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
+
     OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodDuringCoolingOperation(const std::string& supplyAirFlowRateMethodDuringCoolingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateMethodDuringCoolingOperation();
 
-    bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateDuringCoolingOperation();
-    void autosizeSupplyAirFlowRateDuringCoolingOperation();
-
-    bool setSupplyAirFlowRatePerFloorAreaDuringCoolingOperation(double supplyAirFlowRatePerFloorAreaDuringCoolingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaDuringCoolingOperation();
-
-    bool setFractionofAutosizedDesignCoolingSupplyAirFlowRate(double fractionofAutosizedDesignCoolingSupplyAirFlowRate);
     OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignCoolingSupplyAirFlowRate();
-
-    bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation);
     OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperation();
+
+    // During Heating
+
+    /** Sets the field and switches "Supply Air Flow Rate Method During Heating Operation" (heatingSAFMethod) to "SupplyAirFlowRate" */
+    bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
+    /** Sets the field and switches the heatingSAFMethod to "SupplyAirFlowRate" */
+    void autosizeSupplyAirFlowRateDuringHeatingOperation();
+
+    /** Sets the field and switches the heatingSAFMethod to "FlowPerFloorArea" */
+    bool setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(double supplyAirFlowRatePerFloorAreaduringHeatingOperation);
+
+    /** Sets the field and switches the heatingSAFMethod to "FractionOfAutosizedHeatingValue" */
+    bool setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate);
+
+    /** Sets the field and switches the heatingSAFMethod to "FlowPerHeatingCapacity" */
+    bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
 
     OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodDuringHeatingOperation(const std::string& supplyAirFlowRateMethodDuringHeatingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateMethodDuringHeatingOperation();
 
-    bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateDuringHeatingOperation();
-    void autosizeSupplyAirFlowRateDuringHeatingOperation();
-
-    bool setSupplyAirFlowRatePerFloorAreaduringHeatingOperation(double supplyAirFlowRatePerFloorAreaduringHeatingOperation);
     OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaduringHeatingOperation();
-
-    bool setFractionofAutosizedDesignHeatingSupplyAirFlowRate(double fractionofAutosizedDesignHeatingSupplyAirFlowRate);
     OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignHeatingSupplyAirFlowRate();
-
-    bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation(double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation);
     OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation();
 
-    bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& supplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired);
+    // When no Heating or Cooling is Required
 
+    // Sets the "Supply Air Flow Rate Method When No Cooling or Heating is Required" (noCoolHeatSAFMethod) to "None" and clears the NoCoolHeat flow rate fields
     void resetSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired();
 
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "SupplyAirFlowRate" */
     bool setSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(double supplyAirFlowRateWhenNoCoolingorHeatingisRequired);
-
-    void resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "SupplyAirFlowRate" */
     void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
 
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "FlowPerFloorArea" */
     bool setSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired(double supplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired);
 
-    void resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
-
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "FractionOfAutosizedCoolingValue" */
     bool setFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
       double fractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
 
-    void resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "FractionOfAutosizedHeatingValue" */
     bool setFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired(
       double fractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired);
 
-    void resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
-
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "FlowPerCoolingCapacity" */
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired(
       double designSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired);
 
-    void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
-
+    /** Sets the field and switches the noCoolHeatSAFMethod) to "FlowPerHeatingCapacity" */
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
       double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
 
-    void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& noCoolHeatMethod);
+
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) void resetSupplyAirFlowRatePerFloorAreaWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignCoolingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofAutosizedDesignHeatingSupplyAirFlowRateWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringCoolingOperationWhenNoCoolingorHeatingisRequired();
+    OS_DEPRECATED(3, 7, 0) void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+    // End SAF methods
 
     bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 
@@ -356,21 +388,21 @@ namespace model {
 
     void resetOutdoorDryBulbTemperatureSensorNodeName();
 
-    bool setMaximumCyclingRate(double maximumCyclingRate);
+    OS_DEPRECATED(3, 7, 0) bool setMaximumCyclingRate(double maximumCyclingRate);
 
-    void resetMaximumCyclingRate();
+    OS_DEPRECATED(3, 7, 0) void resetMaximumCyclingRate();
 
-    bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpTimeConstant(double heatPumpTimeConstant);
 
-    void resetHeatPumpTimeConstant();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpTimeConstant();
 
-    bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
+    OS_DEPRECATED(3, 7, 0) bool setFractionofOnCyclePowerUse(double fractionofOnCyclePowerUse);
 
-    void resetFractionofOnCyclePowerUse();
+    OS_DEPRECATED(3, 7, 0) void resetFractionofOnCyclePowerUse();
 
-    bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
+    OS_DEPRECATED(3, 7, 0) bool setHeatPumpFanDelayTime(double heatPumpFanDelayTime);
 
-    void resetHeatPumpFanDelayTime();
+    OS_DEPRECATED(3, 7, 0) void resetHeatPumpFanDelayTime();
 
     bool setAncilliaryOnCycleElectricPower(double ancilliaryOnCycleElectricPower);
 

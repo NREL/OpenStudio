@@ -12,8 +12,7 @@
 namespace openstudio {
 namespace model {
 
-  class CurveQuadLinear;
-  class CurveQuintLinear;
+  class Curve;
 
   namespace detail {
 
@@ -98,11 +97,13 @@ namespace model {
 
       double ratedEnteringAirWetBulbTemperature() const;
 
-      CurveQuadLinear totalCoolingCapacityCurve() const;
+      Curve totalCoolingCapacityCurve() const;
 
-      CurveQuintLinear sensibleCoolingCapacityCurve() const;
+      Curve sensibleCoolingCapacityCurve() const;
 
-      CurveQuadLinear coolingPowerConsumptionCurve() const;
+      Curve coolingPowerConsumptionCurve() const;
+
+      Curve partLoadFractionCorrelationCurve() const;
 
       double nominalTimeforCondensateRemovaltoBegin() const;
 
@@ -111,6 +112,10 @@ namespace model {
       double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity() const;
 
       bool isRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacityDefaulted() const;
+
+      double maximumCyclingRate() const;
+      double latentCapacityTimeConstant() const;
+      double fanDelayTime() const;
 
       boost::optional<double> autosizedRatedAirFlowRate() const;
 
@@ -160,29 +165,42 @@ namespace model {
 
       bool setRatedEnteringAirWetBulbTemperature(double ratedEnteringAirWetBulbTemperature);
 
-      bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);
+      bool setTotalCoolingCapacityCurve(const Curve& totalCoolingCapacityCurve);
 
-      bool setSensibleCoolingCapacityCurve(const CurveQuintLinear& sensibleCoolingCapacityCurve);
+      bool setSensibleCoolingCapacityCurve(const Curve& sensibleCoolingCapacityCurve);
 
-      bool setCoolingPowerConsumptionCurve(const CurveQuadLinear& coolingPowerConsumptionCurve);
+      bool setCoolingPowerConsumptionCurve(const Curve& coolingPowerConsumptionCurve);
 
       bool setNominalTimeforCondensateRemovaltoBegin(double nominalTimeforCondensateRemovaltoBegin);
 
       void resetNominalTimeforCondensateRemovaltoBegin();
+
+      bool setPartLoadFractionCorrelationCurve(const Curve& partLoadFractionCorrelationCurve);
 
       bool setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(
         double ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
 
       void resetRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity();
 
+      bool setMaximumCyclingRate(double maximumCyclingRate);
+      bool setLatentCapacityTimeConstant(double latentCapacityTimeConstant);
+      bool setFanDelayTime(double fanDelayTime);
+
       //@}
       /** @name Other */
       //@{
+
+      void setConstructorSharedDefaults(const Model& model);
 
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilCoolingWaterToAirHeatPumpEquationFit");
+
+      boost::optional<Curve> optionalTotalCoolingCapacityCurve() const;
+      boost::optional<Curve> optionalSensibleCoolingCapacityCurve() const;
+      boost::optional<Curve> optionalCoolingPowerConsumptionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
 
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
     };

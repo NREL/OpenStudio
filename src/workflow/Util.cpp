@@ -18,6 +18,9 @@
 #include "../utilities/idf/IdfObject.hpp"
 #include "../utilities/idd/IddObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/filetypes/WorkflowStepResult.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../utilities/time/DateTime.hpp"
 
 #include <boost/filesystem/operations.hpp>
 #include <utilities/idd/IddEnums.hxx>
@@ -30,7 +33,10 @@
 #include <algorithm>
 #include <array>
 #include <iterator>
+#include <map>
 #include <string_view>
+#include <regex>
+#include <string>
 
 namespace openstudio::workflow::util {
 
@@ -300,6 +306,46 @@ void zipResults(const openstudio::path& dirPath) {
   auto reportDirPath = dirPath / "reports";
   if (fs::exists(reportDirPath) && fs::is_directory(reportDirPath)) {
     zipDirectory(reportDirPath, dirPath / "data_point_reports.zip");
+  }
+}
+
+// TODO: investigate removing this. `OSRunner::registerValue` already calls `OSRunner::cleanValueName`, perhaps we just reuse that
+std::string sanitizeKey(std::string key) {
+  static const std::regex invalidCharsRegex(R"([|!@#$%^&*(){}\\[\];:'",<.>/?+=]+)");
+  static const std::regex squeezeUnderscoresRegex(R"(_{2,})");
+  static const std::regex trailingUnderscoreOrWhiteSpaceRegex(R"((_|\s)+$)");
+
+  if (std::regex_search(key, invalidCharsRegex)) {
+    LOG_FREE(Warn, "openstudio.worklow.Util", fmt::format("Renaming result key '{}' to remove invalid characters", key));
+    // Replace invalid characters with underscores
+    key = std::regex_replace(key, invalidCharsRegex, "_");
+  }
+
+  // Squeeze consecutive underscores
+  key = std::regex_replace(key, squeezeUnderscoresRegex, "_");
+  // Strip trailing underscores or whitespace
+  key = std::regex_replace(key, trailingUnderscoreOrWhiteSpaceRegex, "");
+
+  return key;
+}
+
+bool addResultMeasureInfo(WorkflowStepResult& result, BCLMeasure& measure) {
+  try {
+    result.setMeasureType(measure.measureType());
+    result.setMeasureName(measure.name());
+    result.setMeasureId(measure.uid());
+    result.setMeasureVersionId(measure.versionId());
+    auto version_modified_ = measure.versionModified();
+    if (version_modified_) {
+      result.setMeasureVersionModified(*version_modified_);
+    }
+    result.setMeasureXmlChecksum(measure.xmlChecksum());
+    result.setMeasureClassName(measure.className());
+    result.setMeasureDisplayName(measure.displayName());
+    result.setMeasureTaxonomy(measure.taxonomyTag());
+    return true;
+  } catch (...) {
+    return false;
   }
 }
 

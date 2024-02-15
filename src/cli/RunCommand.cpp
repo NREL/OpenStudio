@@ -134,7 +134,9 @@ namespace cli {
     // Subcommand callback
     app->callback([opt, &ruby, &python] {
       openstudio::OSWorkflow workflow(*opt, ruby, python);
-      workflow.run();
+      if (!workflow.run()) {
+        std::exit(1);
+      }
     });
   }
 

@@ -11,6 +11,7 @@
 <script type="text/javascript" src="../../js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   extensions: ["tex2jax.js"],
@@ -166,26 +167,26 @@ $(function() {
 
     toggleLevel(3);
   }
-  
+
   // Hide Deprecated page if it doesn't exist
   if ($('div.title.h1').text() != 'Deprecated List') {
     console.log('Checking for deprecated.html');
     $.get('deprecated.html')
-      .fail(function() { 
+      .fail(function() {
         $('a[href="deprecated.html"]').parent().prev('.divider').remove();
         $('a[href="deprecated.html"]').parent().remove();
       });
   }
-  
+
   // Hide Object Hierarchy page if it doesn't exist
   if ($('div.title.h1').text() != 'Object Hierarchy') {
     console.log('Checking for inherits.html');
     $.get('inherits.html')
-      .fail(function() { 
+      .fail(function() {
         $('a[href="inherits.html"]').parent().remove();
       });
   }
-  
+
   // Remove second alphabetical index
   $('div.qindex').last().remove();
 });
