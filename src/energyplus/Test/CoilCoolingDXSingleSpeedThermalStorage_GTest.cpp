@@ -51,6 +51,8 @@
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -339,9 +341,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
   EXPECT_NE("", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName).get());
   EXPECT_NE("", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName).get());
   EXPECT_EQ(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get(),
-            idfDX.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName).get());
+            idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName).get());
   EXPECT_EQ(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get(),
-            idfDX.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName).get());
+            idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName).get());
 
   EXPECT_EQ("Yes", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeAvailable).get());
   // EXPECT_EQ("Autosize", idfObject.getString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CoolingOnlyModeRatedTotalEvaporatorCoolingCapacity).get());
@@ -850,5 +852,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXSingleSpeedThermalStora
             idf_coilSystem.getString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName).get());
   EXPECT_EQ("Coil:Cooling:DX:SingleSpeed:ThermalStorage", idf_coilSystem.getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType).get());
   EXPECT_EQ(coilCoolingDXSingleSpeedThermalStorage.nameString(), idf_coilSystem.getString(CoilSystem_Cooling_DXFields::CoolingCoilName).get());
-  EXPECT_EQ(idf_dx, idf_coilSystem.getTarget(CoilSystem_Cooling_DXFields::CoolingCoilName).get());
+  EXPECT_EQ(idfObject, idf_coilSystem.getTarget(CoilSystem_Cooling_DXFields::CoolingCoilName).get());
 }
