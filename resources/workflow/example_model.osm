@@ -20,8 +20,8 @@ OS:RunPeriod,
   Run Period 1,                           !- Name
   1,                                      !- Begin Month
   1,                                      !- Begin Day of Month
-  12,                                     !- End Month
-  31,                                     !- End Day of Month
+  1,                                      !- End Month
+  7,                                      !- End Day of Month
   No,                                     !- Use Weather File Holidays and Special Days
   No,                                     !- Use Weather File Daylight Saving Period
   No,                                     !- Apply Weekend Holiday Rule

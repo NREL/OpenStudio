@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>python_plugin_python</name>
+  <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
+  <version_id>c8974060-b00b-4110-917e-6d88e8fa345b</version_id>
+  <version_modified>2024-02-16T08:52:12Z</version_modified>
+  <xml_checksum>33A29C78</xml_checksum>
+  <class_name>PythonPluginPython</class_name>
+  <display_name>Python Plugin Python.</display_name>
+  <description>Generates an EnergyPlus PythonPlugin python file</description>
+  <modeler_description>Uses a Jinja template to render the PythonPlugin</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.4.1</identifier>
+        <min_compatible>3.4.1</min_compatible>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>1AF145E8</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program.csv</filename>
+      <filetype>csv</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>56A3E864</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program.py.jinja</filename>
+      <filetype>jinja</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>2A5E9738</checksum>
+    </file>
+  </files>
+</measure>

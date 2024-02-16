@@ -1,0 +1,12 @@
+{
+	"weather_file": "../../Examples/compact_osw/files/srrl_2013_amy.epw",
+	"seed_file": "../example_model.osm",
+	"steps": [
+		{
+			"measure_dir_name": "PythonPluginRuby"
+		},
+		{
+			"measure_dir_name": "PythonPluginPython"
+		}
+	]
+}

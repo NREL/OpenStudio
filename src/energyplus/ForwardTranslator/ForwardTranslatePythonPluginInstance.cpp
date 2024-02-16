@@ -32,7 +32,7 @@ namespace energyplus {
 
     path filePath = modelObject.externalFile().filePath();
     if (!openstudio::filesystem::exists(filePath)) {
-      LOG(Warn, modelObject.briefDescription() << "will not be translated, cannot find the referenced file '" << filePath << "'");
+      LOG(Warn, modelObject.briefDescription() << " will not be translated, cannot find the referenced file '" << filePath << "'");
       return boost::none;
     }
 
