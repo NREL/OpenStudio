@@ -29,6 +29,8 @@ class {{ pluginClassName }}(EnergyPlusPlugin):
             self.data["running_avg_temp_variable"] = self.api.exchange.get_global_handle(
                 state, "{{ py_var2.nameString() }}"
             )
+            print("HI FROM JINJA PYTHON PLUGIN")
+            sys.stdout.flush()
             self.do_setup = False
         zone_temps = [self.api.exchange.get_variable_value(state, t_handle) for t_handle in self.data["zone_temps"]]
         numerator = float(self.df.iloc[0]["numerator"])

@@ -27,6 +27,8 @@ class <%= pluginClassName %>(EnergyPlusPlugin):
             self.data['avg_temp_variable'] = self.api.exchange.get_global_handle(state, '<%= py_var.nameString %>')
             self.data['trend'] = self.api.exchange.get_trend_handle(state, '<%= py_trend_var.nameString %>')
             self.data['running_avg_temp_variable'] = self.api.exchange.get_global_handle(state, '<%= py_var2.nameString %>')
+            print("HI FROM ERB PYTHON PLUGIN")
+            sys.stdout.flush()
             self.do_setup = False
         zone_temps = list()
         for t_handle in self.data['zone_temps']:
