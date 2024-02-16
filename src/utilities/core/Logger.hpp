@@ -56,13 +56,14 @@ class OSWorkflow;
 /// convenience function for SWIG, prefer macros in C++
 UTILITIES_API void logFree(LogLevel level, const std::string& channel, const std::string& message);
 
-/** Singleton logger class.  Singleton Logger object maintains logging state throughout
-   *   program execution.
+class Logger;
+
+/** Primary logging class.
    */
 class UTILITIES_API LoggerSingleton
 {
 
-  friend class Singleton<LoggerSingleton>;
+  friend class Logger;
 
  public:
   /// destructor, cleans up, writes xml file footers, etc
@@ -115,15 +116,27 @@ class UTILITIES_API LoggerSingleton
   SinkSetType m_sinks;
 };
 
-#if _WIN32 || _MSC_VER
+/** Surprisingly, LoggerSingleton is not a singleton.
+ * Historically, Logger
+ * was a template instantiation of openstudio::Singleton<LoggerSingleton>,
+ * but the template was found to result in a singleton that was not global
+ * across the ScriptEngine DLL boundary (bug on Windows platforms). Logger is a non-template version
+ * that is equivalent to openstudio::Singleton<LoggerSingleton>, but this version
+ * is global across the ScriptEngine interface. For compatibility reasons,
+ * Logger and LoggerSingleton are functionally equivalent to their original
+ * implementations, despite the somewhat surprising names.
+ */
+class UTILITIES_API Logger
+{
+ public:
+  Logger() = delete;
 
-/// Explicitly instantiate and export LoggerSingleton Singleton template instance
-/// so that the same instance is shared between the DLL's that link to Utilities.dll
-UTILITIES_TEMPLATE_EXT template class UTILITIES_API openstudio::Singleton<LoggerSingleton>;
+  static LoggerSingleton& instance() {
+    static LoggerSingleton obj;
+    return obj;
+  }
+};
 
-#endif
-
-using Logger = openstudio::Singleton<LoggerSingleton>;
 }  // namespace openstudio
 
 #endif  // UTILITIES_CORE_LOGGER_HPP
