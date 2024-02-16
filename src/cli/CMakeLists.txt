@@ -238,17 +238,17 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_RubyPython PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
-    COMMAND $<TARGET_FILE:openstudio> run -w compact_python_plugin.osw
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
-  )
-  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES RESOURCE_LOCK "compact_osw")
-
   add_test(NAME OpenStudioCLI.Run_PythonRuby
     COMMAND $<TARGET_FILE:openstudio> run -w compact_python_then_ruby.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
+    COMMAND $<TARGET_FILE:openstudio> run -w python_plugin_jinja_erb.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/python_plugin/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES RESOURCE_LOCK "python_plugin")
 
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.test_loglevel

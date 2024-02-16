@@ -1,30 +1,16 @@
 <?xml version="1.0"?>
 <measure>
-  <schema_version>3.0</schema_version>
-  <error>Unable to locate primary Ruby script path for BCLMeasure 'python_plugin_python' located at C:/OpenStudio/OpenStudio/resources/Examples/compact_osw/measures/PythonPluginPython.</error>
+  <schema_version>3.1</schema_version>
   <name>python_plugin_python</name>
   <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
-  <version_id>81c577cc-60fd-4619-9e70-f2718323cbee</version_id>
-  <version_modified>20230425T225152Z</version_modified>
+  <version_id>f9b19973-2d11-4bbd-a196-e90be89911f1</version_id>
+  <version_modified>2024-02-16T08:35:29Z</version_modified>
   <xml_checksum>33A29C78</xml_checksum>
   <class_name>PythonPluginPython</class_name>
-  <display_name>Increase R-value of Insulation for Roofs by a Specified Percentage.</display_name>
-  <description>DESCRIPTION_TEXT</description>
-  <modeler_description>MODELER_DESCRIPTION_TEXT</modeler_description>
-  <arguments>
-    <argument>
-      <name>r_value</name>
-      <display_name>Percentage Increase of R-value for Roof Insulation.</display_name>
-      <description></description>
-      <type>Double</type>
-      <units></units>
-      <required>true</required>
-      <model_dependent>false</model_dependent>
-      <default_value>30</default_value>
-      <min_value></min_value>
-      <max_value></max_value>
-    </argument>
-  </arguments>
+  <display_name>Python Plugin Python.</display_name>
+  <description>TODO</description>
+  <modeler_description>TODO</modeler_description>
+  <arguments />
   <outputs />
   <provenances />
   <tags>
@@ -67,7 +53,19 @@
       <filename>measure.py</filename>
       <filetype>py</filetype>
       <usage_type>script</usage_type>
-      <checksum>A2B283E7</checksum>
+      <checksum>F8246294</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program.csv</filename>
+      <filetype>csv</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>56A3E864</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program_jinja.py</filename>
+      <filetype>py</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>BE0FC45D</checksum>
     </file>
   </files>
 </measure>

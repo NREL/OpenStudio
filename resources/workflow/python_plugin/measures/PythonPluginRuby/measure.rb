@@ -77,13 +77,13 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
     pluginClassName = 'AverageZoneTemps'
 
     # get the python plugin program (erb template)
-    pluginTemplatePath = File.join(File.dirname(__FILE__), '../../files/python_plugin_program_erb.py')
+    pluginTemplatePath = File.join(File.dirname(__FILE__), 'resources/python_plugin_program_erb.py')
     in_py = ''
     File.open(pluginTemplatePath, 'r') do |file|
       in_py = file.read
     end
 
-    dataPath = File.join(File.dirname(__FILE__), '../../files/python_plugin_program.csv')
+    dataPath = File.join(File.dirname(__FILE__), 'resources/python_plugin_program.csv')
     OpenStudio::Model::ExternalFile.getExternalFile(model, dataPath)
 
     # configure plugin template with variable values

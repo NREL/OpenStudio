@@ -90,11 +90,11 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         pluginClassName = 'AverageZoneTemps'
 
         # get the python plugin program (jinja template)
-        pluginTemplatePath = os.path.join(os.path.dirname(__file__), '../../files/python_plugin_program_jinja.py')
+        pluginTemplatePath = os.path.join(os.path.dirname(__file__), 'resources/python_plugin_program_jinja.py')
         f = open(pluginTemplatePath, 'r')
         in_py = f.read()
 
-        dataPath = os.path.join(os.path.dirname(__file__), '../../files/python_plugin_program.csv')
+        dataPath = os.path.join(os.path.dirname(__file__), 'resources/python_plugin_program.csv')
         openstudio.model.ExternalFile.getExternalFile(model, dataPath)
 
         # configure plugin template with variable values
