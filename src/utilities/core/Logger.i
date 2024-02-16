@@ -28,8 +28,6 @@
 %template(LogMessageVector) std::vector<openstudio::LogMessage>;
 %template(OptionalLogMessage) boost::optional<openstudio::LogMessage>;
 
-%template(Logger) openstudio::Singleton<openstudio::LoggerSingleton>;
-
 // Ignore std::thread::id stuff
 %ignore openstudio::LogSink::threadId;
 %ignore openstudio::LogSink::setThreadId;
