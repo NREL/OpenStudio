@@ -11,12 +11,12 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
 
   # human readable description
   def description
-    return 'TODO'
+    return 'Generates an EnergyPlus PythonPlugin python file'
   end
 
   # human readable description of modeling approach
   def modeler_description
-    return 'TODO'
+    return 'Uses an ERB template to render the PythonPlugin'
   end
 
   def arguments(model)
@@ -77,7 +77,7 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
     pluginClassName = 'AverageZoneTemps'
 
     # get the python plugin program (erb template)
-    pluginTemplatePath = File.join(File.dirname(__FILE__), 'resources/python_plugin_program_erb.py')
+    pluginTemplatePath = File.join(File.dirname(__FILE__), 'resources/python_plugin_program.py.erb')
     in_py = ''
     File.open(pluginTemplatePath, 'r') do |file|
       in_py = file.read

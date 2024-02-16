@@ -3,13 +3,13 @@
   <schema_version>3.1</schema_version>
   <name>python_plugin_python</name>
   <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
-  <version_id>f9b19973-2d11-4bbd-a196-e90be89911f1</version_id>
-  <version_modified>2024-02-16T08:35:29Z</version_modified>
+  <version_id>c8974060-b00b-4110-917e-6d88e8fa345b</version_id>
+  <version_modified>2024-02-16T08:52:12Z</version_modified>
   <xml_checksum>33A29C78</xml_checksum>
   <class_name>PythonPluginPython</class_name>
   <display_name>Python Plugin Python.</display_name>
-  <description>TODO</description>
-  <modeler_description>TODO</modeler_description>
+  <description>Generates an EnergyPlus PythonPlugin python file</description>
+  <modeler_description>Uses a Jinja template to render the PythonPlugin</modeler_description>
   <arguments />
   <outputs />
   <provenances />
@@ -53,7 +53,7 @@
       <filename>measure.py</filename>
       <filetype>py</filetype>
       <usage_type>script</usage_type>
-      <checksum>F8246294</checksum>
+      <checksum>1AF145E8</checksum>
     </file>
     <file>
       <filename>python_plugin_program.csv</filename>
@@ -62,10 +62,10 @@
       <checksum>56A3E864</checksum>
     </file>
     <file>
-      <filename>python_plugin_program_jinja.py</filename>
-      <filetype>py</filetype>
+      <filename>python_plugin_program.py.jinja</filename>
+      <filetype>jinja</filetype>
       <usage_type>resource</usage_type>
-      <checksum>BE0FC45D</checksum>
+      <checksum>2A5E9738</checksum>
     </file>
   </files>
 </measure>
