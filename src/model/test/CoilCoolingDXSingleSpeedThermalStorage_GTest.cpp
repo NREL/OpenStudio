@@ -33,15 +33,14 @@
 #include "../CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
+#include "../Curve.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveTriquadratic.hpp"
 #include "../AirLoopHVACUnitarySystem.hpp"
-#include "../AirLoopHVACUnitarySystem_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
-#include "../Node_Impl.hpp"
 #include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
@@ -145,10 +144,9 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_GettersSetters) {
   EXPECT_FALSE(coilCoolingDXSingleSpeedThermalStorage.setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(-10.0));
   EXPECT_EQ(1.2, coilCoolingDXSingleSpeedThermalStorage.storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient());
 
-  // Fluid Storage Tank Rating Temperature: Optional Double
+  // Fluid Storage Tank Rating Temperature: Required Double
   EXPECT_TRUE(coilCoolingDXSingleSpeedThermalStorage.setFluidStorageTankRatingTemperature(1.3));
-  ASSERT_TRUE(coilCoolingDXSingleSpeedThermalStorage.fluidStorageTankRatingTemperature());
-  EXPECT_EQ(1.3, coilCoolingDXSingleSpeedThermalStorage.fluidStorageTankRatingTemperature().get());
+  EXPECT_EQ(1.3, coilCoolingDXSingleSpeedThermalStorage.fluidStorageTankRatingTemperature());
 
   // Rated Evaporator Air Flow Rate: Required Double
   // Autosize
@@ -921,24 +919,84 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_addToNode) {
 TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
   Model model;
 
-  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+  EXPECT_EQ(0, model.getModelObjects<Curve>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CurveTriquadratic>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
 
-  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  CoilCoolingDXSingleSpeedThermalStorage dx(model);
+  CurveBiquadratic curve1(m);
+  EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve1));
+  CurveQuadratic curve2(m);
+  EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(curve2));
+  CurveTriquadratic curve3(m);
+  EXPECT_TRUE(dx.setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve3));
+
+  {
+    EXPECT_EQ(3, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+    EXPECT_TRUE(dx.setStorageType("Water"));
+  }
 
   auto dxClone = dx.clone(model).cast<CoilCoolingDXSingleSpeedThermalStorage>();
-  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  {
+    EXPECT_EQ("Water", dxClone.storageType());
 
-  dx.remove();
-  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+    EXPECT_EQ(3, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(2, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  }
 
-  dxClone.remove();
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  {
+    Model model2;
+
+    EXPECT_EQ(0, model2.getModelObjects<Curve>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(0, model2.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+    auto dxClone2 = dx.clone(model2).cast<CoilCoolingDXSingleSpeedThermalStorage>();
+
+    EXPECT_EQ("Water", dxClone2.storageType());
+
+    EXPECT_EQ(3, model2.getModelObjects<Curve>().size());
+    EXPECT_EQ(1, model2.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model2.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(1, model2.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(1, model2.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  }
+
+  {
+    dx.remove();
+    EXPECT_EQ(3, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+
+    dxClone.remove();
+    EXPECT_EQ(0, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(0, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  }
 }
 
 TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
   Model model;
 
   CoilCoolingDXSingleSpeedThermalStorage dx(model);
+  CurveBiquadratic curve1(m);
+  EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve1));
 
   AirLoopHVACUnitarySystem unitary(model);
   EXPECT_TRUE(unitary.setCoolingCoil(dx));
@@ -951,11 +1009,13 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
 
   EXPECT_EQ(1u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CurveBiquadratic>().size());
 
   // Cloning the unitary should clone the coolingCoil, but the clone of the DX should still share resources
   auto unitaryClone = unitary.clone(model).cast<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CurveBiquadratic>().size());
   EXPECT_EQ(dx, unitary.coolingCoil().get());
   EXPECT_NE(dx, unitaryClone.coolingCoil().get());
 }

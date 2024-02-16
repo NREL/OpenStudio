@@ -138,20 +138,6 @@ namespace model {
       return OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNode;
     }
 
-    ModelObject CoilCoolingDXSingleSpeedThermalStorage_Impl::clone(Model model) const {
-      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXSingleSpeedThermalStorage>();
-
-      return std::move(newCoil);
-    }
-
-    std::vector<ModelObject> CoilCoolingDXSingleSpeedThermalStorage_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // TODO: every curve?
-
-      return result;
-    }
-
     boost::optional<HVACComponent> CoilCoolingDXSingleSpeedThermalStorage_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitarySystem
       std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
@@ -273,8 +259,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::fluidStorageTankRatingTemperature() const {
-      return getDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature, true);
+    double CoilCoolingDXSingleSpeedThermalStorage_Impl::fluidStorageTankRatingTemperature() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::ratedEvaporatorAirFlowRate() const {
@@ -957,11 +945,6 @@ namespace model {
         setDouble(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature, fluidStorageTankRatingTemperature);
       OS_ASSERT(result);
       return result;
-    }
-
-    void CoilCoolingDXSingleSpeedThermalStorage_Impl::resetFluidStorageTankRatingTemperature() {
-      const bool result = setString(OS_Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature, "");
-      OS_ASSERT(result);
     }
 
     bool CoilCoolingDXSingleSpeedThermalStorage_Impl::setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate) {
@@ -1901,10 +1884,7 @@ namespace model {
     auto schedule_on = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(schedule_on);
     OS_ASSERT(ok);
-    ok = setOperatingModeControlMethod("ScheduledModes");
-    OS_ASSERT(ok);
-    auto schedule_off = model.alwaysOffDiscreteSchedule();
-    ok = setOperationModeControlSchedule(schedule_off);
+    ok = setOperatingModeControlMethod("ScheduledModes");  // intentionally NOT setting an operation mode control schedule
     OS_ASSERT(ok);
     ok = setStorageType("Ice");  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
@@ -1915,6 +1895,8 @@ namespace model {
     ok = setStorageCapacitySizingFactor(6.0);  // RetailPackagedTESCoil.idf
     OS_ASSERT(ok);
     ok = setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(7.913);  // RetailPackagedTESCoil.idf
+    OS_ASSERT(ok);
+    ok = setFluidStorageTankRatingTemperature(26.7);
     OS_ASSERT(ok);
     autosizeRatedEvaporatorAirFlowRate();
 
@@ -2068,7 +2050,7 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient();
   }
 
-  boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage::fluidStorageTankRatingTemperature() const {
+  double CoilCoolingDXSingleSpeedThermalStorage::fluidStorageTankRatingTemperature() const {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->fluidStorageTankRatingTemperature();
   }
 
@@ -2578,10 +2560,6 @@ namespace model {
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setFluidStorageTankRatingTemperature(double fluidStorageTankRatingTemperature) {
     return getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->setFluidStorageTankRatingTemperature(fluidStorageTankRatingTemperature);
-  }
-
-  void CoilCoolingDXSingleSpeedThermalStorage::resetFluidStorageTankRatingTemperature() {
-    getImpl<detail::CoilCoolingDXSingleSpeedThermalStorage_Impl>()->resetFluidStorageTankRatingTemperature();
   }
 
   bool CoilCoolingDXSingleSpeedThermalStorage::setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate) {

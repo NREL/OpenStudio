@@ -18956,6 +18956,7 @@ OS:Coil:Cooling:DX:SingleSpeed:ThermalStorage,
        \required-field
   N6,  \field Fluid Storage Tank Rating Temperature
        \type real
+       \required-field
        \units C
        \note required field if Storage Type is Water or UserDefinedFluidType
   N7 , \field Rated Evaporator Air Flow Rate

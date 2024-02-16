@@ -70,10 +70,6 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
-      virtual ModelObject clone(Model model) const override;
-
-      virtual std::vector<ModelObject> children() const override;
-
       virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
       virtual bool addToNode(Node& node) override;
@@ -109,7 +105,7 @@ namespace model {
 
       double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient() const;
 
-      boost::optional<double> fluidStorageTankRatingTemperature() const;
+      double fluidStorageTankRatingTemperature() const;
 
       boost::optional<double> ratedEvaporatorAirFlowRate() const;
 
@@ -338,8 +334,6 @@ namespace model {
       bool setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
 
       bool setFluidStorageTankRatingTemperature(double fluidStorageTankRatingTemperature);
-
-      void resetFluidStorageTankRatingTemperature();
 
       bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
 

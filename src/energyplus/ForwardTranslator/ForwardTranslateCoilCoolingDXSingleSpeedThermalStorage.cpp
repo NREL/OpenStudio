@@ -134,11 +134,9 @@ namespace energyplus {
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::StorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient,
                         storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
 
-    // Fluid Storage Tank Rating Temperature: boost::optional<double>
-    if (boost::optional<double> fluidStorageTankRatingTemperature_ = modelObject.fluidStorageTankRatingTemperature()) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature,
-                          fluidStorageTankRatingTemperature_.get());
-    }
+    // Fluid Storage Tank Rating Temperature: Required Double
+    const double fluidStorageTankRatingTemperature = modelObject.fluidStorageTankRatingTemperature();
+    idfObject.setDouble(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::FluidStorageTankRatingTemperature, fluidStorageTankRatingTemperature);
 
     if (modelObject.isRatedEvaporatorAirFlowRateAutosized()) {
       idfObject.setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::RatedEvaporatorAirFlowRate, "Autosize");

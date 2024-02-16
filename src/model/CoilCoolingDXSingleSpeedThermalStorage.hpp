@@ -97,7 +97,7 @@ namespace model {
 
     double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient() const;
 
-    boost::optional<double> fluidStorageTankRatingTemperature() const;
+    double fluidStorageTankRatingTemperature() const;
 
     boost::optional<double> ratedEvaporatorAirFlowRate() const;
 
@@ -326,8 +326,6 @@ namespace model {
     bool setStorageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient(double storageTanktoAmbientUvalueTimesAreaHeatTransferCoefficient);
 
     bool setFluidStorageTankRatingTemperature(double fluidStorageTankRatingTemperature);
-
-    void resetFluidStorageTankRatingTemperature();
 
     bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
 
