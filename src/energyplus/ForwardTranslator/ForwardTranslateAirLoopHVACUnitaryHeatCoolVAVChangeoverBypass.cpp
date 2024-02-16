@@ -9,8 +9,6 @@
 #include "../../model/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -38,7 +36,6 @@
 #include "../../model/Mixer.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
@@ -228,10 +225,6 @@ namespace energyplus {
       if (boost::optional<CoilCoolingDXSingleSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXSingleSpeed>()) {
         _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
-      } else if (boost::optional<CoilCoolingDXSingleSpeedThermalStorage> dxCoil =
-                   coolingCoil->optionalCast<CoilCoolingDXSingleSpeedThermalStorage>()) {
-        _coolingCoil = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(dxCoil.get());
-        m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
       } else if (boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil->optionalCast<CoilCoolingDXVariableSpeed>()) {
         _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(coolingCoil->handle(), _coolingCoil.get()));
@@ -324,9 +317,6 @@ namespace energyplus {
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolOutletNodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, coolInletNodeName);
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, coolOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolOutletNodeName);

@@ -17,8 +17,6 @@
 #include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -42,7 +40,6 @@
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
@@ -298,10 +295,6 @@ namespace energyplus {
       _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
 
       m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
-    } else if (boost::optional<CoilCoolingDXSingleSpeedThermalStorage> dxCoil = coolingCoil.optionalCast<CoilCoolingDXSingleSpeedThermalStorage>()) {
-      _coolingCoil = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(dxCoil.get());
-
-      m_map.insert(std::make_pair(coolingCoil.handle(), _coolingCoil.get()));
     } else if (boost::optional<CoilCoolingDXVariableSpeed> dxCoil = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
       _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(dxCoil.get());
 
@@ -334,9 +327,6 @@ namespace energyplus {
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, coolingCoilInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, coolingCoilOutletNodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, coolingCoilInletNodeName);
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, coolingCoilOutletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, coolingCoilInletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, coolingCoilOutletNodeName);

@@ -23,7 +23,6 @@
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -99,9 +98,6 @@ namespace energyplus {
         if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
           idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, hxSupplyAirOutletNodeName);
           idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, hxExhaustAirInletNodeName);
-        } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
-          idf->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, hxSupplyAirOutletNodeName);
-          idf->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, hxExhaustAirInletNodeName);
         } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
           idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, hxSupplyAirOutletNodeName);
           idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, hxExhaustAirInletNodeName);

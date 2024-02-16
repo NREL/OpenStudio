@@ -15,8 +15,6 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage.hpp"
-#include "../../model/CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
@@ -34,7 +32,6 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -167,9 +164,6 @@ namespace energyplus {
 
     if (boost::optional<CoilCoolingDXSingleSpeed> coilCoolingDXSingleSpeed = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>()) {
       _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(coilCoolingDXSingleSpeed.get());
-    } else if (boost::optional<CoilCoolingDXSingleSpeedThermalStorage> coilCoolingDXSingleSpeedThermalStorage =
-                 coolingCoil.optionalCast<CoilCoolingDXSingleSpeedThermalStorage>()) {
-      _coolingCoil = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(coilCoolingDXSingleSpeedThermalStorage.get());
     } else if (boost::optional<CoilCoolingDXVariableSpeed> coilCoolingDXVariableSpeed = coolingCoil.optionalCast<CoilCoolingDXVariableSpeed>()) {
       _coolingCoil = translateCoilCoolingDXVariableSpeedWithoutUnitary(coilCoolingDXVariableSpeed.get());
     } else if (boost::optional<CoilSystemIntegratedHeatPumpAirSource> coilSystemIntegratedHeatPumpAirSource =
@@ -270,8 +264,6 @@ namespace energyplus {
 
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, nodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
@@ -302,8 +294,6 @@ namespace energyplus {
 
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, nodeName);
-      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
-        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, nodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::CoilSystem_IntegratedHeatPump_AirSource) {
