@@ -30,9 +30,7 @@ class {{ pluginClassName }}(EnergyPlusPlugin):
                 state, "{{ py_var2.nameString() }}"
             )
             self.do_setup = False
-        zone_temps = list()
-        for t_handle in self.data["zone_temps"]:
-            zone_temps.append(self.api.exchange.get_variable_value(state, t_handle))
+        zone_temps = [self.api.exchange.get_variable_value(state, t_handle) for t_handle in self.data["zone_temps"]]
         numerator = float(self.df.iloc[0]["numerator"])
         denominator = float(self.df.iloc[0]["denominator"])
         for i in range(len(self.data["zone_volumes"])):

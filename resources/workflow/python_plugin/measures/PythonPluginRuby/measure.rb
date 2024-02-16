@@ -37,11 +37,11 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
     # Add a PythonPlugin:Variable (all OS SDK PythonPluginVariable objects are
     # translated to a single E+ PythonPlugin:Variables (extensible object))
     py_var = OpenStudio::Model::PythonPluginVariable.new(model)
-    py_var.setName('AverageBuildingTemp')
+    py_var.setName('Ruby AverageBuildingTemp')
 
     # Add a PythonPlugin:OutputVariable for that variable
     py_out_var = OpenStudio::Model::PythonPluginOutputVariable.new(py_var)
-    py_out_var.setName('Averaged Building Temperature')
+    py_out_var.setName('Ruby Averaged Building Temperature')
     py_out_var.setTypeofDatainVariable('Averaged')
     py_out_var.setUpdateFrequency('ZoneTimestep')
     py_out_var.setUnits('C')
@@ -58,15 +58,15 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
     # Trend Variable: while this is a fully functioning object, you're probably
     # best just using a storage variable on the Python side (eg: a list)
     py_trend_var = OpenStudio::Model::PythonPluginTrendVariable.new(py_var)
-    py_trend_var.setName('Running Averaged Building Temperature')
+    py_trend_var.setName('Ruby Running Averaged Building Temperature')
     n_timesteps = 24 * model.getTimestep.numberOfTimestepsPerHour
     py_trend_var.setNumberofTimestepstobeLogged(n_timesteps)
 
     py_var2 = OpenStudio::Model::PythonPluginVariable.new(model)
-    py_var2.setName('RunningAverageBuildingTemp')
+    py_var2.setName('RubyRunningAverageBuildingTemp')
 
     py_out_trend_var = OpenStudio::Model::PythonPluginOutputVariable.new(py_var2)
-    py_out_trend_var.setName('Running Averaged Building Temperature')
+    py_out_trend_var.setName('Ruby Running Averaged Building Temperature')
     py_out_trend_var.setTypeofDatainVariable('Averaged')
     py_out_trend_var.setUpdateFrequency('ZoneTimestep')
     py_out_trend_var.setUnits('C')
@@ -74,7 +74,7 @@ class PythonPluginRuby < OpenStudio::Measure::ModelMeasure
     out_trend_var = OpenStudio::Model::OutputVariable.new('PythonPlugin:OutputVariable', model)
     out_trend_var.setReportingFrequency('Timestep')
 
-    pluginClassName = 'AverageZoneTemps'
+    pluginClassName = 'RubyAverageZoneTemps'
 
     # get the python plugin program (erb template)
     pluginTemplatePath = File.join(File.dirname(__FILE__), 'resources/python_plugin_program.py.erb')

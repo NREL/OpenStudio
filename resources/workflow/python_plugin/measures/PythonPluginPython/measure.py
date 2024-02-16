@@ -1,9 +1,11 @@
-import os
 import tempfile
 import typing
+from pathlib import Path
 
 import jinja2
 import openstudio
+
+RESOURCES_DIR = Path(__file__).parent / "resources"
 
 
 class PythonPluginPython(openstudio.measure.ModelMeasure):
@@ -51,11 +53,11 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         # Add a PythonPlugin:Variable (all OS SDK PythonPluginVariable objects are
         # translated to a single E+ PythonPlugin:Variables (extensible object))
         py_var = openstudio.model.PythonPluginVariable(model)
-        py_var.setName("AverageBuildingTemp")
+        py_var.setName("PythonAverageBuildingTemp")
 
         # Add a PythonPlugin:OutputVariable for that variable
         py_out_var = openstudio.model.PythonPluginOutputVariable(py_var)
-        py_out_var.setName("Averaged Building Temperature")
+        py_out_var.setName("Python Averaged Building Temperature")
         py_out_var.setTypeofDatainVariable("Averaged")
         py_out_var.setUpdateFrequency("ZoneTimestep")
         py_out_var.setUnits("C")
@@ -72,15 +74,15 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         # Trend Variable: while this is a fully functioning object, you're probably
         # best just using a storage variable on the Python side (eg: a list)
         py_trend_var = openstudio.model.PythonPluginTrendVariable(py_var)
-        py_trend_var.setName("Running Averaged Building Temperature")
+        py_trend_var.setName("Python Running Averaged Building Temperature")
         n_timesteps = 24 * model.getTimestep().numberOfTimestepsPerHour()
         py_trend_var.setNumberofTimestepstobeLogged(n_timesteps)
 
         py_var2 = openstudio.model.PythonPluginVariable(model)
-        py_var2.setName("RunningAverageBuildingTemp")
+        py_var2.setName("Python RunningAverageBuildingTemp")
 
         py_out_trend_var = openstudio.model.PythonPluginOutputVariable(py_var2)
-        py_out_trend_var.setName("Running Averaged Building Temperature")
+        py_out_trend_var.setName("Python Running Averaged Building Temperature")
         py_out_trend_var.setTypeofDatainVariable("Averaged")
         py_out_trend_var.setUpdateFrequency("ZoneTimestep")
         py_out_trend_var.setUnits("C")
@@ -88,15 +90,14 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
         out_trend_var = openstudio.model.OutputVariable("PythonPlugin:OutputVariable", model)
         out_trend_var.setReportingFrequency("Timestep")
 
-        pluginClassName = "AverageZoneTemps"
+        pluginClassName = "PythonAverageZoneTemps"
 
         # get the python plugin program (jinja template)
-        pluginTemplatePath = os.path.join(os.path.dirname(__file__), "resources/python_plugin_program.py.jinja")
-        f = open(pluginTemplatePath, "r")
-        in_py = f.read()
+        pluginTemplatePath = RESOURCES_DIR / "python_plugin_program.py.jinja"
+        in_py = pluginTemplatePath.read_text()
 
-        dataPath = os.path.join(os.path.dirname(__file__), "resources/python_plugin_program.csv")
-        openstudio.model.ExternalFile.getExternalFile(model, dataPath)
+        dataPath = RESOURCES_DIR / "python_plugin_program.csv"
+        openstudio.model.ExternalFile.getExternalFile(model, str(dataPath))
 
         # configure plugin template with variable values
         env = jinja2.Environment()
@@ -112,15 +113,13 @@ class PythonPluginPython(openstudio.measure.ModelMeasure):
 
         # Write it to a temporary directory so we don't pollute the current directory
         # ExternalFile will copy it
-        temp_dir = tempfile.TemporaryDirectory()
-        pluginPath = os.path.join(temp_dir.name, "python_plugin_program_jinja.py")
-        with open(pluginPath, "w") as f:
-            f.write(out_py)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            pluginPath = Path(temp_dir) / "python_plugin_program_jinja.py"
+            pluginPath.write_text(out_py)
 
-        # create the external file object
-        # os.chdir('../..')
-        external_file = openstudio.model.ExternalFile.getExternalFile(model, pluginPath)
-        external_file = external_file.get()
+            copyFile = True
+            external_file = openstudio.model.ExternalFile.getExternalFile(model, str(pluginPath), copyFile)
+            external_file = external_file.get()
 
         # create the python plugin instance object
         python_plugin_instance = openstudio.model.PythonPluginInstance(external_file, pluginClassName)
