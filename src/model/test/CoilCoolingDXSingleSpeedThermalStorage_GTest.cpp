@@ -34,13 +34,19 @@
 
 #include "../ScheduleConstant.hpp"
 #include "../Curve.hpp"
+#include "../Curve_Impl.hpp"
 #include "../CurveBiquadratic.hpp"
+#include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 #include "../CurveTriquadratic.hpp"
+#include "../CurveTriquadratic_Impl.hpp"
 #include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVACUnitarySystem_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
+#include "../Node_Impl.hpp"
 #include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
@@ -926,11 +932,11 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
   EXPECT_EQ(0, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
 
   CoilCoolingDXSingleSpeedThermalStorage dx(model);
-  CurveBiquadratic curve1(m);
+  CurveBiquadratic curve1(model);
   EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve1));
-  CurveQuadratic curve2(m);
+  CurveQuadratic curve2(model);
   EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve(curve2));
-  CurveTriquadratic curve3(m);
+  CurveTriquadratic curve3(model);
   EXPECT_TRUE(dx.setCoolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve3));
 
   {
@@ -995,7 +1001,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_cloneParent) {
   Model model;
 
   CoilCoolingDXSingleSpeedThermalStorage dx(model);
-  CurveBiquadratic curve1(m);
+  CurveBiquadratic curve1(model);
   EXPECT_TRUE(dx.setCoolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve(curve1));
 
   AirLoopHVACUnitarySystem unitary(model);
