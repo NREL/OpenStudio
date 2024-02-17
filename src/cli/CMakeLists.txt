@@ -82,6 +82,15 @@ endif()
 ###############################################################################
 
 if(BUILD_TESTING)
+  # openstudio_tests is a test target for C++ based tests that extend across multiple
+  # compiled units such as the case for openstudio cli. 
+  # For example, here is a good place to test issues that are concerned with
+  # the complexities of sharing data between the Python and Ruby script engines.
+  set(openstudio_tests_src
+    "test/Logger_GTest.cpp"
+  )
+  CREATE_TEST_TARGETS(openstudio "${openstudio_tests_src}" openstudiolib openstudio_workflow)
+  add_dependencies(openstudio_tests openstudio)
 
   # Just for convenience: having to VT the seb model which is at 1.11.5 can be very time consuming, especially on debug builds
   add_custom_target(update_seb_osm_in_build_dir
