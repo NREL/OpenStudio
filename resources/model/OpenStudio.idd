@@ -13670,7 +13670,6 @@ OS:Boiler:HotWater,
   N2, \field Nominal Thermal Efficiency
        \type real
        \minimum> 0.0
-       \maximum 1.0
        \default 0.8
        \note Based on the higher heating value of fuel.
   A4, \field Efficiency Curve Temperature Evaluation Variable
@@ -30283,7 +30282,6 @@ OS:WaterHeater:Mixed,
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
-       \maximum 1.0
   A6 , \field Part Load Factor Curve Name
        \type object-list
        \object-list UnivariateFunctions
@@ -31641,7 +31639,6 @@ OS:WaterHeater:Stratified,
        \required-field
        \type real
        \minimum> 0.0
-       \maximum 1.0
   N12, \field Off Cycle Parasitic Fuel Consumption Rate
        \required-field
        \type real
@@ -36628,6 +36625,7 @@ OS:OutputControl:Table:Style,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
+       \key InchPoundExceptElectricity
        \required-field
 
 OS:Output:Meter,
@@ -37076,6 +37074,7 @@ OS:Output:SQLite,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
+       \key InchPoundExceptElectricity
        \required-field
 
 OS:Output:EnergyManagementSystem,
