@@ -191,8 +191,8 @@ if(hasParent)
 endif()
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 23)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MAJOR 24)
+set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
@@ -200,7 +200,7 @@ set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0-IOFreeze")
 
 set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
 

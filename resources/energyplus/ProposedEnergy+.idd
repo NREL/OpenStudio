@@ -1,4 +1,4 @@
-!IDD_Version 23.2.0
+!IDD_Version 24.1.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -369,6 +369,7 @@
 !      kgWater/kgDryAir
 !      kmol
 !      kmol/s
+!      umol/m2s
 !      m3/m3
 !      micron
 !      minutes
@@ -379,6 +380,7 @@
 !      ppm
 !      rev/min
 !      s
+!      umol_m2s
 !      V
 !      VA
 !      W/m2, deg C or cd/m2
@@ -404,7 +406,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 23.2
+      \default 24.1
 
 SimulationControl,
       \unique-object
@@ -11478,10 +11480,10 @@ People,
   A7 , \field Mean Radiant Temperature Calculation Type
        \note optional (only required for thermal comfort runs)
        \type choice
-       \key ZoneAveraged
+       \key EnclosureAveraged
        \key SurfaceWeighted
        \key AngleFactor
-       \default ZoneAveraged
+       \default EnclosureAveraged
   A8 , \field Surface Name/Angle Factor List Name
        \type object-list
        \object-list AllHeatTranAngFacNames
@@ -17129,7 +17131,7 @@ HVACTemplate:Zone:Unitary,
       \object-list ZoneNames
   A2, \field Template Unitary System Name
       \required-field
-      \note Enter the name of an HVACTemplate:System:Unitary, HVACTemplate:System:UnitaryHeatPump:AirTtoAir,
+      \note Enter the name of an HVACTemplate:System:Unitary, HVACTemplate:System:UnitaryHeatPump:AirToAir,
       \note or HVACTemplate:System:UnitarySystem object serving this zone.
       \type object-list
       \object-list CompactHVACSystemUnitary
