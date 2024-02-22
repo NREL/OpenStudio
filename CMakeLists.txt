@@ -196,13 +196,13 @@ set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
+set(ENERGYPLUS_BUILD_SHA "3a22bbbf44")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v24.1.0-IOFreeze")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0-IOFreeze-RC2")
 
-set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
+set(ENERGYPLUS_REPO "NREL")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -628,7 +628,7 @@ if(UNIX)
       set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
+      set(ENERGYPLUS_EXPECTED_HASH edce5108dcee47352e98c7944bbc9a20)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
@@ -640,10 +640,10 @@ if(UNIX)
       if (ARCH MATCHES "arm64")
         set(ENERGYPLUS_EXPECTED_HASH 363c537aff1f9c664192451139a85964)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH 773dc61ddb6f3dc633ac4df0bdaa3337)
+        set(ENERGYPLUS_EXPECTED_HASH 395fed03cc28cdf43363ddffc8709b68)
       endif()
     elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH b8644c02e287e3ffee89023e98ac5a13)
+      set(ENERGYPLUS_EXPECTED_HASH 85a3d5720675f44dc38aa510fc39bfed)
     else() # 18.04
       message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
     endif()
@@ -679,7 +679,7 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 7fbc694629ba6abbe400854661ebe1ae)
+    set(ENERGYPLUS_EXPECTED_HASH 9691e207686b994a38047e51ac59dee1)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
