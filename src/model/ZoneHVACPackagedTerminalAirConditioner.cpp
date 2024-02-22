@@ -374,7 +374,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+    bool
+      ZoneHVACPackagedTerminalAirConditioner_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
       if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
         return setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
       } else {

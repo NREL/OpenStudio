@@ -4036,22 +4036,22 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ZoneHVACPackagedTerminalAirCondit
   ASSERT_EQ(1u, ptacs.size());
   WorkspaceObject ptac = ptacs[0];
 
-  EXPECT_EQ("Zone HVAC Packaged Terminal Air Conditioner 1", ptac.getString(1).get());         // Name
-  EXPECT_EQ("", ptac.getTarget(2)->nameString());                    // Availability Schedule Name
-  EXPECT_TRUE(ptac.isEmpty(3));                            // Air Inlet Node Name
-  EXPECT_TRUE(ptac.isEmpty(4));                          // Air Outlet Node Name
-  EXPECT_EQ("OutdoorAir:Mixer", ptac.getString(5).get());             // Outdoor Air Mixer Object Type
-  EXPECT_TRUE(ptac.isEmpty(6));                           // Outdoor Air Mixer Name
-  EXPECT_EQ("Autosize", ptac.getString(7).get());                            // Supply Air Flow Rate During Cooling Operation
-  EXPECT_EQ("Autosize", ptac.getString(8).get());                            // Supply Air Flow Rate During Heating Operation
-  EXPECT_EQ("Autosize", ptac.getString(9).get());                            // Supply Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("Yes", ptac.getString(10).get());                           // No Load Supply Air Flow Rate Control Set To Low Speed
-  EXPECT_EQ("Autosize", ptac.getString(11));                                    // Outdoor Air Flow Rate During Cooling Operation
-  EXPECT_EQ("Autosize", ptac.getString(12));                                    // Outdoor Air Flow Rate During Heating Operation
-  EXPECT_EQ("Autosize", ptac.getString(13).get());                           // Outdoor Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("", ptac.getTarget(14)->nameString());  // Supply Air Fan Name
-  EXPECT_EQ("", ptac.getTarget(15)->nameString());                           // Heating Coil Name
-  EXPECT_EQ("", ptac.getTarget(16)->nameString());                           // Cooling Coil Name
-  EXPECT_EQ("DrawThrough", ptac.getString(17).get());                           // Fan Placement
-  EXPECT_EQ("", ptac.getString(18)->nameString());                      // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_EQ("Zone HVAC Packaged Terminal Air Conditioner 1", ptac.getString(1).get());  // Name
+  EXPECT_EQ("", ptac.getTarget(2)->nameString());                                       // Availability Schedule Name
+  EXPECT_TRUE(ptac.isEmpty(3));                                                         // Air Inlet Node Name
+  EXPECT_TRUE(ptac.isEmpty(4));                                                         // Air Outlet Node Name
+  EXPECT_EQ("OutdoorAir:Mixer", ptac.getString(5).get());                               // Outdoor Air Mixer Object Type
+  EXPECT_TRUE(ptac.isEmpty(6));                                                         // Outdoor Air Mixer Name
+  EXPECT_EQ("Autosize", ptac.getString(7).get());                                       // Supply Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Autosize", ptac.getString(8).get());                                       // Supply Air Flow Rate During Heating Operation
+  EXPECT_EQ("Autosize", ptac.getString(9).get());                                       // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", ptac.getString(10).get());                                           // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("Autosize", ptac.getString(11));                                            // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Autosize", ptac.getString(12));                                            // Outdoor Air Flow Rate During Heating Operation
+  EXPECT_EQ("Autosize", ptac.getString(13).get());                                      // Outdoor Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("", ptac.getTarget(14)->nameString());                                      // Supply Air Fan Name
+  EXPECT_EQ("", ptac.getTarget(15)->nameString());                                      // Heating Coil Name
+  EXPECT_EQ("", ptac.getTarget(16)->nameString());                                      // Cooling Coil Name
+  EXPECT_EQ("DrawThrough", ptac.getString(17).get());                                   // Fan Placement
+  EXPECT_EQ("", ptac.getString(18)->nameString());                                      // Supply Air Fan Operating Mode Schedule Name
 }
