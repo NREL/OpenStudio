@@ -8967,7 +8967,7 @@ namespace osversion {
         // 1 Field has been added from 3.7.0 to 3.8.0:
         // ----------------------------------------------
         // * No Load Supply Air Flow Rate Control Set To Low Speed * 10
-        auto iddObject = idd_3_7_0.getObject(iddname);
+        auto iddObject = idd_3_8_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
