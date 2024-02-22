@@ -8951,5 +8951,49 @@ namespace osversion {
 
   }  // end update_3_6_1_to_3_7_0
 
+  std::string VersionTranslator::update_3_7_0_to_3_8_0(const IdfFile& idf_3_7_0, const IddFileAndFactoryWrapper& idd_3_8_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_7_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_8_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_7_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:ZoneHVAC:PackagedTerminalAirConditioner") {
+
+        // 1 Field has been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Control Set To Low Speed * 10
+        auto iddObject = idd_3_7_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(10, "Yes");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_7_0_to_3_8_0
+
 }  // namespace osversion
 }  // namespace openstudio
