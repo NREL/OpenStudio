@@ -1,4 +1,4 @@
-!IDD_Version 3.7.0
+!IDD_Version 3.8.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.7.0
+       \default 3.8.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -29202,7 +29202,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
-       \min-fields 16
+       \min-fields 17
   A1, \field Handle
        \type handle
        \required-field
@@ -29257,6 +29257,13 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \autosizable
        \units m3/s
        \minimum 0
+  A8,  \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N4, \field Outdoor Air Flow Rate During Cooling Operation
        \note Must be less than or equal to supply air flow rate during cooling operation.
        \type real
@@ -29281,7 +29288,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \autosizable
        \units m3/s
        \minimum 0
-  A8, \field Supply Air Fan Name
+  A9, \field Supply Air Fan Name
        \note Needs to match in the fan object.
        \type object-list
        \required-field
@@ -29290,25 +29297,25 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note Fan:ConstantVolume only works when continuous fan operation is used the entire
        \note simulation (all supply air fan operating mode schedule values are greater than 0).
        \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
-  A9, \field Heating Coil Name
+  A10, \field Heating Coil Name
        \note Needs to match in the heating coil object.
        \type object-list
        \required-field
        \object-list HeatingCoilName
-  A10, \field Cooling Coil Name
+  A11, \field Cooling Coil Name
        \note Needs to match a DX cooling coil object.
        \type object-list
        \required-field
        \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
-  A11, \field Fan Placement
+  A12, \field Fan Placement
        \note Select fan placement as either blow through or draw through.
        \type choice
        \default DrawThrough
        \key BlowThrough
        \key DrawThrough
-  A12; \field Supply Air Fan Operating Mode Schedule Name
+  A13; \field Supply Air Fan Operating Mode Schedule Name
        \note Enter the name of a schedule that controls fan operation. Schedule Name values of 0 denote
        \note cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater
        \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
