@@ -241,8 +241,7 @@ namespace model {
     }
 
     bool ZoneHVACWaterToAirHeatPump_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
-      boost::optional<std::string> value =
-        getString(OS_ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
       OS_ASSERT(value);
       return openstudio::istringEqual(value.get(), "Yes");
     }
@@ -437,8 +436,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      ZoneHVACWaterToAirHeatPump_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+    bool ZoneHVACWaterToAirHeatPump_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
       if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
         return setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
       } else {

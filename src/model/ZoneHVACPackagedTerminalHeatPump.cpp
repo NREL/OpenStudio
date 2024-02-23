@@ -209,8 +209,7 @@ namespace model {
     }
 
     bool ZoneHVACPackagedTerminalHeatPump_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
-      boost::optional<std::string> value =
-        getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
       OS_ASSERT(value);
       return openstudio::istringEqual(value.get(), "Yes");
     }
@@ -433,8 +432,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool
-      ZoneHVACPackagedTerminalHeatPump_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
       if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
         return setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
       } else {
