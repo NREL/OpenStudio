@@ -414,8 +414,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
       EXPECT_EQ("Watts/Area", i_eqSpaceType_->getString(ElectricEquipmentFields::DesignLevelCalculationMethod).get());
 
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::DesignLevel));
-      EXPECT_EQ(eqSpaceTypeDefinition.wattsperSpaceFloorArea().get(),
-                i_eqSpaceType_->getDouble(ElectricEquipmentFields::WattsperFloorArea).get());
+      EXPECT_EQ(eqSpaceTypeDefinition.wattsperSpaceFloorArea().get(), i_eqSpaceType_->getDouble(ElectricEquipmentFields::WattsperFloorArea).get());
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::WattsperPerson));
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::FractionRadiant));
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::FractionLost));

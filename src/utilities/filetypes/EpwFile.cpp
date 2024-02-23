@@ -3916,7 +3916,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
           Time delta = endDate.get() - lastDate.get();
           if (std::abs(delta.totalDays()) > 1) {
             if (realYear) {  // Warn once
-              LOG(Warn, "Successive data points (" << lastDate.get() << " to " << endDate.get() << ", ending on line " << lineNumber
+              LOG(Info, "Successive data points (" << lastDate.get() << " to " << endDate.get() << ", ending on line " << lineNumber
                                                    << ") are greater than 1 day apart in EPW file '" << m_path
                                                    << "'. Data will be treated as typical (TMY)");
             }
@@ -3988,7 +3988,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
 
   if (realYear) {
     if (m_startDayOfWeek != startDate->dayOfWeek()) {
-      LOG(Warn, "Header start day of the week and actual start day of the week do not match in EPW file '"
+      LOG(Info, "Header start day of the week and actual start day of the week do not match in EPW file '"
                   << m_path << "'. Data will be treated as typical (TMY)");
       // The flag needs to be changed so we can do the wrapAround check below
       realYear = false;
