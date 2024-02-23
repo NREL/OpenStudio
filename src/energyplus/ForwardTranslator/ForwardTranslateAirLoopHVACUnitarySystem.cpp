@@ -349,6 +349,13 @@ namespace energyplus {
       unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation, d.get());
     }
 
+    // No Load Supply Air Flow Rate Control Set To Low Speed
+    if (modelObject.noLoadSupplyAirFlowRateControlSetToLowSpeed()) {
+      idfObject.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
+    } else {
+      idfObject.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
+    }
+
     // Maximum Supply Air Temperature
     if (modelObject.isMaximumSupplyAirTemperatureAutosized()) {
       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "Autosize");

@@ -208,6 +208,13 @@ namespace model {
       return result;
     }
 
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
+      boost::optional<std::string> value =
+        getString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
     boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::outdoorAirFlowRateDuringCoolingOperation() const {
       return getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirFlowRateDuringCoolingOperation, true);
     }
@@ -424,6 +431,15 @@ namespace model {
     void ZoneHVACPackagedTerminalHeatPump_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFlowRateWhenNoCoolingorHeatingisNeeded, "Autosize");
       OS_ASSERT(result);
+    }
+
+    bool
+      ZoneHVACPackagedTerminalHeatPump_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+      if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+        return setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
+      } else {
+        return setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
+      }
     }
 
     bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirFlowRateDuringCoolingOperation(
@@ -879,6 +895,7 @@ namespace model {
     autosizeOutdoorAirFlowRateDuringHeatingOperation();
     autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
     autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    setNoLoadSupplyAirFlowRateControlSetToLowSpeed(true);
     autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
@@ -930,6 +947,10 @@ namespace model {
 
   boost::optional<double> ZoneHVACPackagedTerminalHeatPump::supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized();
   }
 
   bool ZoneHVACPackagedTerminalHeatPump::isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const {
@@ -1045,6 +1066,11 @@ namespace model {
 
   void ZoneHVACPackagedTerminalHeatPump::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() {
     getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  bool ZoneHVACPackagedTerminalHeatPump::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+    return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setNoLoadSupplyAirFlowRateControlSetToLowSpeed(
+      noLoadSupplyAirFlowRateControlSetToLowSpeed);
   }
 
   bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation) {
