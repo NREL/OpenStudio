@@ -29493,13 +29493,17 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units C
         \required-field
         \note Supplemental heater will not operate when outdoor temperature exceeds this value.
-  A15; \field Controlling Zone or Thermostat Location
+  A15, \field Controlling Zone or Thermostat Location
        \type object-list
        \object-list ThermalZoneNames
        \note Used only for AirloopHVAC equipment on a main branch and defines zone name where thermostat is located.
        \note Not required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
        \note Required when terminal unit is used on main AirloopHVAC branch and coils are not set point controlled.
        \note When terminal unit is used in air loop and is load controlled, this zone's thermostat will control operation.
+  A16; \field Design Specification Multispeed Object Name
+       \type object-list
+       \object-list UnitarySystemPerformaceNames
+       \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 22
@@ -29636,10 +29640,14 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note Constant results in 100% water flow regardless of compressor PLR
         \note Cycling results in water flow that matches compressor PLR
         \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
-   A26; \field Design Specification ZoneHVAC Sizing Object Name
+   A26, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
+   A27; \field Design Specification Multispeed Object Name
+        \type object-list
+        \object-list UnitarySystemPerformaceNames
+        \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10

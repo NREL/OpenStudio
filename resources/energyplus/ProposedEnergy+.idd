@@ -24646,7 +24646,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \note Enter the type of performance specification object used to describe the multispeed coil or fan.
    A22; \field Design Specification Multispeed Object Name
         \type object-list
-        \object-list UnitarySystemPerformaceNames
+        \object-list UnitarySystemPerformanceNames
         \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 ZoneHVAC:Dehumidifier:DX,
@@ -25996,7 +25996,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
        \note Enter the type of performance specification object used to describe the multispeed coil or fan.
   A21; \field Design Specification Multispeed Object Name
        \type object-list
-       \object-list UnitarySystemPerformaceNames
+       \object-list UnitarySystemPerformanceNames
        \note The name of the performance specification object used to describe the multispeed coil or fan.
 
 \group Zone HVAC Radiative/Convective Units
@@ -37684,7 +37684,7 @@ AirLoopHVAC:UnitarySystem,
        \note Enter the type of performance specification object used to describe the multispeed coil.
   A27; \field Design Specification Multispeed Object Name
        \type object-list
-       \object-list UnitarySystemPerformaceNames
+       \object-list UnitarySystemPerformanceNames
        \note The name of the performance specification object used to describe the multispeed coil.
 
 UnitarySystemPerformance:Multispeed,
@@ -37694,7 +37694,7 @@ UnitarySystemPerformance:Multispeed,
        \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
   A1 , \field Name
        \required-field
-       \reference UnitarySystemPerformaceNames
+       \reference UnitarySystemPerformanceNames
   N1 , \field Number of Speeds for Heating
        \required-field
        \type integer

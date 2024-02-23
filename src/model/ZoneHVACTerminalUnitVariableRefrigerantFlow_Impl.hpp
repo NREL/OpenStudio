@@ -16,6 +16,7 @@ namespace model {
   class HVACComponent;
   class Schedule;
   class ThermalZone;
+  class UnitarySystemPerformanceMultispeed;
 
   namespace detail {
 
@@ -140,6 +141,10 @@ namespace model {
       // Supply Air Fan Placement
       std::string supplyAirFanPlacement() const;
       bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
+
+      boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject() const;
+      bool setDesignSpecificationMultispeedObject(const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace);
+      void resetDesignSpecificationMultispeedObject();
 
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 

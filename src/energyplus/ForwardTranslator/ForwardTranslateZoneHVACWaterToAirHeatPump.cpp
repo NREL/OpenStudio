@@ -27,6 +27,8 @@
 #include "../../model/CoilHeatingGas_Impl.hpp"
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -354,6 +356,17 @@ namespace energyplus {
     idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, modelObject.heatPumpCoilWaterFlowMode());
 
     // TODO: field 'Design Specification ZoneHVAC Sizing' isn't implemented since the object isn't wrapped in SDK
+
+    // Design Specification Multispeed Object Name
+    if (boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject()) {
+      boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
+
+      if (_unitarySystemPerformance && _unitarySystemPerformance->name()) {
+        idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectType,
+                            _unitarySystemPerformance->iddObject().name());
+        idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName, _unitarySystemPerformance->name().get());
+      }
+    }
 
     return idfObject;
   }

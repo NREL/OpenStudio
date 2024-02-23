@@ -29,6 +29,8 @@
 #include "../../model/CoilCoolingDXVariableRefrigerantFlow_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableRefrigerantFlow.hpp"
 #include "../../model/CoilHeatingDXVariableRefrigerantFlow_Impl.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed.hpp"
+#include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include "../../utilities/math/FloatCompare.hpp"
@@ -429,6 +431,18 @@ namespace energyplus {
         if (auto zone = translateAndMapModelObject(zones.front())) {
           idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::ControllingZoneorThermostatLocation, zone->name().get());
         }
+      }
+    }
+
+    // Design Specification Multispeed Object Name
+    if (boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject()) {
+      boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
+
+      if (_unitarySystemPerformance && _unitarySystemPerformance->name()) {
+        idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectType,
+                            _unitarySystemPerformance->iddObject().name());
+        idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::DesignSpecificationMultispeedObjectName,
+                            _unitarySystemPerformance->name().get());
       }
     }
 

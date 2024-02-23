@@ -27,6 +27,8 @@
 #include "CoilHeatingWater_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "UnitarySystemPerformanceMultispeed.hpp"
+#include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -84,6 +86,10 @@ namespace model {
 
       wahpClone.setSupplementalHeatingCoil(supplementalHeatingCoilClone);
 
+      if (auto designSpec = designSpecificationMultispeedObject()) {
+        wahpClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
+      }
+
       if (model == this->model()) {
         if (auto waterToAirComponent = t_coolingCoil.optionalCast<WaterToAirComponent>()) {
           if (auto plant = waterToAirComponent->plantLoop()) {
@@ -125,6 +131,9 @@ namespace model {
         if (boost::optional<PlantLoop> plantLoop = t_supplementalHeatingCoil->plantLoop()) {
           plantLoop->removeDemandBranchWithComponent(t_supplementalHeatingCoil.get());
         }
+      }
+      if (auto designSpec = designSpecificationMultispeedObject()) {
+        designSpec->remove();
       }
       return ZoneHVACComponent_Impl::remove();
     }
@@ -174,6 +183,9 @@ namespace model {
       }
       if (OptionalHVACComponent intermediate = optionalSupplementalHeatingCoil()) {
         result.push_back(*intermediate);
+      }
+      if (auto designSpec = designSpecificationMultispeedObject()) {
+        result.push_back(*designSpec);
       }
       return result;
     }
@@ -349,6 +361,11 @@ namespace model {
 
     boost::optional<Schedule> ZoneHVACWaterToAirHeatPump_Impl::supplyAirFanOperatingModeSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
+    }
+
+    boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACWaterToAirHeatPump_Impl::designSpecificationMultispeedObject() const {
+      return getObject<ModelObject>().getModelObjectTarget<UnitarySystemPerformanceMultispeed>(
+        OS_ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName);
     }
 
     bool ZoneHVACWaterToAirHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -592,6 +609,23 @@ namespace model {
 
     void ZoneHVACWaterToAirHeatPump_Impl::resetSupplyAirFanOperatingModeSchedule() {
       bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACWaterToAirHeatPump_Impl::setDesignSpecificationMultispeedObject(
+      const boost::optional<UnitarySystemPerformanceMultispeed>& unitarySystemPerformace) {
+      bool result(false);
+      if (unitarySystemPerformace) {
+        result = setPointer(OS_ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName, unitarySystemPerformace.get().handle());
+      } else {
+        resetDesignSpecificationMultispeedObject();
+        result = true;
+      }
+      return result;
+    }
+
+    void ZoneHVACWaterToAirHeatPump_Impl::resetDesignSpecificationMultispeedObject() {
+      bool result = setString(OS_ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationMultispeedObjectName, "");
       OS_ASSERT(result);
     }
 
@@ -980,6 +1014,10 @@ namespace model {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->supplyAirFanOperatingModeSchedule();
   }
 
+  boost::optional<UnitarySystemPerformanceMultispeed> ZoneHVACWaterToAirHeatPump::designSpecificationMultispeedObject() const {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->designSpecificationMultispeedObject();
+  }
+
   bool ZoneHVACWaterToAirHeatPump::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -1151,6 +1189,14 @@ namespace model {
 
   void ZoneHVACWaterToAirHeatPump::resetSupplyAirFanOperatingModeSchedule() {
     getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetSupplyAirFanOperatingModeSchedule();
+  }
+
+  bool ZoneHVACWaterToAirHeatPump::setDesignSpecificationMultispeedObject(const UnitarySystemPerformanceMultispeed& unitarySystemPerformace) {
+    return getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->setDesignSpecificationMultispeedObject(unitarySystemPerformace);
+  }
+
+  void ZoneHVACWaterToAirHeatPump::resetDesignSpecificationMultispeedObject() {
+    getImpl<detail::ZoneHVACWaterToAirHeatPump_Impl>()->resetDesignSpecificationMultispeedObject();
   }
 
   /// @cond

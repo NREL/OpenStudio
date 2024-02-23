@@ -9,8 +9,25 @@
 
 #include "../AirLoopHVACUnitarySystem.hpp"
 #include "../AirLoopHVACUnitarySystem_Impl.hpp"
+
+#include "../ZoneHVACWaterToAirHeatPump.hpp"
+#include "../ZoneHVACWaterToAirHeatPump_Impl.hpp"
+#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "../UnitarySystemPerformanceMultispeed.hpp"
 #include "../UnitarySystemPerformanceMultispeed_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
+#include "../CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
+#include "../CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingElectric_Impl.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanOnOff_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -98,12 +115,44 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_SupplyAirflowRatioField)
 
 TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addToAirLoopHVACUnitarySystem) {
   Model m;
-  UnitarySystemPerformanceMultispeed perf = UnitarySystemPerformanceMultispeed(m);
+  UnitarySystemPerformanceMultispeed perf(m);
   AirLoopHVACUnitarySystem airloopsys = AirLoopHVACUnitarySystem(m);
 
+  ASSERT_FALSE(airloopsys.designSpecificationMultispeedObject());
   EXPECT_TRUE(airloopsys.setDesignSpecificationMultispeedObject(perf));
   ASSERT_TRUE(airloopsys.designSpecificationMultispeedObject());
   EXPECT_EQ(airloopsys.designSpecificationMultispeedObject().get().handle(), perf.handle());
   airloopsys.resetDesignSpecificationMultispeedObject();
   ASSERT_FALSE(airloopsys.designSpecificationMultispeedObject());
+}
+
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addZoneHVACWaterToAirHeatPump) {
+  Model m;
+  UnitarySystemPerformanceMultispeed perf(m);
+  Schedule availabilitySched = m.alwaysOnDiscreteSchedule();
+  FanOnOff supplyFan(m, availabilitySched);
+  CoilHeatingWaterToAirHeatPumpEquationFit coilHeatingWaterToAirHP(m);
+  CoilCoolingWaterToAirHeatPumpEquationFit coilCoolingWaterToAirHP(m);
+  CoilHeatingElectric supplementalHC(m, availabilitySched);
+  ZoneHVACWaterToAirHeatPump zonehvac(m, availabilitySched, supplyFan, coilHeatingWaterToAirHP, coilCoolingWaterToAirHP, supplementalHC);
+
+  ASSERT_FALSE(zonehvac.designSpecificationMultispeedObject());
+  EXPECT_TRUE(zonehvac.setDesignSpecificationMultispeedObject(perf));
+  ASSERT_TRUE(zonehvac.designSpecificationMultispeedObject());
+  EXPECT_EQ(zonehvac.designSpecificationMultispeedObject().get().handle(), perf.handle());
+  zonehvac.resetDesignSpecificationMultispeedObject();
+  ASSERT_FALSE(zonehvac.designSpecificationMultispeedObject());
+}
+
+TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_addZoneHVACTerminalUnitVariableRefrigerantFlow) {
+  Model m;
+  UnitarySystemPerformanceMultispeed perf(m);
+  ZoneHVACTerminalUnitVariableRefrigerantFlow zonehvac(m);
+
+  ASSERT_FALSE(zonehvac.designSpecificationMultispeedObject());
+  EXPECT_TRUE(zonehvac.setDesignSpecificationMultispeedObject(perf));
+  ASSERT_TRUE(zonehvac.designSpecificationMultispeedObject());
+  EXPECT_EQ(zonehvac.designSpecificationMultispeedObject().get().handle(), perf.handle());
+  zonehvac.resetDesignSpecificationMultispeedObject();
+  ASSERT_FALSE(zonehvac.designSpecificationMultispeedObject());
 }
