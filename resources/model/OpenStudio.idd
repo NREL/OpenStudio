@@ -29572,7 +29572,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \autosizable
         \units m3/s
         \minimum 0
-  A7,   \field No Load Supply Air Flow Rate Control Set To Low Speed
+   A7,  \field No Load Supply Air Flow Rate Control Set To Low Speed
         \type choice
         \key Yes
         \key No
