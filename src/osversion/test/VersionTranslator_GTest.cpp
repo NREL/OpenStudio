@@ -4053,5 +4053,5 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ZoneHVACPackagedTerminalAirCondit
   EXPECT_EQ("", ptac.getTarget(15)->nameString());                                      // Heating Coil Name
   EXPECT_EQ("", ptac.getTarget(16)->nameString());                                      // Cooling Coil Name
   EXPECT_EQ("DrawThrough", ptac.getString(17).get());                                   // Fan Placement
-  EXPECT_EQ("", ptac.getString(18)->nameString());                                      // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_EQ("", ptac.getTarget(18)->nameString());                                      // Supply Air Fan Operating Mode Schedule Name
 }
