@@ -348,7 +348,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
       EXPECT_EQ("Watts/Area", i_lights.getString(LightsFields::DesignLevelCalculationMethod).get());
 
       EXPECT_TRUE(i_lights.isEmpty(LightsFields::LightingLevel));
-      EXPECT_EQ(lightsDefinition.wattsperSpaceFloorArea().get(), i_lights.getDouble(LightsFields::WattsperZoneFloorArea).get());
+      EXPECT_EQ(lightsDefinition.wattsperSpaceFloorArea().get(), i_lights.getDouble(LightsFields::WattsperFloorArea).get());
       EXPECT_TRUE(i_lights.isEmpty(LightsFields::WattsperPerson));
       EXPECT_TRUE(i_lights.isEmpty(LightsFields::ReturnAirFraction));
       EXPECT_TRUE(i_lights.isEmpty(LightsFields::FractionRadiant));
@@ -391,7 +391,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
       EXPECT_EQ(eqSpaceDefinition.designLevelCalculationMethod(), i_eqSpace_->getString(ElectricEquipmentFields::DesignLevelCalculationMethod).get());
       EXPECT_EQ("EquipmentLevel", i_eqSpace_->getString(ElectricEquipmentFields::DesignLevelCalculationMethod).get());
       EXPECT_EQ(eqSpaceDefinition.designLevel().get(), i_eqSpace_->getDouble(ElectricEquipmentFields::DesignLevel).get());
-      EXPECT_TRUE(i_eqSpace_->isEmpty(ElectricEquipmentFields::WattsperZoneFloorArea));
+      EXPECT_TRUE(i_eqSpace_->isEmpty(ElectricEquipmentFields::WattsperFloorArea));
       EXPECT_TRUE(i_eqSpace_->isEmpty(ElectricEquipmentFields::WattsperPerson));
       EXPECT_TRUE(i_eqSpace_->isEmpty(ElectricEquipmentFields::FractionRadiant));
       EXPECT_TRUE(i_eqSpace_->isEmpty(ElectricEquipmentFields::FractionLost));
@@ -415,7 +415,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
 
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::DesignLevel));
       EXPECT_EQ(eqSpaceTypeDefinition.wattsperSpaceFloorArea().get(),
-                i_eqSpaceType_->getDouble(ElectricEquipmentFields::WattsperZoneFloorArea).get());
+                i_eqSpaceType_->getDouble(ElectricEquipmentFields::WattsperFloorArea).get());
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::WattsperPerson));
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::FractionRadiant));
       EXPECT_TRUE(i_eqSpaceType_->isEmpty(ElectricEquipmentFields::FractionLost));
