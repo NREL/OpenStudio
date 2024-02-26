@@ -24742,37 +24742,13 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \units dimensionless
       \minimum 0.0
       \maximum 1.0
-  N4, \field Sensible Effectiveness at 75% Heating Air Flow
+  N4, \field Sensible Effectiveness at 100% Cooling Air Flow
       \type real
       \required-field
       \units dimensionless
       \minimum 0.0
       \maximum 1.0
-  N5, \field Latent Effectiveness at 75% Heating Air Flow
-      \type real
-      \required-field
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-  N6, \field Sensible Effectiveness at 100% Cooling Air Flow
-      \type real
-      \required-field
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-  N7, \field Latent Effectiveness at 100% Cooling Air Flow
-      \type real
-      \required-field
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-  N8, \field Sensible Effectiveness at 75% Cooling Air Flow
-      \type real
-      \required-field
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-  N9, \field Latent Effectiveness at 75% Cooling Air Flow
+  N5, \field Latent Effectiveness at 100% Cooling Air Flow
       \type real
       \required-field
       \units dimensionless
@@ -24790,7 +24766,7 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
   A7, \field Exhaust Air Outlet Node
       \type object-list
       \object-list ConnectionNames
-  N10,\field Nominal Electric Power
+  N6, \field Nominal Electric Power
       \type real
       \required-field
       \units W
@@ -24813,33 +24789,57 @@ OS:HeatExchanger:AirToAir:SensibleAndLatent,
       \key ExhaustAirRecirculation
       \key ExhaustOnly
       \key MinimumExhaustTemperature
-  N11,\field Threshold Temperature
+  N7, \field Threshold Temperature
       \type real
       \units C
       \default 1.7
       \note Supply (outdoor) air inlet temp threshold for exhaust air recirculation and
       \note exhaust only frost control types. Exhaust air outlet threshold Temperature for
       \note minimum exhaust temperature frost control type.
-  N12,\field Initial Defrost Time Fraction
+  N8, \field Initial Defrost Time Fraction
       \type real
       \units dimensionless
       \minimum 0.0
       \maximum 1.0
       \note Fraction of the time when frost control will be invoked at the threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  N13,\field Rate of Defrost Time Fraction Increase
+  N9, \field Rate of Defrost Time Fraction Increase
       \type real
       \units 1/K
       \minimum 0.0
       \note Rate of increase in defrost time fraction as actual temp falls below threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  A11;\field Economizer Lockout
+  A11,\field Economizer Lockout
       \type choice
       \required-field
       \key Yes
       \key No
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
+  A12,\field Sensible Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for heating
+      \note will be the value in N2 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A13,\field Latent Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for heating
+      \note will be the value in N3 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A14,\field Sensible Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for cooling
+      \note will be the value in N4 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A15;\field Latent Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for cooling
+      \note will be the value in N5 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
 
 OS:HeatExchanger:Desiccant:BalancedFlow,
       \memo This object models a balanced desiccant heat exchanger.
