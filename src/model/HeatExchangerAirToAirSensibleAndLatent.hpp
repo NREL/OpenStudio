@@ -67,11 +67,11 @@ namespace model {
 
     OS_DEPRECATED(3, 8, 0) double sensibleEffectivenessat75HeatingAirFlow() const;
 
-    OS_DEPRECATED(3, 8, 0)  bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
 
-    OS_DEPRECATED(3, 8, 0)  double latentEffectivenessat75HeatingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double latentEffectivenessat75HeatingAirFlow() const;
 
-    OS_DEPRECATED(3, 8, 0)  bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
 
     double sensibleEffectivenessat100CoolingAirFlow() const;
 
@@ -85,9 +85,9 @@ namespace model {
 
     OS_DEPRECATED(3, 8, 0) setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
 
-    OS_DEPRECATED(3, 8, 0)  double latentEffectivenessat75CoolingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double latentEffectivenessat75CoolingAirFlow() const;
 
-    OS_DEPRECATED(3, 8, 0)  bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
 
     double nominalElectricPower() const;
 
@@ -130,17 +130,17 @@ namespace model {
     bool setEconomizerLockout(bool economizerLockout);
 
     boost::optional<Curve> sensibleEffectivenessofHeatingAirFlowCurve() const;
-    
+
     bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
-    
+
     boost::optional<Curve> latentEffectivenessofHeatingAirFlowCurve() const;
-    
+
     bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
-    
+
     boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve() const;
-    
+
     bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
-    
+
     boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
 
     bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);

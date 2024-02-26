@@ -4035,6 +4035,6 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndL
   std::vector<WorkspaceObject> hxs = model->getObjectsByType("OS:HeatExchanger:AirToAir:SensibleAndLatent");
   ASSERT_EQ(1u, hxs.size());
   WorkspaceObject hx = hxs[0];
-  
+
   // TODO
 }

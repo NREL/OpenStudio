@@ -66,13 +66,13 @@ namespace energyplus {
     // // SensibleEffectivenessat75_HeatingAirFlow
     // d = modelObject.sensibleEffectivenessat75HeatingAirFlow();
     // if (d) {
-      // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow, d.get());
+    // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow, d.get());
     // }
 
     // // LatentEffectivenessat75_HeatingAirFlow
     // d = modelObject.latentEffectivenessat75HeatingAirFlow();
     // if (d) {
-      // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, d.get());
+    // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, d.get());
     // }
 
     // SensibleEffectivenessat100_CoolingAirFlow
@@ -90,13 +90,13 @@ namespace energyplus {
     // // SensibleEffectivenessat75_CoolingAirFlow
     // d = modelObject.sensibleEffectivenessat75CoolingAirFlow();
     // if (d) {
-      // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow, d.get());
+    // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow, d.get());
     // }
 
     // // LatentEffectivenessat75_CoolingAirFlow
     // d = modelObject.latentEffectivenessat75CoolingAirFlow();
     // if (d) {
-      // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, d.get());
+    // idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, d.get());
     // }
 
     // SupplyAirInletNodeName
@@ -198,14 +198,14 @@ namespace energyplus {
         idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName, wo_->nameString());
       }
     }
-    
+
     // SensibleEffectivenessofCoolingAirFlowCurveName
     if (boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve_ = modelObject.sensibleEffectivenessofCoolingAirFlowCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(sensibleEffectivenessofCoolingAirFlowCurve_.get())) {
         idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName, wo_->nameString());
       }
     }
-    
+
     // LatentEffectivenessofCoolingAirFlowCurveName
     if (boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve_ = modelObject.latentEffectivenessofCoolingAirFlowCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(latentEffectivenessofCoolingAirFlowCurve_.get())) {

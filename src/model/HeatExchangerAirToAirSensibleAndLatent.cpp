@@ -246,7 +246,8 @@ namespace model {
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalSensibleEffectivenessofHeatingAirFlowCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofHeatingAirFlowCurve() const {
@@ -256,11 +257,12 @@ namespace model {
       }
       return value.get();
     }
-    
+
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalLatentEffectivenessofHeatingAirFlowCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurve);
     }
-    
+
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofCoolingAirFlowCurve() const {
       boost::optional<Curve> value = optionalSensibleEffectivenessofCoolingAirFlowCurve();
       if (!value) {
@@ -268,11 +270,12 @@ namespace model {
       }
       return value.get();
     }
-    
+
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalSensibleEffectivenessofCoolingAirFlowCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurve);
     }
-    
+
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofCoolingAirFlowCurve() const {
       boost::optional<Curve> value = optionalLatentEffectivenessofCoolingAirFlowCurve();
       if (!value) {
@@ -282,7 +285,8 @@ namespace model {
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalLatentEffectivenessofCoolingAirFlowCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurve);
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -397,21 +401,17 @@ namespace model {
       return setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, economizerLockout);
     }
 
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
-      
-    }
-    
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve) {
-      
-    }
-    
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
-      
-    }
-    
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve) {
-      
-    }
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofHeatingAirFlowCurve(
+      const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {}
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofHeatingAirFlowCurve(
+      const Curve& latentEffectivenessofHeatingAirFlowCurve) {}
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofCoolingAirFlowCurve(
+      const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {}
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofCoolingAirFlowCurve(
+      const Curve& latentEffectivenessofCoolingAirFlowCurve) {}
 
     boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilitySchedule);
@@ -553,7 +553,7 @@ namespace model {
     setThresholdTemperature(1.7);
 
     setEconomizerLockout(true);
-    
+
     // TODO
     // setSensibleEffectivenessofHeatingAirFlowCurve
     // setLatentEffectivenessofHeatingAirFlowCurve
@@ -642,15 +642,15 @@ namespace model {
   boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessofHeatingAirFlowCurve() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessofHeatingAirFlowCurve();
   }
-  
+
   boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessofHeatingAirFlowCurve() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessofHeatingAirFlowCurve();
   }
-  
+
   boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessofCoolingAirFlowCurve() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessofCoolingAirFlowCurve();
   }
-  
+
   boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessofCoolingAirFlowCurve() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessofCoolingAirFlowCurve();
   }
@@ -731,20 +731,26 @@ namespace model {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
   }
 
-  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofHeatingAirFlowCurve(sensibleEffectivenessofHeatingAirFlowCurve);
+  bool
+    HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofHeatingAirFlowCurve(
+      sensibleEffectivenessofHeatingAirFlowCurve);
   }
-  
+
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofHeatingAirFlowCurve(latentEffectivenessofHeatingAirFlowCurve);
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofHeatingAirFlowCurve(
+      latentEffectivenessofHeatingAirFlowCurve);
   }
-  
-  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofCoolingAirFlowCurve(sensibleEffectivenessofCoolingAirFlowCurve);
+
+  bool
+    HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofCoolingAirFlowCurve(
+      sensibleEffectivenessofCoolingAirFlowCurve);
   }
-  
+
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofCoolingAirFlowCurve(latentEffectivenessofCoolingAirFlowCurve);
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofCoolingAirFlowCurve(
+      latentEffectivenessofCoolingAirFlowCurve);
   }
 
   AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct(double length, double diameter) {

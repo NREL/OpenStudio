@@ -108,11 +108,11 @@ namespace model {
       bool economizerLockout() const;
 
       boost::optional<Curve> sensibleEffectivenessofHeatingAirFlowCurve() const;
-      
+
       boost::optional<Curve> latentEffectivenessofHeatingAirFlowCurve() const;
-      
+
       boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve() const;
-      
+
       boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
 
       boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
@@ -158,11 +158,11 @@ namespace model {
       bool setEconomizerLockout(bool economizerLockout);
 
       bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
-      
+
       bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
-      
+
       bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
-      
+
       bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
 
       //@}
@@ -189,7 +189,7 @@ namespace model {
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-      
+
       boost::optional<Curve> optionalSensibleEffectivenessofHeatingAirFlowCurve() const;
       boost::optional<Curve> optionalLatentEffectivenessofHeatingAirFlowCurve() const;
       boost::optional<Curve> optionalSensibleEffectivenessofCoolingAirFlowCurve() const;
