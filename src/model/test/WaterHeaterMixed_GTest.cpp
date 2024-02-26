@@ -36,9 +36,10 @@ TEST_F(ModelFixture, WaterHeaterMixed_WaterHeaterMixed) {
   model::Model m;
   model::WaterHeaterMixed waterHeaterMixed(m);
 
-  EXPECT_EQ(0.8, waterHeaterMixed.heaterThermalEfficiency());
+  ASSERT_TRUE(waterHeaterMixed.heaterThermalEfficiency());
+  EXPECT_EQ(0.8, waterHeaterMixed.heaterThermalEfficiency().get());
   EXPECT_TRUE(waterHeaterMixed.setHeaterThermalEfficiency(1.3));
-  EXPECT_EQ(1.3, waterHeaterMixed.heaterThermalEfficiency());
+  EXPECT_EQ(1.3, waterHeaterMixed.heaterThermalEfficiency().get());
 }
 
 TEST_F(ModelFixture, WaterHeaterMixed_NewFields) {
