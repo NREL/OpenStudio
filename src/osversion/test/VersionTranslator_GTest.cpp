@@ -4022,3 +4022,19 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
     EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // TimedEmpiricalDefrostHeatInputEnergyFractionCurveName
   }
 }
+
+TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndLatent) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_8_0/test_vt_HeatExchangerAirToAirSensibleAndLatent.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_8_0/test_vt_HeatExchangerAirToAirSensibleAndLatent_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> hxs = model->getObjectsByType("OS:HeatExchanger:AirToAir:SensibleAndLatent");
+  ASSERT_EQ(1u, hxs.size());
+  WorkspaceObject hx = hxs[0];
+  
+  // TODO
+}

@@ -143,7 +143,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
     m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
-    m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::update_3_7_0_to_3_8_0;
+    // m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -8950,6 +8951,34 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_6_1_to_3_7_0
+
+  std::string VersionTranslator::update_3_7_0_to_3_8_0(const IdfFile& idf_3_7_0, const IddFileAndFactoryWrapper& idd_3_8_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_7_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_8_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_7_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
+
+        // TODO
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_7_0_to_3_8_0
 
 }  // namespace osversion
 }  // namespace openstudio
