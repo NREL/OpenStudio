@@ -83,7 +83,7 @@ namespace model {
 
     OS_DEPRECATED(3, 8, 0) double sensibleEffectivenessat75CoolingAirFlow() const;
 
-    OS_DEPRECATED(3, 8, 0) setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
 
     OS_DEPRECATED(3, 8, 0) double latentEffectivenessat75CoolingAirFlow() const;
 
