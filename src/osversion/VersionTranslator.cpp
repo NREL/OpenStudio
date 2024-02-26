@@ -8965,7 +8965,94 @@ namespace osversion {
 
       if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
 
-        // TODO
+        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * Sensible Effectiveness at 75% Heating Air Flow {dimensionless} * 6
+        // * Latent Effectiveness at 75% Heating Air Flow {dimensionless} * 7
+        // * Sensible Effectiveness at 75% Cooling Air Flow {dimensionless} * 10
+        // * Latent Effectiveness at 75% Cooling Air Flow {dimensionless} * 11
+
+        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * Sensible Effectiveness of Heating Air Flow Curve Name * 20
+        // * Latent Effectiveness of Heating Air Flow Curve Name * 21
+        // * Sensible Effectiveness of Cooling Air Flow Curve Name * 22
+        // * Latent Effectiveness of Cooling Air Flow Curve Name * 23
+
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else if (i < 8) {
+              // no op
+            } else if (i < 10) {
+              newObject.setString(i - 2, value.get());
+            } else if (i < 12) {
+              // no op
+            } else {
+              newObject.setString(i - 4, value.get());
+            }
+          }
+        }
+
+        std::string varListHandle = toString(createUUID());
+        std::vector<int> e_idxs = {4, 5, 8, 9};
+        std::vector<int> c_idxs = {20, 21, 22, 23};
+        bool tableAdded = false;
+        for (size_t i = 0; i < e_idxs.size(); ++i) {
+          if (
+            (auto e100 = object.getDouble(e_idxs[i]))
+            && (auto e75 = object.getDouble(
+                  e_idxs[i]
+                  + 2))) {  // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}, Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
+            if (e100.get() != e75.get()) {
+              tableAdded = true;
+
+              IdfObject tableLookup(idd_3_8_0.getObject("OS:Table:Lookup").get());
+              std::string uuid = toString(createUUID());
+              tableLookup.setString(0, uuid);                                     // Handle
+              tableLookup.setString(1, object.nameString() + "_" + toString(i));  // Name
+              tableLookup.setString(2, varListHandle);                            // Independent Variable List Name
+              tableLookup.setString(3, "DivisorOnly");                            // Normalization Method
+              tableLookup.setDouble(4, e100.get());                               // Normalization Divisor
+              tableLookup.setDouble(5, 0.0);                                      // Minimum Output
+              tableLookup.setDouble(6, 10.0);                                     // Maximum Output
+              tableLookup.setString(7, "Dimensionless");                          // Output Unit Type
+              tableLookup.pushExtensibleGroup().setDouble(0, e75);                // Output Value 1
+              tableLookup.pushExtensibleGroup().setDouble(0, e100);               // Output Value 2
+
+              newObject.setString(c_idxs[i], uuid);
+            }
+          }
+        }
+
+        if (tableAdded) {
+          IdfObject varList(idd_3_8_0.getObject("OS:ModelObjectList").get());
+          varList.setString(0, varListHandle);
+          varList.setString(1, object.nameString() + "_IndependentVariableList");  // Name
+
+          ss << varList;
+          m_new.push_back(varList);
+
+          IdfObject var(idd_3_8_0.getObject("OS:Table:IndependentVariable").get());
+          std::string varHandle = toString(createUUID());
+          varList.pushExtensibleGroup({varHandle});  // Model Object 1
+          var.setString(0, varHandle);
+          var.setString(1, object.nameString() + "_IndependentVariable");  // Name
+          var.setString(2, "Linear");                                      // Interpolation Method
+          var.setString(3, "Linear");                                      // Extrapolation Method
+          var.setDouble(4, 0.0);                                           // Minimum Value
+          var.setDouble(5, 10.0);                                          // Maximum Value
+          var.setString(7, "Dimensionless");                               // Unit Type
+          var.pushExtensibleGroup().setDouble(0, 0.75);                    // Value 1
+          var.pushExtensibleGroup().setDouble(0, 1.0);                     // Value 2
+
+          ss << var;
+          m_new.push_back(var);
+        }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
