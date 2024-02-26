@@ -238,53 +238,21 @@ namespace model {
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofHeatingAirFlowCurve() const {
-      boost::optional<Curve> value = optionalSensibleEffectivenessofHeatingAirFlowCurve();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Sensible Effectiveness of Heating Air Flow Curve attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalSensibleEffectivenessofHeatingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofHeatingAirFlowCurve() const {
-      boost::optional<Curve> value = optionalLatentEffectivenessofHeatingAirFlowCurve();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Latent Effectiveness of Heating Air Flow Curve attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalLatentEffectivenessofHeatingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurve);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofCoolingAirFlowCurve() const {
-      boost::optional<Curve> value = optionalSensibleEffectivenessofCoolingAirFlowCurve();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Sensible Effectiveness of Cooling Air Flow Curve attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalSensibleEffectivenessofCoolingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurve);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofCoolingAirFlowCurve() const {
-      boost::optional<Curve> value = optionalLatentEffectivenessofCoolingAirFlowCurve();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have a Latent Effectiveness of Cooling Air Flow Curve attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalLatentEffectivenessofCoolingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurve);
     }

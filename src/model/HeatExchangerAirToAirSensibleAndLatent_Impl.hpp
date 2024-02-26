@@ -189,11 +189,6 @@ namespace model {
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-
-      boost::optional<Curve> optionalSensibleEffectivenessofHeatingAirFlowCurve() const;
-      boost::optional<Curve> optionalLatentEffectivenessofHeatingAirFlowCurve() const;
-      boost::optional<Curve> optionalSensibleEffectivenessofCoolingAirFlowCurve() const;
-      boost::optional<Curve> optionalLatentEffectivenessofCoolingAirFlowCurve() const;
     };
 
   }  // namespace detail
