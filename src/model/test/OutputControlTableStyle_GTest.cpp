@@ -28,4 +28,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_GettersSetters) {
   EXPECT_FALSE(outputControlTableStyle.setUnitConversion("AnotherInvalid"));
   EXPECT_EQ("Tab", outputControlTableStyle.columnSeparator());
   EXPECT_EQ("JtoKWH", outputControlTableStyle.unitConversion());
+
+  EXPECT_TRUE(outputControlTableStyle.setUnitConversion("InchPoundExceptElectricity"));
+  EXPECT_EQ("InchPoundExceptElectricity", outputControlTableStyle.unitConversion());
 }
