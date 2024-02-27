@@ -3904,8 +3904,9 @@ OS:People:Definition,
   A5, \field Mean Radiant Temperature Calculation Type
        \note optional (only required for thermal comfort runs)
        \type choice
-       \default ZoneAveraged
+       \default EnclosureAveraged
        \key ZoneAveraged
+       \key EnclosureAveraged
        \key SurfaceWeighted
        \key AngleFactor
   A6; \field Thermal Comfort Model Type
