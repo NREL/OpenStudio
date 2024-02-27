@@ -2719,9 +2719,11 @@ namespace sdd {
     auto htgSensEff75Element = element.child("HtgSensEff75");
     boost::optional<double> _htgSensEff75 = lexicalCastToDouble(htgSensEff75Element);
     if (_htgSensEff75) {
-      if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = hx.sensibleEffectivenessofHeatingAirFlowCurve().optionalCast<TableLookup>()) {
-        double sensibleEffectivenessat100HeatingAirFlow = hx.sensibleEffectivenessat100HeatingAirFlow();
-        sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgSensEff75.get(), sensibleEffectivenessat100HeatingAirFlow});
+      if (boost::optional<Curve> curve_ = hx.sensibleEffectivenessofHeatingAirFlowCurve()) {
+        if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+          double sensibleEffectivenessat100HeatingAirFlow = hx.sensibleEffectivenessat100HeatingAirFlow();
+          sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgSensEff75.get(), sensibleEffectivenessat100HeatingAirFlow});
+        }
       }
     }
 
@@ -2736,9 +2738,11 @@ namespace sdd {
     auto htgLatEff75Element = element.child("HtgLatEff75");
     boost::optional<double> _htgLatEff75 = lexicalCastToDouble(htgLatEff75Element);
     if (_htgLatEff75) {
-      if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = hx.latentEffectivenessofHeatingAirFlowCurve().optionalCast<TableLookup>()) {
-        double latentEffectivenessat100HeatingAirFlow = hx.latentEffectivenessat100HeatingAirFlow();
-        latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgLatEff75.get(), latentEffectivenessat100HeatingAirFlow});
+      if (boost::optional<Curve> curve_ = hx.latentEffectivenessofHeatingAirFlowCurve()) {
+        if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+          double latentEffectivenessat100HeatingAirFlow = hx.latentEffectivenessat100HeatingAirFlow();
+          latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgLatEff75.get(), latentEffectivenessat100HeatingAirFlow});
+        }
       }
     }
 
@@ -2753,9 +2757,11 @@ namespace sdd {
     auto clgSensEff75Element = element.child("ClgSensEff75");
     boost::optional<double> _clgSensEff75 = lexicalCastToDouble(clgSensEff75Element);
     if (_clgSensEff75) {
-      if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = hx.sensibleEffectivenessofCoolingAirFlowCurve().optionalCast<TableLookup>()) {
-        double sensibleEffectivenessat100CoolingAirFlow = hx.sensibleEffectivenessat100CoolingAirFlow();
-        sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgSensEff75.get(), sensibleEffectivenessat100CoolingAirFlow});
+      if (boost::optional<Curve> curve_ = hx.sensibleEffectivenessofCoolingAirFlowCurve()) {
+        if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+          double sensibleEffectivenessat100CoolingAirFlow = hx.sensibleEffectivenessat100CoolingAirFlow();
+          sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgSensEff75.get(), sensibleEffectivenessat100CoolingAirFlow});
+        }
       }
     }
 
@@ -2770,9 +2776,11 @@ namespace sdd {
     auto clgLatEff75Element = element.child("ClgLatEff75");
     boost::optional<double> _clgLatEff75 = lexicalCastToDouble(clgLatEff75Element);
     if (_clgLatEff75) {
-      if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = hx.latentEffectivenessat100CoolingAirFlow().optionalCast<TableLookup>()) {
-        double latentEffectivenessat100CoolingAirFlow = hx.latentEffectivenessat100CoolingAirFlow();
-        latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgLatEff75.get(), latentEffectivenessat100CoolingAirFlow});
+      if (boost::optional<Curve> curve_ = hx.latentEffectivenessofCoolingAirFlowCurve()) {
+        if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+          double latentEffectivenessat100CoolingAirFlow = hx.latentEffectivenessat100CoolingAirFlow();
+          latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgLatEff75.get(), latentEffectivenessat100CoolingAirFlow});
+        }
       }
     }
 
