@@ -2719,7 +2719,10 @@ namespace sdd {
     auto htgSensEff75Element = element.child("HtgSensEff75");
     boost::optional<double> _htgSensEff75 = lexicalCastToDouble(htgSensEff75Element);
     if (_htgSensEff75) {
-      hx.setSensibleEffectivenessat75HeatingAirFlow(_htgSensEff75.get());
+      if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = hx.sensibleEffectivenessofHeatingAirFlowCurve().optionalCast<TableLookup>()) {
+        double sensibleEffectivenessat100HeatingAirFlow = hx.sensibleEffectivenessat100HeatingAirFlow();
+        sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgSensEff75.get(), sensibleEffectivenessat100HeatingAirFlow});
+      }
     }
 
     // HtgLatEff100
@@ -2733,7 +2736,10 @@ namespace sdd {
     auto htgLatEff75Element = element.child("HtgLatEff75");
     boost::optional<double> _htgLatEff75 = lexicalCastToDouble(htgLatEff75Element);
     if (_htgLatEff75) {
-      hx.setLatentEffectivenessat75HeatingAirFlow(_htgLatEff75.get());
+      if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = hx.latentEffectivenessofHeatingAirFlowCurve().optionalCast<TableLookup>()) {
+        double latentEffectivenessat100HeatingAirFlow = hx.latentEffectivenessat100HeatingAirFlow();
+        latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgLatEff75.get(), latentEffectivenessat100HeatingAirFlow});
+      }
     }
 
     // ClgSensEff100
@@ -2747,7 +2753,10 @@ namespace sdd {
     auto clgSensEff75Element = element.child("ClgSensEff75");
     boost::optional<double> _clgSensEff75 = lexicalCastToDouble(clgSensEff75Element);
     if (_clgSensEff75) {
-      hx.setSensibleEffectivenessat75CoolingAirFlow(_clgSensEff75.get());
+      if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = hx.sensibleEffectivenessofCoolingAirFlowCurve().optionalCast<TableLookup>()) {
+        double sensibleEffectivenessat100CoolingAirFlow = hx.sensibleEffectivenessat100CoolingAirFlow();
+        sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgSensEff75.get(), sensibleEffectivenessat100CoolingAirFlow});
+      }
     }
 
     // ClgLatEff100
@@ -2761,7 +2770,10 @@ namespace sdd {
     auto clgLatEff75Element = element.child("ClgLatEff75");
     boost::optional<double> _clgLatEff75 = lexicalCastToDouble(clgLatEff75Element);
     if (_clgLatEff75) {
-      hx.setLatentEffectivenessat75CoolingAirFlow(_clgLatEff75.get());
+      if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = hx.latentEffectivenessat100CoolingAirFlow().optionalCast<TableLookup>()) {
+        double latentEffectivenessat100CoolingAirFlow = hx.latentEffectivenessat100CoolingAirFlow();
+        latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgLatEff75.get(), latentEffectivenessat100CoolingAirFlow});
+      }
     }
 
     // AuxPwr

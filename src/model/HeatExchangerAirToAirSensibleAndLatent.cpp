@@ -283,24 +283,28 @@ namespace model {
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow,
                               sensibleEffectivenessat100HeatingAirFlow);
       return result;
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result =
         setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow, latentEffectivenessat100HeatingAirFlow);
       return result;
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow,
                               sensibleEffectivenessat100CoolingAirFlow);
       return result;
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result =
         setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow, latentEffectivenessat100CoolingAirFlow);
       return result;
@@ -921,13 +925,13 @@ namespace model {
     if (boost::optional<TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ =
           sensibleEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
       double sensibleEffectivenessat100CoolingAirFlow =
-        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100CoolingAirFlow();
       sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues(
         {sensibleEffectivenessat75CoolingAirFlow, sensibleEffectivenessat100CoolingAirFlow});
       return setSensibleEffectivenessofCoolingAirFlowCurve(sensibleEffectivenessofCoolingAirFlowCurve_.get());
     } else if (!sensibleEffectivenessofCoolingAirFlowCurve()) {
       double sensibleEffectivenessat100CoolingAirFlow =
-        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100CoolingAirFlow();
 
       TableIndependentVariable var(model());
       var.setInterpolationMethod("Linear");
@@ -959,12 +963,12 @@ namespace model {
     if (boost::optional<TableLookup> latentEffectivenessofCoolingAirFlowCurve_ =
           latentEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
       double latentEffectivenessat100CoolingAirFlow =
-        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100CoolingAirFlow();
       latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({latentEffectivenessat75CoolingAirFlow, latentEffectivenessat100CoolingAirFlow});
       return setLatentEffectivenessofCoolingAirFlowCurve(latentEffectivenessofCoolingAirFlowCurve_.get());
     } else if (!latentEffectivenessofCoolingAirFlowCurve()) {
       double latentEffectivenessat100CoolingAirFlow =
-        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100CoolingAirFlow();
 
       TableIndependentVariable var(model());
       var.setInterpolationMethod("Linear");
