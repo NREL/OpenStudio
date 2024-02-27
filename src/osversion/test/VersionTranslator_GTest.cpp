@@ -4022,3 +4022,28 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
     EXPECT_TRUE(hp.isEmpty(insertionIndex++));                           // TimedEmpiricalDefrostHeatInputEnergyFractionCurveName
   }
 }
+
+TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndLatent) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_8_0/test_vt_PeopleDefinition.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_8_0/test_vt_PeopleDefinition_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> defs = model->getObjectsByType("OS:People:Definition");
+  ASSERT_EQ(1u, defs.size());
+  WorkspaceObject def = defs[0];
+
+  EXPECT_EQ("People Definition 1", def.getString(1).get());  // Name
+  EXPECT_EQ("People", def.getString(2).get());                       // Number of People Calculation Method
+  EXPECT_EQ(0, def.getDouble(3).get());                                         // Number of People {people}
+  EXPECT_TRUE(def.isEmpty(4));                                               // People per Space Floor Area {person/m2}
+  EXPECT_TRUE(def.isEmpty(5));                                               // Space Floor Area per Person {m2/person}
+  EXPECT_EQ(0.3, def.getDouble(6).get());                                               // Fraction Radiant
+  EXPECT_TRUE(def.isEmpty(7));                                               // Sensible Heat Fraction
+  EXPECT_TRUE(def.isEmpty(8));                                               // Carbon Dioxide Generation Rate {m3/s-W}
+  EXPECT_TRUE(def.isEmpty(9));                                               // Enable ASHRAE 55 Comfort Warnings
+  EXPECT_EQ("EnclosureAveraged", def.getString(10).get());                                               // Mean Radiant Temperature Calculation Type
+}
