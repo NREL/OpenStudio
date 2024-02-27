@@ -8976,7 +8976,7 @@ namespace osversion {
         if ((value = object.getString(10))) {
           if (value.get() == "ZoneAveraged") {
             newObject.setString(10, "EnclosureAveraged");
-          }            
+          }
         }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
