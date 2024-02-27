@@ -60,38 +60,38 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_GettersSetters) {
 
   // Latent Effectiveness at 100% Heating Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.latentEffectivenessat100HeatingAirFlow());
+  EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(0.55));
+  EXPECT_EQ(0.55, hx.latentEffectivenessat100HeatingAirFlow());
 
   // Sensible Effectiveness at 75% Heating Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.sensibleEffectivenessat75HeatingAirFlow());
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.6));
+  EXPECT_EQ(0.6, hx.sensibleEffectivenessat75HeatingAirFlow());
 
   // Latent Effectiveness at 75% Heating Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.latentEffectivenessat75HeatingAirFlow());
+  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.65));
+  EXPECT_EQ(0.65, hx.latentEffectivenessat75HeatingAirFlow());
 
   // Sensible Effectiveness at 100% Cooling Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.sensibleEffectivenessat100CoolingAirFlow());
+  EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(0.7));
+  EXPECT_EQ(0.7, hx.sensibleEffectivenessat100CoolingAirFlow());
 
   // Latent Effectiveness at 100% Cooling Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.latentEffectivenessat100CoolingAirFlow());
+  EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(0.75));
+  EXPECT_EQ(0.75, hx.latentEffectivenessat100CoolingAirFlow());
 
   // Sensible Effectiveness at 75% Cooling Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.sensibleEffectivenessat75CoolingAirFlow());
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.8));
+  EXPECT_EQ(0.8, hx.sensibleEffectivenessat75CoolingAirFlow());
 
   // Latent Effectiveness at 75% Cooling Air Flow:  Double
   // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.5));
-  EXPECT_EQ(0.5, hx.latentEffectivenessat75CoolingAirFlow());
+  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.85));
+  EXPECT_EQ(0.85, hx.latentEffectivenessat75CoolingAirFlow());
 
   // Supply Air Inlet Node: Optional Object
 

@@ -17,6 +17,12 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "TableLookup.hpp"
+#include "TableLookup_Impl.hpp"
+#include "TableIndependentVariable.hpp"
+#include "TableIndependentVariable_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -244,17 +250,17 @@ namespace model {
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofHeatingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurve);
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofCoolingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurve);
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName);
     }
 
     boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofCoolingAirFlowCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurve);
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName);
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -370,16 +376,32 @@ namespace model {
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofHeatingAirFlowCurve(
-      const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {}
+      const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName,
+                               sensibleEffectivenessofHeatingAirFlowCurve.handle());
+      return result;
+    }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofHeatingAirFlowCurve(
-      const Curve& latentEffectivenessofHeatingAirFlowCurve) {}
+      const Curve& latentEffectivenessofHeatingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName,
+                               latentEffectivenessofHeatingAirFlowCurve.handle());
+      return result;
+    }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofCoolingAirFlowCurve(
-      const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {}
+      const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName,
+                               sensibleEffectivenessofCoolingAirFlowCurve.handle());
+      return result;
+    }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofCoolingAirFlowCurve(
-      const Curve& latentEffectivenessofCoolingAirFlowCurve) {}
+      const Curve& latentEffectivenessofCoolingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName,
+                               latentEffectivenessofCoolingAirFlowCurve.handle());
+      return result;
+    }
 
     boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilitySchedule);
@@ -498,17 +520,9 @@ namespace model {
 
     setLatentEffectivenessat100HeatingAirFlow(0.68);
 
-    // setSensibleEffectivenessat75HeatingAirFlow(0.81); FIXME
-
-    // setLatentEffectivenessat75HeatingAirFlow(0.73); FIXME
-
     setSensibleEffectivenessat100CoolingAirFlow(0.76);
 
     setLatentEffectivenessat100CoolingAirFlow(0.68);
-
-    // setSensibleEffectivenessat75CoolingAirFlow(0.81); FIXME
-
-    // setLatentEffectivenessat75CoolingAirFlow(0.73); FIXME
 
     setNominalElectricPower(0.0);
 
@@ -522,11 +536,58 @@ namespace model {
 
     setEconomizerLockout(true);
 
-    // TODO
-    // setSensibleEffectivenessofHeatingAirFlowCurve
-    // setLatentEffectivenessofHeatingAirFlowCurve
-    // setSensibleEffectivenessofCoolingAirFlowCurve
-    // setLatentEffectivenessofCoolingAirFlowCurve
+    TableIndependentVariable var(model);
+    var.setInterpolationMethod("Linear");
+    var.setExtrapolationMethod("Linear");
+    var.setMinimumValue(0.0);
+    var.setMaximumValue(10.0);
+    var.setUnitType("Dimensionless");
+    var.addValue(0.75);
+    var.addValue(1.0);
+
+    TableLookup s75heating(model);
+    s75heating.setNormalizationMethod("DivisorOnly");
+    s75heating.setNormalizationDivisor(0.76);
+    s75heating.setMinimumOutput(0.0);
+    s75heating.setMaximumOutput(10.0);
+    s75heating.setOutputUnitType("Dimensionless");
+    s75heating.addOutputValue(0.81);
+    s75heating.addOutputValue(0.76);
+    s75heating.addIndependentVariable(var);
+    setSensibleEffectivenessofHeatingAirFlowCurve(s75heating);
+
+    TableLookup l75heating(model);
+    l75heating.setNormalizationMethod("DivisorOnly");
+    l75heating.setNormalizationDivisor(0.68);
+    l75heating.setMinimumOutput(0.0);
+    l75heating.setMaximumOutput(10.0);
+    l75heating.setOutputUnitType("Dimensionless");
+    l75heating.addOutputValue(0.73);
+    l75heating.addOutputValue(0.68);
+    l75heating.addIndependentVariable(var);
+    setLatentEffectivenessofHeatingAirFlowCurve(l75heating);
+
+    TableLookup s75cooling(model);
+    s75cooling.setNormalizationMethod("DivisorOnly");
+    s75cooling.setNormalizationDivisor(0.76);
+    s75cooling.setMinimumOutput(0.0);
+    s75cooling.setMaximumOutput(10.0);
+    s75cooling.setOutputUnitType("Dimensionless");
+    s75cooling.addOutputValue(0.81);
+    s75cooling.addOutputValue(0.76);
+    s75cooling.addIndependentVariable(var);
+    setSensibleEffectivenessofCoolingAirFlowCurve(s75cooling);
+
+    TableLookup l75cooling(model);
+    l75cooling.setNormalizationMethod("DivisorOnly");
+    l75cooling.setNormalizationDivisor(0.68);
+    l75cooling.setMinimumOutput(0.0);
+    l75cooling.setMaximumOutput(10.0);
+    l75cooling.setOutputUnitType("Dimensionless");
+    l75cooling.addOutputValue(0.73);
+    l75cooling.addOutputValue(0.68);
+    l75cooling.addIndependentVariable(var);
+    setLatentEffectivenessofCoolingAirFlowCurve(l75cooling);
   }
 
   IddObjectType HeatExchangerAirToAirSensibleAndLatent::iddObjectType() {
@@ -742,50 +803,192 @@ namespace model {
   // DEPRECATED
   double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75HeatingAirFlow() const {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: get this value from curve; if no curve, return the 100 value
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100HeatingAirFlow();
+    if (boost::optional<TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ =
+          sensibleEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>()) {
+      return sensibleEffectivenessofHeatingAirFlowCurve_->outputValues()[0];
+    } else {
+      return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100HeatingAirFlow();
+    }
   }
 
   double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75HeatingAirFlow() const {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: get this value from curve; if no curve, return the 100 value
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+    if (boost::optional<TableLookup> latentEffectivenessofHeatingAirFlowCurve_ =
+          latentEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>()) {
+      return latentEffectivenessofHeatingAirFlowCurve_->outputValues()[0];
+    } else {
+      return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+    }
   }
 
   double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75CoolingAirFlow() const {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: get this value from curve; if no curve, return the 100 value
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100CoolingAirFlow();
+    if (boost::optional<TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ =
+          sensibleEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
+      return sensibleEffectivenessofCoolingAirFlowCurve_->outputValues()[0];
+    } else {
+      return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100CoolingAirFlow();
+    }
   }
 
   double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75CoolingAirFlow() const {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: get this value from curve; if no curve, return the 100 value
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100CoolingAirFlow();
+    if (boost::optional<TableLookup> latentEffectivenessofCoolingAirFlowCurve_ =
+          latentEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
+      return latentEffectivenessofCoolingAirFlowCurve_->outputValues()[0];
+    } else {
+      return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100CoolingAirFlow();
+    }
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow) {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: create a curve here, or just do nothing and return false?
-    return false;
+    if (boost::optional<TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ =
+          sensibleEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>()) {
+      double sensibleEffectivenessat100HeatingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100HeatingAirFlow();
+      sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues(
+        {sensibleEffectivenessat75HeatingAirFlow, sensibleEffectivenessat100HeatingAirFlow});
+      return setSensibleEffectivenessofHeatingAirFlowCurve(sensibleEffectivenessofHeatingAirFlowCurve_.get());
+    } else if (!sensibleEffectivenessofHeatingAirFlowCurve()) {
+      double sensibleEffectivenessat100HeatingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100HeatingAirFlow();
+
+      TableIndependentVariable var(model());
+      var.setInterpolationMethod("Linear");
+      var.setExtrapolationMethod("Linear");
+      var.setMinimumValue(0.0);
+      var.setMaximumValue(10.0);
+      var.setUnitType("Dimensionless");
+      var.addValue(0.75);
+      var.addValue(1.0);
+
+      TableLookup tableLookup(model());
+      tableLookup.setNormalizationMethod("DivisorOnly");
+      tableLookup.setNormalizationDivisor(sensibleEffectivenessat100HeatingAirFlow);
+      tableLookup.setMinimumOutput(0.0);
+      tableLookup.setMaximumOutput(10.0);
+      tableLookup.setOutputUnitType("Dimensionless");
+      tableLookup.addOutputValue(sensibleEffectivenessat75HeatingAirFlow);
+      tableLookup.addOutputValue(sensibleEffectivenessat100HeatingAirFlow);
+      tableLookup.addIndependentVariable(var);
+
+      return setSensibleEffectivenessofHeatingAirFlowCurve(tableLookup);
+    } else {
+      return false;
+    }
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow) {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: create a curve here, or just do nothing and return false?
-    return false;
+    if (boost::optional<TableLookup> latentEffectivenessofHeatingAirFlowCurve_ =
+          latentEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>()) {
+      double latentEffectivenessat100HeatingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+      latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({latentEffectivenessat75HeatingAirFlow, latentEffectivenessat100HeatingAirFlow});
+      return setLatentEffectivenessofHeatingAirFlowCurve(latentEffectivenessofHeatingAirFlowCurve_.get());
+    } else if (!latentEffectivenessofHeatingAirFlowCurve()) {
+      double latentEffectivenessat100HeatingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+
+      TableIndependentVariable var(model());
+      var.setInterpolationMethod("Linear");
+      var.setExtrapolationMethod("Linear");
+      var.setMinimumValue(0.0);
+      var.setMaximumValue(10.0);
+      var.setUnitType("Dimensionless");
+      var.addValue(0.75);
+      var.addValue(1.0);
+
+      TableLookup tableLookup(model());
+      tableLookup.setNormalizationMethod("DivisorOnly");
+      tableLookup.setNormalizationDivisor(latentEffectivenessat100HeatingAirFlow);
+      tableLookup.setMinimumOutput(0.0);
+      tableLookup.setMaximumOutput(10.0);
+      tableLookup.setOutputUnitType("Dimensionless");
+      tableLookup.addOutputValue(latentEffectivenessat75HeatingAirFlow);
+      tableLookup.addOutputValue(latentEffectivenessat100HeatingAirFlow);
+      tableLookup.addIndependentVariable(var);
+
+      return setLatentEffectivenessofHeatingAirFlowCurve(tableLookup);
+    } else {
+      return false;
+    }
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow) {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: create a curve here, or just do nothing and return false?
-    return false;
+    if (boost::optional<TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ =
+          sensibleEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
+      double sensibleEffectivenessat100CoolingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+      sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues(
+        {sensibleEffectivenessat75CoolingAirFlow, sensibleEffectivenessat100CoolingAirFlow});
+      return setSensibleEffectivenessofCoolingAirFlowCurve(sensibleEffectivenessofCoolingAirFlowCurve_.get());
+    } else if (!sensibleEffectivenessofCoolingAirFlowCurve()) {
+      double sensibleEffectivenessat100CoolingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+
+      TableIndependentVariable var(model());
+      var.setInterpolationMethod("Linear");
+      var.setExtrapolationMethod("Linear");
+      var.setMinimumValue(0.0);
+      var.setMaximumValue(10.0);
+      var.setUnitType("Dimensionless");
+      var.addValue(0.75);
+      var.addValue(1.0);
+
+      TableLookup tableLookup(model());
+      tableLookup.setNormalizationMethod("DivisorOnly");
+      tableLookup.setNormalizationDivisor(sensibleEffectivenessat100CoolingAirFlow);
+      tableLookup.setMinimumOutput(0.0);
+      tableLookup.setMaximumOutput(10.0);
+      tableLookup.setOutputUnitType("Dimensionless");
+      tableLookup.addOutputValue(sensibleEffectivenessat75CoolingAirFlow);
+      tableLookup.addOutputValue(sensibleEffectivenessat100CoolingAirFlow);
+      tableLookup.addIndependentVariable(var);
+
+      return setSensibleEffectivenessofCoolingAirFlowCurve(tableLookup);
+    } else {
+      return false;
+    }
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow) {
     DEPRECATED_AT_MSG(3, 8, 0, "As of EnergyPlus 24.1.0, this property ...");
-    // FIXME: create a curve here, or just do nothing and return false?
-    return false;
+    if (boost::optional<TableLookup> latentEffectivenessofCoolingAirFlowCurve_ =
+          latentEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>()) {
+      double latentEffectivenessat100CoolingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+      latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({latentEffectivenessat75CoolingAirFlow, latentEffectivenessat100CoolingAirFlow});
+      return setLatentEffectivenessofCoolingAirFlowCurve(latentEffectivenessofCoolingAirFlowCurve_.get());
+    } else if (!latentEffectivenessofCoolingAirFlowCurve()) {
+      double latentEffectivenessat100CoolingAirFlow =
+        getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
+
+      TableIndependentVariable var(model());
+      var.setInterpolationMethod("Linear");
+      var.setExtrapolationMethod("Linear");
+      var.setMinimumValue(0.0);
+      var.setMaximumValue(10.0);
+      var.setUnitType("Dimensionless");
+      var.addValue(0.75);
+      var.addValue(1.0);
+
+      TableLookup tableLookup(model());
+      tableLookup.setNormalizationMethod("DivisorOnly");
+      tableLookup.setNormalizationDivisor(latentEffectivenessat100CoolingAirFlow);
+      tableLookup.setMinimumOutput(0.0);
+      tableLookup.setMaximumOutput(10.0);
+      tableLookup.setOutputUnitType("Dimensionless");
+      tableLookup.addOutputValue(latentEffectivenessat75CoolingAirFlow);
+      tableLookup.addOutputValue(latentEffectivenessat100CoolingAirFlow);
+      tableLookup.addIndependentVariable(var);
+
+      return setLatentEffectivenessofCoolingAirFlowCurve(tableLookup);
+    } else {
+      return false;
+    }
   }
 
 }  // namespace model

@@ -9003,44 +9003,45 @@ namespace osversion {
         std::vector<int> c_idxs = {20, 21, 22, 23};
         bool tableAdded = false;
         for (size_t i = 0; i < e_idxs.size(); ++i) {
-          if (
-            (auto e100 = object.getDouble(e_idxs[i]))
-            && (auto e75 = object.getDouble(
-                  e_idxs[i]
-                  + 2))) {  // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}, Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
-            if (e100.get() != e75.get()) {
-              tableAdded = true;
+          if (auto e100 = object.getDouble(e_idxs[i])) {       // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}
+            if (auto e75 = object.getDouble(e_idxs[i] + 2)) {  // Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
+              if (e100.get() != e75.get()) {
+                tableAdded = true;
 
-              IdfObject tableLookup(idd_3_8_0.getObject("OS:Table:Lookup").get());
-              std::string uuid = toString(createUUID());
-              tableLookup.setString(0, uuid);                                     // Handle
-              tableLookup.setString(1, object.nameString() + "_" + toString(i));  // Name
-              tableLookup.setString(2, varListHandle);                            // Independent Variable List Name
-              tableLookup.setString(3, "DivisorOnly");                            // Normalization Method
-              tableLookup.setDouble(4, e100.get());                               // Normalization Divisor
-              tableLookup.setDouble(5, 0.0);                                      // Minimum Output
-              tableLookup.setDouble(6, 10.0);                                     // Maximum Output
-              tableLookup.setString(7, "Dimensionless");                          // Output Unit Type
-              tableLookup.pushExtensibleGroup().setDouble(0, e75);                // Output Value 1
-              tableLookup.pushExtensibleGroup().setDouble(0, e100);               // Output Value 2
+                IdfObject tableLookup(idd_3_8_0.getObject("OS:Table:Lookup").get());
+                std::string uuid = toString(createUUID());
+                tableLookup.setString(0, uuid);                                               // Handle
+                tableLookup.setString(1, object.nameString() + "_" + std::to_string(i + 1));  // Name
+                tableLookup.setString(2, varListHandle);                                      // Independent Variable List Name
+                tableLookup.setString(3, "DivisorOnly");                                      // Normalization Method
+                tableLookup.setDouble(4, e100.get());                                         // Normalization Divisor
+                tableLookup.setDouble(5, 0.0);                                                // Minimum Output
+                tableLookup.setDouble(6, 10.0);                                               // Maximum Output
+                tableLookup.setString(7, "Dimensionless");                                    // Output Unit Type
+                tableLookup.pushExtensibleGroup().setDouble(0, e75.get());                    // Output Value 1
+                tableLookup.pushExtensibleGroup().setDouble(0, e100.get());                   // Output Value 2
 
-              newObject.setString(c_idxs[i], uuid);
+                newObject.setString(c_idxs[i], uuid);  // Sensible/Latent Effectiveness of Heating/Cooling Air Flow Curve Name
+
+                ss << tableLookup;
+                m_new.push_back(tableLookup);
+              }
             }
           }
         }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
 
         if (tableAdded) {
           IdfObject varList(idd_3_8_0.getObject("OS:ModelObjectList").get());
           varList.setString(0, varListHandle);
           varList.setString(1, object.nameString() + "_IndependentVariableList");  // Name
 
-          ss << varList;
-          m_new.push_back(varList);
-
           IdfObject var(idd_3_8_0.getObject("OS:Table:IndependentVariable").get());
           std::string varHandle = toString(createUUID());
-          varList.pushExtensibleGroup({varHandle});  // Model Object 1
           var.setString(0, varHandle);
+          varList.pushExtensibleGroup({varHandle});                        // Model Object 1
           var.setString(1, object.nameString() + "_IndependentVariable");  // Name
           var.setString(2, "Linear");                                      // Interpolation Method
           var.setString(3, "Linear");                                      // Extrapolation Method
@@ -9050,12 +9051,12 @@ namespace osversion {
           var.pushExtensibleGroup().setDouble(0, 0.75);                    // Value 1
           var.pushExtensibleGroup().setDouble(0, 1.0);                     // Value 2
 
-          ss << var;
-          m_new.push_back(var);
-        }
+          m_new.push_back(varList);
+          ss << varList;
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
+          m_new.push_back(var);
+          ss << var;
+        }
 
         // No-op
       } else {
