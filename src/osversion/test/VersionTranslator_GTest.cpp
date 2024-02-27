@@ -4023,7 +4023,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
   }
 }
 
-TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndLatent) {
+TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_PeopleDefinition) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_8_0/test_vt_PeopleDefinition.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);

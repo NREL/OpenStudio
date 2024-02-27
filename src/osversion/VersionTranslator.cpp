@@ -8973,24 +8973,32 @@ namespace osversion {
         auto iddObject = idd_3_8_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
-        if ((value = object.getString(10))) {
-          if (value.get() == "ZoneAveraged") {
-            newObject.setString(10, "EnclosureAveraged");
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i == 10) {
+              if (value.get() == "ZoneAveraged") {
+                newObject.setString(10, "EnclosureAveraged");
+              } else {
+                newObject.setString(10, value.get());
+              }
+            } else {
+              newObject.setString(i, value.get());
+            }
           }
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+
+          // No-op
         }
-
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
-
-        // No-op
-      } else {
-        ss << object;
+        else {
+          ss << object;
+        }
       }
-    }
 
-    return ss.str();
+      return ss.str();
 
-  }  // end update_3_7_0_to_3_8_0
+    }  // end update_3_7_0_to_3_8_0
 
-}  // namespace osversion
+  }  // namespace osversion
 }  // namespace openstudio
