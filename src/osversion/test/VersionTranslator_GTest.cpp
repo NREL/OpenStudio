@@ -2226,14 +2226,14 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     auto& ptac = ptacs.front();
 
     // Check the Supply Air Fan Operating Mode Schedule
-    ASSERT_TRUE(ptac.getTarget(17));
-    WorkspaceObject fanOpSch = ptac.getTarget(17).get();
+    ASSERT_TRUE(ptac.getTarget(18));
+    WorkspaceObject fanOpSch = ptac.getTarget(18).get();
     EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
     EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
 
     // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
-    ASSERT_TRUE(ptac.getTarget(13));
-    WorkspaceObject fan = ptac.getTarget(13).get();
+    ASSERT_TRUE(ptac.getTarget(14));
+    WorkspaceObject fan = ptac.getTarget(14).get();
 
     EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
     EXPECT_EQ("PTAC Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
@@ -3209,7 +3209,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
     auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
     ASSERT_EQ(3, unitarys.size());
 
-    constexpr size_t deletionIndex = 38;
+    constexpr size_t deletionIndex = 39;
     for (const auto& unitary : unitarys) {
 
       EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
@@ -3360,7 +3360,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_vsdeqfit) {
     auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
     ASSERT_EQ(4, unitarys.size());
 
-    constexpr size_t deletionIndex = 38;
+    constexpr size_t deletionIndex = 39;
     for (const auto& unitary : unitarys) {
 
       EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
@@ -3533,7 +3533,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
     auto wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
     ASSERT_EQ(2, wahps.size());
 
-    constexpr size_t deletionIndex = 15;
+    constexpr size_t deletionIndex = 16;
     for (const auto& wahp : wahps) {
 
       // Before: cooling coil name
@@ -3546,8 +3546,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
     }
   }
 
-  constexpr int heatingCoilNameIndex = 13;
-  constexpr int coolingCoilNameIndex = 14;
+  constexpr int heatingCoilNameIndex = 14;
+  constexpr int coolingCoilNameIndex = 15;
 
   {
     auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP Eq").get();
