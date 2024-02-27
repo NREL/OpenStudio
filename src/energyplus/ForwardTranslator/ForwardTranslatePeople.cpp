@@ -103,7 +103,10 @@ namespace energyplus {
     }
 
     if (!definition.isMeanRadiantTemperatureCalculationTypeDefaulted()) {
-      idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, definition.meanRadiantTemperatureCalculationType());
+      std::string meanRadiantTemperatureCalculationType = definition.meanRadiantTemperatureCalculationType();
+      if (!(meanRadiantTemperatureCalculationType == "ZoneAveraged")) {
+        idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, meanRadiantTemperatureCalculationType);
+      }
     }
 
     // TODO: Surface Name/Angle Factor List Name
