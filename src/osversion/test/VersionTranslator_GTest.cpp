@@ -4037,7 +4037,7 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_NoLoadSupplyAirFlowRateControlSet
   WorkspaceObject ptac = ptacs[0];
 
   EXPECT_EQ("Zone HVAC Packaged Terminal Air Conditioner 1", ptac.getString(1).get());  // Name
-  EXPECT_EQ("", ptac.getTarget(2)->nameString());                                       // Availability Schedule Name
+  EXPECT_EQ("Always On Discrete", ptac.getTarget(2)->nameString());                     // Availability Schedule Name
   EXPECT_TRUE(ptac.isEmpty(3));                                                         // Air Inlet Node Name
   EXPECT_TRUE(ptac.isEmpty(4));                                                         // Air Outlet Node Name
   EXPECT_EQ("OutdoorAir:Mixer", ptac.getString(5).get());                               // Outdoor Air Mixer Object Type
@@ -4049,18 +4049,18 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_NoLoadSupplyAirFlowRateControlSet
   EXPECT_EQ("Autosize", ptac.getString(11).get());                                      // Outdoor Air Flow Rate During Cooling Operation
   EXPECT_EQ("Autosize", ptac.getString(12).get());                                      // Outdoor Air Flow Rate During Heating Operation
   EXPECT_EQ("Autosize", ptac.getString(13).get());                                      // Outdoor Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("", ptac.getTarget(14)->nameString());                                      // Supply Air Fan Name
-  EXPECT_EQ("", ptac.getTarget(15)->nameString());                                      // Heating Coil Name
-  EXPECT_EQ("", ptac.getTarget(16)->nameString());                                      // Cooling Coil Name
+  EXPECT_EQ("Fan Constant Volume 1", ptac.getTarget(14)->nameString());                 // Supply Air Fan Name
+  EXPECT_EQ("Coil Heating Electric 1", ptac.getTarget(15)->nameString());               // Heating Coil Name
+  EXPECT_EQ("Coil Cooling DX Single Speed 1", ptac.getTarget(16)->nameString());        // Cooling Coil Name
   EXPECT_EQ("DrawThrough", ptac.getString(17).get());                                   // Fan Placement
-  EXPECT_EQ("", ptac.getTarget(18)->nameString());                                      // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_EQ("Always On Discrete", ptac.getTarget(18)->nameString());                    // Supply Air Fan Operating Mode Schedule Name
 
   std::vector<WorkspaceObject> pthps = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalHeatPump");
   ASSERT_EQ(1u, pthps.size());
   WorkspaceObject pthp = pthps[0];
 
   EXPECT_EQ("Zone HVAC Packaged Terminal Heat Pump 1", pthp.getString(1).get());  // Name
-  EXPECT_EQ("", pthp.getTarget(2)->nameString());                                 // Availability Schedule Name
+  EXPECT_EQ("Always On Discrete", pthp.getTarget(2)->nameString());               // Availability Schedule Name
   EXPECT_TRUE(pthp.isEmpty(3));                                                   // Air Inlet Node Name
   EXPECT_TRUE(pthp.isEmpty(4));                                                   // Air Outlet Node Name
   EXPECT_EQ("OutdoorAir:Mixer", pthp.getString(5).get());                         // Outdoor Air Mixer Object Type
@@ -4072,88 +4072,89 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_NoLoadSupplyAirFlowRateControlSet
   EXPECT_EQ("Autosize", pthp.getString(11).get());                                // Outdoor Air Flow Rate During Cooling Operation
   EXPECT_EQ("Autosize", pthp.getString(12).get());                                // Outdoor Air Flow Rate During Heating Operation
   EXPECT_EQ("Autosize", pthp.getString(13).get());                                // Outdoor Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("", pthp.getTarget(14)->nameString());                                // Supply Air Fan Name
-  EXPECT_EQ("", pthp.getTarget(15)->nameString());                                // Heating Coil Name
+  EXPECT_EQ("Fan Constant Volume 2", pthp.getTarget(14)->nameString());           // Supply Air Fan Name
+  EXPECT_EQ("Coil Heating DX Single Speed 1", pthp.getTarget(15)->nameString());  // Heating Coil Name
   EXPECT_TRUE(pthp.isEmpty(16));                                                  // Heating Convergence Tolerance {dimensionless}
   EXPECT_TRUE(pthp.isEmpty(17));                                                  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
-  EXPECT_EQ("", ptac.getTarget(18)->nameString());                                // Cooling Coil Name
+  EXPECT_EQ("Coil Cooling DX Single Speed 2", pthp.getTarget(18)->nameString());  // Cooling Coil Name
   EXPECT_TRUE(pthp.isEmpty(19));                                                  // Cooling Convergence Tolerance {dimensionless}
-  EXPECT_EQ("", pthp.getTarget(20)->nameString());                                // Supplemental Heating Coil Name
-  EXPECT_TRUE(pthp.isEmpty(21));                                                  // Maximum Supply Air Temperature from Supplemental Heater {C}
-  EXPECT_TRUE(pthp.isEmpty(22));                    // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
-  EXPECT_TRUE(pthp.isEmpty(23));                    // Fan Placement
-  EXPECT_EQ("", ptac.getTarget(24)->nameString());  // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_EQ("Coil Heating Electric 2", pthp.getTarget(20)->nameString());         // Supplemental Heating Coil Name
+  EXPECT_EQ("Autosize", pthp.getString(21).get());                                // Maximum Supply Air Temperature from Supplemental Heater {C}
+  EXPECT_TRUE(pthp.isEmpty(22));                                      // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  EXPECT_TRUE(pthp.isEmpty(23));                                      // Fan Placement
+  EXPECT_EQ("Always On Discrete", pthp.getTarget(24)->nameString());  // Supply Air Fan Operating Mode Schedule Name
 
   std::vector<WorkspaceObject> wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
   ASSERT_EQ(1u, wahps.size());
   WorkspaceObject wahp = wahps[0];
 
   EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1", wahp.getString(1).get());  // Name
-  EXPECT_EQ("", wahp.getTarget(2)->nameString());                            // Availability Schedule Name
+  EXPECT_EQ("Always On Discrete", wahp.getTarget(2)->nameString());          // Availability Schedule Name
   EXPECT_TRUE(wahp.isEmpty(3));                                              // Air Inlet Node Name
   EXPECT_TRUE(wahp.isEmpty(4));                                              // Air Outlet Node Name
   EXPECT_TRUE(wahp.isEmpty(5));                                              // Outdoor Air Mixer Name
   EXPECT_EQ("Autosize", wahp.getString(6).get());                            // Supply Air Flow Rate During Cooling Operation
   EXPECT_EQ("Autosize", wahp.getString(7).get());                            // Supply Air Flow Rate During Heating Operation
-  EXPECT_EQ("Autosize", wahp.getString(8).get());                            // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("autosize", wahp.getString(8).get());                            // Supply Air Flow Rate When No Cooling or Heating is Needed
   EXPECT_EQ("Yes", wahp.getString(9).get());                                 // No Load Supply Air Flow Rate Control Set To Low Speed
-  EXPECT_EQ("Autosize", wahp.getString(10).get());                           // Outdoor Air Flow Rate During Cooling Operation
-  EXPECT_EQ("Autosize", wahp.getString(11).get());                           // Outdoor Air Flow Rate During Heating Operation
+  EXPECT_EQ("autosize", wahp.getString(10).get());                           // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("autosize", wahp.getString(11).get());                           // Outdoor Air Flow Rate During Heating Operation
   EXPECT_EQ("Autosize", wahp.getString(12).get());                           // Outdoor Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("", wahp.getTarget(13)->nameString());                           // Supply Air Fan Name
-  EXPECT_EQ("", wahp.getTarget(14)->nameString());                           // Heating Coil Name
-  EXPECT_EQ("", wahp.getTarget(15)->nameString());                           // Cooling Coil Name
-  EXPECT_EQ("", wahp.getTarget(16)->nameString());                           // Supplemental Heating Coil Name
-  EXPECT_EQ("Autosize", wahp.getString(17).get());                           // Maximum Supply Air Temperature from Supplemental Heater {C}
-  EXPECT_TRUE(wahp.isEmpty(18));  // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
-  EXPECT_TRUE(wahp.isEmpty(19));  // Outdoor Dry-Bulb Temperature Sensor Node Name
-  EXPECT_TRUE(wahp.isEmpty(20));  // Fan Placement
-  EXPECT_TRUE(wahp.isEmpty(21));  // Supply Air Fan Operating Mode Schedule Name
-  EXPECT_TRUE(wahp.isEmpty(22));  // Availability Manager List Name
+  EXPECT_EQ("Fan On Off 1", wahp.getTarget(13)->nameString());               // Supply Air Fan Name
+  EXPECT_EQ("Coil Heating Water To Air Heat Pump Equation Fit 1", wahp.getTarget(14)->nameString());  // Heating Coil Name
+  EXPECT_EQ("Coil Cooling Water To Air Heat Pump Equation Fit 1", wahp.getTarget(15)->nameString());  // Cooling Coil Name
+  EXPECT_EQ("Coil Heating Electric 3", wahp.getTarget(16)->nameString());                             // Supplemental Heating Coil Name
+  EXPECT_EQ("Autosize", wahp.getString(17).get());  // Maximum Supply Air Temperature from Supplemental Heater {C}
+  EXPECT_TRUE(wahp.isEmpty(18));                    // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  EXPECT_TRUE(wahp.isEmpty(19));                    // Outdoor Dry-Bulb Temperature Sensor Node Name
+  EXPECT_TRUE(wahp.isEmpty(20));                    // Fan Placement
+  EXPECT_TRUE(wahp.isEmpty(21));                    // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_TRUE(wahp.isEmpty(22));                    // Availability Manager List Name
 
   std::vector<WorkspaceObject> unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
   ASSERT_EQ(1u, unitarys.size());
   WorkspaceObject unitary = unitarys[0];
 
   EXPECT_EQ("Air Loop HVAC Unitary System 1", unitary.getString(1).get());  // Name
-  EXPECT_EQ("Load", wahp.getString(2).get());                               // Control Type
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Controlling Zone or Thermostat Location
-  EXPECT_EQ("None", wahp.getString(2).get());                               // Dehumidification Control Type
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Availability Schedule Name
-  EXPECT_TRUE(ptac.isEmpty(3));                                             // Air Inlet Node Name
-  EXPECT_TRUE(ptac.isEmpty(4));                                             // Air Outlet Node Name
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Supply Fan Name
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Fan Placement
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Supply Air Fan Operating Mode Schedule Name
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Heating Coil Name
-  EXPECT_EQ(1, wahp.getDouble(12).get());                                   // DX Heating Coil Sizing Ratio
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Cooling Coil Name
-  EXPECT_EQ("No", wahp.getString(12).get());                                // Use DOAS DX Cooling Coil
-  EXPECT_EQ(2, wahp.getDouble(12).get());                                   // DOAS DX Cooling Coil Leaving Minimum Air Temperature {C}
-  EXPECT_EQ("SensibleOnlyLoadControl", wahp.getString(12).get());           // Latent Load Control
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Supplemental Heating Coil Name
-  EXPECT_EQ("None", wahp.getString(12).get());                              // Supply Air Flow Rate Method During Cooling Operation
-  EXPECT_EQ("Autosize", ptac.getString(7).get());                           // Supply Air Flow Rate During Cooling Operation
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
-  EXPECT_TRUE(wahp.isEmpty(21));                                            // Fraction of Autosized Design Cooling Supply Air Flow Rate
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation {m3/s-W}
-  EXPECT_EQ("None", wahp.getString(12).get());     // Supply Air Flow Rate Method During Heating Operation
-  EXPECT_EQ("Autosize", ptac.getString(8).get());  // Supply Air Flow Rate During Heating Operation
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Supply Air Flow Rate Per Floor Area during Heating Operation {m3/s-m2}
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Fraction of Autosized Design Heating Supply Air Flow Rate
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation {m3/s-W}
-  EXPECT_EQ("None", wahp.getString(12).get());     // Supply Air Flow Rate Method When No Cooling or Heating is Required
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Supply Air Flow Rate When No Cooling or Heating is Required {m3/s}
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required {m3/s-m2}
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
-  EXPECT_TRUE(wahp.isEmpty(21));                   // Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
-  EXPECT_TRUE(
-    wahp.isEmpty(21));  // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required {m3/s-W}
-  EXPECT_TRUE(
-    wahp.isEmpty(21));  // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required {m3/s-W}
-  EXPECT_EQ(80, wahp.getDouble(12).get());  // Maximum Supply Air Temperature {C}
-  EXPECT_EQ(21, wahp.getDouble(12).get());  // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
-  EXPECT_TRUE(wahp.isEmpty(21));            // Outdoor Dry-Bulb Temperature Sensor Node Name
-  EXPECT_EQ(0, wahp.getDouble(12).get());   // Ancilliary On-Cycle Electric Power {W}
-  EXPECT_EQ(0, wahp.getDouble(12).get());   // Ancilliary Off-Cycle Electric Power {W}
+  EXPECT_EQ("Load", unitary.getString(2).get());                            // Control Type
+  EXPECT_TRUE(unitary.isEmpty(3));                                          // Controlling Zone or Thermostat Location
+  EXPECT_EQ("None", unitary.getString(4).get());                            // Dehumidification Control Type
+  EXPECT_TRUE(unitary.isEmpty(5));                                          // Availability Schedule Name
+  EXPECT_TRUE(unitary.isEmpty(6));                                          // Air Inlet Node Name
+  EXPECT_TRUE(unitary.isEmpty(7));                                          // Air Outlet Node Name
+  EXPECT_TRUE(unitary.isEmpty(8));                                          // Supply Fan Name
+  EXPECT_TRUE(unitary.isEmpty(9));                                          // Fan Placement
+  EXPECT_TRUE(unitary.isEmpty(10));                                         // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_TRUE(unitary.isEmpty(11));                                         // Heating Coil Name
+  EXPECT_EQ(1, unitary.getDouble(12).get());                                // DX Heating Coil Sizing Ratio
+  EXPECT_TRUE(unitary.isEmpty(13));                                         // Cooling Coil Name
+  EXPECT_EQ("No", unitary.getString(14).get());                             // Use DOAS DX Cooling Coil
+  EXPECT_EQ(2, unitary.getDouble(15).get());                                // DOAS DX Cooling Coil Leaving Minimum Air Temperature {C}
+  EXPECT_EQ("SensibleOnlyLoadControl", unitary.getString(16).get());        // Latent Load Control
+  EXPECT_TRUE(unitary.isEmpty(17));                                         // Supplemental Heating Coil Name
+  EXPECT_EQ("None", unitary.getString(18).get());                           // Supply Air Flow Rate Method During Cooling Operation
+  EXPECT_TRUE(unitary.isEmpty(19));                                         // Supply Air Flow Rate During Cooling Operation
+  EXPECT_TRUE(unitary.isEmpty(20));                                         // Supply Air Flow Rate Per Floor Area During Cooling Operation {m3/s-m2}
+  EXPECT_TRUE(unitary.isEmpty(21));                                         // Fraction of Autosized Design Cooling Supply Air Flow Rate
+  EXPECT_TRUE(unitary.isEmpty(22));                // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation {m3/s-W}
+  EXPECT_EQ("None", unitary.getString(23).get());  // Supply Air Flow Rate Method During Heating Operation
+  EXPECT_TRUE(unitary.isEmpty(24));                // Supply Air Flow Rate During Heating Operation
+  EXPECT_TRUE(unitary.isEmpty(25));                // Supply Air Flow Rate Per Floor Area during Heating Operation {m3/s-m2}
+  EXPECT_TRUE(unitary.isEmpty(26));                // Fraction of Autosized Design Heating Supply Air Flow Rate
+  EXPECT_TRUE(unitary.isEmpty(27));                // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation {m3/s-W}
+  EXPECT_EQ("None", unitary.getString(28).get());  // Supply Air Flow Rate Method When No Cooling or Heating is Required
+  EXPECT_TRUE(unitary.isEmpty(29));                // Supply Air Flow Rate When No Cooling or Heating is Required {m3/s}
+  EXPECT_TRUE(unitary.isEmpty(30));                // Supply Air Flow Rate Per Floor Area When No Cooling or Heating is Required {m3/s-m2}
+  EXPECT_TRUE(unitary.isEmpty(31));                // Fraction of Autosized Design Cooling Supply Air Flow Rate When No Cooling or Heating is Required
+  EXPECT_TRUE(unitary.isEmpty(32));                // Fraction of Autosized Design Heating Supply Air Flow Rate When No Cooling or Heating is Required
+  EXPECT_TRUE(unitary.isEmpty(
+    33));  // Design Supply Air Flow Rate Per Unit of Capacity During Cooling Operation When No Cooling or Heating is Required {m3/s-W}
+  EXPECT_TRUE(unitary.isEmpty(
+    34));  // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required {m3/s-W}
+  EXPECT_EQ("Yes", unitary.getString(35).get());  // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ(80, unitary.getDouble(36).get());     // Maximum Supply Air Temperature {C}
+  EXPECT_EQ(21, unitary.getDouble(37).get());     // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+  EXPECT_TRUE(unitary.isEmpty(38));               // Outdoor Dry-Bulb Temperature Sensor Node Name
+  EXPECT_EQ(0, unitary.getDouble(39).get());      // Ancilliary On-Cycle Electric Power {W}
+  EXPECT_EQ(0, unitary.getDouble(40).get());      // Ancilliary Off-Cycle Electric Power {W}
 }
