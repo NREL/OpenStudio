@@ -8985,20 +8985,20 @@ namespace osversion {
               newObject.setString(i, value.get());
             }
           }
-
-          m_refactored.push_back(RefactoredObjectData(object, newObject));
-          ss << newObject;
-
-          // No-op
         }
-        else {
-          ss << object;
-        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
       }
+    }
 
-      return ss.str();
+    return ss.str();
 
-    }  // end update_3_7_0_to_3_8_0
+  }  // end update_3_7_0_to_3_8_0
 
-  }  // namespace osversion
+}  // namespace osversion
 }  // namespace openstudio
