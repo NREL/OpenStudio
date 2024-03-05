@@ -2265,14 +2265,14 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     auto& pthp = pthps.front();
 
     // Check the Supply Air Fan Operating Mode Schedule
-    ASSERT_TRUE(pthp.getTarget(23));
-    WorkspaceObject fanOpSch = pthp.getTarget(23).get();
+    ASSERT_TRUE(pthp.getTarget(24));
+    WorkspaceObject fanOpSch = pthp.getTarget(24).get();
     EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
     EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
 
     // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
-    ASSERT_TRUE(pthp.getTarget(13));
-    WorkspaceObject fan = pthp.getTarget(13).get();
+    ASSERT_TRUE(pthp.getTarget(14));
+    WorkspaceObject fan = pthp.getTarget(14).get();
 
     // This one is all defaulted, ensure we get the SAME values
     EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
