@@ -82,6 +82,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_ControlType
   idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
 
   ASSERT_EQ("Load", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::ControlType).get());
+  EXPECT_EQ("Yes", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed).get());
 }
 
 std::vector<std::string> getUnitaryNodes(const Workspace& workspace) {

@@ -162,6 +162,19 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_ZoneHVACPackagedTerminalHe
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  model::Model m;
+  model::CoilHeatingDXVariableSpeed heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::ScheduleCompact availabilitySchedule(m);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
+
+  model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+
+  EXPECT_TRUE(pthp.noLoadSupplyAirFlowRateControlSetToLowSpeed());
+  EXPECT_TRUE(pthp.setNoLoadSupplyAirFlowRateControlSetToLowSpeed(false));
+  EXPECT_FALSE(pthp.noLoadSupplyAirFlowRateControlSetToLowSpeed());
 }
 
 TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_Clone) {

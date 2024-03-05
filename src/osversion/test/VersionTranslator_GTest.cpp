@@ -4036,27 +4036,27 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_NoLoadSupplyAirFlowRateControlSet
   ASSERT_EQ(1u, ptacs.size());
   WorkspaceObject ptac = ptacs[0];
 
-  EXPECT_EQ("Autosize", ptac.getString(9).get());                                       // Supply Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("Yes", ptac.getString(10).get());                                           // No Load Supply Air Flow Rate Control Set To Low Speed
-  EXPECT_EQ("Autosize", ptac.getString(11).get());                                      // Outdoor Air Flow Rate During Cooling Operation
-  EXPECT_EQ("Always On Discrete", ptac.getTarget(18)->nameString());                    // Supply Air Fan Operating Mode Schedule Name
+  EXPECT_EQ("Autosize", ptac.getString(9).get());                     // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", ptac.getString(10).get());                         // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("Autosize", ptac.getString(11).get());                    // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Always On Discrete", ptac.getTarget(18)->nameString());  // Supply Air Fan Operating Mode Schedule Name
 
   std::vector<WorkspaceObject> pthps = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalHeatPump");
   ASSERT_EQ(1u, pthps.size());
   WorkspaceObject pthp = pthps[0];
 
-  EXPECT_EQ("Autosize", pthp.getString(9).get());                                 // Supply Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("Yes", pthp.getString(10).get());                                     // No Load Supply Air Flow Rate Control Set To Low Speed
-  EXPECT_EQ("Autosize", pthp.getString(11).get());                                // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Autosize", pthp.getString(9).get());                     // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", pthp.getString(10).get());                         // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("Autosize", pthp.getString(11).get());                    // Outdoor Air Flow Rate During Cooling Operation
   EXPECT_EQ("Always On Discrete", pthp.getTarget(24)->nameString());  // Supply Air Fan Operating Mode Schedule Name
 
   std::vector<WorkspaceObject> wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
   ASSERT_EQ(1u, wahps.size());
   WorkspaceObject wahp = wahps[0];
 
-  EXPECT_EQ("autosize", wahp.getString(8).get());                            // Supply Air Flow Rate When No Cooling or Heating is Needed
-  EXPECT_EQ("Yes", wahp.getString(9).get());                                 // No Load Supply Air Flow Rate Control Set To Low Speed
-  EXPECT_EQ("autosize", wahp.getString(10).get());                           // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("autosize", wahp.getString(8).get());   // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", wahp.getString(9).get());        // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("autosize", wahp.getString(10).get());  // Outdoor Air Flow Rate During Cooling Operation
   EXPECT_TRUE(wahp.isEmpty(22));                    // Availability Manager List Name
 
   std::vector<WorkspaceObject> unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
