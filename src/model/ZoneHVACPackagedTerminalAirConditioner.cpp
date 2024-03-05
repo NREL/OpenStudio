@@ -210,10 +210,7 @@ namespace model {
     }
 
     bool ZoneHVACPackagedTerminalAirConditioner_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
-      boost::optional<std::string> value =
-        getString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed);
     }
 
     boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::outdoorAirFlowRateDuringCoolingOperation() const {
@@ -376,11 +373,8 @@ namespace model {
 
     bool
       ZoneHVACPackagedTerminalAirConditioner_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
-      if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
-        return setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
-      } else {
-        return setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
-      }
+      return setBooleanFieldValue(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed,
+                                  noLoadSupplyAirFlowRateControlSetToLowSpeed);
     }
 
     bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirFlowRateDuringCoolingOperation(

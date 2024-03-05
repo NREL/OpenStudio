@@ -485,9 +485,7 @@ namespace model {
     }
 
     bool AirLoopHVACUnitarySystem_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
-      boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed);
     }
 
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::maximumSupplyAirTemperature() const {
@@ -1106,11 +1104,8 @@ namespace model {
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
-      if (noLoadSupplyAirFlowRateControlSetToLowSpeed) {
-        return setString(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
-      } else {
-        return setString(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
-      }
+      return setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed,
+                                  noLoadSupplyAirFlowRateControlSetToLowSpeed);
     }
 
     bool AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
