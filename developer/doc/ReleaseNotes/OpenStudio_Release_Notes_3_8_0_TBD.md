@@ -86,8 +86,10 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 *
 
 ## Known Issues / Limitations
-* In some cases you may need to install an extra dependency needed by EnergyPlus on Linux and Mac. See this EnergyPlus issue for details https://github.com/NREL/EnergyPlus/issues/10284 
-* While we udpated the gbXML schema to v7.03, the forward and reverse translation between gbXML and OSM does not support any new gbXML fields that may have been added.
+
+*
+*
+*
 
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.7.0...v3.8.0
 
