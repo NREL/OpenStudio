@@ -311,6 +311,7 @@
 !      percent/K              =>   percent/F           0.555555555555556
 !      person/m2              =>   person/ft2          0.0928939733269818
 !      s/m                    =>   s/ft                0.3048
+!      umol/m2-s              =>   umol/ft2-s          0.09290304
 !      V/K                    =>   V/F                 0.555555555555556
 !      W                      =>   Btu/h               3.4121412858518
 !      W/((m3/s)-Pa)          =>   W/((gal/min)-ftH20) 0.188582274697355
@@ -369,7 +370,6 @@
 !      kgWater/kgDryAir
 !      kmol
 !      kmol/s
-!      umol/m2s
 !      m3/m3
 !      micron
 !      minutes
@@ -380,7 +380,6 @@
 !      ppm
 !      rev/min
 !      s
-!      umol_m2s
 !      V
 !      VA
 !      W/m2, deg C or cd/m2
@@ -12152,10 +12151,10 @@ IndoorLivingWall,
        \ip-units ft2
   N2 , \field LED Nominal Intensity
        \note The value represents photosynthetic photon flux density (PPFD) of LED grow light.
-       \note PPFD is measured in micro-mole per m2 per second (umol_m2s) which establishes exactly how many photosynthetically active radiation (PAR) photons are landing on a specific area.
-       \units umol_m2s
+       \note PPFD is measured in micro-mole per m2 per second (umol/m2-s) which establishes exactly how many photosynthetically active radiation (PAR) photons are landing on a specific area.
+       \units umol/m2-s
        \type real
-       \ip-units umol_m2s
+       \ip-units umol/ft2-s
   N3 , \field LED Nominal Power
        \note This field defines nominal total LED power for an indoor living wall system.
        \units W
