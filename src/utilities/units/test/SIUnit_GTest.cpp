@@ -29,6 +29,7 @@ using openstudio::createSIPeople;
 using openstudio::createSIForce;
 using openstudio::createSIEnergy;
 using openstudio::createSIPower;
+using openstudio::createSIAmountOfSubstance;
 
 using openstudio::convert;
 
@@ -159,6 +160,11 @@ TEST_F(UnitsFixture, SIUnit_createFunctions) {
   EXPECT_EQ(0, u.scale().exponent);
   EXPECT_EQ("kg*m^2/s^3", u.standardString());
   EXPECT_EQ("W", u.prettyString());
+
+  u = createSIAmountOfSubstance();
+  EXPECT_EQ(0, u.scale().exponent);
+  EXPECT_EQ("mol", u.standardString());
+  EXPECT_EQ("", u.prettyString());
 }
 
 TEST_F(UnitsFixture, SIUnit_convert) {

@@ -393,3 +393,32 @@ TEST_F(IddFixture, IddFactory_OpenStudio_EnforceNoExternalList) {
     }
   }
 }
+
+TEST_F(IddFixture, IddFactory_Units_umol) {
+  const IddFile file = IddFactory::instance().getIddFile(IddFileType::EnergyPlus);
+  auto iddObject_ = file.getObject("IndoorLivingWall");
+  EXPECT_TRUE(iddObject_);
+  const IddFieldVector fields = iddObject_->nonextensibleFields();
+
+  bool found = false;
+
+  for (const IddField& field : fields) {
+    if (OptionalString iddUnits = field.properties().units) {
+      if (*iddUnits == "umol/m2-s") {
+        found = true;
+        OptionalUnit siUnit = field.getUnits(false);
+        ASSERT_TRUE(siUnit);
+        EXPECT_TRUE(siUnit->system() == UnitSystem::SI);
+        EXPECT_EQ("mol/m^2*s", siUnit->standardString(false));
+        OptionalUnit ipUnit = field.getUnits(true);
+        ASSERT_TRUE(ipUnit);
+        EXPECT_TRUE(ipUnit->system() == UnitSystem::Mixed);
+        const Quantity q(1.0, *ipUnit);
+        const OptionalQuantity testQ = convert(q, *siUnit);
+        EXPECT_TRUE(testQ);
+        break;
+      }
+    }
+  }
+  EXPECT_TRUE(found);
+}

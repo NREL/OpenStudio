@@ -96,6 +96,21 @@ IddUnitString::IddUnitString(const std::string& s) : m_original(s), m_converted(
       }
     }
   }
+
+  if ((!m_converted.empty()) && boost::regex_search(m_converted, boost::regex("umol"))) {
+    Unit temp = parseUnitString(m_converted);
+
+    // g -> m(kg)
+    int gExp = temp.baseUnitExponent("umol");
+    if (gExp != 0) {
+      temp.setBaseUnitExponent("umol", 0);
+      temp.setBaseUnitExponent("mol", gExp);
+      bool ok = temp.setScale(-6 * gExp);
+      if (ok) {
+        m_converted = temp.standardString();
+      }
+    }
+  }
 }
 
 std::string IddUnitString::toStandardUnitString() const {
