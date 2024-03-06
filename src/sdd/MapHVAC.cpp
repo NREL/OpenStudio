@@ -57,6 +57,7 @@
 #include "../model/Curve.hpp"
 #include "../model/Curve_Impl.hpp"
 #include "../model/TableLookup.hpp"
+#include "../model/TableLookup_Impl.hpp"
 #include "../model/TableIndependentVariable.hpp"
 #include "../model/Duct.hpp"
 #include "../model/Duct_Impl.hpp"
@@ -2720,7 +2721,7 @@ namespace sdd {
     boost::optional<double> _htgSensEff75 = lexicalCastToDouble(htgSensEff75Element);
     if (_htgSensEff75) {
       if (boost::optional<model::Curve> curve_ = hx.sensibleEffectivenessofHeatingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+        if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
           double sensibleEffectivenessat100HeatingAirFlow = hx.sensibleEffectivenessat100HeatingAirFlow();
           sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgSensEff75.get(), sensibleEffectivenessat100HeatingAirFlow});
         }
@@ -2739,7 +2740,7 @@ namespace sdd {
     boost::optional<double> _htgLatEff75 = lexicalCastToDouble(htgLatEff75Element);
     if (_htgLatEff75) {
       if (boost::optional<model::Curve> curve_ = hx.latentEffectivenessofHeatingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+        if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
           double latentEffectivenessat100HeatingAirFlow = hx.latentEffectivenessat100HeatingAirFlow();
           latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgLatEff75.get(), latentEffectivenessat100HeatingAirFlow});
         }
@@ -2758,7 +2759,7 @@ namespace sdd {
     boost::optional<double> _clgSensEff75 = lexicalCastToDouble(clgSensEff75Element);
     if (_clgSensEff75) {
       if (boost::optional<model::Curve> curve_ = hx.sensibleEffectivenessofCoolingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+        if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
           double sensibleEffectivenessat100CoolingAirFlow = hx.sensibleEffectivenessat100CoolingAirFlow();
           sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgSensEff75.get(), sensibleEffectivenessat100CoolingAirFlow});
         }
@@ -2777,7 +2778,7 @@ namespace sdd {
     boost::optional<double> _clgLatEff75 = lexicalCastToDouble(clgLatEff75Element);
     if (_clgLatEff75) {
       if (boost::optional<model::Curve> curve_ = hx.latentEffectivenessofCoolingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<TableLookup>()) {
+        if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
           double latentEffectivenessat100CoolingAirFlow = hx.latentEffectivenessat100CoolingAirFlow();
           latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgLatEff75.get(), latentEffectivenessat100CoolingAirFlow});
         }
