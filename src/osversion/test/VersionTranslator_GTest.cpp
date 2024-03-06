@@ -4036,40 +4036,39 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndL
   ASSERT_EQ(1u, hxs.size());
   WorkspaceObject hx = hxs[0];
 
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1", hx.getString(1).get());  // Name
-  EXPECT_EQ("Always On Discrete", hx.getTarget(2)->nameString());                       // Availability Schedule
-  EXPECT_EQ("autosize", hx.getString(3).get());                                         // Nominal Supply Air Flow Rate
-  EXPECT_EQ(0.76, hx.getDouble(4).get());                                               // Sensible Effectiveness at 100% Heating Air Flow
-  EXPECT_EQ(0.68, hx.getDouble(5).get());                                               // Latent Effectiveness at 100% Heating Air Flow
-  EXPECT_EQ(0.76, hx.getDouble(6).get());                                               // Sensible Effectiveness at 100% Cooling Air Flow
-  EXPECT_EQ(0.68, hx.getDouble(7).get());                                               // Latent Effectiveness at 100% Cooling Air Flow
-  EXPECT_TRUE(hx.isEmpty(8));                                                           // Supply Air Inlet Node
-  EXPECT_TRUE(hx.isEmpty(9));                                                           // Supply Air Outlet Node
-  EXPECT_TRUE(hx.isEmpty(10));                                                          // Exhaust Air Inlet Node
-  EXPECT_TRUE(hx.isEmpty(11));                                                          // Exhaust Air Outlet Node
-  EXPECT_EQ(0, hx.getDouble(12).get());                                                 // Nominal Electric Power
-  EXPECT_EQ("Yes", hx.getString(13).get());                                             // Supply Air Outlet Temperature Control
-  EXPECT_EQ("Plate", hx.getString(14).get());                                           // Heat Exchanger Type
-  EXPECT_EQ("None", hx.getString(15).get());                                            // Frost Control Type
-  EXPECT_EQ(1.7, hx.getDouble(16).get());                                               // Threshold Temperature
-  EXPECT_TRUE(hx.isEmpty(17));                                                          // Initial Defrost Time Fraction
-  EXPECT_TRUE(hx.isEmpty(18));                                                          // Rate of Defrost Time Fraction Increase
-  EXPECT_EQ("Yes", hx.getString(19).get());                                             // Economizer Lockout
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_1",
+  EXPECT_EQ("ERV", hx.getString(1).get());                         // Name
+  EXPECT_EQ("Always On Discrete", hx.getTarget(2)->nameString());  // Availability Schedule
+  EXPECT_EQ("autosize", hx.getString(3).get());                    // Nominal Supply Air Flow Rate
+  EXPECT_EQ(0.76, hx.getDouble(4).get());                          // Sensible Effectiveness at 100% Heating Air Flow
+  EXPECT_EQ(0.68, hx.getDouble(5).get());                          // Latent Effectiveness at 100% Heating Air Flow
+  EXPECT_EQ(0.74, hx.getDouble(6).get());                          // Sensible Effectiveness at 100% Cooling Air Flow
+  EXPECT_EQ(0.67, hx.getDouble(7).get());                          // Latent Effectiveness at 100% Cooling Air Flow
+                                                                   // Supply Air Inlet Node
+  EXPECT_FALSE(hx.isEmpty(8));
+  EXPECT_EQ("Outboard OA Node", hx.getTarget(8)->getTarget(OS_ConnectionFields::SourceObject)->nameString());
+  EXPECT_FALSE(hx.isEmpty(9));   // Supply Air Outlet Node
+  EXPECT_FALSE(hx.isEmpty(10));  // Exhaust Air Inlet Node
+  EXPECT_FALSE(hx.isEmpty(11));
+  // Exhaust Air Outlet Node
+  EXPECT_EQ("Relief Node", hx.getTarget(11)->getTarget(OS_ConnectionFields::TargetObject)->nameString());
+
+  // Former last field
+  EXPECT_EQ("No", hx.getString(19).get());  // Economizer Lockout
+  EXPECT_EQ("ERV_SensHeatEff",
             hx.getTarget(20)->nameString());  // Sensible Effectiveness of Heating Air Flow Curve Name
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_2",
+  EXPECT_EQ("ERV_LatHeatEff",
             hx.getTarget(21)->nameString());  // Latent Effectiveness of Heating Air Flow Curve Name
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_3",
+  EXPECT_EQ("ERV_SensCoolEff",
             hx.getTarget(22)->nameString());  // Sensible Effectiveness of Cooling Air Flow Curve Name
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_4",
+  EXPECT_EQ("ERV_LatCoolEff",
             hx.getTarget(23)->nameString());  // Latent Effectiveness of Cooling Air Flow Curve Name
 
   std::vector<WorkspaceObject> tableLookups = model->getObjectsByType("OS:Table:Lookup");
   ASSERT_EQ(4u, tableLookups.size());
-  auto& tableLookup = tableLookups.front();
+  auto tableLookup = hx.getTarget(20).get();
 
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_1", tableLookup.nameString());  // Name
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_IndependentVariableList",
+  EXPECT_EQ("ERV_SensHeatEff", tableLookup.nameString());  // Name
+  EXPECT_EQ("ERV_IndependentVariableList",
             tableLookup.getTarget(2)->nameString());           // Independent Variable List Name
   EXPECT_EQ("DivisorOnly", tableLookup.getString(3).get());    // Normalization Method
   EXPECT_EQ(0.76, tableLookup.getDouble(4).get());             // Normalization Divisor
@@ -4089,26 +4088,26 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndL
   ASSERT_EQ(1u, varLists.size());
   WorkspaceObject varList = varLists[0];
 
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_IndependentVariableList", varList.nameString());  // Name
+  EXPECT_EQ("ERV_IndependentVariableList", varList.nameString());  // Name
   ASSERT_EQ(1, varList.numExtensibleGroups());
   auto var_ = varList.extensibleGroups().front().cast<WorkspaceExtensibleGroup>().getTarget(0);  // Model Object 1
   ASSERT_TRUE(var_);
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_IndependentVariable", var_->nameString());
+  EXPECT_EQ("ERV_IndependentVariable", var_->nameString());
 
   std::vector<WorkspaceObject> vars = model->getObjectsByType("OS:Table:IndependentVariable");
   ASSERT_EQ(1u, vars.size());
   WorkspaceObject var = vars[0];
 
-  EXPECT_EQ("Heat Exchanger Air To Air Sensible And Latent 1_IndependentVariable", var.nameString());  // Name
-  EXPECT_EQ("Linear", var.getString(2).get());                                                         // Interpolation Method
-  EXPECT_EQ("Linear", var.getString(3).get());                                                         // Extrapolation Method
-  EXPECT_EQ(0.0, var.getDouble(4).get());                                                              // Minimum Value
-  EXPECT_EQ(10.0, var.getDouble(5).get());                                                             // Maximum Value
-  EXPECT_TRUE(var.isEmpty(6));                                                                         // Normalization Reference Value
-  EXPECT_EQ("Dimensionless", var.getString(7).get());                                                  // Unit Type
-  EXPECT_TRUE(var.isEmpty(8));                                                                         // External File Name
-  EXPECT_TRUE(var.isEmpty(9));                                                                         // External File Column Number
-  EXPECT_TRUE(var.isEmpty(10));                                                                        // External File Starting Row Number
+  EXPECT_EQ("ERV_IndependentVariable", var.nameString());  // Name
+  EXPECT_EQ("Linear", var.getString(2).get());             // Interpolation Method
+  EXPECT_EQ("Linear", var.getString(3).get());             // Extrapolation Method
+  EXPECT_EQ(0.0, var.getDouble(4).get());                  // Minimum Value
+  EXPECT_EQ(10.0, var.getDouble(5).get());                 // Maximum Value
+  EXPECT_TRUE(var.isEmpty(6));                             // Normalization Reference Value
+  EXPECT_EQ("Dimensionless", var.getString(7).get());      // Unit Type
+  EXPECT_TRUE(var.isEmpty(8));                             // External File Name
+  EXPECT_TRUE(var.isEmpty(9));                             // External File Column Number
+  EXPECT_TRUE(var.isEmpty(10));                            // External File Starting Row Number
   ASSERT_EQ(2, var.numExtensibleGroups());
   auto eg4 = var.extensibleGroups()[0];
   EXPECT_EQ(0.75, eg4.getDouble(0).get());  // Value 1

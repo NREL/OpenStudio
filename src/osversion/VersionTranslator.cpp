@@ -8960,6 +8960,10 @@ namespace osversion {
     IdfFile targetIdf(idd_3_8_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    constexpr std::array<int, 4> hx_old_100effectiveness_idxs{4, 5, 8, 9};
+    constexpr std::array<int, 4> hx_new_effectiveness_curves_idxs{20, 21, 22, 23};
+    constexpr std::array<std::string_view, 4> hx_new_table_names{"SensHeat", "LatHeat", "SensCool", "LatCool"};
+
     for (const IdfObject& object : idf_3_7_0.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -8998,30 +9002,32 @@ namespace osversion {
           }
         }
 
-        std::string varListHandle = toString(createUUID());
-        std::vector<int> e_idxs = {4, 5, 8, 9};
-        std::vector<int> c_idxs = {20, 21, 22, 23};
+        const std::string varListHandle = toString(createUUID());
         bool tableAdded = false;
-        for (size_t i = 0; i < e_idxs.size(); ++i) {
-          if (auto e100 = object.getDouble(e_idxs[i])) {       // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}
-            if (auto e75 = object.getDouble(e_idxs[i] + 2)) {  // Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
+        for (size_t i = 0; i < hx_old_100effectiveness_idxs.size(); ++i) {
+          // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}
+          if (auto e100 = object.getDouble(hx_old_100effectiveness_idxs[i])) {
+            // Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
+
+            if (auto e75 = object.getDouble(hx_old_100effectiveness_idxs[i] + 2)) {
               if (e100.get() != e75.get()) {
                 tableAdded = true;
 
                 IdfObject tableLookup(idd_3_8_0.getObject("OS:Table:Lookup").get());
                 std::string uuid = toString(createUUID());
-                tableLookup.setString(0, uuid);                                               // Handle
-                tableLookup.setString(1, object.nameString() + "_" + std::to_string(i + 1));  // Name
-                tableLookup.setString(2, varListHandle);                                      // Independent Variable List Name
-                tableLookup.setString(3, "DivisorOnly");                                      // Normalization Method
-                tableLookup.setDouble(4, e100.get());                                         // Normalization Divisor
-                tableLookup.setDouble(5, 0.0);                                                // Minimum Output
-                tableLookup.setDouble(6, 10.0);                                               // Maximum Output
-                tableLookup.setString(7, "Dimensionless");                                    // Output Unit Type
-                tableLookup.pushExtensibleGroup().setDouble(0, e75.get());                    // Output Value 1
-                tableLookup.pushExtensibleGroup().setDouble(0, e100.get());                   // Output Value 2
+                tableLookup.setString(0, uuid);                                                                 // Handle
+                tableLookup.setString(1, fmt::format("{}_{}Eff", object.nameString(), hx_new_table_names[i]));  // Name
+                tableLookup.setString(2, varListHandle);                                                        // Independent Variable List Name
+                tableLookup.setString(3, "DivisorOnly");                                                        // Normalization Method
+                tableLookup.setDouble(4, e100.get());                                                           // Normalization Divisor
+                tableLookup.setDouble(5, 0.0);                                                                  // Minimum Output
+                tableLookup.setDouble(6, 10.0);                                                                 // Maximum Output
+                tableLookup.setString(7, "Dimensionless");                                                      // Output Unit Type
+                tableLookup.pushExtensibleGroup().setDouble(0, e75.get());                                      // Output Value 1
+                tableLookup.pushExtensibleGroup().setDouble(0, e100.get());                                     // Output Value 2
 
-                newObject.setString(c_idxs[i], uuid);  // Sensible/Latent Effectiveness of Heating/Cooling Air Flow Curve Name
+                // Sensible/Latent Effectiveness of Heating/Cooling Air Flow Curve Name
+                newObject.setString(hx_new_effectiveness_curves_idxs[i], uuid);
 
                 ss << tableLookup;
                 m_new.push_back(tableLookup);
@@ -9030,8 +9036,8 @@ namespace osversion {
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+        m_refactored.emplace_back(object, std::move(newObject));
 
         if (tableAdded) {
           IdfObject varList(idd_3_8_0.getObject("OS:ModelObjectList").get());
@@ -9051,11 +9057,11 @@ namespace osversion {
           var.pushExtensibleGroup().setDouble(0, 0.75);                    // Value 1
           var.pushExtensibleGroup().setDouble(0, 1.0);                     // Value 2
 
-          m_new.push_back(varList);
           ss << varList;
+          m_new.emplace_back(std::move(varList));
 
-          m_new.push_back(var);
           ss << var;
+          m_new.emplace_back(std::move(var));
         }
 
         // No-op
