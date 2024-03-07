@@ -17,13 +17,23 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "TableLookup.hpp"
+#include "TableLookup_Impl.hpp"
+#include "TableIndependentVariable.hpp"
+#include "TableIndependentVariable_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
+#include "../utilities/math/FloatCompare.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+// Remove when deprecated methods are removed
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 
@@ -174,18 +184,6 @@ namespace model {
       return value.get();
     }
 
-    double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat75HeatingAirFlow() const {
-      boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat75HeatingAirFlow() const {
-      boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
     double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat100CoolingAirFlow() const {
       boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow, true);
       OS_ASSERT(value);
@@ -194,18 +192,6 @@ namespace model {
 
     double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat100CoolingAirFlow() const {
       boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessat75CoolingAirFlow() const {
-      boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow, true);
-      OS_ASSERT(value);
-      return value.get();
-    }
-
-    double HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessat75CoolingAirFlow() const {
-      boost::optional<double> value = getDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -258,6 +244,26 @@ namespace model {
       return openstudio::istringEqual(value.get(), "Yes");
     }
 
+    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofHeatingAirFlowCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName);
+    }
+
+    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofHeatingAirFlowCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName);
+    }
+
+    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::sensibleEffectivenessofCoolingAirFlowCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName);
+    }
+
+    boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent_Impl::latentEffectivenessofCoolingAirFlowCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName);
+    }
+
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilitySchedule, "HeatExchangerAirToAirSensibleAndLatent",
                                 "Availability", schedule);
@@ -278,50 +284,30 @@ namespace model {
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow,
                               sensibleEffectivenessat100HeatingAirFlow);
       return result;
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result =
         setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow, latentEffectivenessat100HeatingAirFlow);
       return result;
     }
 
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow) {
-      bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow,
-                              sensibleEffectivenessat75HeatingAirFlow);
-      return result;
-    }
-
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow) {
-      bool result =
-        setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, latentEffectivenessat75HeatingAirFlow);
-      return result;
-    }
-
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow,
                               sensibleEffectivenessat100CoolingAirFlow);
       return result;
     }
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow) {
+      // FIXME: wouldn't this value need to get set on the tablelookup if it exists?
       bool result =
         setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow, latentEffectivenessat100CoolingAirFlow);
-      return result;
-    }
-
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow) {
-      bool result = setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow,
-                              sensibleEffectivenessat75CoolingAirFlow);
-      return result;
-    }
-
-    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow) {
-      bool result =
-        setDouble(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, latentEffectivenessat75CoolingAirFlow);
       return result;
     }
 
@@ -392,6 +378,54 @@ namespace model {
 
     bool HeatExchangerAirToAirSensibleAndLatent_Impl::setEconomizerLockout(bool economizerLockout) {
       return setBooleanFieldValue(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, economizerLockout);
+    }
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofHeatingAirFlowCurve(
+      const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName,
+                               sensibleEffectivenessofHeatingAirFlowCurve.handle());
+      return result;
+    }
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofHeatingAirFlowCurve(
+      const Curve& latentEffectivenessofHeatingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName,
+                               latentEffectivenessofHeatingAirFlowCurve.handle());
+      return result;
+    }
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setSensibleEffectivenessofCoolingAirFlowCurve(
+      const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName,
+                               sensibleEffectivenessofCoolingAirFlowCurve.handle());
+      return result;
+    }
+
+    bool HeatExchangerAirToAirSensibleAndLatent_Impl::setLatentEffectivenessofCoolingAirFlowCurve(
+      const Curve& latentEffectivenessofCoolingAirFlowCurve) {
+      bool result = setPointer(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName,
+                               latentEffectivenessofCoolingAirFlowCurve.handle());
+      return result;
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetSensibleEffectivenessofHeatingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetLatentEffectivenessofHeatingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetSensibleEffectivenessofCoolingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetLatentEffectivenessofCoolingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {
@@ -511,17 +545,9 @@ namespace model {
 
     setLatentEffectivenessat100HeatingAirFlow(0.68);
 
-    setSensibleEffectivenessat75HeatingAirFlow(0.81);
-
-    setLatentEffectivenessat75HeatingAirFlow(0.73);
-
     setSensibleEffectivenessat100CoolingAirFlow(0.76);
 
     setLatentEffectivenessat100CoolingAirFlow(0.68);
-
-    setSensibleEffectivenessat75CoolingAirFlow(0.81);
-
-    setLatentEffectivenessat75CoolingAirFlow(0.73);
 
     setNominalElectricPower(0.0);
 
@@ -534,6 +560,87 @@ namespace model {
     setThresholdTemperature(1.7);
 
     setEconomizerLockout(true);
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::assignHistoricalEffectivenessCurves() {
+
+    Model model = this->model();
+
+    TableIndependentVariable var(model);
+    var.setName(nameString() + "_IndependentVariable");
+    var.setInterpolationMethod("Linear");
+    var.setExtrapolationMethod("Linear");
+    var.setMinimumValue(0.0);
+    var.setMaximumValue(10.0);
+    var.setUnitType("Dimensionless");
+    var.addValue(0.75);
+    var.addValue(1.0);
+
+    {
+      TableLookup s75heating(model);
+      s75heating.setName(fmt::format("{}_SensHeatEff", nameString()));
+      s75heating.addIndependentVariable(var);
+
+      s75heating.setNormalizationMethod("DivisorOnly");
+      s75heating.setNormalizationDivisor(0.76);
+      s75heating.setMinimumOutput(0.0);
+      s75heating.setMaximumOutput(10.0);
+      s75heating.setOutputUnitType("Dimensionless");
+      s75heating.addOutputValue(0.81);
+      s75heating.addOutputValue(0.76);
+
+      setSensibleEffectivenessofHeatingAirFlowCurve(s75heating);
+    }
+
+    {
+      TableLookup l75heating(model);
+      l75heating.setName(fmt::format("{}_LatHeatEff", nameString()));
+      l75heating.addIndependentVariable(var);
+
+      l75heating.setNormalizationMethod("DivisorOnly");
+      l75heating.setNormalizationDivisor(0.68);
+      l75heating.setMinimumOutput(0.0);
+      l75heating.setMaximumOutput(10.0);
+      l75heating.setOutputUnitType("Dimensionless");
+      l75heating.addOutputValue(0.73);
+      l75heating.addOutputValue(0.68);
+
+      setLatentEffectivenessofHeatingAirFlowCurve(l75heating);
+    }
+
+    {
+      TableLookup s75cooling(model);
+      s75cooling.setName(fmt::format("{}_SensCoolEff", nameString()));
+      s75cooling.addIndependentVariable(var);
+
+      s75cooling.setNormalizationMethod("DivisorOnly");
+      s75cooling.setNormalizationDivisor(0.76);
+      s75cooling.setMinimumOutput(0.0);
+      s75cooling.setMaximumOutput(10.0);
+      s75cooling.setOutputUnitType("Dimensionless");
+      s75cooling.addOutputValue(0.81);
+      s75cooling.addOutputValue(0.76);
+
+      setSensibleEffectivenessofCoolingAirFlowCurve(s75cooling);
+    }
+
+    {
+      TableLookup l75cooling(model);
+      l75cooling.setName(fmt::format("{}_LatCoolEff", nameString()));
+      l75cooling.addIndependentVariable(var);
+
+      l75cooling.setNormalizationMethod("DivisorOnly");
+      l75cooling.setNormalizationDivisor(0.68);
+      l75cooling.setMinimumOutput(0.0);
+      l75cooling.setMaximumOutput(10.0);
+      l75cooling.setOutputUnitType("Dimensionless");
+      l75cooling.addOutputValue(0.73);
+      l75cooling.addOutputValue(0.68);
+
+      setLatentEffectivenessofCoolingAirFlowCurve(l75cooling);
+    }
+
+    return true;
   }
 
   IddObjectType HeatExchangerAirToAirSensibleAndLatent::iddObjectType() {
@@ -570,28 +677,12 @@ namespace model {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100HeatingAirFlow();
   }
 
-  double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75HeatingAirFlow() const {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat75HeatingAirFlow();
-  }
-
-  double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75HeatingAirFlow() const {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat75HeatingAirFlow();
-  }
-
   double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat100CoolingAirFlow() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat100CoolingAirFlow();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat100CoolingAirFlow() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat100CoolingAirFlow();
-  }
-
-  double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75CoolingAirFlow() const {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessat75CoolingAirFlow();
-  }
-
-  double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75CoolingAirFlow() const {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessat75CoolingAirFlow();
   }
 
   double HeatExchangerAirToAirSensibleAndLatent::nominalElectricPower() const {
@@ -630,6 +721,22 @@ namespace model {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->economizerLockout();
   }
 
+  boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessofHeatingAirFlowCurve() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessofHeatingAirFlowCurve();
+  }
+
+  boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessofHeatingAirFlowCurve() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessofHeatingAirFlowCurve();
+  }
+
+  boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessofCoolingAirFlowCurve() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->sensibleEffectivenessofCoolingAirFlowCurve();
+  }
+
+  boost::optional<Curve> HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessofCoolingAirFlowCurve() const {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->latentEffectivenessofCoolingAirFlowCurve();
+  }
+
   bool HeatExchangerAirToAirSensibleAndLatent::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -652,16 +759,6 @@ namespace model {
       latentEffectivenessat100HeatingAirFlow);
   }
 
-  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessat75HeatingAirFlow(
-      sensibleEffectivenessat75HeatingAirFlow);
-  }
-
-  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessat75HeatingAirFlow(
-      latentEffectivenessat75HeatingAirFlow);
-  }
-
   bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessat100CoolingAirFlow(
       sensibleEffectivenessat100CoolingAirFlow);
@@ -670,16 +767,6 @@ namespace model {
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessat100CoolingAirFlow(
       latentEffectivenessat100CoolingAirFlow);
-  }
-
-  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessat75CoolingAirFlow(
-      sensibleEffectivenessat75CoolingAirFlow);
-  }
-
-  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow) {
-    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessat75CoolingAirFlow(
-      latentEffectivenessat75CoolingAirFlow);
   }
 
   bool HeatExchangerAirToAirSensibleAndLatent::setNominalElectricPower(double nominalElectricPower) {
@@ -726,6 +813,44 @@ namespace model {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setEconomizerLockout(economizerLockout);
   }
 
+  bool
+    HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofHeatingAirFlowCurve(
+      sensibleEffectivenessofHeatingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetSensibleEffectivenessofHeatingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetSensibleEffectivenessofHeatingAirFlowCurve();
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofHeatingAirFlowCurve(
+      latentEffectivenessofHeatingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetLatentEffectivenessofHeatingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetLatentEffectivenessofHeatingAirFlowCurve();
+  }
+
+  bool
+    HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setSensibleEffectivenessofCoolingAirFlowCurve(
+      sensibleEffectivenessofCoolingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetSensibleEffectivenessofCoolingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetSensibleEffectivenessofCoolingAirFlowCurve();
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve) {
+    return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofCoolingAirFlowCurve(
+      latentEffectivenessofCoolingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetLatentEffectivenessofCoolingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetLatentEffectivenessofCoolingAirFlowCurve();
+  }
+
   AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct(double length, double diameter) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
   }
@@ -742,6 +867,204 @@ namespace model {
 
   boost::optional<double> HeatExchangerAirToAirSensibleAndLatent::autosizedNominalSupplyAirFlowRate() const {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->autosizedNominalSupplyAirFlowRate();
+  }
+
+  // DEPRECATED
+
+  boost::optional<double> evalCurveAt75(const Curve& curve) {
+    if (boost::optional<TableLookup> tableLookup_ = curve.optionalCast<TableLookup>()) {
+      if (tableLookup_->numVariables() == 1) {
+        if (!tableLookup_->outputValues().empty() && !tableLookup_->independentVariables().front().values().empty()
+            && openstudio::equal(tableLookup_->independentVariables().front().values().front(), 0.75)) {
+          auto val = tableLookup_->outputValues().front();
+
+          auto normMethod = tableLookup_->normalizationMethod();
+          if (istringEqual(normMethod, "None")) {
+            // No-op
+
+          } else if (istringEqual(normMethod, "DivisorOnly")) {
+            val /= tableLookup_->normalizationDivisor();
+          } else if (istringEqual(normMethod, "AutomaticWithDivisor")) {
+            const double i = tableLookup_->independentVariables().front().normalizationReferenceValue().get_value_or(1.0);
+            val /= tableLookup_->normalizationDivisor();
+            val /= i;
+          }
+          return val;
+        }
+      } else {
+        LOG_FREE(Warn, "openstudio.model.HeatExchangerAirToAirSensibleAndLatent", "Wrong number of variables");
+      }
+    } else {
+      return curve.evaluate(0.75);
+    }
+
+    return boost::none;
+  }
+
+  double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75HeatingAirFlow() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use sensibleEffectivenessofHeatingAirFlowCurve instead.");
+
+    auto eff100 = sensibleEffectivenessat100HeatingAirFlow();
+
+    if (auto curve_ = sensibleEffectivenessofHeatingAirFlowCurve()) {
+      auto val = evalCurveAt75(*curve_);
+      if (val && *val > 0.0) {
+        return *val * eff100;
+      } else {
+        LOG(Warn, briefDescription() << " has a sensibleEffectivenessofHeatingAirFlowCurve assigned but failed to retrieve the value at 0.75.");
+      }
+    }
+
+    // Constant effectiveness if no curves
+    return eff100;
+  }
+
+  double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75HeatingAirFlow() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use latentEffectivenessofHeatingAirFlowCurve instead.");
+
+    auto eff100 = latentEffectivenessat100HeatingAirFlow();
+
+    if (auto curve_ = latentEffectivenessofHeatingAirFlowCurve()) {
+      auto val = evalCurveAt75(*curve_);
+      if (val && *val > 0.0) {
+        return *val * eff100;
+      } else {
+        LOG(Warn, briefDescription() << " has a latentEffectivenessofHeatingAirFlowCurve assigned but failed to retrieve the value at 0.75.");
+      }
+    }
+
+    // Constant effectiveness if no curves
+    return eff100;
+  }
+
+  double HeatExchangerAirToAirSensibleAndLatent::sensibleEffectivenessat75CoolingAirFlow() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use sensibleEffectivenessofCoolingAirFlowCurve instead.");
+
+    auto eff100 = sensibleEffectivenessat100CoolingAirFlow();
+
+    if (auto curve_ = sensibleEffectivenessofCoolingAirFlowCurve()) {
+      auto val = evalCurveAt75(*curve_);
+      if (val && *val > 0.0) {
+        return *val * eff100;
+      } else {
+        LOG(Warn, briefDescription() << " has a sensibleEffectivenessofCoolingAirFlowCurve assigned but failed to retrieve the value at 0.75.");
+      }
+    }
+
+    // Constant effectiveness if no curves
+    return eff100;
+  }
+
+  double HeatExchangerAirToAirSensibleAndLatent::latentEffectivenessat75CoolingAirFlow() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use latentEffectivenessofCoolingAirFlowCurve instead.");
+
+    auto eff100 = latentEffectivenessat100CoolingAirFlow();
+
+    if (auto curve_ = latentEffectivenessofCoolingAirFlowCurve()) {
+      auto val = evalCurveAt75(*curve_);
+      if (val && *val > 0.0) {
+        return *val * eff100;
+      } else {
+        LOG(Warn, briefDescription() << " has a latentEffectivenessofCoolingAirFlowCurve assigned but failed to retrieve the value at 0.75.");
+      }
+    }
+
+    return eff100;
+  }
+
+  bool setCurveAt75(const Curve& curve, double valueAt75) {
+
+    if (boost::optional<TableLookup> tableLookup_ = curve.optionalCast<TableLookup>()) {
+
+      if (tableLookup_->numVariables() != 1) {
+        LOG_FREE(Warn, "openstudio.model.HeatExchangerAirToAirSensibleAndLatent", "Wrong number of variables");
+        return false;
+      }
+
+      auto indVarVals = tableLookup_->independentVariables().front().values();
+      auto outVals = tableLookup_->outputValues();
+
+      if (!outVals.empty() && !indVarVals.empty() && openstudio::equal(indVarVals.front(), 0.75)) {
+        outVals.front() = valueAt75;
+        return tableLookup_->setOutputValues(outVals);
+      }
+    }
+
+    LOG_FREE(Warn, "openstudio.model.HeatExchangerAirToAirSensibleAndLatent", "Cannot set effectiveness for a Curve that isn't a TableLookup.");
+    return false;
+  }
+
+  TableLookup makeTable(double val75, double val100, const Model& model, const std::string& tableName) {
+    TableIndependentVariable var(model);
+    var.setName(fmt::format("{}_IndependentVariable", tableName));
+    var.setInterpolationMethod("Linear");
+    var.setExtrapolationMethod("Linear");
+    var.setMinimumValue(0.0);
+    var.setMaximumValue(10.0);
+    var.setUnitType("Dimensionless");
+    var.addValue(0.75);
+    var.addValue(1.0);
+
+    TableLookup tableLookup(model);
+    tableLookup.setName(tableName);
+    tableLookup.setNormalizationMethod("DivisorOnly");
+    tableLookup.setNormalizationDivisor(val100);
+    tableLookup.setMinimumOutput(0.0);
+    tableLookup.setMaximumOutput(10.0);
+    tableLookup.setOutputUnitType("Dimensionless");
+    tableLookup.addOutputValue(val75);
+    tableLookup.addOutputValue(val100);
+    tableLookup.addIndependentVariable(var);
+
+    return tableLookup;
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow) {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use sensibleEffectivenessofHeatingAirFlowCurve instead.");
+
+    if (auto curve_ = sensibleEffectivenessofHeatingAirFlowCurve()) {
+      return setCurveAt75(*curve_, sensibleEffectivenessat75HeatingAirFlow);
+    }
+
+    auto tableLookup = makeTable(sensibleEffectivenessat75HeatingAirFlow, sensibleEffectivenessat100HeatingAirFlow(), model(),
+                                 fmt::format("{}_SensHeatEff", nameString()));
+    return setSensibleEffectivenessofHeatingAirFlowCurve(tableLookup);
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow) {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use latentEffectivenessofHeatingAirFlowCurve instead.");
+
+    if (auto curve_ = latentEffectivenessofHeatingAirFlowCurve()) {
+      return setCurveAt75(*curve_, latentEffectivenessat75HeatingAirFlow);
+    }
+
+    auto tableLookup =
+      makeTable(latentEffectivenessat75HeatingAirFlow, latentEffectivenessat100HeatingAirFlow(), model(), fmt::format("{}_LatHeatEff", nameString()));
+    return setLatentEffectivenessofHeatingAirFlowCurve(tableLookup);
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow) {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use sensibleEffectivenessofCoolingAirFlowCurve instead.");
+
+    if (auto curve_ = sensibleEffectivenessofCoolingAirFlowCurve()) {
+      return setCurveAt75(*curve_, sensibleEffectivenessat75CoolingAirFlow);
+    }
+
+    auto tableLookup = makeTable(sensibleEffectivenessat75CoolingAirFlow, sensibleEffectivenessat100CoolingAirFlow(), model(),
+                                 fmt::format("{}_SensCoolEff", nameString()));
+    return setSensibleEffectivenessofCoolingAirFlowCurve(tableLookup);
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow) {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use latentEffectivenessofCoolingAirFlowCurve instead.");
+
+    if (auto curve_ = latentEffectivenessofCoolingAirFlowCurve()) {
+      return setCurveAt75(*curve_, latentEffectivenessat75CoolingAirFlow);
+    }
+
+    auto tableLookup =
+      makeTable(latentEffectivenessat75CoolingAirFlow, latentEffectivenessat100CoolingAirFlow(), model(), fmt::format("{}_LatCoolEff", nameString()));
+    return setLatentEffectivenessofCoolingAirFlowCurve(tableLookup);
   }
 
 }  // namespace model

@@ -311,6 +311,7 @@
 !      percent/K              =>   percent/F           0.555555555555556
 !      person/m2              =>   person/ft2          0.0928939733269818
 !      s/m                    =>   s/ft                0.3048
+!      umol/m2-s              =>   umol/ft2-s          0.09290304
 !      V/K                    =>   V/F                 0.555555555555556
 !      W                      =>   Btu/h               3.4121412858518
 !      W/((m3/s)-Pa)          =>   W/((gal/min)-ftH20) 0.188582274697355
@@ -369,7 +370,6 @@
 !      kgWater/kgDryAir
 !      kmol
 !      kmol/s
-!      umol/m2s
 !      m3/m3
 !      micron
 !      minutes
@@ -380,7 +380,6 @@
 !      ppm
 !      rev/min
 !      s
-!      umol_m2s
 !      V
 !      VA
 !      W/m2, deg C or cd/m2
@@ -12152,10 +12151,10 @@ IndoorLivingWall,
        \ip-units ft2
   N2 , \field LED Nominal Intensity
        \note The value represents photosynthetic photon flux density (PPFD) of LED grow light.
-       \note PPFD is measured in micro-mole per m2 per second (umol_m2s) which establishes exactly how many photosynthetically active radiation (PAR) photons are landing on a specific area.
-       \units umol_m2s
+       \note PPFD is measured in micro-mole per m2 per second (umol/m2-s) which establishes exactly how many photosynthetically active radiation (PAR) photons are landing on a specific area.
+       \units umol/m2-s
        \type real
-       \ip-units umol_m2s
+       \ip-units umol/ft2-s
   N3 , \field LED Nominal Power
        \note This field defines nominal total LED power for an indoor living wall system.
        \units W
@@ -36942,37 +36941,13 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \minimum 0.0
       \maximum 1.0
       \default 0.0
-  N4, \field Sensible Effectiveness at 75% Heating Air Flow
+  N4, \field Sensible Effectiveness at 100% Cooling Air Flow
       \type real
       \units dimensionless
       \minimum 0.0
       \maximum 1.0
       \default 0.0
-  N5, \field Latent Effectiveness at 75% Heating Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N6, \field Sensible Effectiveness at 100% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N7, \field Latent Effectiveness at 100% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N8, \field Sensible Effectiveness at 75% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N9, \field Latent Effectiveness at 75% Cooling Air Flow
+  N5, \field Latent Effectiveness at 100% Cooling Air Flow
       \type real
       \units dimensionless
       \minimum 0.0
@@ -36990,7 +36965,7 @@ HeatExchanger:AirToAir:SensibleAndLatent,
   A6, \field Exhaust Air Outlet Node Name
       \required-field
       \type node
-  N10,\field Nominal Electric Power
+  N6, \field Nominal Electric Power
       \type real
       \units W
       \ip-units W
@@ -37013,14 +36988,14 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \key ExhaustOnly
       \key MinimumExhaustTemperature
       \default None
-  N11,\field Threshold Temperature
+  N7, \field Threshold Temperature
       \type real
       \units C
       \default 1.7
       \note Supply (outdoor) air inlet temp threshold for exhaust air recirculation and
       \note exhaust only frost control types. Exhaust air outlet threshold Temperature for
       \note minimum exhaust temperature frost control type.
-  N12,\field Initial Defrost Time Fraction
+  N8, \field Initial Defrost Time Fraction
       \type real
       \units dimensionless
       \minimum 0.0
@@ -37028,20 +37003,44 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \default 0.083
       \note Fraction of the time when frost control will be invoked at the threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  N13,\field Rate of Defrost Time Fraction Increase
+  N9, \field Rate of Defrost Time Fraction Increase
       \type real
       \units 1/K
       \minimum 0.0
       \default 0.012
       \note Rate of increase in defrost time fraction as actual temp falls below threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  A10;\field Economizer Lockout
+  A10,\field Economizer Lockout
       \type choice
       \key Yes
       \key No
       \default Yes
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
+  A11,\field Sensible Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for heating
+      \note will be the value in N2 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A12,\field Latent Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for heating
+      \note will be the value in N3 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A13,\field Sensible Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for cooling
+      \note will be the value in N4 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A14;\field Latent Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for cooling
+      \note will be the value in N5 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
 
 HeatExchanger:Desiccant:BalancedFlow,
       \memo This object models a balanced desiccant heat exchanger.
@@ -37722,6 +37721,14 @@ AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the heating capacity.
        \note Required field when No Load Supply Air Flow Rate Method is FlowPerHeatingCapacity.
+  A23, \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note This field is not used when Design Specification Multispeed Object Type input is present 
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N17, \field Maximum Supply Air Temperature
        \type real
        \units C
@@ -37734,7 +37741,7 @@ AirLoopHVAC:UnitarySystem,
        \units C
        \default 21.0
        \note Enter the maximum outdoor dry-bulb temperature for supplemental heater operation.
-  A23, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+  A24, \field Outdoor Dry-Bulb Temperature Sensor Node Name
        \type node
        \note If this field is blank, outdoor temperature from the weather file is used.
        \note If this field is not blank, the node name specified determines the outdoor temperature used
@@ -37766,17 +37773,17 @@ AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \default 80.0
        \note Enter the maximum heat recovery inlet temperature allowed for heat recovery.
-  A24, \field Heat Recovery Water Inlet Node Name
+  A25, \field Heat Recovery Water Inlet Node Name
        \type node
        \note Enter the name of the heat recovery water inlet node if plant water loop connections are present.
-  A25, \field Heat Recovery Water Outlet Node Name
+  A26, \field Heat Recovery Water Outlet Node Name
        \type node
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A26, \field Design Specification Multispeed Object Type
+  A27, \field Design Specification Multispeed Object Type
        \type choice
        \key UnitarySystemPerformance:Multispeed
        \note Enter the type of performance specification object used to describe the multispeed coil.
-  A27; \field Design Specification Multispeed Object Name
+  A28; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note The name of the performance specification object used to describe the multispeed coil.
