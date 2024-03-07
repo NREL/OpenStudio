@@ -170,6 +170,13 @@ namespace energyplus {
       idfObject.setDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate, value.get());
     }
 
+    // NoLoadSupplyAirFlowRateControlSetToLowSpeed
+    if (modelObject.noLoadSupplyAirFlowRateControlSetToLowSpeed()) {
+      idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
+    } else {
+      idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
+    }
+
     // OutdoorAirFlowRateDuringCoolingOperation
     if (modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized()) {
       idfObject.setString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingOutdoorAirFlowRate, "Autosize");

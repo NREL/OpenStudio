@@ -2226,14 +2226,14 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     auto& ptac = ptacs.front();
 
     // Check the Supply Air Fan Operating Mode Schedule
-    ASSERT_TRUE(ptac.getTarget(17));
-    WorkspaceObject fanOpSch = ptac.getTarget(17).get();
+    ASSERT_TRUE(ptac.getTarget(18));
+    WorkspaceObject fanOpSch = ptac.getTarget(18).get();
     EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
     EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
 
     // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
-    ASSERT_TRUE(ptac.getTarget(13));
-    WorkspaceObject fan = ptac.getTarget(13).get();
+    ASSERT_TRUE(ptac.getTarget(14));
+    WorkspaceObject fan = ptac.getTarget(14).get();
 
     EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
     EXPECT_EQ("PTAC Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
@@ -2265,14 +2265,14 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     auto& pthp = pthps.front();
 
     // Check the Supply Air Fan Operating Mode Schedule
-    ASSERT_TRUE(pthp.getTarget(23));
-    WorkspaceObject fanOpSch = pthp.getTarget(23).get();
+    ASSERT_TRUE(pthp.getTarget(24));
+    WorkspaceObject fanOpSch = pthp.getTarget(24).get();
     EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
     EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
 
     // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
-    ASSERT_TRUE(pthp.getTarget(13));
-    WorkspaceObject fan = pthp.getTarget(13).get();
+    ASSERT_TRUE(pthp.getTarget(14));
+    WorkspaceObject fan = pthp.getTarget(14).get();
 
     // This one is all defaulted, ensure we get the SAME values
     EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
@@ -3209,7 +3209,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_eqfit) {
     auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
     ASSERT_EQ(3, unitarys.size());
 
-    constexpr size_t deletionIndex = 38;
+    constexpr size_t deletionIndex = 39;
     for (const auto& unitary : unitarys) {
 
       EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
@@ -3360,7 +3360,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_unitary_vsdeqfit) {
     auto unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
     ASSERT_EQ(4, unitarys.size());
 
-    constexpr size_t deletionIndex = 38;
+    constexpr size_t deletionIndex = 39;
     for (const auto& unitary : unitarys) {
 
       EXPECT_EQ("sensor", unitary.getString(deletionIndex - 1).get());
@@ -3533,7 +3533,7 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
     auto wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
     ASSERT_EQ(2, wahps.size());
 
-    constexpr size_t deletionIndex = 15;
+    constexpr size_t deletionIndex = 16;
     for (const auto& wahp : wahps) {
 
       // Before: cooling coil name
@@ -3546,8 +3546,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_Coils_Latent_wahp) {
     }
   }
 
-  constexpr int heatingCoilNameIndex = 13;
-  constexpr int coolingCoilNameIndex = 14;
+  constexpr int heatingCoilNameIndex = 14;
+  constexpr int coolingCoilNameIndex = 15;
 
   {
     auto wahp = model->getObjectByTypeAndName("OS:ZoneHVAC:WaterToAirHeatPump", "WAHP Eq").get();
@@ -4113,4 +4113,51 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_HeatExchangerAirToAirSensibleAndL
   EXPECT_EQ(0.75, eg4.getDouble(0).get());  // Value 1
   auto eg5 = var.extensibleGroups()[1];
   EXPECT_EQ(1.0, eg5.getDouble(0).get());  // Value 2
+}
+
+TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_NoLoadSupplyAirFlowRateControlSetToLowSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_8_0/test_vt_NoLoadSupplyAirFlowRateControlSetToLowSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_8_0/test_vt_NoLoadSupplyAirFlowRateControlSetToLowSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ptacs = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalAirConditioner");
+  ASSERT_EQ(1u, ptacs.size());
+  WorkspaceObject ptac = ptacs[0];
+
+  EXPECT_EQ("Autosize", ptac.getString(9).get());                     // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", ptac.getString(10).get());                         // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("Autosize", ptac.getString(11).get());                    // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Always On Discrete", ptac.getTarget(18)->nameString());  // Supply Air Fan Operating Mode Schedule Name
+
+  std::vector<WorkspaceObject> pthps = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalHeatPump");
+  ASSERT_EQ(1u, pthps.size());
+  WorkspaceObject pthp = pthps[0];
+
+  EXPECT_EQ("Autosize", pthp.getString(9).get());                     // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", pthp.getString(10).get());                         // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("Autosize", pthp.getString(11).get());                    // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_EQ("Always On Discrete", pthp.getTarget(24)->nameString());  // Supply Air Fan Operating Mode Schedule Name
+
+  std::vector<WorkspaceObject> wahps = model->getObjectsByType("OS:ZoneHVAC:WaterToAirHeatPump");
+  ASSERT_EQ(1u, wahps.size());
+  WorkspaceObject wahp = wahps[0];
+
+  EXPECT_EQ("autosize", wahp.getString(8).get());   // Supply Air Flow Rate When No Cooling or Heating is Needed
+  EXPECT_EQ("Yes", wahp.getString(9).get());        // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ("autosize", wahp.getString(10).get());  // Outdoor Air Flow Rate During Cooling Operation
+  EXPECT_TRUE(wahp.isEmpty(22));                    // Availability Manager List Name
+
+  std::vector<WorkspaceObject> unitarys = model->getObjectsByType("OS:AirLoopHVAC:UnitarySystem");
+  ASSERT_EQ(1u, unitarys.size());
+  WorkspaceObject unitary = unitarys[0];
+
+  EXPECT_TRUE(unitary.isEmpty(
+    34));  // Design Supply Air Flow Rate Per Unit of Capacity During Heating Operation When No Cooling or Heating is Required {m3/s-W}
+  EXPECT_EQ("Yes", unitary.getString(35).get());  // No Load Supply Air Flow Rate Control Set To Low Speed
+  EXPECT_EQ(80, unitary.getDouble(36).get());     // Maximum Supply Air Temperature {C}
+  EXPECT_EQ(0, unitary.getDouble(40).get());      // Ancilliary Off-Cycle Electric Power {W}
 }

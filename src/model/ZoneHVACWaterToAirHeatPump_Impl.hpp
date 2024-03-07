@@ -77,6 +77,8 @@ namespace model {
 
       bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
+      bool noLoadSupplyAirFlowRateControlSetToLowSpeed() const;
+
       boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
       bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
@@ -163,6 +165,8 @@ namespace model {
       void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
       void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+
+      bool setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed);
 
       bool setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation);
 

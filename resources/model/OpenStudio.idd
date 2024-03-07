@@ -12049,6 +12049,14 @@ OS:AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the heating capacity.
        \note Required field when Supply air Flow Rate Method During Heating Operation is FlowPerHeatingCapacity.
+  A20, \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note This field is not used when Design Specification Multispeed Object Type input is present 
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N17, \field Maximum Supply Air Temperature
        \type real
        \units C
@@ -12061,7 +12069,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \units C
        \default 21.0
        \note Enter the maximum outdoor dry-bulb temperature for supplemental heater operation.
-  A20, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+  A21, \field Outdoor Dry-Bulb Temperature Sensor Node Name
        \type alpha
        \note If this field is blank, outdoor temperature from the weather file is used.
        \note If this field is not blank, the node name specified determines the outdoor temperature used
@@ -12095,15 +12103,15 @@ OS:AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \default 80.0
        \note Enter the maximum heat recovery inlet temperature allowed for heat recovery.
-  A21, \field Heat Recovery Water Inlet Node Name
+  A22, \field Heat Recovery Water Inlet Node Name
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water inlet node if plant water loop connections are present.
-  A22, \field Heat Recovery Water Outlet Node Name
+  A23, \field Heat Recovery Water Outlet Node Name
        \type object-list
        \object-list ConnectionNames
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A23; \field Design Specification Multispeed Object Name
+  A24; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note The name of the performance specification object used to describe the multispeed coil.
@@ -29052,7 +29060,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \object-list ScheduleNames
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
-       \min-fields 24
+       \min-fields 25
   A1, \field Handle
        \type handle
        \required-field
@@ -29107,6 +29115,13 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \autosizable
        \units m3/s
        \minimum 0
+  A8,  \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N4, \field Outdoor Air Flow Rate During Cooling Operation
        \note Must be less than or equal to supply air flow rate during cooling operation.
        \type real
@@ -29130,14 +29145,14 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \autosizable
        \units m3/s
        \minimum 0
-  A8, \field Supply Air Fan Name
+  A9, \field Supply Air Fan Name
        \note Needs to match a fan object.
        \type object-list
        \required-field
        \object-list FansCVandOnOff
        \object-list FansSystemModel
        \note Fan:ConstantVolume only works with fan operating mode is continuous.
-  A9, \field Heating Coil Name
+  A10, \field Heating Coil Name
        \note Needs to match in the DX Heating Coil object.
        \type object-list
        \required-field
@@ -29156,7 +29171,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \units C
        \minimum -20
        \default -8.0
-  A10, \field Cooling Coil Name
+  A11, \field Cooling Coil Name
        \note Needs to match in the DX Cooling Coil object.
        \type object-list
        \required-field
@@ -29169,7 +29184,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \units dimensionless
        \minimum> 0
        \default 0.001
-  A11, \field Supplemental Heating Coil Name
+  A12, \field Supplemental Heating Coil Name
        \note Needs to match in the supplemental heating coil object.
        \type object-list
        \required-field
@@ -29186,13 +29201,13 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \units C
        \maximum 21
        \default 21.0
-  A12, \field Fan Placement
+  A13, \field Fan Placement
        \note Select fan placement as either blow through or draw through.
        \type choice
        \default DrawThrough
        \key BlowThrough
        \key DrawThrough
-  A13; \field Supply Air Fan Operating Mode Schedule Name
+  A14; \field Supply Air Fan Operating Mode Schedule Name
        \note Enter the name of a schedule that controls fan operation. Schedule values of 0 denote
        \note cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater
        \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
@@ -29202,7 +29217,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:PackagedTerminalAirConditioner,
-       \min-fields 16
+       \min-fields 17
   A1, \field Handle
        \type handle
        \required-field
@@ -29257,6 +29272,13 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \autosizable
        \units m3/s
        \minimum 0
+  A8,  \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N4, \field Outdoor Air Flow Rate During Cooling Operation
        \note Must be less than or equal to supply air flow rate during cooling operation.
        \type real
@@ -29281,7 +29303,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \autosizable
        \units m3/s
        \minimum 0
-  A8, \field Supply Air Fan Name
+  A9, \field Supply Air Fan Name
        \note Needs to match in the fan object.
        \type object-list
        \required-field
@@ -29290,25 +29312,25 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note Fan:ConstantVolume only works when continuous fan operation is used the entire
        \note simulation (all supply air fan operating mode schedule values are greater than 0).
        \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
-  A9, \field Heating Coil Name
+  A10, \field Heating Coil Name
        \note Needs to match in the heating coil object.
        \type object-list
        \required-field
        \object-list HeatingCoilName
-  A10, \field Cooling Coil Name
+  A11, \field Cooling Coil Name
        \note Needs to match a DX cooling coil object.
        \type object-list
        \required-field
        \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
-  A11, \field Fan Placement
+  A12, \field Fan Placement
        \note Select fan placement as either blow through or draw through.
        \type choice
        \default DrawThrough
        \key BlowThrough
        \key DrawThrough
-  A12; \field Supply Air Fan Operating Mode Schedule Name
+  A13; \field Supply Air Fan Operating Mode Schedule Name
        \note Enter the name of a schedule that controls fan operation. Schedule Name values of 0 denote
        \note cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater
        \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
@@ -29501,7 +29523,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
        \note When terminal unit is used in air loop and is load controlled, this zone's thermostat will control operation.
 
 OS:ZoneHVAC:WaterToAirHeatPump,
-        \min-fields 22
+        \min-fields 23
    A1,  \field Handle
         \type handle
         \required-field
@@ -29550,6 +29572,13 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \autosizable
         \units m3/s
         \minimum 0
+   A7,  \field No Load Supply Air Flow Rate Control Set To Low Speed
+        \type choice
+        \key Yes
+        \key No
+        \required-field
+        \note When Yes is selected the minimum air flow rate is used.
+        \note When No is selected the maximum air flow rate is used.
    N4,  \field Outdoor Air Flow Rate During Cooling Operation
         \note Must be less than or equal to supply air flow rate during cooling operation.
         \type real
@@ -29573,25 +29602,25 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \autosizable
         \units m3/s
         \minimum 0
-   A7,  \field Supply Air Fan Name
+   A8,  \field Supply Air Fan Name
         \required-field
         \type object-list
         \object-list FansOnOff
         \object-list FansSystemModel
         \note Needs to match Fan:SystemModel or Fan:OnOff object
-   A8, \field Heating Coil Name
+   A9, \field Heating Coil Name
         \note  Needs to match in the water-to-air heatpump heating coil object
         \type object-list
         \required-field
         \object-list HeatingCoilsWaterToAirHP
         \object-list HeatingCoilsWaterToAirVSHP
-   A9, \field Cooling Coil Name
+   A10, \field Cooling Coil Name
         \note Needs to match in the water-to-air heatpump cooling coil object
         \type object-list
         \required-field
         \object-list CoolingCoilsWaterToAirHP
         \object-list CoolingCoilsWaterToAirVSHP
-   A10, \field Supplemental Heating Coil Name
+   A11, \field Supplemental Heating Coil Name
         \note  Needs to match in the supplemental heating coil object
         \type object-list
         \required-field
@@ -29606,26 +29635,26 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \maximum 21.0
         \default 21.0
         \units C
-   A11, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+   A12, \field Outdoor Dry-Bulb Temperature Sensor Node Name
         \type alpha
         \required-field
-   A12, \field Fan Placement
+   A13, \field Fan Placement
         \type choice
         \key BlowThrough
         \key DrawThrough
         \default BlowThrough
-   A13, \field Supply Air Fan Operating Mode Schedule Name
+   A14, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule values of 0 denote
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A14, \field Availability Manager List Name
+   A15, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A15, \field Heat Pump Coil Water Flow Mode
+   A16, \field Heat Pump Coil Water Flow Mode
         \type choice
         \key Constant
         \key Cycling
@@ -29635,7 +29664,7 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note Constant results in 100% water flow regardless of compressor PLR
         \note Cycling results in water flow that matches compressor PLR
         \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
-   A26; \field Design Specification ZoneHVAC Sizing Object Name
+   A17; \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName

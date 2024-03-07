@@ -9064,6 +9064,75 @@ namespace osversion {
           m_new.emplace_back(std::move(var));
         }
 
+      } else if ((iddname == "OS:ZoneHVAC:PackagedTerminalAirConditioner") || (iddname == "OS:ZoneHVAC:PackagedTerminalHeatPump")) {
+
+        // 1 Field has been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Control Set To Low Speed * 10
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(10, "Yes");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:ZoneHVAC:WaterToAirHeatPump") {
+
+        // 1 Field has been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Control Set To Low Speed * 9
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(9, "Yes");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:AirLoopHVAC:UnitarySystem") {
+
+        // 1 Field has been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Control Set To Low Speed * 35
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 35) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(35, "Yes");
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;

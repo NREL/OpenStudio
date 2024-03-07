@@ -150,6 +150,8 @@ namespace model {
 
       boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() const;
 
+      bool noLoadSupplyAirFlowRateControlSetToLowSpeed() const;
+
       boost::optional<double> maximumSupplyAirTemperature() const;
 
       bool isMaximumSupplyAirTemperatureDefaulted() const;
@@ -335,6 +337,8 @@ namespace model {
         double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
 
       void resetDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+
+      bool setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed);
 
       bool setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature);
 

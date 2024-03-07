@@ -57,6 +57,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
   // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
   EXPECT_EQ("Coil:Cooling:DX:SingleSpeed", idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
   EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
+  EXPECT_EQ("Yes", idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed).get());
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
 }

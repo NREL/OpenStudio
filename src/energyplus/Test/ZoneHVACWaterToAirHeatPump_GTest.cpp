@@ -242,6 +242,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     EXPECT_EQ(1.1, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::CoolingSupplyAirFlowRate).get());
     EXPECT_EQ(1.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatingSupplyAirFlowRate).get());
     EXPECT_EQ(0.5, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate).get());
+    EXPECT_EQ("Yes", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed).get());
     EXPECT_EQ(0.3, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::CoolingOutdoorAirFlowRate).get());
     EXPECT_EQ(0.4, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatingOutdoorAirFlowRate).get());
     EXPECT_EQ(0.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadOutdoorAirFlowRate).get());
@@ -293,7 +294,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
     }
 
     {
-      ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName));
+      ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName));
       auto idf_coolingCoil = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName).get();
 
       EXPECT_EQ(clg_coil.nameString(), idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::Name).get());
