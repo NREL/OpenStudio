@@ -21,6 +21,8 @@
 #include "../ScheduleCompact.hpp"
 #include "../Curve.hpp"
 #include "../TableLookup.hpp"
+#include "../TableLookup_Impl.hpp"
+#include "../TableIndependentVariable.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -304,23 +306,184 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_Deprecated75Effectiv
   Model m;
   HeatExchangerAirToAirSensibleAndLatent hx(m);
 
-  // Sensible Effectiveness at 75% Heating Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.6));
-  EXPECT_EQ(0.6, hx.sensibleEffectivenessat75HeatingAirFlow());
+  // Ensure no curves assigned for now
+  hx.resetSensibleEffectivenessofHeatingAirFlowCurve();
+  hx.resetLatentEffectivenessofHeatingAirFlowCurve();
+  hx.resetSensibleEffectivenessofCoolingAirFlowCurve();
+  hx.resetLatentEffectivenessofCoolingAirFlowCurve();
 
-  // Latent Effectiveness at 75% Heating Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.65));
-  EXPECT_EQ(0.65, hx.latentEffectivenessat75HeatingAirFlow());
+  constexpr double sensibleHeatingEff100 = 0.76;
+  constexpr double latentHeatingEff100 = 0.68;
+  constexpr double sensibleCoolingEff100 = 0.72;
+  constexpr double latentCoolingEff100 = 0.63;
+  constexpr double sensibleHeatingEff75 = sensibleHeatingEff100 * 1.05;
+  constexpr double latentHeatingEff75 = latentHeatingEff100 * 1.05;
+  constexpr double sensibleCoolingEff75 = sensibleCoolingEff100 * 1.05;
+  constexpr double latentCoolingEff75 = latentCoolingEff100 * 1.05;
 
-  // Sensible Effectiveness at 75% Cooling Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.8));
-  EXPECT_EQ(0.8, hx.sensibleEffectivenessat75CoolingAirFlow());
+  EXPECT_TRUE(hx.setSensibleEffectivenessat100HeatingAirFlow(sensibleHeatingEff100));
+  EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(latentHeatingEff100));
+  EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(sensibleCoolingEff100));
+  EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(latentCoolingEff100));
 
-  // Latent Effectiveness at 75% Cooling Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.85));
-  EXPECT_EQ(0.85, hx.latentEffectivenessat75CoolingAirFlow());
+  // When no curves assigned, the effectiveness is constant
+  EXPECT_EQ(sensibleHeatingEff100, hx.sensibleEffectivenessat75HeatingAirFlow());
+  EXPECT_EQ(latentHeatingEff100, hx.latentEffectivenessat75HeatingAirFlow());
+  EXPECT_EQ(sensibleCoolingEff100, hx.sensibleEffectivenessat75CoolingAirFlow());
+  EXPECT_EQ(latentCoolingEff100, hx.latentEffectivenessat75CoolingAirFlow());
+
+  const std::vector<double> expectedIndVals{0.75, 1.0};
+
+  // Sensible Effectiveness at 75% Heating Air Flow: Double
+  {
+    EXPECT_FALSE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+    EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(sensibleHeatingEff75));
+    ASSERT_TRUE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+    ASSERT_TRUE(hx.sensibleEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.sensibleEffectivenessofHeatingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    EXPECT_DOUBLE_EQ(sensibleHeatingEff75, hx.sensibleEffectivenessat75HeatingAirFlow());
+
+    // Works to modify when an existing table lookup is in the expected format
+    auto val2 = sensibleHeatingEff75 + 0.025;
+    EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(val2));
+    EXPECT_DOUBLE_EQ(val2, hx.sensibleEffectivenessat75HeatingAirFlow());
+  }
+
+  // Latent Effectiveness at 75% Heating Air Flow: Double
+  {
+    EXPECT_FALSE(hx.latentEffectivenessofHeatingAirFlowCurve());
+    EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(latentHeatingEff75));
+    ASSERT_TRUE(hx.latentEffectivenessofHeatingAirFlowCurve());
+    ASSERT_TRUE(hx.latentEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.latentEffectivenessofHeatingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    EXPECT_DOUBLE_EQ(latentHeatingEff75, hx.latentEffectivenessat75HeatingAirFlow());
+
+    // Works to modify when an existing table lookup is in the expected format
+    auto val2 = latentHeatingEff75 + 0.025;
+    EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(val2));
+    EXPECT_DOUBLE_EQ(val2, hx.latentEffectivenessat75HeatingAirFlow());
+  }
+
+  // Sensible Effectiveness at 75% Cooling Air Flow: Double
+  {
+    EXPECT_FALSE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+    EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(sensibleCoolingEff75));
+    ASSERT_TRUE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+    ASSERT_TRUE(hx.sensibleEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.sensibleEffectivenessofCoolingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    EXPECT_DOUBLE_EQ(sensibleCoolingEff75, hx.sensibleEffectivenessat75CoolingAirFlow());
+
+    // Works to modify when an existing table lookup is in the expected format
+    auto val2 = sensibleCoolingEff75 + 0.025;
+    EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(val2));
+    EXPECT_DOUBLE_EQ(val2, hx.sensibleEffectivenessat75CoolingAirFlow());
+  }
+
+  // Latent Effectiveness at 75% Cooling Air Flow: Double
+  {
+    EXPECT_FALSE(hx.latentEffectivenessofCoolingAirFlowCurve());
+    EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(latentCoolingEff75));
+    ASSERT_TRUE(hx.latentEffectivenessofCoolingAirFlowCurve());
+    ASSERT_TRUE(hx.latentEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.latentEffectivenessofCoolingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    EXPECT_DOUBLE_EQ(latentCoolingEff75, hx.latentEffectivenessat75CoolingAirFlow());
+
+    // Works to modify when an existing table lookup is in the expected format
+    auto val2 = latentCoolingEff75 + 0.025;
+    EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(val2));
+    EXPECT_DOUBLE_EQ(val2, hx.latentEffectivenessat75CoolingAirFlow());
+  }
+}
+
+TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_assignHistoricalEffectivenessCurves) {
+
+  Model m;
+  HeatExchangerAirToAirSensibleAndLatent hx(m);
+
+  // Ensure no curves assigned for now
+  hx.resetSensibleEffectivenessofHeatingAirFlowCurve();
+  hx.resetLatentEffectivenessofHeatingAirFlowCurve();
+  hx.resetSensibleEffectivenessofCoolingAirFlowCurve();
+  hx.resetLatentEffectivenessofCoolingAirFlowCurve();
+
+  EXPECT_TRUE(hx.assignHistoricalEffectivenessCurves());
+
+  constexpr double sensibleHeatingEff75 = 0.81;
+  constexpr double latentHeatingEff75 = 0.73;
+  constexpr double sensibleCoolingEff75 = 0.81;
+  constexpr double latentCoolingEff75 = 0.73;
+
+  const std::vector<double> expectedIndVals{0.75, 1.0};
+
+  // Sensible Effectiveness at 75% Heating Air Flow: Double
+  {
+    ASSERT_TRUE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+    ASSERT_TRUE(hx.sensibleEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.sensibleEffectivenessofHeatingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    auto val100 = hx.sensibleEffectivenessat100HeatingAirFlow();
+    EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
+    EXPECT_DOUBLE_EQ(val100, tableLookup.normalizationDivisor());
+    const std::vector<double> expectedOutVals = {sensibleHeatingEff75, val100};
+    ASSERT_EQ(expectedOutVals, tableLookup.outputValues());
+
+    EXPECT_DOUBLE_EQ(sensibleHeatingEff75, hx.sensibleEffectivenessat75HeatingAirFlow());  // DEPRECATED
+  }
+
+  // Latent Effectiveness at 75% Heating Air Flow: Double
+  {
+    ASSERT_TRUE(hx.latentEffectivenessofHeatingAirFlowCurve());
+    ASSERT_TRUE(hx.latentEffectivenessofHeatingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.latentEffectivenessofHeatingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    auto val100 = hx.latentEffectivenessat100HeatingAirFlow();
+    EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
+    EXPECT_DOUBLE_EQ(val100, tableLookup.normalizationDivisor());
+    const std::vector<double> expectedOutVals = {latentHeatingEff75, val100};
+    ASSERT_EQ(expectedOutVals, tableLookup.outputValues());
+
+    EXPECT_DOUBLE_EQ(latentHeatingEff75, hx.latentEffectivenessat75HeatingAirFlow());  // DEPRECATED
+  }
+
+  // Sensible Effectiveness at 75% Cooling Air Flow: Double
+  {
+    ASSERT_TRUE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+    ASSERT_TRUE(hx.sensibleEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.sensibleEffectivenessofCoolingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    auto val100 = hx.sensibleEffectivenessat100CoolingAirFlow();
+    EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
+    EXPECT_DOUBLE_EQ(val100, tableLookup.normalizationDivisor());
+    const std::vector<double> expectedOutVals = {sensibleCoolingEff75, val100};
+    ASSERT_EQ(expectedOutVals, tableLookup.outputValues());
+
+    EXPECT_DOUBLE_EQ(sensibleCoolingEff75, hx.sensibleEffectivenessat75CoolingAirFlow());  // DEPRECATED
+  }
+
+  // Latent Effectiveness at 75% Cooling Air Flow: Double
+  {
+    ASSERT_TRUE(hx.latentEffectivenessofCoolingAirFlowCurve());
+    ASSERT_TRUE(hx.latentEffectivenessofCoolingAirFlowCurve()->optionalCast<TableLookup>());
+    auto tableLookup = hx.latentEffectivenessofCoolingAirFlowCurve()->cast<TableLookup>();
+    EXPECT_EQ(1, tableLookup.numVariables());
+    ASSERT_EQ(expectedIndVals, tableLookup.independentVariables().front().values());
+    auto val100 = hx.latentEffectivenessat100CoolingAirFlow();
+    EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
+    EXPECT_DOUBLE_EQ(val100, tableLookup.normalizationDivisor());
+    const std::vector<double> expectedOutVals = {latentCoolingEff75, val100};
+    ASSERT_EQ(expectedOutVals, tableLookup.outputValues());
+
+    EXPECT_DOUBLE_EQ(latentCoolingEff75, hx.latentEffectivenessat75CoolingAirFlow());  // DEPRECATED
+  }
 }
