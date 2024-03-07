@@ -44,11 +44,17 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   EXPECT_TRUE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
   EXPECT_NE("ZoneAveraged", definition.meanRadiantTemperatureCalculationType());
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+
+  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
+
+  // Backward compat
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("ZoneAveraged"));
-  EXPECT_EQ("ZoneAveraged", definition.meanRadiantTemperatureCalculationType());
-  EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
-  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("EnclosureAveraged"));
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+
+  EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
+  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
   EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
   definition.resetMeanRadiantTemperatureCalculationType();
   EXPECT_TRUE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());

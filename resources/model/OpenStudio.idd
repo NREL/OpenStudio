@@ -3905,7 +3905,6 @@ OS:People:Definition,
        \note optional (only required for thermal comfort runs)
        \type choice
        \default EnclosureAveraged
-       \key ZoneAveraged
        \key EnclosureAveraged
        \key SurfaceWeighted
        \key AngleFactor
@@ -12055,7 +12054,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key Yes
        \key No
        \required-field
-       \note This field is not used when Design Specification Multispeed Object Type input is present 
+       \note This field is not used when Design Specification Multispeed Object Type input is present
        \note When Yes is selected the minimum air flow rate is used.
        \note When No is selected the maximum air flow rate is used.
   N17, \field Maximum Supply Air Temperature

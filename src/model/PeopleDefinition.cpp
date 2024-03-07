@@ -247,7 +247,10 @@ namespace model {
     }
 
     bool PeopleDefinition_Impl::setMeanRadiantTemperatureCalculationType(const std::string& meanRadiantTemperatureCalculationType) {
-      bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, meanRadiantTemperatureCalculationType);
+      // Backward compat, starting at 3.8.0
+      const std::string mrtType =
+        istringEqual("ZoneAveraged", meanRadiantTemperatureCalculationType) ? "EnclosureAveraged" : meanRadiantTemperatureCalculationType;
+      bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, mrtType);
       return result;
     }
 
