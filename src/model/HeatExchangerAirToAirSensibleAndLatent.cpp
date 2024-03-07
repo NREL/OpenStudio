@@ -407,6 +407,26 @@ namespace model {
       return result;
     }
 
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetSensibleEffectivenessofHeatingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofHeatingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetLatentEffectivenessofHeatingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofHeatingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetSensibleEffectivenessofCoolingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessofCoolingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    void HeatExchangerAirToAirSensibleAndLatent_Impl::resetLatentEffectivenessofCoolingAirFlowCurve() {
+      bool result = setString(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessofCoolingAirFlowCurveName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<Schedule> HeatExchangerAirToAirSensibleAndLatent_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilitySchedule);
     }
@@ -770,9 +790,17 @@ namespace model {
       sensibleEffectivenessofHeatingAirFlowCurve);
   }
 
+  void HeatExchangerAirToAirSensibleAndLatent::resetSensibleEffectivenessofHeatingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetSensibleEffectivenessofHeatingAirFlowCurve();
+  }
+
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofHeatingAirFlowCurve(
       latentEffectivenessofHeatingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetLatentEffectivenessofHeatingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetLatentEffectivenessofHeatingAirFlowCurve();
   }
 
   bool
@@ -781,9 +809,17 @@ namespace model {
       sensibleEffectivenessofCoolingAirFlowCurve);
   }
 
+  void HeatExchangerAirToAirSensibleAndLatent::resetSensibleEffectivenessofCoolingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetSensibleEffectivenessofCoolingAirFlowCurve();
+  }
+
   bool HeatExchangerAirToAirSensibleAndLatent::setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve) {
     return getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->setLatentEffectivenessofCoolingAirFlowCurve(
       latentEffectivenessofCoolingAirFlowCurve);
+  }
+
+  void HeatExchangerAirToAirSensibleAndLatent::resetLatentEffectivenessofCoolingAirFlowCurve() {
+    getImpl<detail::HeatExchangerAirToAirSensibleAndLatent_Impl>()->resetLatentEffectivenessofCoolingAirFlowCurve();
   }
 
   AirflowNetworkEquivalentDuct HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct(double length, double diameter) {

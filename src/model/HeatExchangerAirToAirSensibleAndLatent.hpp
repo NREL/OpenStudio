@@ -130,20 +130,20 @@ namespace model {
     bool setEconomizerLockout(bool economizerLockout);
 
     boost::optional<Curve> sensibleEffectivenessofHeatingAirFlowCurve() const;
-
     bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
+    void resetSensibleEffectivenessofHeatingAirFlowCurve();
 
     boost::optional<Curve> latentEffectivenessofHeatingAirFlowCurve() const;
-
     bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
+    void resetLatentEffectivenessofHeatingAirFlowCurve();
 
     boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve() const;
-
     bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
+    void resetSensibleEffectivenessofCoolingAirFlowCurve();
 
     boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
-
     bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
+    void resetLatentEffectivenessofCoolingAirFlowCurve();
 
     boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 

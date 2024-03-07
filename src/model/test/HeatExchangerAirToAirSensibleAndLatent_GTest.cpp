@@ -19,6 +19,8 @@
 #include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../HVACTemplates.hpp"
 #include "../ScheduleCompact.hpp"
+#include "../Curve.hpp"
+#include "../TableLookup.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -63,16 +65,6 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_GettersSetters) {
   EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(0.55));
   EXPECT_EQ(0.55, hx.latentEffectivenessat100HeatingAirFlow());
 
-  // Sensible Effectiveness at 75% Heating Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.6));
-  EXPECT_EQ(0.6, hx.sensibleEffectivenessat75HeatingAirFlow());
-
-  // Latent Effectiveness at 75% Heating Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.65));
-  EXPECT_EQ(0.65, hx.latentEffectivenessat75HeatingAirFlow());
-
   // Sensible Effectiveness at 100% Cooling Air Flow:  Double
   // No Default
   EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(0.7));
@@ -82,16 +74,6 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_GettersSetters) {
   // No Default
   EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(0.75));
   EXPECT_EQ(0.75, hx.latentEffectivenessat100CoolingAirFlow());
-
-  // Sensible Effectiveness at 75% Cooling Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.8));
-  EXPECT_EQ(0.8, hx.sensibleEffectivenessat75CoolingAirFlow());
-
-  // Latent Effectiveness at 75% Cooling Air Flow:  Double
-  // No Default
-  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.85));
-  EXPECT_EQ(0.85, hx.latentEffectivenessat75CoolingAirFlow());
 
   // Supply Air Inlet Node: Optional Object
 
@@ -259,4 +241,86 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_remove) {
   EXPECT_TRUE(hx7.addToNode(outletNode));
 
   EXPECT_TRUE(!loop.remove().empty());
+}
+
+TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_EffectivenessCurves) {
+  Model m;
+  HeatExchangerAirToAirSensibleAndLatent hx(m);
+
+  {
+    hx.resetSensibleEffectivenessofHeatingAirFlowCurve();
+    EXPECT_FALSE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+
+    TableLookup sensibleHeatingEff(m);
+    EXPECT_TRUE(hx.setSensibleEffectivenessofHeatingAirFlowCurve(sensibleHeatingEff));
+    ASSERT_TRUE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+    EXPECT_EQ(sensibleHeatingEff, hx.sensibleEffectivenessofHeatingAirFlowCurve().get());
+
+    hx.resetSensibleEffectivenessofHeatingAirFlowCurve();
+    EXPECT_FALSE(hx.sensibleEffectivenessofHeatingAirFlowCurve());
+  }
+
+  {
+    hx.resetLatentEffectivenessofHeatingAirFlowCurve();
+    EXPECT_FALSE(hx.latentEffectivenessofHeatingAirFlowCurve());
+
+    TableLookup latentHeatingEff(m);
+    EXPECT_TRUE(hx.setLatentEffectivenessofHeatingAirFlowCurve(latentHeatingEff));
+    ASSERT_TRUE(hx.latentEffectivenessofHeatingAirFlowCurve());
+    EXPECT_EQ(latentHeatingEff, hx.latentEffectivenessofHeatingAirFlowCurve().get());
+
+    hx.resetLatentEffectivenessofHeatingAirFlowCurve();
+    EXPECT_FALSE(hx.latentEffectivenessofHeatingAirFlowCurve());
+  }
+
+  {
+    hx.resetSensibleEffectivenessofCoolingAirFlowCurve();
+    EXPECT_FALSE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+
+    TableLookup sensibleCoolingEff(m);
+    EXPECT_TRUE(hx.setSensibleEffectivenessofCoolingAirFlowCurve(sensibleCoolingEff));
+    ASSERT_TRUE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+    EXPECT_EQ(sensibleCoolingEff, hx.sensibleEffectivenessofCoolingAirFlowCurve().get());
+
+    hx.resetSensibleEffectivenessofCoolingAirFlowCurve();
+    EXPECT_FALSE(hx.sensibleEffectivenessofCoolingAirFlowCurve());
+  }
+
+  {
+    hx.resetLatentEffectivenessofCoolingAirFlowCurve();
+    EXPECT_FALSE(hx.latentEffectivenessofCoolingAirFlowCurve());
+
+    TableLookup latentCoolingEff(m);
+    EXPECT_TRUE(hx.setLatentEffectivenessofCoolingAirFlowCurve(latentCoolingEff));
+    ASSERT_TRUE(hx.latentEffectivenessofCoolingAirFlowCurve());
+    EXPECT_EQ(latentCoolingEff, hx.latentEffectivenessofCoolingAirFlowCurve().get());
+
+    hx.resetLatentEffectivenessofCoolingAirFlowCurve();
+    EXPECT_FALSE(hx.latentEffectivenessofCoolingAirFlowCurve());
+  }
+}
+
+TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_Deprecated75Effectiveness) {
+  Model m;
+  HeatExchangerAirToAirSensibleAndLatent hx(m);
+
+  // Sensible Effectiveness at 75% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75HeatingAirFlow(0.6));
+  EXPECT_EQ(0.6, hx.sensibleEffectivenessat75HeatingAirFlow());
+
+  // Latent Effectiveness at 75% Heating Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat75HeatingAirFlow(0.65));
+  EXPECT_EQ(0.65, hx.latentEffectivenessat75HeatingAirFlow());
+
+  // Sensible Effectiveness at 75% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setSensibleEffectivenessat75CoolingAirFlow(0.8));
+  EXPECT_EQ(0.8, hx.sensibleEffectivenessat75CoolingAirFlow());
+
+  // Latent Effectiveness at 75% Cooling Air Flow:  Double
+  // No Default
+  EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(0.85));
+  EXPECT_EQ(0.85, hx.latentEffectivenessat75CoolingAirFlow());
 }

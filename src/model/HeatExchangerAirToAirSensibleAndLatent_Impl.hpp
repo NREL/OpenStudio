@@ -115,8 +115,6 @@ namespace model {
 
       boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
 
-      boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
-
       //@}
       /** @name Setters */
       //@{
@@ -124,7 +122,6 @@ namespace model {
       bool setAvailabilitySchedule(Schedule& schedule);
 
       bool setNominalSupplyAirFlowRate(boost::optional<double> nominalSupplyAirFlowRate);
-
       void autosizeNominalSupplyAirFlowRate();
 
       bool setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow);
@@ -144,26 +141,27 @@ namespace model {
       bool setFrostControlType(const std::string& frostControlType);
 
       bool setThresholdTemperature(double thresholdTemperature);
-
       void resetThresholdTemperature();
 
       bool setInitialDefrostTimeFraction(boost::optional<double> initialDefrostTimeFraction);
-
       void resetInitialDefrostTimeFraction();
 
       bool setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease);
-
       void resetRateofDefrostTimeFractionIncrease();
 
       bool setEconomizerLockout(bool economizerLockout);
 
       bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
+      void resetSensibleEffectivenessofHeatingAirFlowCurve();
 
       bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
+      void resetLatentEffectivenessofHeatingAirFlowCurve();
 
       bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
+      void resetSensibleEffectivenessofCoolingAirFlowCurve();
 
       bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
+      void resetLatentEffectivenessofCoolingAirFlowCurve();
 
       //@}
       /** @name Other */
@@ -171,6 +169,8 @@ namespace model {
 
       AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
       boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+      boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 
       //@}
 
