@@ -210,12 +210,12 @@
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
-#include "model/TableIndependentVariable.hpp"
 
 #include <cmath>
 #include <functional>
 
 #include <pugixml.hpp>
+#include <fmt/format.h>
 
 namespace openstudio {
 namespace sdd {
@@ -2716,35 +2716,11 @@ namespace sdd {
       hx.setSensibleEffectivenessat100HeatingAirFlow(_htgSensEff100.get());
     }
 
-    // HtgSensEff75
-    auto htgSensEff75Element = element.child("HtgSensEff75");
-    boost::optional<double> _htgSensEff75 = lexicalCastToDouble(htgSensEff75Element);
-    if (_htgSensEff75) {
-      if (boost::optional<model::Curve> curve_ = hx.sensibleEffectivenessofHeatingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> sensibleEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
-          double sensibleEffectivenessat100HeatingAirFlow = hx.sensibleEffectivenessat100HeatingAirFlow();
-          sensibleEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgSensEff75.get(), sensibleEffectivenessat100HeatingAirFlow});
-        }
-      }
-    }
-
     // HtgLatEff100
     auto htgLatEff100Element = element.child("HtgLatEff100");
     boost::optional<double> _htgLatEff100 = lexicalCastToDouble(htgLatEff100Element);
     if (_htgLatEff100) {
       hx.setLatentEffectivenessat100HeatingAirFlow(_htgLatEff100.get());
-    }
-
-    // HtgLatEff75
-    auto htgLatEff75Element = element.child("HtgLatEff75");
-    boost::optional<double> _htgLatEff75 = lexicalCastToDouble(htgLatEff75Element);
-    if (_htgLatEff75) {
-      if (boost::optional<model::Curve> curve_ = hx.latentEffectivenessofHeatingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> latentEffectivenessofHeatingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
-          double latentEffectivenessat100HeatingAirFlow = hx.latentEffectivenessat100HeatingAirFlow();
-          latentEffectivenessofHeatingAirFlowCurve_->setOutputValues({_htgLatEff75.get(), latentEffectivenessat100HeatingAirFlow});
-        }
-      }
     }
 
     // ClgSensEff100
@@ -2754,18 +2730,6 @@ namespace sdd {
       hx.setSensibleEffectivenessat100CoolingAirFlow(_clgSensEff100.get());
     }
 
-    // ClgSensEff75
-    auto clgSensEff75Element = element.child("ClgSensEff75");
-    boost::optional<double> _clgSensEff75 = lexicalCastToDouble(clgSensEff75Element);
-    if (_clgSensEff75) {
-      if (boost::optional<model::Curve> curve_ = hx.sensibleEffectivenessofCoolingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> sensibleEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
-          double sensibleEffectivenessat100CoolingAirFlow = hx.sensibleEffectivenessat100CoolingAirFlow();
-          sensibleEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgSensEff75.get(), sensibleEffectivenessat100CoolingAirFlow});
-        }
-      }
-    }
-
     // ClgLatEff100
     auto clgLatEff100Element = element.child("ClgLatEff100");
     boost::optional<double> _clgLatEff100 = lexicalCastToDouble(clgLatEff100Element);
@@ -2773,15 +2737,101 @@ namespace sdd {
       hx.setLatentEffectivenessat100CoolingAirFlow(_clgLatEff100.get());
     }
 
-    // ClgLatEff75
+    // DEPRECATED 75% fields
+    auto htgSensEff75Element = element.child("HtgSensEff75");
+    boost::optional<double> _htgSensEff75 = lexicalCastToDouble(htgSensEff75Element);
+
+    auto htgLatEff75Element = element.child("HtgLatEff75");
+    boost::optional<double> _htgLatEff75 = lexicalCastToDouble(htgLatEff75Element);
+
+    auto clgSensEff75Element = element.child("ClgSensEff75");
+    boost::optional<double> _clgSensEff75 = lexicalCastToDouble(clgSensEff75Element);
+
     auto clgLatEff75Element = element.child("ClgLatEff75");
     boost::optional<double> _clgLatEff75 = lexicalCastToDouble(clgLatEff75Element);
-    if (_clgLatEff75) {
-      if (boost::optional<model::Curve> curve_ = hx.latentEffectivenessofCoolingAirFlowCurve()) {
-        if (boost::optional<model::TableLookup> latentEffectivenessofCoolingAirFlowCurve_ = curve_->optionalCast<model::TableLookup>()) {
-          double latentEffectivenessat100CoolingAirFlow = hx.latentEffectivenessat100CoolingAirFlow();
-          latentEffectivenessofCoolingAirFlowCurve_->setOutputValues({_clgLatEff75.get(), latentEffectivenessat100CoolingAirFlow});
-        }
+
+    if (_htgSensEff75 || _htgLatEff75 || _clgSensEff75 || _clgLatEff75) {
+
+      model::TableIndependentVariable var(model);
+      var.setName(hx.nameString() + "_IndependentVariable");
+      var.setInterpolationMethod("Linear");
+      var.setExtrapolationMethod("Linear");
+      var.setMinimumValue(0.0);
+      var.setMaximumValue(10.0);
+      var.setUnitType("Dimensionless");
+      var.addValue(0.75);
+      var.addValue(1.0);
+
+      if (_htgSensEff75) {
+        auto val100 = _htgSensEff100.get_value_or(1.0);
+
+        model::TableLookup table(model);
+        table.setName(fmt::format("{}_SensHeatEff", hx.nameString()));
+        table.addIndependentVariable(var);
+
+        table.setNormalizationMethod("DivisorOnly");
+        table.setNormalizationDivisor(val100);
+        table.setMinimumOutput(0.0);
+        table.setMaximumOutput(10.0);
+        table.setOutputUnitType("Dimensionless");
+        table.addOutputValue(*_htgSensEff75);
+        table.addOutputValue(val100);
+
+        hx.setSensibleEffectivenessofHeatingAirFlowCurve(table);
+      }
+
+      if (_htgLatEff75) {
+        auto val100 = _htgLatEff100.get_value_or(1.0);
+
+        model::TableLookup table(model);
+        table.setName(fmt::format("{}_LatHeatEff", hx.nameString()));
+        table.addIndependentVariable(var);
+
+        table.setNormalizationMethod("DivisorOnly");
+        table.setNormalizationDivisor(val100);
+        table.setMinimumOutput(0.0);
+        table.setMaximumOutput(10.0);
+        table.setOutputUnitType("Dimensionless");
+        table.addOutputValue(*_htgLatEff75);
+        table.addOutputValue(val100);
+
+        hx.setLatentEffectivenessofHeatingAirFlowCurve(table);
+      }
+
+      if (_clgSensEff75) {
+        auto val100 = _clgSensEff100.get_value_or(1.0);
+
+        model::TableLookup table(model);
+        table.setName(fmt::format("{}_SensCoolEff", hx.nameString()));
+        table.addIndependentVariable(var);
+
+        table.setNormalizationMethod("DivisorOnly");
+        table.setNormalizationDivisor(val100);
+        table.setMinimumOutput(0.0);
+        table.setMaximumOutput(10.0);
+        table.setOutputUnitType("Dimensionless");
+        table.addOutputValue(*_clgSensEff75);
+        table.addOutputValue(val100);
+
+        hx.setSensibleEffectivenessofCoolingAirFlowCurve(table);
+      }
+
+      if (_clgLatEff75) {
+        auto val100 = _clgLatEff100.get_value_or(1.0);
+
+        model::TableLookup table(model);
+        table.setName(fmt::format("{}_LatCoolEff", hx.nameString()));
+        table.addIndependentVariable(var);
+
+        table.setNormalizationMethod("DivisorOnly");
+        table.setNormalizationDivisor(val100);
+        table.setMinimumOutput(0.0);
+        table.setMaximumOutput(10.0);
+        table.setOutputUnitType("Dimensionless");
+        table.addOutputValue(*_clgLatEff75);
+        table.addOutputValue(val100);
+
+        hx.setLatentEffectivenessofCoolingAirFlowCurve(table);
       }
     }
 
