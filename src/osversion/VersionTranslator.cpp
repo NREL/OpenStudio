@@ -9146,7 +9146,7 @@ namespace osversion {
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
             if (i == 10) {
-              if (value.get() == "ZoneAveraged") {
+              if (istringEqual(value.get(), "ZoneAveraged")) {
                 newObject.setString(10, "EnclosureAveraged");
               } else {
                 newObject.setString(10, value.get());
