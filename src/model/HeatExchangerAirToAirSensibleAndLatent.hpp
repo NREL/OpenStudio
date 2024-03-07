@@ -9,12 +9,15 @@
 #include "ModelAPI.hpp"
 #include "AirToAirComponent.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
 
   class Schedule;
   class AirflowNetworkEquivalentDuct;
+  class Curve;
 
   namespace detail {
 
@@ -27,6 +30,12 @@ namespace model {
   {
 
    public:
+    /** @name Constructors and Destructors */
+    //@{
+
+    /** Constructor. It will **not** instantiate the optional effectivness curve/tables objects and effectiveness will be constant.
+      *  You can then call the helper method `bool assignHistoricalEffectivenessCurves()` to assign 4 TableLookups that will match the pre E+ 24.1.0
+      * defaults for Sensible/Latent Effectiveness at 75% Heating/Cooling airflow */
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
     virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
@@ -35,6 +44,8 @@ namespace model {
     HeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent&& other) = default;
     HeatExchangerAirToAirSensibleAndLatent& operator=(const HeatExchangerAirToAirSensibleAndLatent&) = default;
     HeatExchangerAirToAirSensibleAndLatent& operator=(HeatExchangerAirToAirSensibleAndLatent&&) = default;
+
+    //@}
 
     static IddObjectType iddObjectType();
 
@@ -62,13 +73,13 @@ namespace model {
 
     bool setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow);
 
-    double sensibleEffectivenessat75HeatingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double sensibleEffectivenessat75HeatingAirFlow() const;
 
-    bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
 
-    double latentEffectivenessat75HeatingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double latentEffectivenessat75HeatingAirFlow() const;
 
-    bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
 
     double sensibleEffectivenessat100CoolingAirFlow() const;
 
@@ -78,13 +89,13 @@ namespace model {
 
     bool setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow);
 
-    double sensibleEffectivenessat75CoolingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double sensibleEffectivenessat75CoolingAirFlow() const;
 
-    bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
 
-    double latentEffectivenessat75CoolingAirFlow() const;
+    OS_DEPRECATED(3, 8, 0) double latentEffectivenessat75CoolingAirFlow() const;
 
-    bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
+    OS_DEPRECATED(3, 8, 0) bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
 
     double nominalElectricPower() const;
 
@@ -126,10 +137,34 @@ namespace model {
 
     bool setEconomizerLockout(bool economizerLockout);
 
+    boost::optional<Curve> sensibleEffectivenessofHeatingAirFlowCurve() const;
+    bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
+    void resetSensibleEffectivenessofHeatingAirFlowCurve();
+
+    boost::optional<Curve> latentEffectivenessofHeatingAirFlowCurve() const;
+    bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
+    void resetLatentEffectivenessofHeatingAirFlowCurve();
+
+    boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve() const;
+    bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
+    void resetSensibleEffectivenessofCoolingAirFlowCurve();
+
+    boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
+    bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
+    void resetLatentEffectivenessofCoolingAirFlowCurve();
+
+    /** @name Other */
+    //@{
+
     boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+    // Helper that creates defaulted Optional Curves (TableLookups) to match the pre E+ 24.1.0 effectiveness defaults
+    bool assignHistoricalEffectivenessCurves();
+
+    //@}
 
    protected:
     /// @cond
