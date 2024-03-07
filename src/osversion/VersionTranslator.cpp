@@ -143,7 +143,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
     m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
-    m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::update_3_7_0_to_3_8_0;
+    // m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -8950,6 +8951,128 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_6_1_to_3_7_0
+
+  std::string VersionTranslator::update_3_7_0_to_3_8_0(const IdfFile& idf_3_7_0, const IddFileAndFactoryWrapper& idd_3_8_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_7_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_8_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    constexpr std::array<int, 4> hx_old_100effectiveness_idxs{4, 5, 8, 9};
+    constexpr std::array<int, 4> hx_new_effectiveness_curves_idxs{20, 21, 22, 23};
+    constexpr std::array<std::string_view, 4> hx_new_table_names{"SensHeat", "LatHeat", "SensCool", "LatCool"};
+
+    for (const IdfObject& object : idf_3_7_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
+
+        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * Sensible Effectiveness at 75% Heating Air Flow {dimensionless} * 6
+        // * Latent Effectiveness at 75% Heating Air Flow {dimensionless} * 7
+        // * Sensible Effectiveness at 75% Cooling Air Flow {dimensionless} * 10
+        // * Latent Effectiveness at 75% Cooling Air Flow {dimensionless} * 11
+
+        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * Sensible Effectiveness of Heating Air Flow Curve Name * 20
+        // * Latent Effectiveness of Heating Air Flow Curve Name * 21
+        // * Sensible Effectiveness of Cooling Air Flow Curve Name * 22
+        // * Latent Effectiveness of Cooling Air Flow Curve Name * 23
+
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else if (i < 8) {
+              // no op
+            } else if (i < 10) {
+              newObject.setString(i - 2, value.get());
+            } else if (i < 12) {
+              // no op
+            } else {
+              newObject.setString(i - 4, value.get());
+            }
+          }
+        }
+
+        const std::string varListHandle = toString(createUUID());
+        bool tableAdded = false;
+        for (size_t i = 0; i < hx_old_100effectiveness_idxs.size(); ++i) {
+          // Sensible/Latent Effectiveness at 100% Heating/Cooling Air Flow {dimensionless}
+          if (auto e100 = object.getDouble(hx_old_100effectiveness_idxs[i])) {
+            // Sensible/Latent Effectiveness at 75% Heating/Cooling Air Flow {dimensionless}
+
+            if (auto e75 = object.getDouble(hx_old_100effectiveness_idxs[i] + 2)) {
+              if (e100.get() != e75.get()) {
+                tableAdded = true;
+
+                IdfObject tableLookup(idd_3_8_0.getObject("OS:Table:Lookup").get());
+                std::string uuid = toString(createUUID());
+                tableLookup.setString(0, uuid);                                                                 // Handle
+                tableLookup.setString(1, fmt::format("{}_{}Eff", object.nameString(), hx_new_table_names[i]));  // Name
+                tableLookup.setString(2, varListHandle);                                                        // Independent Variable List Name
+                tableLookup.setString(3, "DivisorOnly");                                                        // Normalization Method
+                tableLookup.setDouble(4, e100.get());                                                           // Normalization Divisor
+                tableLookup.setDouble(5, 0.0);                                                                  // Minimum Output
+                tableLookup.setDouble(6, 10.0);                                                                 // Maximum Output
+                tableLookup.setString(7, "Dimensionless");                                                      // Output Unit Type
+                tableLookup.pushExtensibleGroup().setDouble(0, e75.get());                                      // Output Value 1
+                tableLookup.pushExtensibleGroup().setDouble(0, e100.get());                                     // Output Value 2
+
+                // Sensible/Latent Effectiveness of Heating/Cooling Air Flow Curve Name
+                newObject.setString(hx_new_effectiveness_curves_idxs[i], uuid);
+
+                ss << tableLookup;
+                m_new.push_back(tableLookup);
+              }
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(object, std::move(newObject));
+
+        if (tableAdded) {
+          IdfObject varList(idd_3_8_0.getObject("OS:ModelObjectList").get());
+          varList.setString(0, varListHandle);
+          varList.setString(1, object.nameString() + "_IndependentVariableList");  // Name
+
+          IdfObject var(idd_3_8_0.getObject("OS:Table:IndependentVariable").get());
+          std::string varHandle = toString(createUUID());
+          var.setString(0, varHandle);
+          varList.pushExtensibleGroup({varHandle});                        // Model Object 1
+          var.setString(1, object.nameString() + "_IndependentVariable");  // Name
+          var.setString(2, "Linear");                                      // Interpolation Method
+          var.setString(3, "Linear");                                      // Extrapolation Method
+          var.setDouble(4, 0.0);                                           // Minimum Value
+          var.setDouble(5, 10.0);                                          // Maximum Value
+          var.setString(7, "Dimensionless");                               // Unit Type
+          var.pushExtensibleGroup().setDouble(0, 0.75);                    // Value 1
+          var.pushExtensibleGroup().setDouble(0, 1.0);                     // Value 2
+
+          ss << varList;
+          m_new.emplace_back(std::move(varList));
+
+          ss << var;
+          m_new.emplace_back(std::move(var));
+        }
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_7_0_to_3_8_0
 
 }  // namespace osversion
 }  // namespace openstudio
