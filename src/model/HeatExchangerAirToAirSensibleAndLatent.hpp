@@ -30,6 +30,12 @@ namespace model {
   {
 
    public:
+    /** @name Constructors and Destructors */
+    //@{
+
+    /** Constructor. It will **not** instantiate the optional effectivness curve/tables objects and effectiveness will be constant.
+      *  You can then call the helper method `bool assignHistoricalEffectivenessCurves()` to assign 4 TableLookups that will match the pre E+ 24.1.0
+      * defaults for Sensible/Latent Effectiveness at 75% Heating/Cooling airflow */
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
     virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
@@ -38,6 +44,8 @@ namespace model {
     HeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent&& other) = default;
     HeatExchangerAirToAirSensibleAndLatent& operator=(const HeatExchangerAirToAirSensibleAndLatent&) = default;
     HeatExchangerAirToAirSensibleAndLatent& operator=(HeatExchangerAirToAirSensibleAndLatent&&) = default;
+
+    //@}
 
     static IddObjectType iddObjectType();
 
@@ -145,10 +153,18 @@ namespace model {
     bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
     void resetLatentEffectivenessofCoolingAirFlowCurve();
 
+    /** @name Other */
+    //@{
+
     boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+    // Helper that creates defaulted Optional Curves (TableLookups) to match the pre E+ 24.1.0 effectiveness defaults
+    bool assignHistoricalEffectivenessCurves();
+
+    //@}
 
    protected:
     /// @cond

@@ -559,8 +559,14 @@ namespace model {
     setThresholdTemperature(1.7);
 
     setEconomizerLockout(true);
+  }
+
+  bool HeatExchangerAirToAirSensibleAndLatent::assignHistoricalEffectivenessCurves() {
+
+    Model model = this->model();
 
     TableIndependentVariable var(model);
+    var.setName(nameString() + "_IndependentVariable");
     var.setInterpolationMethod("Linear");
     var.setExtrapolationMethod("Linear");
     var.setMinimumValue(0.0);
@@ -569,49 +575,71 @@ namespace model {
     var.addValue(0.75);
     var.addValue(1.0);
 
-    TableLookup s75heating(model);
-    s75heating.setNormalizationMethod("DivisorOnly");
-    s75heating.setNormalizationDivisor(0.76);
-    s75heating.setMinimumOutput(0.0);
-    s75heating.setMaximumOutput(10.0);
-    s75heating.setOutputUnitType("Dimensionless");
-    s75heating.addOutputValue(0.81);
-    s75heating.addOutputValue(0.76);
-    s75heating.addIndependentVariable(var);
-    setSensibleEffectivenessofHeatingAirFlowCurve(s75heating);
+    {
+      TableLookup s75heating(model);
+      s75heating.setName(fmt::format("{}_SensHeatEff", nameString()));
+      s75heating.addIndependentVariable(var);
 
-    TableLookup l75heating(model);
-    l75heating.setNormalizationMethod("DivisorOnly");
-    l75heating.setNormalizationDivisor(0.68);
-    l75heating.setMinimumOutput(0.0);
-    l75heating.setMaximumOutput(10.0);
-    l75heating.setOutputUnitType("Dimensionless");
-    l75heating.addOutputValue(0.73);
-    l75heating.addOutputValue(0.68);
-    l75heating.addIndependentVariable(var);
-    setLatentEffectivenessofHeatingAirFlowCurve(l75heating);
+      s75heating.setNormalizationMethod("DivisorOnly");
+      s75heating.setNormalizationDivisor(0.76);
+      s75heating.setMinimumOutput(0.0);
+      s75heating.setMaximumOutput(10.0);
+      s75heating.setOutputUnitType("Dimensionless");
+      s75heating.addOutputValue(0.81);
+      s75heating.addOutputValue(0.76);
 
-    TableLookup s75cooling(model);
-    s75cooling.setNormalizationMethod("DivisorOnly");
-    s75cooling.setNormalizationDivisor(0.76);
-    s75cooling.setMinimumOutput(0.0);
-    s75cooling.setMaximumOutput(10.0);
-    s75cooling.setOutputUnitType("Dimensionless");
-    s75cooling.addOutputValue(0.81);
-    s75cooling.addOutputValue(0.76);
-    s75cooling.addIndependentVariable(var);
-    setSensibleEffectivenessofCoolingAirFlowCurve(s75cooling);
+      setSensibleEffectivenessofHeatingAirFlowCurve(s75heating);
+    }
 
-    TableLookup l75cooling(model);
-    l75cooling.setNormalizationMethod("DivisorOnly");
-    l75cooling.setNormalizationDivisor(0.68);
-    l75cooling.setMinimumOutput(0.0);
-    l75cooling.setMaximumOutput(10.0);
-    l75cooling.setOutputUnitType("Dimensionless");
-    l75cooling.addOutputValue(0.73);
-    l75cooling.addOutputValue(0.68);
-    l75cooling.addIndependentVariable(var);
-    setLatentEffectivenessofCoolingAirFlowCurve(l75cooling);
+    {
+      TableLookup l75heating(model);
+      l75heating.setName(fmt::format("{}_LatHeatEff", nameString()));
+      l75heating.addIndependentVariable(var);
+
+      l75heating.setNormalizationMethod("DivisorOnly");
+      l75heating.setNormalizationDivisor(0.68);
+      l75heating.setMinimumOutput(0.0);
+      l75heating.setMaximumOutput(10.0);
+      l75heating.setOutputUnitType("Dimensionless");
+      l75heating.addOutputValue(0.73);
+      l75heating.addOutputValue(0.68);
+
+      setLatentEffectivenessofHeatingAirFlowCurve(l75heating);
+    }
+
+    {
+      TableLookup s75cooling(model);
+      s75cooling.setName(fmt::format("{}_SensCoolEff", nameString()));
+      s75cooling.addIndependentVariable(var);
+
+      s75cooling.setNormalizationMethod("DivisorOnly");
+      s75cooling.setNormalizationDivisor(0.76);
+      s75cooling.setMinimumOutput(0.0);
+      s75cooling.setMaximumOutput(10.0);
+      s75cooling.setOutputUnitType("Dimensionless");
+      s75cooling.addOutputValue(0.81);
+      s75cooling.addOutputValue(0.76);
+
+      setSensibleEffectivenessofCoolingAirFlowCurve(s75cooling);
+    }
+
+    {
+      TableLookup l75cooling(model);
+      l75cooling.setName(fmt::format("{}_LatCoolEff", nameString()));
+      l75cooling.addIndependentVariable(var);
+
+      l75cooling.setNormalizationMethod("DivisorOnly");
+      l75cooling.setNormalizationDivisor(0.68);
+      l75cooling.setMinimumOutput(0.0);
+      l75cooling.setMaximumOutput(10.0);
+      l75cooling.setOutputUnitType("Dimensionless");
+      l75cooling.addOutputValue(0.73);
+      l75cooling.addOutputValue(0.68);
+
+      setLatentEffectivenessofCoolingAirFlowCurve(l75cooling);
+    }
+
+    return true;
   }
 
   IddObjectType HeatExchangerAirToAirSensibleAndLatent::iddObjectType() {
