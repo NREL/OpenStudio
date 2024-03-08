@@ -9084,8 +9084,8 @@ namespace osversion {
 
         newObject.setString(10, "Yes");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:ZoneHVAC:WaterToAirHeatPump") {
 
@@ -9107,8 +9107,8 @@ namespace osversion {
 
         newObject.setString(9, "Yes");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
       } else if (iddname == "OS:AirLoopHVAC:UnitarySystem") {
 
@@ -9130,8 +9130,35 @@ namespace osversion {
 
         newObject.setString(35, "Yes");
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:People:Definition") {
+
+        // 1 Key has been changed from 3.7.0 to 3.8.0:
+        // ----------------------------------------------
+        // * Mean Radiant Temperature Calculation Type * 10
+        //   * ZoneAveraged -> EnclosureAveraged
+
+        auto iddObject = idd_3_8_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i == 10) {
+              if (istringEqual(value.get(), "ZoneAveraged")) {
+                newObject.setString(10, "EnclosureAveraged");
+              } else {
+                newObject.setString(10, value.get());
+              }
+            } else {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
