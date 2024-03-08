@@ -633,7 +633,7 @@ if(UNIX)
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 0edcf8a13c7f0e05b65e1559cb7624cd)
+    set(ENERGYPLUS_EXPECTED_HASH TBD_TODO_TBD) # TODO
     set(ENERGYPLUS_PLATFORM "Linux-CentOS7.9.2009-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
