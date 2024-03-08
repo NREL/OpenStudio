@@ -244,6 +244,15 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
+  add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
+    COMMAND $<TARGET_FILE:openstudio> run --show-stdout -w python_plugin_jinja_erb.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/python_plugin/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES RESOURCE_LOCK "python_plugin")
+  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES
+    PASS_REGULAR_EXPRESSION "HI FROM ERB PYTHON PLUGIN[\r\n\t ]*HI FROM JINJA PYTHON PLUGIN"
+  )
+
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.test_loglevel
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose ${Pytest_XDIST_OPTS} --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_loglevel.py"
