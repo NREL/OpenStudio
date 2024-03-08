@@ -263,8 +263,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
     EXPECT_EQ("Watts/Area",
               electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
 
-    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
-    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false).get());
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
+    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false).get());
 
     EXPECT_TRUE(electricEquipmentITEAirCooledObject.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
 
@@ -292,8 +292,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
     EXPECT_EQ("Watts/Area",
               electricEquipmentITEAirCooledObject.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
 
-    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
-    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false).get());
+    ASSERT_TRUE(electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
+    EXPECT_EQ(20.0, electricEquipmentITEAirCooledObject.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false).get());
 
     ASSERT_TRUE(electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName));
     EXPECT_EQ(zoneObject.handle(), electricEquipmentITEAirCooledObject.getTarget(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName)->handle());
@@ -668,7 +668,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
       ASSERT_TRUE(ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false));
       EXPECT_EQ("Watts/Unit", ite.getString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, false).get());
 
-      EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+      EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea));
 
       EXPECT_EQ(nodeName, ite.getString(ElectricEquipment_ITE_AirCooledFields::SupplyAirNodeName).get());
 
@@ -755,7 +755,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
         EXPECT_EQ(130.0, w);
         EXPECT_EQ(iteBuildingDefinition.wattsperUnit().get(), w);
 
-        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea));
 
         totalWatts += w;
 
@@ -777,7 +777,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
         EXPECT_EQ(150.0, w);
         EXPECT_EQ(iteSpace3Definition.wattsperUnit().get(), w);
 
-        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea));
+        EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea));
 
         totalWatts += w;
 
@@ -795,8 +795,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
 
         EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
 
-        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
-        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea).get();
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
+        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea).get();
 
         EXPECT_EQ(iteOffice.wattsperZoneFloorArea().get(), w_perArea);
 
@@ -820,8 +820,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
 
         EXPECT_TRUE(ite.isEmpty(ElectricEquipment_ITE_AirCooledFields::WattsperUnit));
 
-        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, false));
-        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea).get();
+        ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
+        double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea).get();
 
         EXPECT_EQ(iteSpace1.wattsperZoneFloorArea().get(), w_perArea);
 

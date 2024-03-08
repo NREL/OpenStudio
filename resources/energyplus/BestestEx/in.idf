@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,23.2;
+  Version,24.1;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -1217,7 +1217,7 @@
     OCCUPANTS YEAR,          !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     2548,                    !- Design Level {W}
-    ,                        !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
     0.7,                     !- Fraction Radiant
@@ -1230,7 +1230,7 @@
     ELECTRIC YEAR,           !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     10687.7,                 !- Design Level {W}
-    ,                        !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
     0.7,                     !- Fraction Radiant
@@ -1243,7 +1243,7 @@
     GAS YEAR,                !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     4375,                    !- Design Level {W}
-    ,                        !- Watts per Zone Floor Area {W/m2}
+    ,                        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
     0.7,                     !- Fraction Radiant

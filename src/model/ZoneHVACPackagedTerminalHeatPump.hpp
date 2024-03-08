@@ -78,6 +78,8 @@ namespace model {
 
     bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
+    bool noLoadSupplyAirFlowRateControlSetToLowSpeed() const;
+
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
     boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
@@ -151,6 +153,8 @@ namespace model {
     void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
     void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+
+    bool setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed);
 
     bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
 

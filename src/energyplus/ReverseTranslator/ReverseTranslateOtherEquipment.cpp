@@ -60,7 +60,7 @@ namespace energyplus {
         LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Watts/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperFloorArea);
       if (d) {
         if (d.get() < 0.0) {
           LOG(Warn, "OtherEquipment has negative energy use. Advanced feature--use with caution.");

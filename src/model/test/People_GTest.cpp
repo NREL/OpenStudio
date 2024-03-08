@@ -40,6 +40,24 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   EXPECT_EQ(0, definition.numberofPeople().get());
   EXPECT_FALSE(definition.peopleperSpaceFloorArea());
   EXPECT_FALSE(definition.spaceFloorAreaperPerson());
+
+  EXPECT_TRUE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
+  EXPECT_NE("ZoneAveraged", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+
+  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
+
+  // Backward compat
+  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("ZoneAveraged"));
+  EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+
+  EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
+  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
+  definition.resetMeanRadiantTemperatureCalculationType();
+  EXPECT_TRUE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
 }
 
 TEST_F(ModelFixture, People_DesignLevels) {

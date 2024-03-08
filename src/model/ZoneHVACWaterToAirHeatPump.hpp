@@ -16,7 +16,6 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-
   class HVACComponent;
 
   namespace detail {
@@ -70,6 +69,8 @@ namespace model {
     boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
     bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+
+    bool noLoadSupplyAirFlowRateControlSetToLowSpeed() const;
 
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
     boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
@@ -161,6 +162,8 @@ namespace model {
     void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
     void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+
+    bool setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed);
 
     bool setOutdoorAirFlowRateDuringCoolingOperation(boost::optional<double> outdoorAirFlowRateDuringCoolingOperation);
 
