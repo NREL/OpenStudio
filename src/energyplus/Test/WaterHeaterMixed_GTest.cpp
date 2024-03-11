@@ -241,7 +241,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
       PlantLoop p(m);
       EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
 
-      double effValue = 0.5;
+      double effValue = 1.5;
 
       EXPECT_TRUE(wh.setHeaterThermalEfficiency(effValue));
       EXPECT_EQ(effValue, wh.heaterThermalEfficiency().get());

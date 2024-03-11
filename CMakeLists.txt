@@ -18,7 +18,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.7.0)
+project(OpenStudio VERSION 3.8.0)
 
 include(CMake/compiler_flags.cmake)
 
@@ -191,18 +191,18 @@ if(hasParent)
 endif()
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 23)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MAJOR 24)
+set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
+set(ENERGYPLUS_BUILD_SHA "69e977a26e")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0-IOFreeze")
 
-set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
+set(ENERGYPLUS_REPO "NREL")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -625,25 +625,25 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
+      set(ENERGYPLUS_EXPECTED_HASH f27b5abefcbe850f9107b1a84ec313b2)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
+      set(ENERGYPLUS_EXPECTED_HASH 17819846a562cd7d39bb1c3fa57fe448)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 0edcf8a13c7f0e05b65e1559cb7624cd)
+    set(ENERGYPLUS_EXPECTED_HASH db1286992876acc09a8429eef5d4dbac)
     set(ENERGYPLUS_PLATFORM "Linux-CentOS7.9.2009-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
       if (ARCH MATCHES "arm64")
-        set(ENERGYPLUS_EXPECTED_HASH 363c537aff1f9c664192451139a85964)
+        set(ENERGYPLUS_EXPECTED_HASH 33fc7793ff2f6c2e87461b006580b2d8)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH 773dc61ddb6f3dc633ac4df0bdaa3337)
+        set(ENERGYPLUS_EXPECTED_HASH 2aa4ab0527c569751b20d836266dd9b8)
       endif()
     elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH b8644c02e287e3ffee89023e98ac5a13)
+      set(ENERGYPLUS_EXPECTED_HASH 2041c17eff76dead3fc3c4c6dc71b60a)
     else() # 18.04
       message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
     endif()
@@ -679,7 +679,7 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 7fbc694629ba6abbe400854661ebe1ae)
+    set(ENERGYPLUS_EXPECTED_HASH 3d16d187117fa2409b0b32776738bcac)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)

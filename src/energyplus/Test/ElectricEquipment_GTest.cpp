@@ -423,7 +423,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
     for (const auto& equip : equips) {
       EXPECT_EQ(zonelists[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
       EXPECT_EQ("Watts/Area", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
-      EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+      EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
     }
   }
 
@@ -451,7 +451,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
     for (const auto& equip : equips) {
       EXPECT_EQ(spaceLists[0].name().get(), equip.getString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
       EXPECT_EQ("Watts/Area", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
-      EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+      EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
     }
   }
 }
@@ -558,12 +558,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
       if (equip.nameString() == electricEquipment1.nameString()) {
         // electricEquipment1 is in SpaceType1 which has Space1, density of 1.0 W/m2
         EXPECT_EQ(space1->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
 
       } else {
         // electricEquipment2 is in SpaceType2 which has Space2, density of 2.0 W/m2
         EXPECT_EQ(space2->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(2.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(2.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
       }
 
       EXPECT_TRUE(equip.isEmpty(ElectricEquipmentFields::DesignLevel));
@@ -675,12 +675,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
       if (equip.nameString() == electricEquipment1.nameString()) {
         // electricEquipment1 is in SpaceType1 which has Space1, density of 1.0 W/m2
         EXPECT_EQ(space1->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(1.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
 
       } else {
         // electricEquipment2 is in SpaceType2 which has Space2, density of 1.0 W/m2 but with a multiplier of 2
         EXPECT_EQ(space2->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(2.0, equip.getDouble(ElectricEquipmentFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(2.0, equip.getDouble(ElectricEquipmentFields::WattsperFloorArea, true).get());
       }
 
       EXPECT_TRUE(equip.isEmpty(ElectricEquipmentFields::DesignLevel));

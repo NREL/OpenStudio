@@ -30,6 +30,13 @@ TEST_F(ModelFixture, WaterHeaterStratified_WaterHeaterStratified) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  WaterHeaterStratified waterHeaterStratified(m);
+
+  EXPECT_EQ(0.98, waterHeaterStratified.heaterThermalEfficiency());
+  EXPECT_TRUE(waterHeaterStratified.setHeaterThermalEfficiency(1.2));
+  EXPECT_EQ(1.2, waterHeaterStratified.heaterThermalEfficiency());
 }
 
 TEST_F(ModelFixture, WaterHeaterStratified_addToPlantLoop) {

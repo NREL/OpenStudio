@@ -244,8 +244,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
     ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
     EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
-    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
-    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
+    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperFloorArea, false));
+    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperFloorArea, false).get());
 
     ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
     EXPECT_EQ(zoneListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
@@ -278,8 +278,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
     ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
     EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
-    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
-    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
+    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperFloorArea, false));
+    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperFloorArea, false).get());
 
     ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
     EXPECT_EQ(spaceListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
@@ -395,8 +395,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
 
       EXPECT_TRUE(lights.isEmpty(LightsFields::LightingLevel));
 
-      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperZoneFloorArea, false));
-      double wattsperZoneFloorArea = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperZoneFloorArea, false).get();
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperFloorArea, false));
+      double wattsperZoneFloorArea = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperFloorArea, false).get();
 
       if (wattsperZoneFloorArea == 1.0) {
         foundLightingPower1 = true;
@@ -514,12 +514,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_
       if (lights.nameString() == lights1.nameString()) {
         // electricEquipment1 is in SpaceType1 which has Space1, density of 1.0 W/m2
         EXPECT_EQ(space1->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(1.0, lights.getDouble(LightsFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(1.0, lights.getDouble(LightsFields::WattsperFloorArea, true).get());
 
       } else {
         // electricEquipment2 is in SpaceType2 which has Space2, density of 1.0 W/m2 but with a multiplier of 2
         EXPECT_EQ(space2->nameString(), spaceTarget_->nameString());
-        EXPECT_EQ(2.0, lights.getDouble(LightsFields::WattsperZoneFloorArea, true).get());
+        EXPECT_EQ(2.0, lights.getDouble(LightsFields::WattsperFloorArea, true).get());
       }
 
       EXPECT_TRUE(lights.isEmpty(LightsFields::LightingLevel));
@@ -675,13 +675,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
 
     ASSERT_TRUE(idfLights[0].getString(LightsFields::DesignLevelCalculationMethod));
     EXPECT_EQ("Watts/Area", idfLights[0].getString(LightsFields::DesignLevelCalculationMethod).get());
-    ASSERT_TRUE(idfLights[0].getDouble(LightsFields::WattsperZoneFloorArea));
-    EXPECT_DOUBLE_EQ(10.0, idfLights[0].getDouble(LightsFields::WattsperZoneFloorArea).get());
+    ASSERT_TRUE(idfLights[0].getDouble(LightsFields::WattsperFloorArea));
+    EXPECT_DOUBLE_EQ(10.0, idfLights[0].getDouble(LightsFields::WattsperFloorArea).get());
 
     ASSERT_TRUE(idfLights[1].getString(LightsFields::DesignLevelCalculationMethod));
     EXPECT_EQ("Watts/Area", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
-    ASSERT_TRUE(idfLights[1].getDouble(LightsFields::WattsperZoneFloorArea));
-    EXPECT_DOUBLE_EQ(10.0, idfLights[1].getDouble(LightsFields::WattsperZoneFloorArea).get());
+    ASSERT_TRUE(idfLights[1].getDouble(LightsFields::WattsperFloorArea));
+    EXPECT_DOUBLE_EQ(10.0, idfLights[1].getDouble(LightsFields::WattsperFloorArea).get());
   }
 }
 

@@ -164,6 +164,8 @@ namespace model {
     /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate Per Unit of Capacity During Heating Operation" **/
     boost::optional<double> designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() const;
 
+    bool noLoadSupplyAirFlowRateControlSetToLowSpeed() const;
+
     boost::optional<double> maximumSupplyAirTemperature() const;
 
     bool isMaximumSupplyAirTemperatureDefaulted() const;
@@ -362,6 +364,8 @@ namespace model {
     /** Sets the field and switches the noCoolHeatSAFMethod) to "FlowPerHeatingCapacity" */
     bool setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
       double designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
+
+    bool setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed);
 
     OS_DEPRECATED(3, 7, 0) bool setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired(const std::string& noCoolHeatMethod);
 

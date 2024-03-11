@@ -1,4 +1,4 @@
-  Version,23.2;
+  Version,24.1;
 
   Timestep,4;
 
@@ -6681,7 +6681,7 @@
     Baseline Model People Lights and Equipment Schedule,  !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
-    10.7639104167097,        !- Watts per Zone Floor Area {W/m2}
+    10.7639104167097,        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     ,                        !- Return Air Fraction
     ,                        !- Fraction Radiant
@@ -6707,7 +6707,7 @@
     Baseline Model People Lights and Equipment Schedule,  !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
-    10.7639104167097,        !- Watts per Zone Floor Area {W/m2}
+    10.7639104167097,        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     ,                        !- Fraction Latent
     ,                        !- Fraction Radiant

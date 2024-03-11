@@ -355,7 +355,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
     EXPECT_TRUE(newLights.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, *zoneName));
     EXPECT_TRUE(newLights.setString(LightsFields::ScheduleName, schedule.name().get()));
     EXPECT_TRUE(newLights.setString(LightsFields::DesignLevelCalculationMethod, "Watts/Area"));
-    EXPECT_TRUE(newLights.setDouble(LightsFields::WattsperZoneFloorArea, lpd));
+    EXPECT_TRUE(newLights.setDouble(LightsFields::WattsperFloorArea, lpd));
     // DLM@20100429: not handling the radiant fraction, etc
 
     // add lights object to the workspace
@@ -383,9 +383,9 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 
     EXPECT_FALSE(zoneLights[0].getDouble(LightsFields::LightingLevel));
 
-    OptionalDouble wattsperZoneFloorArea = zoneLights[0].getDouble(LightsFields::WattsperZoneFloorArea);
-    ASSERT_TRUE(wattsperZoneFloorArea);
-    EXPECT_EQ(1.0, *wattsperZoneFloorArea);
+    OptionalDouble wattsperFloorArea = zoneLights[0].getDouble(LightsFields::WattsperFloorArea);
+    ASSERT_TRUE(wattsperFloorArea);
+    EXPECT_EQ(1.0, *wattsperFloorArea);
 
     EXPECT_FALSE(zoneLights[0].getDouble(LightsFields::WattsperPerson));
   }

@@ -263,4 +263,9 @@ TEST_F(ModelFixture, ZoneHVACWaterToAirHeatPump_SetGetFields) {
   EXPECT_TRUE(testHP.isHeatPumpCoilWaterFlowModeDefaulted());
   str3 = testHP.heatPumpCoilWaterFlowMode();
   EXPECT_EQ(str3, "Cycling");
+
+  //test no load supply air flow rate control set to low speed
+  EXPECT_TRUE(testHP.noLoadSupplyAirFlowRateControlSetToLowSpeed());
+  EXPECT_TRUE(testHP.setNoLoadSupplyAirFlowRateControlSetToLowSpeed(false));
+  EXPECT_FALSE(testHP.noLoadSupplyAirFlowRateControlSetToLowSpeed());
 }

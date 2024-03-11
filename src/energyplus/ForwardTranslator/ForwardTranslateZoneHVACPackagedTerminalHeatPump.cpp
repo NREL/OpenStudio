@@ -179,6 +179,14 @@ namespace energyplus {
       idfObject.setDouble(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRate, value.get());
     }
 
+    // NoLoadSupplyAirFlowRateControlSetToLowSpeed
+
+    if (modelObject.noLoadSupplyAirFlowRateControlSetToLowSpeed()) {
+      idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
+    } else {
+      idfObject.setString(ZoneHVAC_PackagedTerminalHeatPumpFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
+    }
+
     // OutdoorAirFlowRateDuringCoolingOperation
 
     if (modelObject.isOutdoorAirFlowRateDuringCoolingOperationAutosized()) {

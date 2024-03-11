@@ -174,7 +174,7 @@ namespace energyplus {
 
     d = definition.wattsperZoneFloorArea();
     if (d) {
-      idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, (*d) * multiplier);
+      idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, (*d) * multiplier);
     }
 
     boost::optional<Schedule> designPowerInputSchedule = modelObject.designPowerInputSchedule();

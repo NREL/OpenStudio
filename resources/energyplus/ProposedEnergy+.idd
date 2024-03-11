@@ -1,4 +1,4 @@
-!IDD_Version 23.2.0
+!IDD_Version 24.1.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -311,6 +311,7 @@
 !      percent/K              =>   percent/F           0.555555555555556
 !      person/m2              =>   person/ft2          0.0928939733269818
 !      s/m                    =>   s/ft                0.3048
+!      umol/m2-s              =>   umol/ft2-s          0.09290304
 !      V/K                    =>   V/F                 0.555555555555556
 !      W                      =>   Btu/h               3.4121412858518
 !      W/((m3/s)-Pa)          =>   W/((gal/min)-ftH20) 0.188582274697355
@@ -404,7 +405,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 23.2
+      \default 24.1
 
 SimulationControl,
       \unique-object
@@ -11478,10 +11479,10 @@ People,
   A7 , \field Mean Radiant Temperature Calculation Type
        \note optional (only required for thermal comfort runs)
        \type choice
-       \key ZoneAveraged
+       \key EnclosureAveraged
        \key SurfaceWeighted
        \key AngleFactor
-       \default ZoneAveraged
+       \default EnclosureAveraged
   A8 , \field Surface Name/Angle Factor List Name
        \type object-list
        \object-list AllHeatTranAngFacNames
@@ -11607,8 +11608,6 @@ ComfortViewFactorAngles,
   A1 , \field Name
        \type alpha
        \reference AllHeatTranAngFacNames
-  A2 , \field Zone Name
-       \type object-list
        \object-list ZoneNames
   A3 , \field Surface 1 Name
        \type object-list
@@ -11643,7 +11642,7 @@ Lights,
        \note The entered calculation method is used to create the maximum amount of lights
        \note for this set of attributes
        \note Choices: LightingLevel => Lighting Level -- simply enter watts of lights
-       \note Watts/Area => Watts per Zone Floor Area -- enter the number to apply. Value * Floor Area = Lights
+       \note Watts/Area => Watts per Floor Area -- enter the number to apply. Value * Floor Area = Lights
        \note Watts/Person => Watts per Person -- enter the number to apply. Value * Occupants = Lights
        \type choice
        \key LightingLevel
@@ -11655,7 +11654,7 @@ Lights,
        \type real
        \minimum 0
        \ip-units W
-  N2 , \field Watts per Zone Floor Area
+  N2 , \field Watts per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -11746,7 +11745,7 @@ ElectricEquipment,
        \note The entered calculation method is used to create the maximum amount of electric equipment
        \note for this set of attributes
        \note Choices: EquipmentLevel => Equipment Level -- simply enter watts of equipment
-       \note Watts/Area => Watts per Zone Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
+       \note Watts/Area => Watts per Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
        \note Watts/Person => Watts per Person -- enter the number to apply. Value * Occupants = Equipment Level
        \type choice
        \key EquipmentLevel
@@ -11758,7 +11757,7 @@ ElectricEquipment,
        \type real
        \minimum 0
        \ip-units W
-  N2 , \field Watts per Zone Floor Area
+  N2 , \field Watts per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -11812,7 +11811,7 @@ GasEquipment,
        \note The entered calculation method is used to create the maximum amount of gas equipment
        \note for this set of attributes
        \note Choices: EquipmentLevel => Design Level -- simply enter power input of equipment
-       \note Watts/Area or Power/Area => Power per Zone Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
+       \note Watts/Area or Power/Area => Power per Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
        \note Watts/Person or Power/Person => Power per Person -- enter the number to apply. Value * Occupants = Equipment Level
        \type choice
        \key EquipmentLevel
@@ -11826,7 +11825,7 @@ GasEquipment,
        \type real
        \minimum 0
        \ip-units Btu/h
-  N2 , \field Power per Zone Floor Area
+  N2 , \field Power per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -11892,7 +11891,7 @@ HotWaterEquipment,
        \note The entered calculation method is used to create the maximum amount of hot water equipment
        \note for this set of attributes
        \note Choices: EquipmentLevel => Design Level -- simply enter power input of equipment
-       \note Watts/Area or Power/Area => Power per Zone Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
+       \note Watts/Area or Power/Area => Power per Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
        \note Watts/Person or Power/Person => Power per Person -- enter the number to apply. Value * Occupants = Equipment Level
        \type choice
        \key EquipmentLevel
@@ -11906,7 +11905,7 @@ HotWaterEquipment,
        \type real
        \minimum 0
        \ip-units Btu/h
-  N2 , \field Power per Zone Floor Area
+  N2 , \field Power per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -11960,7 +11959,7 @@ SteamEquipment,
        \note The entered calculation method is used to create the maximum amount of steam equipment
        \note for this set of attributes
        \note Choices: EquipmentLevel => Design Level -- simply enter power input of equipment
-       \note Watts/Area or Power/Area => Power per Zone Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
+       \note Watts/Area or Power/Area => Power per Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
        \note Watts/Person or Power/Person => Power per Person -- enter the number to apply. Value * Occupants = Equipment Level
        \type choice
        \key EquipmentLevel
@@ -11974,7 +11973,7 @@ SteamEquipment,
        \type real
        \minimum 0
        \ip-units Btu/h
-  N2 , \field Power per Zone Floor Area
+  N2 , \field Power per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -12046,7 +12045,7 @@ OtherEquipment,
        \note to set a loss, use a negative value in the following fields.
        \note for this set of attributes
        \note Choices: EquipmentLevel => Design Level -- simply enter power input of equipment
-       \note Watts/Area or Power/Area => Power per Zone Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
+       \note Watts/Area or Power/Area => Power per Floor Area -- enter the number to apply. Value * Floor Area = Equipment Level
        \note Watts/Person or Power/Person => Power per Person -- enter the number to apply. Value * Occupants = Equipment Level
        \type choice
        \key EquipmentLevel
@@ -12059,7 +12058,7 @@ OtherEquipment,
        \units W
        \type real
        \ip-units Btu/h
-  N2 , \field Power per Zone Floor Area
+  N2 , \field Power per Floor Area
        \type real
        \units W/m2
        \ip-units Btu/h-ft2
@@ -12097,6 +12096,77 @@ OtherEquipment,
        \retaincase
        \default General
 
+IndoorLivingWall,
+   \memo Indoor greenery systems such as indoor living walls are panels of plants, which grow hydroponically or from substrates.
+   \memo The living wall structures can be either free-standing or attached to walls.
+   \memo The IndoorLivingWall module directly connects with inside surface heat balance, zone air heat balance, and zone air moisture balance.
+  A1 , \field Name
+       \required-field
+       \type alpha
+  A2,  \field Surface Name
+       \required-field
+       \note Name of the wall partition where indoor green is located.
+       \type object-list
+       \object-list SurfaceNames
+  A3 , \field Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note units in Schedule should be fraction applied to design level of other equipment, generally (0.0 - 1.0)
+  A4 , \field Evapotranspiration Calculation Method
+       \note Model selection for caclulating evapotranspiration of indoor greenery system.
+       \note This rate can also be actuated with user-defined calculations, see EMS application guide for actuator details.
+       \type choice
+       \key Penman-Monteith
+       \key Stanghellini
+       \default Penman-Monteith
+  A5 , \field Lighting Method
+       \note Three different methods are provided here (LED; Daylight; LED-Daylight)
+       \type choice
+       \key LED
+       \key Daylight
+       \key LED-Daylight
+  A6 , \field LED Intensity Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A7 , \field Daylighting Control Name
+       \note If daylighting is used in the selected lighting methods (Daylight or LED-Daylight),
+       \note users should define an object of Daylighting:Control to obtain the daylighting illumance level
+       \note and an object for Daylighing:ReferencePoint for the daylighting sensor location in the thermal zone.
+       \note The name of the object of Daylighting:Controls should be specified in this field.
+       \type alpha
+  A8 , \field LED-Daylight Targeted Lighting Intensity Schedule Name
+       \note This field defines targeted LED intensity level for indoor living wall systems.
+       \note The schedule values can be any positive number representing targeted photosynthetic photon flux density (PPFD).
+       \note Based on the available daylighting, the required LED lighting level and power will be automatically adjusted to meet the targeted LED intensity level.
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Total Leaf Area
+       \note The value is the one-sided leaf area of an indoor living wall.
+       \note Based on the users’ input, LAI is calculated as the ratio of the total leaf area and the partition wall area.
+       \note Typical LAIs are 1.0 for grass and 3.0 for bushes and shrubs. The maximum LAI is 2.0 for the IndoorLivingWall module in EnergyPlus.
+       \note If the calculated LAI is greater than 2.0, the maximum value of 2.0 is used for LAI in the simulation.
+       \units m2
+       \type real
+       \ip-units ft2
+  N2 , \field LED Nominal Intensity
+       \note The value represents photosynthetic photon flux density (PPFD) of LED grow light.
+       \note PPFD is measured in micro-mole per m2 per second (umol/m2-s) which establishes exactly how many photosynthetically active radiation (PAR) photons are landing on a specific area.
+       \units umol/m2-s
+       \type real
+       \ip-units umol/ft2-s
+  N3 , \field LED Nominal Power
+       \note This field defines nominal total LED power for an indoor living wall system.
+       \units W
+       \type real
+       \ip-units W
+  N4 ; \field Radiant Fraction of LED Lights
+       \note This field defines the fraction of radiation from LED lights
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.6
+
 ElectricEquipment:ITE:AirCooled,
    \memo This object describes air-cooled electric information technology equipment (ITE) which has
    \memo variable power consumption as a function of loading and temperature.
@@ -12130,7 +12200,7 @@ ElectricEquipment:ITE:AirCooled,
   A4 , \field Design Power Input Calculation Method
        \note The entered calculation method is used to specify the design power input
        \note Watts/Unit => Watts per Unit -- Design Power = Watts per Unit * Number of Units
-       \note Watts/Area => Watts per Zone Floor Area -- Design Power = Watts per Zone Floor Area * Floor Area
+       \note Watts/Area => Watts per Floor Area -- Design Power = Watts per Floor Area * Floor Area
        \type choice
        \key Watts/Unit
        \key Watts/Area
@@ -12144,7 +12214,7 @@ ElectricEquipment:ITE:AirCooled,
        \type real
        \minimum 0
        \default 1
-  N3 , \field Watts per Zone Floor Area
+  N3 , \field Watts per Floor Area
        \type real
        \minimum 0
        \units W/m2
@@ -15023,6 +15093,8 @@ AirflowNetwork:Distribution:Component:Coil,
       \key Coil:Cooling:DX:MultiSpeed
       \key Coil:Heating:DX:MultiSpeed
       \key Coil:Heating:Desuperheater
+      \key Coil:Heating:Electric:MultiStage
+      \key Coil:Heating:Gas:MultiStage
       \note Select the type of coil corresponding to the name entered in the field above.
  N1 , \field Air Path Length
       \required-field
@@ -17129,7 +17201,7 @@ HVACTemplate:Zone:Unitary,
       \object-list ZoneNames
   A2, \field Template Unitary System Name
       \required-field
-      \note Enter the name of an HVACTemplate:System:Unitary, HVACTemplate:System:UnitaryHeatPump:AirTtoAir,
+      \note Enter the name of an HVACTemplate:System:Unitary, HVACTemplate:System:UnitaryHeatPump:AirToAir,
       \note or HVACTemplate:System:UnitarySystem object serving this zone.
       \type object-list
       \object-list CompactHVACSystemUnitary
@@ -24070,7 +24142,7 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \memo Packaged terminal air conditioner (PTAC). Forced-convection heating-cooling unit
         \memo with supply fan, direct expansion (DX) cooling coil, heating coil (gas, electric, hot
         \memo water, or steam) and fixed-position outdoor air mixer.
-        \min-fields 18
+        \min-fields 19
    A1,  \field Name
         \required-field
         \type alpha
@@ -24130,6 +24202,13 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note This air flow rate is used when no heating or cooling is required and the cooling or
         \note heating coil is off. If this field is left blank or zero, the supply air flow rate
         \note from the previous on cycle (either cooling or heating) is used.
+   A7 , \field No Load Supply Air Flow Rate Control Set To Low Speed
+        \type choice
+        \key Yes
+        \key No
+        \default Yes
+        \note When Yes is selected the minimum air flow rate is used.
+        \note When No is selected the maximum air flow rate is used.
    N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
@@ -24160,7 +24239,7 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note from the previous on cycle (either cooling or heating) is used.
         \note This field is set to zero flow when the PTAC is connected to central
         \note dedicated outdoor air through air terminal single duct mixer object.
-   A7 , \field Supply Air Fan Object Type
+   A8 , \field Supply Air Fan Object Type
         \required-field
         \type choice
         \key Fan:SystemModel
@@ -24169,13 +24248,13 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note Fan:ConstantVolume only works when continuous fan operation is used the entire
         \note simulation (all supply air fan operating mode schedule values are greater than 0).
         \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
-   A8 , \field Supply Air Fan Name
+   A9 , \field Supply Air Fan Name
         \required-field
         \type object-list
         \object-list FansCVandOnOff
         \object-list FansSystemModel
         \note Needs to match in the fan object.
-   A9 , \field Heating Coil Object Type
+   A10, \field Heating Coil Object Type
         \required-field
         \type choice
         \key Coil:Heating:Fuel
@@ -24183,12 +24262,12 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \key Coil:Heating:Water
         \key Coil:Heating:Steam
         \note Select the type of heating coil.
-   A10 , \field Heating Coil Name
+   A11, \field Heating Coil Name
         \required-field
         \type object-list
         \object-list HeatingCoilName
         \note Needs to match in the heating coil object.
-   A11, \field Cooling Coil Object Type
+   A12, \field Cooling Coil Object Type
         \required-field
         \type choice
         \key Coil:Cooling:DX
@@ -24200,34 +24279,34 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \note Coil:Cooling:DX:SingleSpeed or
         \note CoilSystem:Cooling:DX:HeatExchangerAssisted or
         \note Coil:Cooling:DX:VariableSpeed.
-   A12, \field Cooling Coil Name
+   A13, \field Cooling Coil Name
         \required-field
         \type object-list
         \object-list CoilCoolingDX
         \object-list CoolingCoilsDXSingleSpeed
         \object-list CoolingCoilsDXVariableSpeed
         \note Needs to match a DX cooling coil object.
-   A13, \field Fan Placement
+   A14, \field Fan Placement
         \type choice
         \key BlowThrough
         \key DrawThrough
         \default DrawThrough
         \note Select fan placement as either blow through or draw through.
-   A14, \field Supply Air Fan Operating Mode Schedule Name
+   A15, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule Name values of 0 denote
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
-   A15, \field Availability Manager List Name
+   A16, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A16, \field Design Specification ZoneHVAC Sizing Object Name
+   A17, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
-   A17, \field Capacity Control Method
+   A18, \field Capacity Control Method
         \type choice
         \key None
         \key SingleZoneVAV
@@ -24252,7 +24331,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \memo supply fan, direct expansion (DX) cooling coil, DX heating coil (air-to-air heat
         \memo pump), supplemental heating coil (gas, electric, hot water, or steam), and
         \memo fixed-position outdoor air mixer.
-        \min-fields 26
+        \min-fields 27
    A1,  \field Name
         \required-field
         \type alpha
@@ -24311,6 +24390,13 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \note is used when no heating or cooling is required and the DX coil compressor is off.
         \note If this field is left blank or zero, the supply air flow rate from the previous
         \note on cycle (either cooling or heating) is used.
+   A7 , \field No Load Supply Air Flow Rate Control Set To Low Speed
+        \type choice
+        \key Yes
+        \key No
+        \default Yes
+        \note When Yes is selected the minimum air flow rate is used.
+        \note When No is selected the maximum air flow rate is used.
    N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
@@ -24340,27 +24426,27 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \note on cycle (either cooling or heating) is used.
         \note This field is set to zero flow when the PTHP is connected to central
         \note dedicated outdoor air through air terminal single duct mixer object.
-   A7 , \field Supply Air Fan Object Type
+   A8 , \field Supply Air Fan Object Type
         \required-field
         \type choice
         \key Fan:SystemModel
         \key Fan:OnOff
         \key Fan:ConstantVolume
         \note Fan:ConstantVolume only works with fan operating mode is continuous.
-   A8 , \field Supply Air Fan Name
+   A9 , \field Supply Air Fan Name
         \required-field
         \type object-list
         \object-list FansCVandOnOff
         \object-list FansSystemModel
         \note Needs to match a fan object.
-   A9 , \field Heating Coil Object Type
+   A10, \field Heating Coil Object Type
         \required-field
         \type choice
         \key Coil:Heating:DX:SingleSpeed
         \key Coil:Heating:DX:VariableSpeed
         \note Only works with Coil:Heating:DX:SingleSpeed or
         \note Coil:Heating:DX:VariableSpeed.
-   A10 , \field Heating Coil Name
+   A11, \field Heating Coil Name
         \required-field
         \type object-list
         \object-list HeatingCoilsDXSingleSpeed
@@ -24372,7 +24458,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \default 0.001
         \units dimensionless
         \note Defines Heating convergence tolerance as a fraction of Heating load to be met.
-   A11, \field Cooling Coil Object Type
+   A12, \field Cooling Coil Object Type
         \required-field
         \type choice
         \key Coil:Cooling:DX
@@ -24383,7 +24469,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \note Coil:Cooling:DX:SingleSpeed or
         \note CoilSystem:Cooling:DX:HeatExchangerAssisted or
         \note Coil:Cooling:DX:VariableSpeed.
-   A12, \field Cooling Coil Name
+   A13, \field Cooling Coil Name
         \required-field
         \type object-list
         \object-list CoilCoolingDX
@@ -24396,7 +24482,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \default 0.001
         \units dimensionless
         \note Defines Cooling convergence tolerance as a fraction of the Cooling load to be met.
-   A13, \field Supplemental Heating Coil Object Type
+   A14, \field Supplemental Heating Coil Object Type
         \required-field
         \type choice
         \key Coil:Heating:Fuel
@@ -24404,7 +24490,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \key Coil:Heating:Water
         \key Coil:Heating:Steam
         \note works with gas, electric, hot water and steam heating coil.
-   A14, \field Supplemental Heating Coil Name
+   A15, \field Supplemental Heating Coil Name
         \required-field
         \type object-list
         \object-list HeatingCoilName
@@ -24421,28 +24507,28 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \default 21.0
         \units C
         \note Supplemental heater will not operate when outdoor temperature exceeds this value.
-   A15, \field Fan Placement
+   A16, \field Fan Placement
         \type choice
         \key BlowThrough
         \key DrawThrough
         \default DrawThrough
         \note Select fan placement as either blow through or draw through.
-   A16, \field Supply Air Fan Operating Mode Schedule Name
+   A17, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule values of 0 denote
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule Name values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A17, \field Availability Manager List Name
+   A18, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A18, \field Design Specification ZoneHVAC Sizing Object Name
+   A19, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
-   A19, \field Capacity Control Method
+   A20, \field Capacity Control Method
         \type choice
         \key None
         \key SingleZoneVAV
@@ -24466,7 +24552,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \memo Water-to-air heat pump. Forced-convection heating-cooling unit with supply fan,
         \memo water-to-air cooling and heating coils, supplemental heating coil (gas, electric, hot
         \memo water, or steam), and fixed-position outdoor air mixer.
-        \min-fields 21
+        \min-fields 22
    A1,  \field Name
         \required-field
         \type alpha
@@ -24521,6 +24607,13 @@ ZoneHVAC:WaterToAirHeatPump,
         \note is used when no heating or cooling is required and the DX coil compressor is off.
         \note If this field is left blank or zero, the supply air flow rate from the previous
         \note on cycle (either cooling or heating) is used.
+   A7,  \field No Load Supply Air Flow Rate Control Set To Low Speed
+        \type choice
+        \key Yes
+        \key No
+        \default Yes
+        \note When Yes is selected the minimum air flow rate is used.
+        \note When No is selected the maximum air flow rate is used.
    N4 , \field Cooling Outdoor Air Flow Rate
         \required-field
         \type real
@@ -24550,40 +24643,40 @@ ZoneHVAC:WaterToAirHeatPump,
         \note on cycle (either cooling or heating) is used.
         \note This field is set to zero flow when the PTHP is connected to central
         \note dedicated outdoor air through air terminal single duct mixer object.
-   A7,  \field Supply Air Fan Object Type
+   A8,  \field Supply Air Fan Object Type
         \required-field
         \type choice
         \key Fan:SystemModel
         \key Fan:OnOff
-   A8,  \field Supply Air Fan Name
+   A9,  \field Supply Air Fan Name
         \required-field
         \type object-list
         \object-list FansOnOff
         \object-list FansSystemModel
         \note Needs to match Fan:SystemModel or Fan:OnOff object
-   A9,  \field Heating Coil Object Type
+   A10, \field Heating Coil Object Type
         \required-field
         \type choice
         \key Coil:Heating:WaterToAirHeatPump:EquationFit
         \key Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit
-   A10, \field Heating Coil Name
+   A11, \field Heating Coil Name
         \required-field
         \type object-list
         \object-list HeatingCoilsWaterToAirHP
         \object-list HeatingCoilsWaterToAirVSHP
         \note  Needs to match in the water-to-air heat pump heating coil object
-   A11, \field Cooling Coil Object Type
+   A12, \field Cooling Coil Object Type
         \required-field
         \type choice
         \key Coil:Cooling:WaterToAirHeatPump:EquationFit
         \key Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit
-   A12, \field Cooling Coil Name
+   A13, \field Cooling Coil Name
         \required-field
         \type object-list
         \object-list CoolingCoilsWaterToAirHP
         \object-list CoolingCoilsWaterToAirVSHP
         \note Needs to match in the water-to-air heat pump cooling coil object
-   A13, \field Supplemental Heating Coil Object Type
+   A14, \field Supplemental Heating Coil Object Type
         \required-field
         \type choice
         \key Coil:Heating:Fuel
@@ -24591,7 +24684,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \key Coil:Heating:Water
         \key Coil:Heating:Steam
         \note works with gas, electric, hot water and steam heating coils
-   A14, \field Supplemental Heating Coil Name
+   A15, \field Supplemental Heating Coil Name
         \required-field
         \type object-list
         \object-list HeatingCoilName
@@ -24608,25 +24701,25 @@ ZoneHVAC:WaterToAirHeatPump,
         \maximum 21.0
         \default 21.0
         \units C
-   A15, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+   A16, \field Outdoor Dry-Bulb Temperature Sensor Node Name
         \type node
-   A16, \field Fan Placement
+   A17, \field Fan Placement
         \type choice
         \key BlowThrough
         \key DrawThrough
         \default BlowThrough
-   A17, \field Supply Air Fan Operating Mode Schedule Name
+   A18, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
         \note Enter the name of a schedule that controls fan operation. Schedule values of 0 denote
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A18, \field Availability Manager List Name
+   A19, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
-   A19, \field Heat Pump Coil Water Flow Mode
+   A20, \field Heat Pump Coil Water Flow Mode
         \type choice
         \key Constant
         \key Cycling
@@ -24636,15 +24729,15 @@ ZoneHVAC:WaterToAirHeatPump,
         \note Constant results in 100% water flow regardless of compressor PLR
         \note Cycling results in water flow that matches compressor PLR
         \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
-   A20, \field Design Specification ZoneHVAC Sizing Object Name
+   A21, \field Design Specification ZoneHVAC Sizing Object Name
         \note Enter the name of a DesignSpecificationZoneHVACSizing object.
         \type object-list
         \object-list DesignSpecificationZoneHVACSizingName
-   A21, \field Design Specification Multispeed Object Type
+   A22, \field Design Specification Multispeed Object Type
         \type choice
         \key UnitarySystemPerformance:Multispeed
         \note Enter the type of performance specification object used to describe the multispeed coil or fan.
-   A22; \field Design Specification Multispeed Object Name
+   A23; \field Design Specification Multispeed Object Name
         \type object-list
         \object-list UnitarySystemPerformaceNames
         \note The name of the performance specification object used to describe the multispeed coil or fan.
@@ -25764,7 +25857,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \memo AirConditioner:VariableRefrigerantFlow or
         \memo AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:* system.
         \memo Terminal units can be configured as zone, air loop or outside air system equipment.
-        \min-fields 19
+        \min-fields 30
   A1 ,  \field Zone Terminal Unit Name
         \required-field
         \type alpha
@@ -36848,37 +36941,13 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \minimum 0.0
       \maximum 1.0
       \default 0.0
-  N4, \field Sensible Effectiveness at 75% Heating Air Flow
+  N4, \field Sensible Effectiveness at 100% Cooling Air Flow
       \type real
       \units dimensionless
       \minimum 0.0
       \maximum 1.0
       \default 0.0
-  N5, \field Latent Effectiveness at 75% Heating Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N6, \field Sensible Effectiveness at 100% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N7, \field Latent Effectiveness at 100% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N8, \field Sensible Effectiveness at 75% Cooling Air Flow
-      \type real
-      \units dimensionless
-      \minimum 0.0
-      \maximum 1.0
-      \default 0.0
-  N9, \field Latent Effectiveness at 75% Cooling Air Flow
+  N5, \field Latent Effectiveness at 100% Cooling Air Flow
       \type real
       \units dimensionless
       \minimum 0.0
@@ -36896,7 +36965,7 @@ HeatExchanger:AirToAir:SensibleAndLatent,
   A6, \field Exhaust Air Outlet Node Name
       \required-field
       \type node
-  N10,\field Nominal Electric Power
+  N6, \field Nominal Electric Power
       \type real
       \units W
       \ip-units W
@@ -36919,14 +36988,14 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \key ExhaustOnly
       \key MinimumExhaustTemperature
       \default None
-  N11,\field Threshold Temperature
+  N7, \field Threshold Temperature
       \type real
       \units C
       \default 1.7
       \note Supply (outdoor) air inlet temp threshold for exhaust air recirculation and
       \note exhaust only frost control types. Exhaust air outlet threshold Temperature for
       \note minimum exhaust temperature frost control type.
-  N12,\field Initial Defrost Time Fraction
+  N8, \field Initial Defrost Time Fraction
       \type real
       \units dimensionless
       \minimum 0.0
@@ -36934,20 +37003,44 @@ HeatExchanger:AirToAir:SensibleAndLatent,
       \default 0.083
       \note Fraction of the time when frost control will be invoked at the threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  N13,\field Rate of Defrost Time Fraction Increase
+  N9, \field Rate of Defrost Time Fraction Increase
       \type real
       \units 1/K
       \minimum 0.0
       \default 0.012
       \note Rate of increase in defrost time fraction as actual temp falls below threshold temperature.
       \note This field only used for exhaust air recirc and exhaust-only frost control types.
-  A10;\field Economizer Lockout
+  A10,\field Economizer Lockout
       \type choice
       \key Yes
       \key No
       \default Yes
       \note Yes means that the heat exchanger will be locked out (off)
       \note when the economizer is operating or high humidity control is active
+  A11,\field Sensible Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for heating
+      \note will be the value in N2 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A12,\field Latent Effectiveness of Heating Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for heating
+      \note will be the value in N3 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A13,\field Sensible Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the sensivle effectiveness for cooling
+      \note will be the value in N4 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
+  A14;\field Latent Effectiveness of Cooling Air Flow Curve Name
+      \note optional
+      \note if this field has value, then the latent effectiveness for cooling
+      \note will be the value in N5 multiplied by this curve value
+      \type object-list
+      \object-list UnivariateFunctions
 
 HeatExchanger:Desiccant:BalancedFlow,
       \memo This object models a balanced desiccant heat exchanger.
@@ -37628,6 +37721,14 @@ AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \note Enter the supply air volume flow rate as a fraction of the heating capacity.
        \note Required field when No Load Supply Air Flow Rate Method is FlowPerHeatingCapacity.
+  A23, \field No Load Supply Air Flow Rate Control Set To Low Speed
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+       \note This field is not used when Design Specification Multispeed Object Type input is present 
+       \note When Yes is selected the minimum air flow rate is used.
+       \note When No is selected the maximum air flow rate is used.
   N17, \field Maximum Supply Air Temperature
        \type real
        \units C
@@ -37640,7 +37741,7 @@ AirLoopHVAC:UnitarySystem,
        \units C
        \default 21.0
        \note Enter the maximum outdoor dry-bulb temperature for supplemental heater operation.
-  A23, \field Outdoor Dry-Bulb Temperature Sensor Node Name
+  A24, \field Outdoor Dry-Bulb Temperature Sensor Node Name
        \type node
        \note If this field is blank, outdoor temperature from the weather file is used.
        \note If this field is not blank, the node name specified determines the outdoor temperature used
@@ -37672,17 +37773,17 @@ AirLoopHVAC:UnitarySystem,
        \minimum 0.0
        \default 80.0
        \note Enter the maximum heat recovery inlet temperature allowed for heat recovery.
-  A24, \field Heat Recovery Water Inlet Node Name
+  A25, \field Heat Recovery Water Inlet Node Name
        \type node
        \note Enter the name of the heat recovery water inlet node if plant water loop connections are present.
-  A25, \field Heat Recovery Water Outlet Node Name
+  A26, \field Heat Recovery Water Outlet Node Name
        \type node
        \note Enter the name of the heat recovery water outlet node if plant water loop connections are present.
-  A26, \field Design Specification Multispeed Object Type
+  A27, \field Design Specification Multispeed Object Type
        \type choice
        \key UnitarySystemPerformance:Multispeed
        \note Enter the type of performance specification object used to describe the multispeed coil.
-  A27; \field Design Specification Multispeed Object Name
+  A28; \field Design Specification Multispeed Object Name
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note The name of the performance specification object used to describe the multispeed coil.
@@ -42772,7 +42873,6 @@ Boiler:HotWater,
        \required-field
        \type real
        \minimum> 0.0
-       \maximum 1.0
        \note Based on the higher heating value of fuel.
   A3 , \field Efficiency Curve Temperature Evaluation Variable
        \type choice
@@ -48939,7 +49039,6 @@ WaterHeater:Mixed,
        \required-field
        \type real
        \minimum> 0.0
-       \maximum 1.0
   A5 , \field Part Load Factor Curve Name
        \type object-list
        \object-list UnivariateFunctions
@@ -49204,7 +49303,6 @@ WaterHeater:Stratified,
        \required-field
        \type real
        \minimum> 0.0
-       \maximum 1.0
   N12, \field Off Cycle Parasitic Fuel Consumption Rate
        \type real
        \units W
@@ -52164,9 +52262,17 @@ ZoneHVAC:ForcedAir:UserDefined,
    A2 , \field Overall Model Simulation Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A3 , \field Model Setup and Sizing Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A4 , \field Primary Air Inlet Node Name
         \required-field
         \type node
@@ -52225,9 +52331,17 @@ AirTerminal:SingleDuct:UserDefined,
    A2 , \field Overall Model Simulation Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A3 , \field Model Setup and Sizing Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A4 , \field Primary Air Inlet Node Name
         \required-field
         \type node
@@ -52286,6 +52400,12 @@ Coil:UserDefined,
    A2 , \field Overall Model Simulation Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note This is the name of a program to run that defines the user-defined functionality for this component.
+        \note This can match the name of an EnergyManagementSystem:Program or PythonPlugin:Instance object as defined in the input file.
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A3 , \field Model Setup and Sizing Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
@@ -52347,6 +52467,10 @@ PlantComponent:UserDefined,
    A2 , \field Main Model Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    N1 , \field Number of Plant Loop Connections
         \type integer
         \minimum 1
@@ -52375,9 +52499,16 @@ PlantComponent:UserDefined,
    A7 , \field Plant Connection 1 Initialization Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note For use with the API (Library, Callback) workflow, this field should be the same string that the user
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A8  ,\field Plant Connection 1 Simulation Program Calling Manager Name
         \type object-list
         \object-list ProgramNames
+        \note provides when registering a callback function using the API.  In this workflow, the callback name is not entered
+        \note elsewhere in the IDF, so the object-list will not include this user-specified function identifier.  This will
+        \note cause a warning when editing this field in IDF-Editor.
    A9 , \field Plant Connection 2 Inlet Node Name
         \type node
    A10, \field Plant Connection 2 Outlet Node Name
@@ -62620,6 +62751,7 @@ OutputControl:Table:Style,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
+       \key InchPoundExceptElectricity
        \default None
 
 OutputControl:ReportingTolerances,
@@ -63067,6 +63199,7 @@ Output:SQLite,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
+       \key InchPoundExceptElectricity
        \default UseOutputControlTableStyle
 
 Output:EnvironmentalImpactFactors,

@@ -36,7 +36,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_BoilerHotWater) {
 
   EXPECT_TRUE(bhw.setFuelType("Propane"));
   EXPECT_TRUE(bhw.setNominalCapacity(1.0));
-  EXPECT_TRUE(bhw.setNominalThermalEfficiency(0.9));
+  EXPECT_TRUE(bhw.setNominalThermalEfficiency(1.1));
   EXPECT_TRUE(bhw.setEfficiencyCurveTemperatureEvaluationVariable("EnteringBoiler"));
   CurveQuadratic curve1(m);
   EXPECT_TRUE(bhw.setNormalizedBoilerEfficiencyCurve(curve1));
@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_BoilerHotWater) {
   EXPECT_EQ(bhw.nameString(), idf_bhw.getString(Boiler_HotWaterFields::Name, false).get());
   EXPECT_EQ("Propane", idf_bhw.getString(Boiler_HotWaterFields::FuelType, false).get());
   EXPECT_EQ(1.0, idf_bhw.getDouble(Boiler_HotWaterFields::NominalCapacity, false).get());
-  EXPECT_EQ(0.9, idf_bhw.getDouble(Boiler_HotWaterFields::NominalThermalEfficiency, false).get());
+  EXPECT_EQ(1.1, idf_bhw.getDouble(Boiler_HotWaterFields::NominalThermalEfficiency, false).get());
   EXPECT_EQ("EnteringBoiler", idf_bhw.getString(Boiler_HotWaterFields::EfficiencyCurveTemperatureEvaluationVariable, false).get());
   EXPECT_EQ(curve1.nameString(), idf_bhw.getString(Boiler_HotWaterFields::NormalizedBoilerEfficiencyCurveName, false).get());
   EXPECT_EQ(3.0, idf_bhw.getDouble(Boiler_HotWaterFields::DesignWaterFlowRate, false).get());

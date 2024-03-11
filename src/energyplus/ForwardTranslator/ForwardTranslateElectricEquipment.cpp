@@ -60,7 +60,7 @@ namespace energyplus {
 
     d = definition.wattsperSpaceFloorArea();
     if (d) {
-      idfObject.setDouble(ElectricEquipmentFields::WattsperZoneFloorArea, (*d) * multiplier);
+      idfObject.setDouble(ElectricEquipmentFields::WattsperFloorArea, (*d) * multiplier);
     }
 
     d = definition.wattsperPerson();
