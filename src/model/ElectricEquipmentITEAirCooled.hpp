@@ -9,6 +9,8 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoadInstance.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -109,11 +111,13 @@ namespace model {
 
     boost::optional<double> wattsperUnit() const;
 
-    boost::optional<double> wattsperZoneFloorArea() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperZoneFloorArea() const;
 
     double getWattsperUnit(double floorArea) const;
 
-    double getWattsperZoneFloorArea(double floorArea) const;
+    double getWattsperSpaceFloorArea(double floorArea) const;
+    OS_DEPRECATED(3, 8, 0) double getWattsperZoneFloorArea(double floorArea) const;
 
     //@}
    protected:
@@ -140,3 +144,4 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_HPP
+

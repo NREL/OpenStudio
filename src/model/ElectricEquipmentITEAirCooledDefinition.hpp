@@ -9,6 +9,8 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoadDefinition.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -65,7 +67,8 @@ namespace model {
 
     boost::optional<double> wattsperUnit() const;
 
-    boost::optional<double> wattsperZoneFloorArea() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperZoneFloorArea() const;
 
     Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
 
@@ -125,7 +128,8 @@ namespace model {
 
     bool setWattsperUnit(double wattsperUnit);
 
-    bool setWattsperZoneFloorArea(double wattsperZoneFloorArea);
+    bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
+    OS_DEPRECATED(3, 8, 0) bool setWattsperZoneFloorArea(double wattsperSpaceFloorArea);
 
     bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
@@ -191,7 +195,8 @@ namespace model {
 
     double getWattsperUnit(double floorArea) const;
 
-    double getWattsperZoneFloorArea(double floorArea) const;
+    double getWattsperSpaceFloorArea(double floorArea) const;
+    OS_DEPRECATED(3, 8, 0) double getWattsperZoneFloorArea(double floorArea) const;
 
     //@}
    protected:

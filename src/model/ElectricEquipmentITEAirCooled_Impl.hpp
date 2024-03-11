@@ -122,11 +122,11 @@ namespace model {
 
       boost::optional<double> wattsperUnit() const;
 
-      boost::optional<double> wattsperZoneFloorArea() const;
+      boost::optional<double> wattsperSpaceFloorArea() const;
 
       double getWattsperUnit(double floorArea) const;
 
-      double getWattsperZoneFloorArea(double floorArea) const;
+      double getWattsperSpaceFloorArea(double floorArea) const;
 
       //@}
      protected:

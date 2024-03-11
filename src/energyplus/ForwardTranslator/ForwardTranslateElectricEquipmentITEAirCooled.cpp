@@ -172,7 +172,7 @@ namespace energyplus {
       idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, (*d) * multiplier);
     }
 
-    d = definition.wattsperZoneFloorArea();
+    d = definition.wattsperSpaceFloorArea();
     if (d) {
       idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, (*d) * multiplier);
     }

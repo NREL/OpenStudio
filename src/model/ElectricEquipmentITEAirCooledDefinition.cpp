@@ -24,6 +24,8 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
+
 namespace openstudio {
 namespace model {
 
@@ -90,10 +92,10 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> ElectricEquipmentITEAirCooledDefinition_Impl::wattsperZoneFloorArea() const {
+    boost::optional<double> ElectricEquipmentITEAirCooledDefinition_Impl::wattsperSpaceFloorArea() const {
       boost::optional<double> result;
       if (istringEqual("Watts/Area", this->designPowerInputCalculationMethod())) {
-        result = getDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperZoneFloorArea, true);
+        result = getDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperSpaceFloorArea, true);
         //OS_ASSERT(result);
       }
       return result;
@@ -272,7 +274,7 @@ namespace model {
       if (wmethod == "watts/unit") {
         return setWattsperUnit(getWattsperUnit(floorArea));
       } else if (wmethod == "watts/area") {
-        return setWattsperZoneFloorArea(getWattsperZoneFloorArea(floorArea));
+        return setWattsperSpaceFloorArea(getWattsperSpaceFloorArea(floorArea));
       }
 
       return false;
@@ -297,20 +299,20 @@ namespace model {
       return result;
     }
 
-    bool ElectricEquipmentITEAirCooledDefinition_Impl::setWattsperZoneFloorArea(boost::optional<double> wattsperZoneFloorArea) {
+    bool ElectricEquipmentITEAirCooledDefinition_Impl::setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea) {
       bool result = true;
-      if (wattsperZoneFloorArea) {
-        if (*wattsperZoneFloorArea < 0) {
+      if (wattsperSpaceFloorArea) {
+        if (*wattsperSpaceFloorArea < 0) {
           result = false;
         } else {
           result = setString(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignPowerInputCalculationMethod, "Watts/Area");
           OS_ASSERT(result);
-          result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperZoneFloorArea, wattsperZoneFloorArea.get());
+          result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperSpaceFloorArea, wattsperSpaceFloorArea.get());
           OS_ASSERT(result);
         }
       } else {
         if (istringEqual("Watts/Area", this->designPowerInputCalculationMethod())) {
-          result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperZoneFloorArea, 0.0);
+          result = setDouble(OS_ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperSpaceFloorArea, 0.0);
         }
       }
       return result;
@@ -475,14 +477,14 @@ namespace model {
       if (method == "Watts/Unit") {
         return wattsperUnit().get();
       } else if (method == "Watts/Area") {
-        return wattsperZoneFloorArea().get() * floorArea;
+        return wattsperSpaceFloorArea().get() * floorArea;
       }
 
       OS_ASSERT(false);
       return 0.0;
     }
 
-    double ElectricEquipmentITEAirCooledDefinition_Impl::getWattsperZoneFloorArea(double floorArea) const {
+    double ElectricEquipmentITEAirCooledDefinition_Impl::getWattsperSpaceFloorArea(double floorArea) const {
       std::string method = designPowerInputCalculationMethod();
 
       if (method == "Watts/Unit") {
@@ -491,7 +493,7 @@ namespace model {
         }
         return wattsperUnit().get() / floorArea;
       } else if (method == "Watts/Area") {
-        return wattsperZoneFloorArea().get();
+        return wattsperSpaceFloorArea().get();
       }
 
       OS_ASSERT(false);
@@ -597,8 +599,8 @@ namespace model {
     return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->wattsperUnit();
   }
 
-  boost::optional<double> ElectricEquipmentITEAirCooledDefinition::wattsperZoneFloorArea() const {
-    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->wattsperZoneFloorArea();
+  boost::optional<double> ElectricEquipmentITEAirCooledDefinition::wattsperSpaceFloorArea() const {
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->wattsperSpaceFloorArea();
   }
 
   Curve ElectricEquipmentITEAirCooledDefinition::cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const {
@@ -711,8 +713,8 @@ namespace model {
     return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setWattsperUnit(wattsperUnit);
   }
 
-  bool ElectricEquipmentITEAirCooledDefinition::setWattsperZoneFloorArea(double wattsperZoneFloorArea) {
-    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setWattsperZoneFloorArea(wattsperZoneFloorArea);
+  bool ElectricEquipmentITEAirCooledDefinition::setWattsperSpaceFloorArea(double wattsperSpaceFloorArea) {
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
   }
 
   bool ElectricEquipmentITEAirCooledDefinition::setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve) {
@@ -833,8 +835,24 @@ namespace model {
     return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->getWattsperUnit(floorArea);
   }
 
+  double ElectricEquipmentITEAirCooledDefinition::getWattsperSpaceFloorArea(double floorArea) const {
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->getWattsperSpaceFloorArea(floorArea);
+  }
+
+  // DEPRECATED
+  boost::optional<double> ElectricEquipmentITEAirCooledDefinition::wattsperZoneFloorArea() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use wattsperSpaceFloorArea instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->wattsperSpaceFloorArea();
+  }
+
+  bool ElectricEquipmentITEAirCooledDefinition::setWattsperZoneFloorArea(double wattsperSpaceFloorArea) {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use setWattsperSpaceFloorArea instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->setWattsperSpaceFloorArea(wattsperSpaceFloorArea);
+  }
+
   double ElectricEquipmentITEAirCooledDefinition::getWattsperZoneFloorArea(double floorArea) const {
-    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->getWattsperZoneFloorArea(floorArea);
+    DEPRECATED_AT_MSG(3, 8, 0, "Use getWattsperSpaceFloorArea instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooledDefinition_Impl>()->getWattsperSpaceFloorArea(floorArea);
   }
 
   /// @cond

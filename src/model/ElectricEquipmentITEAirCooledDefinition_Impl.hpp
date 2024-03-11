@@ -53,7 +53,7 @@ namespace model {
 
       boost::optional<double> wattsperUnit() const;
 
-      boost::optional<double> wattsperZoneFloorArea() const;
+      boost::optional<double> wattsperSpaceFloorArea() const;
 
       Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
       boost::optional<Curve> optionalCPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
@@ -115,7 +115,7 @@ namespace model {
 
       bool setWattsperUnit(boost::optional<double> wattsperUnit);
 
-      bool setWattsperZoneFloorArea(boost::optional<double> wattsperZoneFloorArea);
+      bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
 
       bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
@@ -181,7 +181,7 @@ namespace model {
 
       double getWattsperUnit(double floorArea) const;
 
-      double getWattsperZoneFloorArea(double floorArea) const;
+      double getWattsperSpaceFloorArea(double floorArea) const;
 
       //@}
      protected:

@@ -215,7 +215,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   // 20 W/m^2
   SpaceType spaceType(model);
   ElectricEquipmentITEAirCooledDefinition definition(model);
-  definition.setWattsperZoneFloorArea(20.0);
+  definition.setWattsperSpaceFloorArea(20.0);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
   electricEquipmentITEAirCooled.setSpaceType(spaceType);
 
@@ -315,7 +315,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
 
   // 20 W/m^2
   ElectricEquipmentITEAirCooledDefinition definition(model);
-  definition.setWattsperZoneFloorArea(20.0);
+  definition.setWattsperSpaceFloorArea(20.0);
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -629,9 +629,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   // | Total    |                                                 750.0                                                               |
   // |================================================================================================================================|
 
-  EXPECT_TRUE(iteSpace1Definition.setWattsperZoneFloorArea(1.0));
+  EXPECT_TRUE(iteSpace1Definition.setWattsperSpaceFloorArea(1.0));
   EXPECT_TRUE(iteSpace3Definition.setWattsperUnit(150.0));
-  EXPECT_TRUE(iteOfficeDefinition.setWattsperZoneFloorArea(1.2));
+  EXPECT_TRUE(iteOfficeDefinition.setWattsperSpaceFloorArea(1.2));
   EXPECT_TRUE(iteBuildingDefinition.setWattsperUnit(130.0));
 
   auto spaces = z.spaces();
@@ -686,11 +686,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
         // These two are per floor area
       } else if (name.find(iteOffice.nameString()) != std::string::npos) {
         EXPECT_EQ(120.0, w);
-        EXPECT_EQ(iteOfficeDefinition.wattsperZoneFloorArea().get() * spaceFloorArea, w);
+        EXPECT_EQ(iteOfficeDefinition.wattsperSpaceFloorArea().get() * spaceFloorArea, w);
         EXPECT_EQ(iteOffice.getWattsperUnit(spaceFloorArea), w);
       } else if (name.find(iteSpace1.nameString()) != std::string::npos) {
         EXPECT_EQ(100.0, w);
-        EXPECT_EQ(iteSpace1Definition.wattsperZoneFloorArea().get() * spaceFloorArea, w);
+        EXPECT_EQ(iteSpace1Definition.wattsperSpaceFloorArea().get() * spaceFloorArea, w);
         EXPECT_EQ(iteSpace1.getWattsperUnit(spaceFloorArea), w);
       }
     }
@@ -798,7 +798,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
         ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
         double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea).get();
 
-        EXPECT_EQ(iteOffice.wattsperZoneFloorArea().get(), w_perArea);
+        EXPECT_EQ(iteOffice.wattsperSpaceFloorArea().get(), w_perArea);
 
         double w = w_perArea * spaceFloorArea;
 
@@ -823,7 +823,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
         ASSERT_TRUE(ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, false));
         double w_perArea = ite.getDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea).get();
 
-        EXPECT_EQ(iteSpace1.wattsperZoneFloorArea().get(), w_perArea);
+        EXPECT_EQ(iteSpace1.wattsperSpaceFloorArea().get(), w_perArea);
 
         double w = w_perArea * spaceFloorArea;
 

@@ -1710,12 +1710,12 @@ namespace model {
       double area = floorArea();
 
       for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
-        result += iTequipment.getWattsperZoneFloorArea(area);
+        result += iTequipment.getWattsperSpaceFloorArea(area);
       }
 
       if (OptionalSpaceType spaceType = this->spaceType()) {
         for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
-          result += iTequipment.getWattsperZoneFloorArea(area);
+          result += iTequipment.getWattsperSpaceFloorArea(area);
         }
       }
 
