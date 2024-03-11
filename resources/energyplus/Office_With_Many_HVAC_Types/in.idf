@@ -1,4 +1,4 @@
-  Version,23.2;
+  Version,24.1;
 
   Building,
     Building 1,              !- Name
@@ -329,6 +329,7 @@
     Autosize,                !- Cooling Supply Air Flow Rate {m3/s}
     Autosize,                !- Heating Supply Air Flow Rate {m3/s}
     Autosize,                !- No Load Supply Air Flow Rate {m3/s}
+    No,                      !- No Load Supply Air Flow Rate Control Set To Low Speed
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
@@ -728,6 +729,7 @@
     Autosize,                !- Cooling Supply Air Flow Rate {m3/s}
     Autosize,                !- Heating Supply Air Flow Rate {m3/s}
     Autosize,                !- No Load Supply Air Flow Rate {m3/s}
+    No,                      !- No Load Supply Air Flow Rate Control Set To Low Speed
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
@@ -9538,7 +9540,7 @@
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
-    5.38195520835486,        !- Watts per Zone Floor Area {W/m2}
+    5.38195520835486,        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Return Air Fraction
     0,                       !- Fraction Radiant
@@ -9563,7 +9565,7 @@
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
-    1.72222566667356,        !- Watts per Zone Floor Area {W/m2}
+    1.72222566667356,        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
     0,                       !- Fraction Radiant
@@ -9606,7 +9608,7 @@
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
-    11.8403014583807,        !- Watts per Zone Floor Area {W/m2}
+    11.8403014583807,        !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Return Air Fraction
     0,                       !- Fraction Radiant
@@ -9631,7 +9633,7 @@
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
-    7.6423763958639,         !- Watts per Zone Floor Area {W/m2}
+    7.6423763958639,         !- Watts per Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0,                       !- Fraction Latent
     0,                       !- Fraction Radiant

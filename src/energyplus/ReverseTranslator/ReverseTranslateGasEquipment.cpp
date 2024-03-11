@@ -54,7 +54,7 @@ namespace energyplus {
         LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Watts/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::GasEquipmentFields::PowerperFloorArea);
       if (d) {
         definition.setWattsperSpaceFloorArea(*d);
       } else {

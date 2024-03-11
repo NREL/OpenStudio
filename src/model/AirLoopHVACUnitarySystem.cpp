@@ -484,6 +484,10 @@ namespace model {
         OS_AirLoopHVAC_UnitarySystemFields::DesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired, true);
     }
 
+    bool AirLoopHVACUnitarySystem_Impl::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
+      return getBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed);
+    }
+
     boost::optional<double> AirLoopHVACUnitarySystem_Impl::maximumSupplyAirTemperature() const {
       return getDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, true);
     }
@@ -1099,6 +1103,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool AirLoopHVACUnitarySystem_Impl::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+      return setBooleanFieldValue(OS_AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed,
+                                  noLoadSupplyAirFlowRateControlSetToLowSpeed);
+    }
+
     bool AirLoopHVACUnitarySystem_Impl::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {
       const bool result = setDouble(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, maximumSupplyAirTemperature);
       return result;
@@ -1330,6 +1339,7 @@ namespace model {
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringCoolingOperation("None");
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodDuringHeatingOperation("None");
     getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("None");
+    setNoLoadSupplyAirFlowRateControlSetToLowSpeed(true);
     setMaximumSupplyAirTemperature(80.0);
     setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
     ok = setAncilliaryOnCycleElectricPower(0.0);
@@ -1541,6 +1551,10 @@ namespace model {
     AirLoopHVACUnitarySystem::designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired() const {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()
       ->designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
+  }
+
+  bool AirLoopHVACUnitarySystem::noLoadSupplyAirFlowRateControlSetToLowSpeed() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->noLoadSupplyAirFlowRateControlSetToLowSpeed();
   }
 
   boost::optional<double> AirLoopHVACUnitarySystem::maximumSupplyAirTemperature() const {
@@ -1812,6 +1826,11 @@ namespace model {
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()
       ->setDesignSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired(
         designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired);
+  }
+
+  bool AirLoopHVACUnitarySystem::setNoLoadSupplyAirFlowRateControlSetToLowSpeed(bool noLoadSupplyAirFlowRateControlSetToLowSpeed) {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->setNoLoadSupplyAirFlowRateControlSetToLowSpeed(
+      noLoadSupplyAirFlowRateControlSetToLowSpeed);
   }
 
   bool AirLoopHVACUnitarySystem::setMaximumSupplyAirTemperature(double maximumSupplyAirTemperature) {

@@ -23,7 +23,7 @@
 ! converted into EnergyPlus objects using a spreadsheet called ConvertENCOSTtoEnergyPlusLifeCycleCost.xls
 ! which is available upon request.
 
-  Version,23.2;
+  Version,24.1;
 
   LifeCycleCost:UsePriceEscalation,
     NorthEast  Residential-Electricity,  !- LCC Price Escalation Name

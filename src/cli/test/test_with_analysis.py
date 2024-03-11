@@ -157,7 +157,7 @@ def test_run_log_debug(osclipath, is_labs: bool):
     assert 50 < len(run_log.splitlines()) < 100
 
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Trace, is_labs=is_labs) == 0
-    assert 30 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) < 40
+    assert 30 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) < 45
     assert 20 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Info, is_labs=is_labs) < 50
     assert 1 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Warn, is_labs=is_labs) < 4
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Error, is_labs=is_labs) == 0
@@ -192,7 +192,7 @@ def test_run_log_toplevel_verbose(osclipath, is_labs: bool):
     assert 50 < len(run_log.splitlines()) < 100
 
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Trace, is_labs=is_labs) == 0
-    assert 30 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) < 40
+    assert 30 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Debug, is_labs=is_labs) < 45
     assert 20 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Info, is_labs=is_labs) < 50
     assert 1 < count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Warn, is_labs=is_labs) < 4
     assert count_msg_with_log_level(run_log=run_log, log_level=LogLevel.Error, is_labs=is_labs) == 0
