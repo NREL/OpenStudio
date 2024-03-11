@@ -149,14 +149,14 @@ namespace model {
         cost.convertToCostPerEach();
       }
 
-      boost::optional<double> wattsperUnit = electricEquipmentITEAirCooledDefinition.wattsperUnit();
-      if (wattsperUnit) {
+      boost::optional<double> designLevel = electricEquipmentITEAirCooledDefinition.designLevel();
+      if (designLevel) {
         return true;
       }
 
       boost::optional<double> wattsperSpaceFloorArea = electricEquipmentITEAirCooledDefinition.wattsperSpaceFloorArea();
       if (wattsperSpaceFloorArea) {
-        return electricEquipmentITEAirCooledDefinition.setWattsperUnit(*wattsperSpaceFloorArea * space->floorArea());
+        return electricEquipmentITEAirCooledDefinition.setDesignLevel(*wattsperSpaceFloorArea * space->floorArea());
       }
 
       return false;
@@ -192,7 +192,7 @@ namespace model {
 
     bool ElectricEquipmentITEAirCooled_Impl::isAbsolute() const {
       ElectricEquipmentITEAirCooledDefinition definition = electricEquipmentITEAirCooledDefinition();
-      if (definition.wattsperUnit()) {
+      if (definition.designLevel()) {
         return true;
       }
       return false;
@@ -362,15 +362,15 @@ namespace model {
 
     // Other functions
 
-    boost::optional<double> ElectricEquipmentITEAirCooled_Impl::wattsperUnit() const {
-      OptionalDouble result = electricEquipmentITEAirCooledDefinition().wattsperUnit();
+    boost::optional<double> ElectricEquipmentITEAirCooled_Impl::designLevel() const {
+      OptionalDouble result = electricEquipmentITEAirCooledDefinition().designLevel();
       if (result) {
         return result.get() * multiplier();
       }
       return result;
     }
 
-    boost::optional<double> ElectricEquipmentITEAirCooled_Impl::wattsperSpaceFloorArea() const {
+    boost::optional<double> ElectricEquipmentITEAirCooled_Impl::powerPerFloorArea() const {
       OptionalDouble result = electricEquipmentITEAirCooledDefinition().wattsperSpaceFloorArea();
       if (result) {
         return result.get() * multiplier();
@@ -378,12 +378,12 @@ namespace model {
       return result;
     }
 
-    double ElectricEquipmentITEAirCooled_Impl::getWattsperUnit(double floorArea) const {
-      return electricEquipmentITEAirCooledDefinition().getWattsperUnit(floorArea) * multiplier();
+    double ElectricEquipmentITEAirCooled_Impl::getDesignLevel(double floorArea) const {
+      return electricEquipmentITEAirCooledDefinition().getDesignLevel(floorArea) * multiplier();
     }
 
-    double ElectricEquipmentITEAirCooled_Impl::getWattsperSpaceFloorArea(double floorArea) const {
-      return electricEquipmentITEAirCooledDefinition().getWattsperSpaceFloorArea(floorArea) * multiplier();
+    double ElectricEquipmentITEAirCooled_Impl::getPowerPerFloorArea(double floorArea) const {
+      return electricEquipmentITEAirCooledDefinition().getPowerPerFloorArea(floorArea) * multiplier();
     }
 
   }  // namespace detail
@@ -498,32 +498,42 @@ namespace model {
     getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->resetElectricPowerSupplyEndUseSubcategory();
   }
 
-  boost::optional<double> ElectricEquipmentITEAirCooled::wattsperUnit() const {
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->wattsperUnit();
+  boost::optional<double> ElectricEquipmentITEAirCooled::designLevel() const {
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->designLevel();
   }
 
-  boost::optional<double> ElectricEquipmentITEAirCooled::wattsperSpaceFloorArea() const {
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->wattsperSpaceFloorArea();
+  boost::optional<double> ElectricEquipmentITEAirCooled::powerPerFloorArea() const {
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->powerPerFloorArea();
   }
 
-  double ElectricEquipmentITEAirCooled::getWattsperUnit(double floorArea) const {
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getWattsperUnit(floorArea);
+  double ElectricEquipmentITEAirCooled::getDesignLevel(double floorArea) const {
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getDesignLevel(floorArea);
   }
 
-  double ElectricEquipmentITEAirCooled::getWattsperSpaceFloorArea(double floorArea) const {
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getWattsperSpaceFloorArea(floorArea);
+  double ElectricEquipmentITEAirCooled::getPowerPerFloorArea(double floorArea) const {
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getPowerPerFloorArea(floorArea);
   }
 
   // DEPRECATED
 
+  boost::optional<double> ElectricEquipmentITEAirCooled::wattsperUnit() const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use designLevel instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->designLevel();
+  }
+
+  double ElectricEquipmentITEAirCooled::getWattsperUnit(double floorArea) const {
+    DEPRECATED_AT_MSG(3, 8, 0, "Use getDesignLevel instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getDesignLevel(floorArea);
+  }
+
   boost::optional<double> ElectricEquipmentITEAirCooled::wattsperZoneFloorArea() const {
-    DEPRECATED_AT_MSG(3, 8, 0, "Use wattsperSpaceFloorArea instead.");
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->wattsperSpaceFloorArea();
+    DEPRECATED_AT_MSG(3, 8, 0, "Use powerPerFloorArea instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->powerPerFloorArea();
   }
 
   double ElectricEquipmentITEAirCooled::getWattsperZoneFloorArea(double floorArea) const {
-    DEPRECATED_AT_MSG(3, 8, 0, "Use getWattsperSpaceFloorArea instead.");
-    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getWattsperSpaceFloorArea(floorArea);
+    DEPRECATED_AT_MSG(3, 8, 0, "Use getPowerPerFloorArea instead.");
+    return getImpl<detail::ElectricEquipmentITEAirCooled_Impl>()->getPowerPerFloorArea(floorArea);
   }
 
   /// @cond

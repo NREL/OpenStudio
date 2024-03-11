@@ -61,8 +61,8 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_DefaultConstructor1) {
 
   //model.save(toPath("./ITE1.osm"), true);
 
-  ASSERT_TRUE(definition.wattsperUnit());
-  EXPECT_EQ(0, definition.wattsperUnit().get());
+  ASSERT_TRUE(definition.designLevel());
+  EXPECT_EQ(0, definition.designLevel().get());
   EXPECT_FALSE(definition.wattsperSpaceFloorArea());
 }
 
@@ -142,11 +142,11 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
 
   ASSERT_TRUE(electricEquipmentITEAirCooled.setSpace(space1.get()));
-  ASSERT_TRUE(definition.wattsperUnit());
-  EXPECT_EQ(0, definition.wattsperUnit().get());
+  ASSERT_TRUE(definition.designLevel());
+  EXPECT_EQ(0, definition.designLevel().get());
   EXPECT_FALSE(definition.wattsperSpaceFloorArea());
-  ASSERT_TRUE(definition.setWattsperUnit(50.0));
-  ASSERT_EQ(50.0, definition.wattsperUnit().get());
+  ASSERT_TRUE(definition.setDesignLevel(50.0));
+  ASSERT_EQ(50.0, definition.designLevel().get());
 
   //change input method to watts/area, see if watts/area is assigned.
   ASSERT_TRUE(definition.setDesignPowerInputCalculationMethod("Watts/Area", electricEquipmentITEAirCooled.floorArea()));

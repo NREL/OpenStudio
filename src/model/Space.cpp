@@ -1615,12 +1615,12 @@ namespace model {
       double area = floorArea();
 
       for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
-        result += iTequipment.getWattsperUnit(area);
+        result += iTequipment.getDesignLevel(area);
       }
 
       if (OptionalSpaceType spaceType = this->spaceType()) {
         for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
-          result += iTequipment.getWattsperUnit(area);
+          result += iTequipment.getDesignLevel(area);
         }
       }
 
@@ -1710,12 +1710,12 @@ namespace model {
       double area = floorArea();
 
       for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
-        result += iTequipment.getWattsperSpaceFloorArea(area);
+        result += iTequipment.getPowerPerFloorArea(area);
       }
 
       if (OptionalSpaceType spaceType = this->spaceType()) {
         for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
-          result += iTequipment.getWattsperSpaceFloorArea(area);
+          result += iTequipment.getPowerPerFloorArea(area);
         }
       }
 

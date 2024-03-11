@@ -906,7 +906,7 @@ namespace model {
     boost::optional<double> SpaceType_Impl::electricEquipmentITEAirCooledPowerPerFloorArea() const {
       double result(0.0);
       for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
-        OptionalDouble temp = iTequipment.wattsperSpaceFloorArea();
+        OptionalDouble temp = iTequipment.powerPerFloorArea();
         if (temp) {
           result += temp.get();
         } else {

@@ -109,14 +109,20 @@ namespace model {
     /** @name Other */
     //@{
 
-    boost::optional<double> wattsperUnit() const;
+    /** Returns the designLevel if possible based on the underlying data of electricEquipmentITEAirCooledDefinition(). */
+    boost::optional<double> designLevel() const;
+    OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperUnit() const;
 
-    boost::optional<double> wattsperSpaceFloorArea() const;
+    /** Returns the designLevel if possible based on the underlying data of electricEquipmentITEAirCooledDefinition(). */
+    boost::optional<double> powerPerFloorArea() const;
     OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperZoneFloorArea() const;
 
-    double getWattsperUnit(double floorArea) const;
+    /** Returns the design level represented by this instance, assuming floorArea (m^2). */
+    double getDesignLevel(double floorArea) const;
+    OS_DEPRECATED(3, 8, 0) double getWattsperUnit(double floorArea) const;
 
-    double getWattsperSpaceFloorArea(double floorArea) const;
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2). */
+    double getPowerPerFloorArea(double floorArea) const;
     OS_DEPRECATED(3, 8, 0) double getWattsperZoneFloorArea(double floorArea) const;
 
     //@}
