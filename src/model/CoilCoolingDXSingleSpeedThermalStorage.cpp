@@ -167,6 +167,219 @@ namespace model {
       return false;
     }
 
+    std::vector<ModelObject> CoilCoolingDXSingleSpeedThermalStorage_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      boost::optional<ModelObject> curve;
+
+      curve = coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModePartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeEvaporatorPartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeStorageChargeCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeStorageChargeCapacityFunctionofTotalEvaporatorPLRCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeStorageEnergyPartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeSensibleHeatRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndChargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeTotalEvaporatorCoolingCapacityFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeEvaporatorEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeEvaporatorPartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageDischargeCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageDischargeCapacityFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageDischargeCapacityFunctionofTotalEvaporatorPLRCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeStorageEnergyPartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeSensibleHeatRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = coolingAndDischargeModeSensibleHeatRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = chargeOnlyModeStorageChargeCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = chargeOnlyModeStorageEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeStorageDischargeCapacityFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeStorageDischargeCapacityFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeEnergyInputRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeEnergyInputRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModePartLoadFractionCorrelationCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeSensibleHeatRatioFunctionofTemperatureCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      curve = dischargeOnlyModeSensibleHeatRatioFunctionofFlowFractionCurve();
+      if (curve) {
+        result.push_back(curve.get());
+      }
+
+      return result;
+    }
+
     ComponentType CoilCoolingDXSingleSpeedThermalStorage_Impl::componentType() const {
       return ComponentType::Cooling;
     }

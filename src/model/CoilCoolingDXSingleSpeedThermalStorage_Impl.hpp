@@ -74,6 +74,8 @@ namespace model {
 
       virtual bool addToNode(Node& node) override;
 
+      virtual std::vector<ModelObject> children() const override;
+
       virtual ComponentType componentType() const override;
       virtual std::vector<FuelType> coolingFuelTypes() const override;
       virtual std::vector<FuelType> heatingFuelTypes() const override;
