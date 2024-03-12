@@ -3,6 +3,9 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
+#ifndef WORKFLOW_RUNPREPROCESSMONTHLY_REPORTS_HPP
+#define WORKFLOW_RUNPREPROCESSMONTHLY_REPORTS_HPP
+
 #include <array>
 #include <string_view>
 
@@ -243,3 +246,5 @@ static constexpr std::array<std::string_view, 7> c_metersForced{
   "Output:Meter,DistrictCooling:Facility,Timestep;",
   "Output:Meter,DistrictHeating:Facility,Timestep;",
 };
+
+#endif  // WORKFLOW_RUNPREPROCESSMONTHLY_REPORTS_HPP
