@@ -989,10 +989,10 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeedThermalStorage_clone) {
     EXPECT_EQ(1, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
 
     dxClone.remove();
-    EXPECT_EQ(0, model.getModelObjects<Curve>().size());
-    EXPECT_EQ(0, model.getConcreteModelObjects<CurveBiquadratic>().size());
-    EXPECT_EQ(0, model.getConcreteModelObjects<CurveQuadratic>().size());
-    EXPECT_EQ(0, model.getConcreteModelObjects<CurveTriquadratic>().size());
+    EXPECT_EQ(3, model.getModelObjects<Curve>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveBiquadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveQuadratic>().size());
+    EXPECT_EQ(1, model.getConcreteModelObjects<CurveTriquadratic>().size());
     EXPECT_EQ(0, model.getConcreteModelObjects<CoilCoolingDXSingleSpeedThermalStorage>().size());
   }
 }
