@@ -157,7 +157,7 @@ void OSWorkflow::runEnergyPlus() {
     // TODO: workflow-gem was manually running expandObjects prior to the potential serialization to json
     // Should we rather pass -x to the E+ cmd line?
     if (!workflowJSON.runOptions()->skipExpandObjects()) {
-      const std::string cmd = openstudio::toString(runDirResults.expandObjectsExe.native());
+      const std::string cmd = fmt::format("\"{}\"", openstudio::toString(runDirResults.expandObjectsExe.native()));
       LOG(Info, "Running command '" << cmd << "'");
 
       int result = 0;
