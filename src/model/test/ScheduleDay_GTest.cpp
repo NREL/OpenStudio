@@ -333,11 +333,9 @@ TEST_F(ModelFixture, Schedule_Day_getValues) {
   Time t2("21:45:00");
   sch_day.addValue(t2, 1);
 
-  auto timestep = model
-                    .getUniqueModelObject<Timestep>()
-    :
+  auto timestep = model.getUniqueModelObject<Timestep>();
 
-      timestep.setNumberOfTimestepsPerHour(1);
+  timestep.setNumberOfTimestepsPerHour(1);
   std::vector<double> values24 = sch_day.getValues(timestep);
   EXPECT_EQ(24 * 1, values24.size());
 
