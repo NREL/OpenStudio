@@ -229,7 +229,7 @@ namespace model {
             break;
           }
           ++i;
-        }          
+        }
       }
       return result;
     }
