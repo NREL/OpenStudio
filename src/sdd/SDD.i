@@ -6,7 +6,7 @@
 #endif
 
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define SDD_API
 
 %include <utilities/core/CommonInclude.i>

@@ -11,9 +11,6 @@ TEST(OpenStudioTest, LoggerGlobal) {
   openstudio::ScriptEngineInstance pythonEngine("pythonengine", {});
   openstudio::ScriptEngineInstance rubyEngine("rubyengine", {});
 
-  pythonEngine->exec("import openstudio");
-  rubyEngine->exec("require 'openstudio'");
-
   pythonEngine->exec("openstudio.Logger.instance().standardOutLogger().disable()");
   isEnabled = openstudio::Logger::instance().standardOutLogger().isEnabled();
   EXPECT_FALSE(isEnabled);
@@ -21,4 +18,7 @@ TEST(OpenStudioTest, LoggerGlobal) {
   rubyEngine->exec("OpenStudio::Logger::instance().standardOutLogger().enable()");
   isEnabled = openstudio::Logger::instance().standardOutLogger().isEnabled();
   EXPECT_TRUE(isEnabled);
+
+  pythonEngine.reset();
+  rubyEngine.reset();
 }

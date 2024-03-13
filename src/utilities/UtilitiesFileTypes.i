@@ -5,9 +5,7 @@
 %module openstudioutilitiesfiletypes
 #endif
 
-#define UTILITIES_API
-#define UTILITIES_TEMPLATE_EXT
-
+%include <utilities/UtilitiesAPI.hpp>
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/UtilitiesCore.i>

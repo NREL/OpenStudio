@@ -16,6 +16,8 @@ namespace keywords = boost::log::keywords;
 
 namespace openstudio {
 
+std::shared_ptr<LoggerSingleton> Logger::obj = nullptr;
+
 /// convenience function for SWIG, prefer macros in C++
 void logFree(LogLevel level, const std::string& channel, const std::string& message) {
   BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;

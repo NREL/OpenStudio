@@ -18,6 +18,7 @@
 #include <sstream>
 #include <set>
 #include <map>
+#include <memory>
 #include <shared_mutex>
 
 /// defines method logChannel() to get a logger for a class
@@ -62,7 +63,6 @@ class Logger;
    */
 class UTILITIES_API LoggerSingleton
 {
-
   friend class Logger;
 
  public:
@@ -132,9 +132,15 @@ class UTILITIES_API Logger
   Logger() = delete;
 
   static LoggerSingleton& instance() {
-    static LoggerSingleton obj;
-    return obj;
+    if (! obj) {
+      obj = std::shared_ptr<LoggerSingleton>(new LoggerSingleton());
+    }
+    return *obj;
   }
+
+ private:
+
+  static std::shared_ptr<LoggerSingleton> obj;
 };
 
 }  // namespace openstudio
