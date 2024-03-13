@@ -16,6 +16,8 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleRule.hpp"
 #include "ScheduleRule_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
@@ -209,6 +211,26 @@ namespace model {
 
       double result = interp(x, y, time.totalDays(), interpMethod, NoneExtrap);
 
+      return result;
+    }
+
+    std::vector<double> getValues(const openstudio::model::Timestep& timestep) const {
+      std::vector<double> values = this->values();          // these are already sorted
+      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+      std::vector<double> result;
+
+      int timesteps = 24.0 * timestep.numberOfTimestepsPerHour();
+      for (size_t timestep = 0; timestep < timesteps; ++timestep) {
+        openstudio::Time t(timestep / timesteps);
+        size_t i = 0;
+        for (const openstudio::Time& time : times) {
+          if (t <= time) {
+            result.push_back(values[i]);
+            break;
+          }
+          ++i;
+        }          
+      }
       return result;
     }
 

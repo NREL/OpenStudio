@@ -69,6 +69,9 @@ namespace model {
     /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
 
+    /// Returns the values for a given timestep.
+    std::vector<double> getValues(const openstudio::model::Timestep& timestep) const;
+
     //@}
     /** @name Setters */
     //@{
