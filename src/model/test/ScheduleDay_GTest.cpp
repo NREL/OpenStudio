@@ -10,6 +10,8 @@
 #include "../ScheduleDay_Impl.hpp"
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleTypeLimits_Impl.hpp"
+#include "../Timestep.hpp"
+#include "../Timestep_Impl.hpp"
 
 #include "../../utilities/time/Date.hpp"
 #include "../../utilities/time/Time.hpp"
@@ -319,4 +321,32 @@ TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity) {
   EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::quiet_NaN()));
   EXPECT_FALSE(sch_day.addValue(t, std::numeric_limits<double>::infinity()));
   EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
+}
+
+TEST_F(ModelFixture, Schedule_Day_getValues) {
+  Model model;
+
+  ScheduleDay sch_day(model);
+
+  Time t1("08:15:00");
+  sch_day.addValue(t1, 0);
+  Time t2("21:45:00");
+  sch_day.addValue(t2, 1);
+
+  auto timestep = model.getUniqueModelObject<Timestep>():
+
+  timestep.setNumberOfTimestepsPerHour(1);
+  std::vector<double> values24 = sch_day.getValues(timestep);
+  EXPECT_EQ(24 * 1, values24.size());
+
+  timestep.setNumberOfTimestepsPerHour(4);
+  std::vector<double> values15 = sch_day.getValues(timestep);
+  EXPECT_EQ(24 * 4, values15.size());
+
+  timestep.setNumberOfTimestepsPerHour(6);
+  std::vector<double> values10 = sch_day.getValues(timestep);
+  EXPECT_EQ(24 * 6, values10.size());
+
+  // TODO: check for 0s and 1s
+  // TODO: check interpolatetoTimestep doesn't matter
 }
