@@ -69,11 +69,19 @@ namespace model {
       /// Returns a vector of values in the same order and with the same number of elements as times.
       virtual std::vector<double> values() const override;
 
-      /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
-      double getValue(const openstudio::Time& time) const;
+      /// Returns the value in effect at the given time.
+      /// If time is less than 0 days or greater than 1 day, 0 is returned.
+      double getValue(const openstudio::Time& time, int numberOfTimestepsPerHour) const;
 
-      /// Returns the values for a given timestep.
-      std::vector<double> getValues(const openstudio::model::Timestep& timestep) const;
+      /// Returns the vector of times marking the end value intervals for a given timesteps per hour.
+      /// Allowable values include 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, and 60.
+      /// These times will be in order and have the same number of elements as getValues.
+      /// All times will be less than or equal to 1 day.
+      std::vector<openstudio::Time> getTimes(int numberOfTimestepsPerHour) const;
+
+      /// Returns the values for a given timesteps per hour.
+      /// Allowable values include 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, and 60.
+      std::vector<double> getValues(int numberOfTimestepsPerHour) const;
 
       //@}
       /** @name Setters */
