@@ -22,10 +22,8 @@
 #include <shared_mutex>
 
 /// defines method logChannel() to get a logger for a class
-#define REGISTER_LOGGER(__logChannel__)        \
-  static openstudio::LogChannel logChannel() { \
-    return __logChannel__;                     \
-  }
+#define REGISTER_LOGGER(__logChannel__) \
+  static openstudio::LogChannel logChannel() { return __logChannel__; }
 
 /// log a message from within a registered class
 #define LOG(__level__, __message__) LOG_FREE(__level__, logChannel(), __message__);
@@ -61,13 +59,13 @@ class Logger;
 
 /** Primary logging class.
    */
-class UTILITIES_API LoggerSingleton
+class UTILITIES_API LoggerImpl
 {
   friend class Logger;
 
  public:
   /// destructor, cleans up, writes xml file footers, etc
-  ~LoggerSingleton();
+  ~LoggerImpl();
 
   /// get logger for standard out
   LogSink standardOutLogger() const;
@@ -97,7 +95,7 @@ class UTILITIES_API LoggerSingleton
 
  private:
   /// private constructor
-  LoggerSingleton();
+  LoggerImpl();
 
   mutable std::shared_mutex m_mutex;
 
@@ -116,31 +114,20 @@ class UTILITIES_API LoggerSingleton
   SinkSetType m_sinks;
 };
 
-/** Surprisingly, LoggerSingleton is not a singleton.
- * Historically, Logger
- * was a template instantiation of openstudio::Singleton<LoggerSingleton>,
- * but the template was found to result in a singleton that was not global
- * across the ScriptEngine DLL boundary (bug on Windows platforms). Logger is a non-template version
- * that is equivalent to openstudio::Singleton<LoggerSingleton>, but this version
- * is global across the ScriptEngine interface. For compatibility reasons,
- * Logger and LoggerSingleton are functionally equivalent to their original
- * implementations, despite the somewhat surprising names.
- */
 class UTILITIES_API Logger
 {
  public:
   Logger() = delete;
 
-  static LoggerSingleton& instance() {
-    if (! obj) {
-      obj = std::shared_ptr<LoggerSingleton>(new LoggerSingleton());
+  static LoggerImpl& instance() {
+    if (!obj) {
+      obj = std::shared_ptr<LoggerImpl>(new LoggerImpl());
     }
     return *obj;
   }
 
  private:
-
-  static std::shared_ptr<LoggerSingleton> obj;
+  static std::shared_ptr<LoggerImpl> obj;
 };
 
 }  // namespace openstudio

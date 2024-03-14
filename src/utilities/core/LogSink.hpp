@@ -76,7 +76,7 @@ class UTILITIES_API LogSink
   void setFormatter(const boost::log::formatter& fmter);
 
  protected:
-  friend class LoggerSingleton;
+  friend class LoggerImpl;
 
   // does not register in the global logger
   LogSink();

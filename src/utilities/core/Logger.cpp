@@ -16,14 +16,14 @@ namespace keywords = boost::log::keywords;
 
 namespace openstudio {
 
-std::shared_ptr<LoggerSingleton> Logger::obj = nullptr;
+std::shared_ptr<LoggerImpl> Logger::obj = nullptr;
 
 /// convenience function for SWIG, prefer macros in C++
 void logFree(LogLevel level, const std::string& channel, const std::string& message) {
   BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;
 }
 
-LoggerSingleton::LoggerSingleton() {
+LoggerImpl::LoggerImpl() {
   // Make current thread id attribute available to logging
   boost::log::core::get()->add_global_attribute("ThreadId", boost::log::attributes::make_function(&std::this_thread::get_id));
 
@@ -40,24 +40,24 @@ LoggerSingleton::LoggerSingleton() {
   //this->addSink(m_standardErrLogger.sink());
 }
 
-LoggerSingleton::~LoggerSingleton() {
+LoggerImpl::~LoggerImpl() {
   // unregister Qt message handler
   //qInstallMsgHandler(consoleLogQtMessage);
 }
 
-LogSink LoggerSingleton::standardOutLogger() const {
+LogSink LoggerImpl::standardOutLogger() const {
   std::shared_lock l{m_mutex};
 
   return m_standardOutLogger;
 }
 
-LogSink LoggerSingleton::standardErrLogger() const {
+LogSink LoggerImpl::standardErrLogger() const {
   std::shared_lock l{m_mutex};
 
   return m_standardErrLogger;
 }
 
-LoggerType& LoggerSingleton::loggerFromChannel(const LogChannel& logChannel) {
+LoggerType& LoggerImpl::loggerFromChannel(const LogChannel& logChannel) {
   std::shared_lock l{m_mutex};
 
   auto it = m_loggerMap.find(logChannel);
@@ -80,7 +80,7 @@ LoggerType& LoggerSingleton::loggerFromChannel(const LogChannel& logChannel) {
   return it->second;
 }
 
-bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink) {
+bool LoggerImpl::findSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::unique_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -88,7 +88,7 @@ bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink) {
   return (it != m_sinks.end());
 }
 
-void LoggerSingleton::addSink(boost::shared_ptr<LogSinkBackend> sink) {
+void LoggerImpl::addSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::shared_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -106,7 +106,7 @@ void LoggerSingleton::addSink(boost::shared_ptr<LogSinkBackend> sink) {
   }
 }
 
-void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
+void LoggerImpl::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::shared_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -124,7 +124,7 @@ void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
   }
 }
 
-void LoggerSingleton::addTimeStampToLogger() {
+void LoggerImpl::addTimeStampToLogger() {
   std::unique_lock l{m_mutex};
 
   // Add a TimeStamp attribute, same as boost::log::add_common_attributes() would do
