@@ -16,8 +16,6 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleRule.hpp"
 #include "ScheduleRule_Impl.hpp"
-#include "Timestep.hpp"
-#include "Timestep_Impl.hpp"
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
@@ -173,13 +171,20 @@ namespace model {
       return m_cachedValues.get();
     }
 
-    double ScheduleDay_Impl::getValue(const openstudio::Time& time) const {
+    double ScheduleDay_Impl::getValue(const openstudio::Time& time, int numberOfTimestepsPerHour) const {
       if (time.totalMinutes() < 0.0 || time.totalDays() > 1.0) {
         return 0.0;
       }
 
-      std::vector<double> values = this->values();          // these are already sorted
-      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+      std::vector<double> values;
+      std::vector<openstudio::Time> times;
+      if (numberOfTimestepsPerHour > 0) {
+        values = this->getValues(numberOfTimestepsPerHour);
+        times = this->getTimes(numberOfTimestepsPerHour);
+      } else {
+        values = this->values();  // these are already sorted
+        times = this->times();    // these are already sorted
+      }
 
       unsigned N = times.size();
       OS_ASSERT(values.size() == N);
@@ -203,7 +208,7 @@ namespace model {
       y[N + 1] = 0.0;
 
       InterpMethod interpMethod;
-      if (this->interpolatetoTimestep()) {
+      if (numberOfTimestepsPerHour > 0) {
         interpMethod = LinearInterp;
       } else {
         interpMethod = HoldNextInterp;
@@ -214,14 +219,36 @@ namespace model {
       return result;
     }
 
-    std::vector<double> getValues(const openstudio::model::Timestep& timestep) const {
-      std::vector<double> values = this->values();          // these are already sorted
-      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+    std::vector<openstudio::Time> ScheduleDay_Impl::getTimes(int numberOfTimestepsPerHour) const {
+      std::vector<openstudio::Time> result;
+
+      std::vector<int> allowables{1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60};
+      if (std::find(allowables.begin(), allowables.end(), numberOfTimestepsPerHour) == allowables.end()) {
+        return result;
+      }
+
+      int minutes = 60 / numberOfTimestepsPerHour;
+      for (size_t hour = 0; hour < 24; ++hour) {
+        for (size_t minute = minutes; minute <= 60; minute += minutes) {
+          if (minute == 60) {
+            openstudio::Time t(0, hour + 1, 0);
+            result.push_back(t);
+          } else {
+            openstudio::Time t(0, hour, minute);
+            result.push_back(t);
+          }
+        }
+      }
+      return result;
+    }
+
+    std::vector<double> ScheduleDay_Impl::getValues(int numberOfTimestepsPerHour) const {
+      std::vector<double> values = this->values();                                        // these are already sorted
+      std::vector<openstudio::Time> times = this->times();                                // these are already sorted
+      std::vector<openstudio::Time> getTimes = this->getTimes(numberOfTimestepsPerHour);  // these are already sorted
       std::vector<double> result;
 
-      int timesteps = 24.0 * timestep.numberOfTimestepsPerHour();
-      for (size_t timestep = 0; timestep < timesteps; ++timestep) {
-        openstudio::Time t(timestep / timesteps);
+      for (const openstudio::Time& t : getTimes) {
         size_t i = 0;
         for (const openstudio::Time& time : times) {
           if (t <= time) {
@@ -253,7 +280,6 @@ namespace model {
 
     bool ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
       return setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep, interpolatetoTimestep);
-      ;
     }
 
     void ScheduleDay_Impl::resetInterpolatetoTimestep() {
@@ -432,8 +458,16 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->values();
   }
 
-  double ScheduleDay::getValue(const openstudio::Time& time) const {
-    return getImpl<detail::ScheduleDay_Impl>()->getValue(time);
+  double ScheduleDay::getValue(const openstudio::Time& time, int numberOfTimestepsPerHour) const {
+    return getImpl<detail::ScheduleDay_Impl>()->getValue(time, numberOfTimestepsPerHour);
+  }
+
+  std::vector<openstudio::Time> ScheduleDay::getTimes(int numberOfTimestepsPerHour) const {
+    return getImpl<detail::ScheduleDay_Impl>()->getTimes(numberOfTimestepsPerHour);
+  }
+
+  std::vector<double> ScheduleDay::getValues(int numberOfTimestepsPerHour) const {
+    return getImpl<detail::ScheduleDay_Impl>()->getValues(numberOfTimestepsPerHour);
   }
 
   bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
