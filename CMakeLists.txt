@@ -196,11 +196,11 @@ set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "69e977a26e")
+set(ENERGYPLUS_BUILD_SHA "0b106a07b7")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v24.1.0-IOFreeze")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0-RC1")
 
 set(ENERGYPLUS_REPO "NREL")
 
@@ -640,10 +640,10 @@ if(UNIX)
       if (ARCH MATCHES "arm64")
         set(ENERGYPLUS_EXPECTED_HASH 33fc7793ff2f6c2e87461b006580b2d8)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH 2aa4ab0527c569751b20d836266dd9b8)
+        set(ENERGYPLUS_EXPECTED_HASH 26a4420a91a7fb96ef2a4021a0fe808c)
       endif()
     elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH 2041c17eff76dead3fc3c4c6dc71b60a)
+      set(ENERGYPLUS_EXPECTED_HASH aeea37cdbdb721d66967e36a2a574cf3)
     else() # 18.04
       message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
     endif()
@@ -679,7 +679,7 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 3d16d187117fa2409b0b32776738bcac)
+    set(ENERGYPLUS_EXPECTED_HASH ae14d11b6f09d1818d1dec627638c9f0)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
