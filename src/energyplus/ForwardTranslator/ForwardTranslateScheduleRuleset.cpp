@@ -300,13 +300,14 @@ namespace energyplus {
           weekSchedule->thursdaySchedule = thursdaySchedule.name().get();
           weekSchedule->fridaySchedule = fridaySchedule.name().get();
           weekSchedule->saturdaySchedule = saturdaySchedule.name().get();
+          // from Schedule:Ruleset
           weekSchedule->holidaySchedule = holidaySchedule.name().get();
           weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
           weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
           weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
           weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
-          // check if this schedule is equal to last week schedule
+          // check if this schedule is equal to last week schedule
           if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))) {
             // if not write out last week schedule
 
@@ -324,58 +325,24 @@ namespace energyplus {
               startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
             }
 
-            OS_ASSERT(startDate <= lastDate);
+            OS_ASSERT(startDate <= date);
 
             // Name the schedule week
-            lastWeekSchedule->setName(scheduleYearName, startDate, lastDate);
+            weekSchedule->setName(scheduleYearName, startDate, date);
 
             // add the values
             std::vector<std::string> values;
-            values.push_back(lastWeekSchedule->name);
+            values.push_back(weekSchedule->name);
             values.push_back(boost::lexical_cast<std::string>(startDate.monthOfYear().value()));
             values.push_back(boost::lexical_cast<std::string>(startDate.dayOfMonth()));
-            values.push_back(boost::lexical_cast<std::string>(lastDate.monthOfYear().value()));
-            values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
+            values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
+            values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
             IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
             OS_ASSERT(!test.empty());
 
             // Write the schedule
-            m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
+            m_idfObjects.push_back(weekSchedule->toIdfObject());
           }
-
-          // write out the last week schedule
-
-          // get last extensible group, if any, to find start date otherwise use jan1
-          openstudio::Date startDate;
-          std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYear.extensibleGroups();
-          if (extensibleGroups.empty()) {
-            startDate = jan1;
-          } else {
-            // day after last end date
-            boost::optional<int> startMonth = extensibleGroups.back().getInt(3, true);
-            OS_ASSERT(startMonth);
-            boost::optional<int> startDay = extensibleGroups.back().getInt(4, true);
-            OS_ASSERT(startDay);
-            startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
-          }
-
-          OS_ASSERT(startDate <= date);
-
-          // Name the schedule week
-          weekSchedule->setName(scheduleYearName, startDate, date);
-
-          // add the values
-          std::vector<std::string> values;
-          values.push_back(weekSchedule->name);
-          values.push_back(boost::lexical_cast<std::string>(startDate.monthOfYear().value()));
-          values.push_back(boost::lexical_cast<std::string>(startDate.dayOfMonth()));
-          values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
-          values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
-          IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
-          OS_ASSERT(!test.empty());
-
-          // Write the schedule
-          m_idfObjects.push_back(weekSchedule->toIdfObject());
         }
 
         // increment date
