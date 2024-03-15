@@ -283,11 +283,14 @@ namespace energyplus {
         if (date == dec31) {
 
           // we may now think of date as being the next saturday on or after 12/31
+          // we may need 2 more week schedules:
+          // 1 if the week that includes 12/31 is the same as the last week schedule
+          // 2 if the week that includes 12/31 is different from the last week schedule
 
           // set last week schedule before we overwrite week schedule
-          lastDate = date - Time(1);
-          while (lastDate.dayOfWeek().value() != DayOfWeek::Saturday) {
-            lastDate = lastDate - Time(1);
+          lastDate = date - Time(1);                                 // i.e., Dec30?
+          if (!(date.dayOfWeek().value() == DayOfWeek::Saturday)) {  // otherwise we already wrote this out
+            lastDate = lastDate - Time(1);  // FIXME: this can't be right. wouldn't this depend on the day of the week for 12/31?
             lastWeekSchedule = weekSchedule;
           }
 
@@ -300,14 +303,13 @@ namespace energyplus {
           weekSchedule->thursdaySchedule = thursdaySchedule.name().get();
           weekSchedule->fridaySchedule = fridaySchedule.name().get();
           weekSchedule->saturdaySchedule = saturdaySchedule.name().get();
-          // from Schedule:Ruleset
           weekSchedule->holidaySchedule = holidaySchedule.name().get();
           weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
           weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
           weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
           weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
-          // check if this schedule is equal to last week schedule
+          // check if this schedule is equal to last week schedule
           if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))) {
             // if not write out last week schedule
 
@@ -325,24 +327,58 @@ namespace energyplus {
               startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
             }
 
-            OS_ASSERT(startDate <= date);
+            OS_ASSERT(startDate <= lastDate);
 
             // Name the schedule week
-            weekSchedule->setName(scheduleYearName, startDate, date);
+            lastWeekSchedule->setName(scheduleYearName, startDate, lastDate);
 
             // add the values
             std::vector<std::string> values;
-            values.push_back(weekSchedule->name);
+            values.push_back(lastWeekSchedule->name);
             values.push_back(boost::lexical_cast<std::string>(startDate.monthOfYear().value()));
             values.push_back(boost::lexical_cast<std::string>(startDate.dayOfMonth()));
-            values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
-            values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
+            values.push_back(boost::lexical_cast<std::string>(lastDate.monthOfYear().value()));
+            values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
             IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
             OS_ASSERT(!test.empty());
 
             // Write the schedule
-            m_idfObjects.push_back(weekSchedule->toIdfObject());
+            m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
           }
+
+          // write out the last week schedule
+
+          // get last extensible group, if any, to find start date otherwise use jan1
+          openstudio::Date startDate;
+          std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYear.extensibleGroups();
+          if (extensibleGroups.empty()) {
+            startDate = jan1;
+          } else {
+            // day after last end date
+            boost::optional<int> startMonth = extensibleGroups.back().getInt(3, true);
+            OS_ASSERT(startMonth);
+            boost::optional<int> startDay = extensibleGroups.back().getInt(4, true);
+            OS_ASSERT(startDay);
+            startDate = yd.makeDate(*startMonth, *startDay) + Time(1);
+          }
+
+          OS_ASSERT(startDate <= date);
+
+          // Name the schedule week
+          weekSchedule->setName(scheduleYearName, startDate, date);
+
+          // add the values
+          std::vector<std::string> values;
+          values.push_back(weekSchedule->name);
+          values.push_back(boost::lexical_cast<std::string>(startDate.monthOfYear().value()));
+          values.push_back(boost::lexical_cast<std::string>(startDate.dayOfMonth()));
+          values.push_back(boost::lexical_cast<std::string>(date.monthOfYear().value()));
+          values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
+          IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
+          OS_ASSERT(!test.empty());
+
+          // Write the schedule
+          m_idfObjects.push_back(weekSchedule->toIdfObject());
         }
 
         // increment date
