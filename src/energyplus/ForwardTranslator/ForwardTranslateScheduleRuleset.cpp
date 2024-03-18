@@ -309,6 +309,11 @@ namespace energyplus {
               case DayOfWeek::Friday:
                 lastDate = date - Time(6);
                 break;
+              case DayOfWeek::Saturday:
+                // do nothing
+                break;
+              default:
+                OS_ASSERT(false);
             }
             lastWeekSchedule = weekSchedule;
           }
