@@ -16,6 +16,8 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleRule.hpp"
 #include "ScheduleRule_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
@@ -25,6 +27,7 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "../utilities/time/Time.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
@@ -242,23 +245,45 @@ namespace model {
       return result;
     }
 
-    std::vector<double> ScheduleDay_Impl::getValues(int numberOfTimestepsPerHour) const {
-      std::vector<double> values = this->values();                                        // these are already sorted
-      std::vector<openstudio::Time> times = this->times();                                // these are already sorted
-      std::vector<openstudio::Time> getTimes = this->getTimes(numberOfTimestepsPerHour);  // these are already sorted
-      std::vector<double> result;
+    openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
+      Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
+      DateTime startDateTime(startDate, Time(0, 0, 0, 0));
 
-      for (const openstudio::Time& t : getTimes) {
+      auto timestep = model().getUniqueModelObject<Timestep>();
+      int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
+
+      DateTimeVector dateTimes;
+      int minutes = 60 / numberOfTimestepsPerHour;
+      for (size_t hour = 0; hour < 24; ++hour) {
+        for (size_t minute = minutes; minute <= 60; minute += minutes) {
+          if (minute == 60) {
+            openstudio::Time t(0, hour + 1, 0);
+            dateTimes.push_back(startDateTime + t);
+          } else {
+            openstudio::Time t(0, hour, minute);
+            dateTimes.push_back(startDateTime + t);
+          }
+        }
+      }
+
+      std::vector<double> values = this->values();          // these are already sorted
+      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+
+      Vector values2(dateTimes.size());
+      for (const openstudio::DateTime& dt : dateTimes) {
         size_t i = 0;
         for (const openstudio::Time& time : times) {
-          if (t <= time) {
-            result.push_back(values[i]);
+          if (dt.time() <= time) {
+            values2(i) = values[i];
             break;
           }
           ++i;
         }
       }
-      return result;
+
+      TimeSeries timeSeries(dateTimes, values2);
+
+      return timeSeries;
     }
 
     bool ScheduleDay_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
@@ -462,12 +487,8 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->getValue(time, numberOfTimestepsPerHour);
   }
 
-  std::vector<openstudio::Time> ScheduleDay::getTimes(int numberOfTimestepsPerHour) const {
-    return getImpl<detail::ScheduleDay_Impl>()->getTimes(numberOfTimestepsPerHour);
-  }
-
-  std::vector<double> ScheduleDay::getValues(int numberOfTimestepsPerHour) const {
-    return getImpl<detail::ScheduleDay_Impl>()->getValues(numberOfTimestepsPerHour);
+  openstudio::TimeSeries ScheduleDay::timeSeries() const {
+    return getImpl<detail::ScheduleDay_Impl>()->timeSeries();
   }
 
   bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
