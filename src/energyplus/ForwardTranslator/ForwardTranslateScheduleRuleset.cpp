@@ -288,9 +288,28 @@ namespace energyplus {
           // 2 if the week that includes 12/31 is different from the last week schedule
 
           // set last week schedule before we overwrite week schedule
-          lastDate = date - Time(1);                                 // i.e., Dec30?
-          if (!(date.dayOfWeek().value() == DayOfWeek::Saturday)) {  // otherwise we already wrote this out
-            lastDate = lastDate - Time(1);  // FIXME: this can't be right. wouldn't this depend on the day of the week for 12/31?
+          bool isSaturday = (date.dayOfWeek().value() == DayOfWeek::Saturday);
+          if (!isSaturday) {  // if it was Saturday, we've already written this week out
+            switch (date.dayOfWeek().value()) {
+              case DayOfWeek::Sunday:
+                lastDate = date - Time(1);
+                break;
+              case DayOfWeek::Monday:
+                lastDate = date - Time(2);
+                break;
+              case DayOfWeek::Tuesday:
+                lastDate = date - Time(3);
+                break;
+              case DayOfWeek::Wednesday:
+                lastDate = date - Time(4);
+                break;
+              case DayOfWeek::Thursday:
+                lastDate = date - Time(5);
+                break;
+              case DayOfWeek::Friday:
+                lastDate = date - Time(6);
+                break;
+            }
             lastWeekSchedule = weekSchedule;
           }
 
@@ -310,7 +329,8 @@ namespace energyplus {
           weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
           // check if this schedule is equal to last week schedule
-          if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))) {
+          if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))
+              && (!isSaturday)) {  // if it was Saturday, we've already written this week out
             // if not write out last week schedule
 
             // get last extensible group, if any, to find start date otherwise use jan1
