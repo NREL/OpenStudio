@@ -68,7 +68,7 @@ namespace model {
 
     /// Returns the value in effect at the given time.
     /// If time is less than 0 days or greater than 1 day, 0 is returned.
-    double getValue(const openstudio::Time& time, int numberOfTimestepsPerHour = 0) const;
+    double getValue(const openstudio::Time& time) const;
 
     /// Returns the values for the timesteps per hour.
     openstudio::TimeSeries timeSeries() const;
