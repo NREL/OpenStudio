@@ -195,7 +195,12 @@ namespace model {
         }
         DateTimeVector dateTimes = timeSeries.dateTimes();
         for (const openstudio::DateTime& dt : dateTimes) {
-          times.push_back(dt.time());
+          if (dt.time().totalDays() > 0) {
+            times.push_back(dt.time());
+          } else {  // this is 00:00:00 from the next day
+            openstudio::Time t(0, 24, 0);
+            times.push_back(t);
+          }
         }
       }
 
@@ -222,9 +227,9 @@ namespace model {
 
       InterpMethod interpMethod;
       if (istringEqual("No", interpolatetoTimestep)) {
-        interpMethod = LinearInterp;  // LinearInterp or HoldNextInterp?
+        interpMethod = LinearInterp;
       } else if (istringEqual("Average", interpolatetoTimestep)) {
-        interpMethod = LinearInterp;  // FIXME: new AverageInterp?
+        interpMethod = AverageInterp;
       } else if (istringEqual("Linear", interpolatetoTimestep)) {
         interpMethod = LinearInterp;
       }
@@ -235,11 +240,11 @@ namespace model {
     }
 
     openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
-      Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
-      DateTime startDateTime(startDate, Time(0, 0, 0, 0));
-
       auto timestep = this->model().getUniqueModelObject<Timestep>();
       int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
+
+      Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
+      DateTime startDateTime(startDate, Time(0, 0, 0));
 
       DateTimeVector dateTimes;
       int minutes = 60 / numberOfTimestepsPerHour;
@@ -258,15 +263,18 @@ namespace model {
       std::vector<double> values = this->values();          // these are already sorted
       std::vector<openstudio::Time> times = this->times();  // these are already sorted
 
+      openstudio::Time dtt;
       Vector values2(dateTimes.size());
-      for (const openstudio::DateTime& dt : dateTimes) {
-        size_t i = 0;
-        for (const openstudio::Time& time : times) {
-          if (dt.time() <= time) {
-            values2(i) = values[i];
+      for (unsigned i = 0; i < dateTimes.size(); ++i) {
+        dtt = dateTimes[i].time();
+        if (dtt.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+          dtt = openstudio::Time(0, 24, 0);
+        }
+        for (unsigned j = 0; j < times.size(); ++j) {
+          if (dtt <= times[j]) {
+            values2[i] = values[j];
             break;
           }
-          ++i;
         }
       }
 
