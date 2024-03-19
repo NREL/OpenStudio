@@ -331,10 +331,10 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
 
   ScheduleDay sch_day(model);
 
-  Time t1("08:15:00");
-  sch_day.addValue(t1, 0);
+  Time t1("08:05:00");
+  sch_day.addValue(t1, 0.1);
   Time t2("21:45:00");
-  sch_day.addValue(t2, 1);
+  sch_day.addValue(t2, 1.0);
 
   {  // Interpolate to Timestep = No
     EXPECT_TRUE(sch_day.setInterpolatetoTimestep("No"));
@@ -342,12 +342,14 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
 
     auto timestep = model.getUniqueModelObject<Timestep>();
 
-    Time t3("08:10:00");
-    EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t3.totalDays(), tol);
-    Time t4("08:18:00");
-    EXPECT_NEAR((8.0 + (18.0 / 60.0)) / 24.0, t4.totalDays(), tol);
-    Time t5("09:00:00");
-    EXPECT_NEAR(9.0 / 24.0, t5.totalDays(), tol);
+    Time t3("08:00:00");
+    EXPECT_NEAR(8.0 / 24.0, t3.totalDays(), tol);
+    Time t4("08:05:00");
+    EXPECT_NEAR((8.0 + (5.0 / 60.0)) / 24.0, t4.totalDays(), tol);
+    Time t5("08:10:00");
+    EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t5.totalDays(), tol);
+    Time t6("09:00:00");
+    EXPECT_NEAR(9.0 / 24.0, t6.totalDays(), tol);
 
     openstudio::TimeSeries timeSeries;
     double value;
@@ -357,66 +359,193 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
     EXPECT_EQ(24 * 1, timeSeries.dateTimes().size());
     EXPECT_EQ(24 * 1, timeSeries.values().size());
     value = sch_day.getValue(t3);
-    EXPECT_NEAR(10.0 / 60.0, value, tol);  // 10 min in a 60 min interval
+    EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t4);
-    EXPECT_NEAR(18.0 / 60.0, value, tol);  // 18 min in a 60 min interval
+    EXPECT_NEAR(0.175, value, tol);
     value = sch_day.getValue(t5);
-    EXPECT_DOUBLE_EQ(1.0, value);
+    EXPECT_NEAR(0.25, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
 
     EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(4));
     timeSeries = sch_day.timeSeries();
     EXPECT_EQ(24 * 4, timeSeries.dateTimes().size());
     EXPECT_EQ(24 * 4, timeSeries.values().size());
     value = sch_day.getValue(t3);
-    EXPECT_DOUBLE_EQ(0.0, value);
+    EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t4);
-    EXPECT_NEAR(3.0 / 15.0, value, tol);  // 3 min in a 15 min interval
+    EXPECT_NEAR(0.4, value, tol);
     value = sch_day.getValue(t5);
-    EXPECT_DOUBLE_EQ(1.0, value);
+    EXPECT_NEAR(0.7, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
 
     EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(6));
     timeSeries = sch_day.timeSeries();
     ASSERT_EQ(24 * 6, timeSeries.dateTimes().size());
-    Time times10_1("00:10:00");
-    EXPECT_EQ(times10_1, timeSeries.dateTimes()[0].time());
-    Time times10_48("08:00:00");
-    EXPECT_EQ(times10_48, timeSeries.dateTimes()[47].time());
-    Time times10_49("08:10:00");
-    EXPECT_EQ(times10_49, timeSeries.dateTimes()[48].time());
-    Time times10_50("08:20:00");
-    EXPECT_EQ(times10_50, timeSeries.dateTimes()[49].time());
-    Time times10_144("24:00:00");
-    EXPECT_EQ(times10_144, timeSeries.dateTimes()[143].time());
     ASSERT_EQ(24 * 6, timeSeries.values().size());
-    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[0]);
-    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[47]);
-    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[48]);
-    EXPECT_DOUBLE_EQ(1.0, timeSeries.values()[49]);
-    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[143]);
     value = sch_day.getValue(t3);
-    EXPECT_DOUBLE_EQ(0.0, value);
+    EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t4);
-    EXPECT_NEAR(8.0 / 10.0, value, tol);  // 8 min in a 10 min interval
+    EXPECT_NEAR(0.55, value, tol);
     value = sch_day.getValue(t5);
-    EXPECT_DOUBLE_EQ(1.0, value);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
 
     EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(10));
     timeSeries = sch_day.timeSeries();
     EXPECT_EQ(24 * 10, timeSeries.dateTimes().size());
     EXPECT_EQ(24 * 10, timeSeries.values().size());
     value = sch_day.getValue(t3);
-    EXPECT_DOUBLE_EQ(0.0, value);
+    EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t4);
-    EXPECT_DOUBLE_EQ(1.0, value);
+    EXPECT_NEAR(0.85, value, tol);
     value = sch_day.getValue(t5);
-    EXPECT_DOUBLE_EQ(1.0, value);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
   }
 
-  {
-    // Interpolate to Timestep = Average
+  {  // Interpolate to Timestep = Average
+    EXPECT_TRUE(sch_day.setInterpolatetoTimestep("Average"));
+    EXPECT_EQ("Average", sch_day.interpolatetoTimestep());
 
+    auto timestep = model.getUniqueModelObject<Timestep>();
+
+    Time t3("08:00:00");
+    EXPECT_NEAR(8.0 / 24.0, t3.totalDays(), tol);
+    Time t4("08:05:00");
+    EXPECT_NEAR((8.0 + (5.0 / 60.0)) / 24.0, t4.totalDays(), tol);
+    Time t5("08:10:00");
+    EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t5.totalDays(), tol);
+    Time t6("09:00:00");
+    EXPECT_NEAR(9.0 / 24.0, t6.totalDays(), tol);
+
+    openstudio::TimeSeries timeSeries;
+    double value;
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(1));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 1, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 1, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.175, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.25, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(4));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 4, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 4, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.4, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.7, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(6));
+    timeSeries = sch_day.timeSeries();
+    ASSERT_EQ(24 * 6, timeSeries.dateTimes().size());
+    ASSERT_EQ(24 * 6, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.55, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(10));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 10, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 10, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.85, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(1.0, value, tol);
   }
 
   {  // Interpolate to Timestep = Linear
+    EXPECT_TRUE(sch_day.setInterpolatetoTimestep("Linear"));
+    EXPECT_EQ("Linear", sch_day.interpolatetoTimestep());
+
+    auto timestep = model.getUniqueModelObject<Timestep>();
+
+    Time t3("08:00:00");
+    EXPECT_NEAR(8.0 / 24.0, t3.totalDays(), tol);
+    Time t4("08:05:00");
+    EXPECT_NEAR((8.0 + (5.0 / 60.0)) / 24.0, t4.totalDays(), tol);
+    Time t5("08:10:00");
+    EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t5.totalDays(), tol);
+    Time t6("09:00:00");
+    EXPECT_NEAR(9.0 / 24.0, t6.totalDays(), tol);
+
+    openstudio::TimeSeries timeSeries;
+    double value;
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(1));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 1, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 1, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.098969, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.105487, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(0.160365, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(4));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 4, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 4, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.098969, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.105487, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(0.160365, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(6));
+    timeSeries = sch_day.timeSeries();
+    ASSERT_EQ(24 * 6, timeSeries.dateTimes().size());
+    ASSERT_EQ(24 * 6, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.098969, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.105487, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(0.160365, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(10));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 10, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 10, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(0.098969, value, tol);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t5);
+    EXPECT_NEAR(0.105487, value, tol);
+    value = sch_day.getValue(t6);
+    EXPECT_NEAR(0.160365, value, tol);
   }
 }
