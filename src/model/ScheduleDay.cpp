@@ -118,8 +118,10 @@ namespace model {
       return !getObject<ScheduleDay>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_DayFields::ScheduleTypeLimitsName);
     }
 
-    bool ScheduleDay_Impl::interpolatetoTimestep() const {
-      return getBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep);
+    std::string ScheduleDay_Impl::interpolatetoTimestep() const {
+      boost::optional<std::string> value = getString(OS_Schedule_DayFields::InterpolatetoTimestep, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const {
@@ -181,16 +183,20 @@ namespace model {
 
       std::vector<double> values;
       std::vector<openstudio::Time> times;
-      if (this->interpolateToTimestep()) {
-        openstudio::TimeSeries timeSeries = timeSeries();
-        values = timeSeries.values();
+      std::string interpolatetoTimestep = this->interpolatetoTimestep();
+      if (istringEqual(interpolatetoTimestep, "Linear")) {
+        values = this->values();  // these are already sorted
+        times = this->times();    // these are already sorted
+      } else {                    // No or Average
+        openstudio::TimeSeries timeSeries = this->timeSeries();
+        Vector values2 = timeSeries.values();
+        for (size_t i = 0; i < values2.size(); ++i) {
+          values.push_back(values2[i]);
+        }
         DateTimeVector dateTimes = timeSeries.dateTimes();
         for (const openstudio::DateTime& dt : dateTimes) {
           times.push_back(dt.time());
         }
-      } else {
-        values = this->values();  // these are already sorted
-        times = this->times();    // these are already sorted
       }
 
       unsigned N = times.size();
@@ -215,10 +221,12 @@ namespace model {
       y[N + 1] = 0.0;
 
       InterpMethod interpMethod;
-      if (this->interpolatetoTimestep()) {
+      if (istringEqual("No", interpolatetoTimestep)) {
+        interpMethod = LinearInterp;  // LinearInterp or HoldNextInterp?
+      } else if (istringEqual("Average", interpolatetoTimestep)) {
+        interpMethod = LinearInterp;  // FIXME: new AverageInterp?
+      } else if (istringEqual("Linear", interpolatetoTimestep)) {
         interpMethod = LinearInterp;
-      } else {
-        interpMethod = HoldNextInterp;
       }
 
       double result = interp(x, y, time.totalDays(), interpMethod, NoneExtrap);
@@ -230,7 +238,7 @@ namespace model {
       Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
       DateTime startDateTime(startDate, Time(0, 0, 0, 0));
 
-      auto timestep = model().getUniqueModelObject<Timestep>();
+      auto timestep = this->model().getUniqueModelObject<Timestep>();
       int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
 
       DateTimeVector dateTimes;
@@ -284,8 +292,8 @@ namespace model {
       return false;
     }
 
-    bool ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-      return setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep, interpolatetoTimestep);
+    bool ScheduleDay_Impl::setInterpolatetoTimestep(const std::string& interpolatetoTimestep) {
+      return setString(OS_Schedule_DayFields::InterpolatetoTimestep, interpolatetoTimestep);
     }
 
     void ScheduleDay_Impl::resetInterpolatetoTimestep() {
@@ -448,7 +456,7 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->isScheduleTypeLimitsDefaulted();
   }
 
-  bool ScheduleDay::interpolatetoTimestep() const {
+  std::string ScheduleDay::interpolatetoTimestep() const {
     return getImpl<detail::ScheduleDay_Impl>()->interpolatetoTimestep();
   }
 
@@ -464,15 +472,15 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->values();
   }
 
-  double ScheduleDay::getValue(const openstudio::Time& time, int numberOfTimestepsPerHour) const {
-    return getImpl<detail::ScheduleDay_Impl>()->getValue(time, numberOfTimestepsPerHour);
+  double ScheduleDay::getValue(const openstudio::Time& time) const {
+    return getImpl<detail::ScheduleDay_Impl>()->getValue(time);
   }
 
   openstudio::TimeSeries ScheduleDay::timeSeries() const {
     return getImpl<detail::ScheduleDay_Impl>()->timeSeries();
   }
 
-  bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  bool ScheduleDay::setInterpolatetoTimestep(const std::string& interpolatetoTimestep) {
     return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
   }
 

@@ -54,7 +54,7 @@ namespace model {
    *  inherits one from a Schedule. */
     bool isScheduleTypeLimitsDefaulted() const;
 
-    bool interpolatetoTimestep() const;
+    std::string interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
 
@@ -77,7 +77,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(const std::string& interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 

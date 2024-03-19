@@ -10,9 +10,12 @@
 #include "../ScheduleDay_Impl.hpp"
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleTypeLimits_Impl.hpp"
+#include "../Timestep.hpp"
+#include "../Timestep_Impl.hpp"
 
 #include "../../utilities/time/Date.hpp"
 #include "../../utilities/time/Time.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
 
 using namespace openstudio::model;
 using namespace openstudio;
@@ -174,7 +177,7 @@ TEST_F(ModelFixture, Schedule_Day_Interp) {
   double tol = 1e-5;
 
   ScheduleDay daySchedule(model);
-  EXPECT_FALSE(daySchedule.interpolatetoTimestep());
+  EXPECT_EQ("No", daySchedule.interpolatetoTimestep());
   EXPECT_TRUE(daySchedule.isInterpolatetoTimestepDefaulted());
 
   // schedule is 1 until 12:00
@@ -188,8 +191,8 @@ TEST_F(ModelFixture, Schedule_Day_Interp) {
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 
-  daySchedule.setInterpolatetoTimestep(true);
-  EXPECT_TRUE(daySchedule.interpolatetoTimestep());
+  daySchedule.setInterpolatetoTimestep("Linear");
+  EXPECT_EQ("Linear", daySchedule.interpolatetoTimestep());
   EXPECT_FALSE(daySchedule.isInterpolatetoTimestepDefaulted());
 
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, -1, 0)), tol);
@@ -321,7 +324,7 @@ TEST_F(ModelFixture, Schedule_Day_addValue_NaN_Infinity) {
   EXPECT_FALSE(sch_day.addValue(t, -std::numeric_limits<double>::infinity()));
 }
 
-TEST_F(ModelFixture, Schedule_Day_getValues) {
+TEST_F(ModelFixture, Schedule_Day_timeSeries) {
   Model model;
 
   double tol = 1e-5;
@@ -333,83 +336,87 @@ TEST_F(ModelFixture, Schedule_Day_getValues) {
   Time t2("21:45:00");
   sch_day.addValue(t2, 1);
 
-  std::vector<openstudio::Time> times = sch_day.getTimes(7);
-  EXPECT_EQ(0, times.size());
+  {  // Interpolate to Timestep = No
+    EXPECT_TRUE(sch_day.setInterpolatetoTimestep("No"));
+    EXPECT_EQ("No", sch_day.interpolatetoTimestep());
 
-  std::vector<openstudio::Time> times24 = sch_day.getTimes(1);
-  EXPECT_EQ(24 * 1, times24.size());
+    auto timestep = model.getUniqueModelObject<Timestep>();
 
-  std::vector<openstudio::Time> times15 = sch_day.getTimes(4);
-  EXPECT_EQ(24 * 4, times15.size());
+    Time t3("08:10:00");
+    EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t3.totalDays(), tol);
+    Time t4("08:18:00");
+    EXPECT_NEAR((8.0 + (18.0 / 60.0)) / 24.0, t4.totalDays(), tol);
+    Time t5("09:00:00");
+    EXPECT_NEAR(9.0 / 24.0, t5.totalDays(), tol);
 
-  std::vector<openstudio::Time> times10 = sch_day.getTimes(6);
-  EXPECT_EQ(24 * 6, times10.size());
-  Time times10_1("00:10:00");
-  EXPECT_EQ(times10_1, times10[0]);
-  Time times10_48("08:00:00");
-  EXPECT_EQ(times10_48, times10[47]);
-  Time times10_49("08:10:00");
-  EXPECT_EQ(times10_49, times10[48]);
-  Time times10_50("08:20:00");
-  EXPECT_EQ(times10_50, times10[49]);
-  Time times10_144("24:00:00");
-  EXPECT_EQ(times10_144, times10[143]);
+    openstudio::TimeSeries timeSeries;
+    double value;
 
-  std::vector<double> values = sch_day.getValues(18);
-  EXPECT_EQ(0, values.size());
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(1));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 1, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 1, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_NEAR(10.0 / 60.0, value, tol);  // 10 min in a 60 min interval
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(18.0 / 60.0, value, tol);  // 18 min in a 60 min interval
+    value = sch_day.getValue(t5);
+    EXPECT_DOUBLE_EQ(1.0, value);
 
-  std::vector<double> values24 = sch_day.getValues(1);
-  EXPECT_EQ(24 * 1, values24.size());
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(4));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 4, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 4, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_DOUBLE_EQ(0.0, value);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(3.0 / 15.0, value, tol);  // 3 min in a 15 min interval
+    value = sch_day.getValue(t5);
+    EXPECT_DOUBLE_EQ(1.0, value);
 
-  std::vector<double> values15 = sch_day.getValues(4);
-  EXPECT_EQ(24 * 4, values15.size());
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(6));
+    timeSeries = sch_day.timeSeries();
+    ASSERT_EQ(24 * 6, timeSeries.dateTimes().size());
+    Time times10_1("00:10:00");
+    EXPECT_EQ(times10_1, timeSeries.dateTimes()[0].time());
+    Time times10_48("08:00:00");
+    EXPECT_EQ(times10_48, timeSeries.dateTimes()[47].time());
+    Time times10_49("08:10:00");
+    EXPECT_EQ(times10_49, timeSeries.dateTimes()[48].time());
+    Time times10_50("08:20:00");
+    EXPECT_EQ(times10_50, timeSeries.dateTimes()[49].time());
+    Time times10_144("24:00:00");
+    EXPECT_EQ(times10_144, timeSeries.dateTimes()[143].time());
+    ASSERT_EQ(24 * 6, timeSeries.values().size());
+    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[0]);
+    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[47]);
+    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[48]);
+    EXPECT_DOUBLE_EQ(1.0, timeSeries.values()[49]);
+    EXPECT_DOUBLE_EQ(0.0, timeSeries.values()[143]);
+    value = sch_day.getValue(t3);
+    EXPECT_DOUBLE_EQ(0.0, value);
+    value = sch_day.getValue(t4);
+    EXPECT_NEAR(8.0 / 10.0, value, tol);  // 8 min in a 10 min interval
+    value = sch_day.getValue(t5);
+    EXPECT_DOUBLE_EQ(1.0, value);
 
-  std::vector<double> values10 = sch_day.getValues(6);
-  EXPECT_EQ(24 * 6, values10.size());
-  EXPECT_DOUBLE_EQ(0.0, values10[0]);
-  EXPECT_DOUBLE_EQ(0.0, values10[47]);
-  EXPECT_DOUBLE_EQ(0.0, values10[48]);
-  EXPECT_DOUBLE_EQ(1.0, values10[49]);
-  EXPECT_DOUBLE_EQ(0.0, values10[143]);
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(10));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 10, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 10, timeSeries.values().size());
+    value = sch_day.getValue(t3);
+    EXPECT_DOUBLE_EQ(0.0, value);
+    value = sch_day.getValue(t4);
+    EXPECT_DOUBLE_EQ(1.0, value);
+    value = sch_day.getValue(t5);
+    EXPECT_DOUBLE_EQ(1.0, value);
+  }
 
-  double value;
+  {
+    // Interpolate to Timestep = Average
 
-  Time t3("08:10:00");
-  EXPECT_NEAR((8.0 + (10.0 / 60.0)) / 24.0, t3.totalDays(), tol);
-  value = sch_day.getValue(t3);
-  EXPECT_DOUBLE_EQ(0.0, value);
-  value = sch_day.getValue(t3, 1);
-  EXPECT_NEAR(10.0 / 60.0, value, tol);  // 10 min in a 60 min interval
-  value = sch_day.getValue(t3, 4);
-  EXPECT_DOUBLE_EQ(0.0, value);
-  value = sch_day.getValue(t3, 6);
-  EXPECT_DOUBLE_EQ(0.0, value);
-  value = sch_day.getValue(t3, 10);
-  EXPECT_DOUBLE_EQ(0.0, value);
+  }
 
-  Time t4("08:18:00");
-  EXPECT_NEAR((8.0 + (18.0 / 60.0)) / 24.0, t4.totalDays(), tol);
-  value = sch_day.getValue(t4);
-  EXPECT_DOUBLE_EQ(1.0, value);
-  value = sch_day.getValue(t4, 1);
-  EXPECT_NEAR(18.0 / 60.0, value, tol);  // 18 min in a 60 min interval
-  value = sch_day.getValue(t4, 4);
-  EXPECT_NEAR(3.0 / 15.0, value, tol);  // 3 min in a 15 min interval
-  value = sch_day.getValue(t4, 6);
-  EXPECT_NEAR(8.0 / 10.0, value, tol);  // 8 min in a 10 min interval
-  value = sch_day.getValue(t4, 10);
-  EXPECT_DOUBLE_EQ(1.0, value);
-
-  Time t5("09:00:00");
-  EXPECT_NEAR(9.0 / 24.0, t5.totalDays(), tol);
-  value = sch_day.getValue(t5);
-  EXPECT_DOUBLE_EQ(1.0, value);
-  value = sch_day.getValue(t5, 1);
-  EXPECT_DOUBLE_EQ(1.0, value);
-  value = sch_day.getValue(t5, 4);
-  EXPECT_DOUBLE_EQ(1.0, value);
-  value = sch_day.getValue(t5, 6);
-  EXPECT_DOUBLE_EQ(1.0, value);
-  value = sch_day.getValue(t5, 10);
-  EXPECT_DOUBLE_EQ(1.0, value);
+  {  // Interpolate to Timestep = Linear
+  }
 }

@@ -59,7 +59,7 @@ namespace model {
 
       bool isScheduleTypeLimitsDefaulted() const;
 
-      bool interpolatetoTimestep() const;
+      std::string interpolatetoTimestep() const;
 
       bool isInterpolatetoTimestepDefaulted() const;
 
@@ -86,7 +86,7 @@ namespace model {
 
       virtual bool resetScheduleTypeLimits() override;
 
-      bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+      bool setInterpolatetoTimestep(const std::string& interpolatetoTimestep);
 
       void resetInterpolatetoTimestep();
 
