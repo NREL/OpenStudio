@@ -59,7 +59,8 @@ enum InterpMethod
   LinearInterp,
   NearestInterp,
   HoldLastInterp,
-  HoldNextInterp
+  HoldNextInterp,
+  AverageInterp
 };
 
 /** Enum to specify the extrapolation method. */
