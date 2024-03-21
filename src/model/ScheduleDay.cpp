@@ -186,6 +186,7 @@ namespace model {
       DateTimeVector dateTimes = ts.dateTimes();
       Vector values = ts.values();
 
+      double value;
       for (unsigned i = 0; i < dateTimes.size() - 1; ++i) {
         openstudio::Time t0 = dateTimes[i].time();
         openstudio::Time t1 = dateTimes[i + 1].time();
@@ -194,11 +195,11 @@ namespace model {
         }
 
         if (t0 == time) {
-          double value = values[i];
+          value = values[i];
         } else if (t1 == time) {
-          double value = values[i + 1];
+          value = values[i + 1];
         } else if ((t0 < time) && (time < t1)) {
-          double value = values[i + 1];
+          value = values[i + 1];
         }
       }
 
