@@ -181,38 +181,64 @@ namespace model {
         return 0.0;
       }
 
-      std::vector<double> values;
-      std::vector<openstudio::Time> times;
-      std::string interpolatetoTimestep = this->interpolatetoTimestep();
-      if (istringEqual(interpolatetoTimestep, "Linear")) {
-        values = this->values();  // these are already sorted
-        times = this->times();    // these are already sorted
-      } else {                    // No or Average
-        openstudio::TimeSeries timeSeries = this->timeSeries();
-        Vector values2 = timeSeries.values();
-        for (size_t i = 0; i < values2.size(); ++i) {
-          values.push_back(values2[i]);
+      TimeSeries ts = this->timeSeries();
+
+      DateTimeVector dateTimes = ts.dateTimes();
+      Vector values = ts.values();
+
+      for (unsigned i = 0; i < dateTimes.size() - 1; ++i) {
+        openstudio::Time t0 = dateTimes[i].time();
+        openstudio::Time t1 = dateTimes[i + 1].time();
+        if (t1.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+          t1 = openstudio::Time(0, 24, 0);
         }
-        DateTimeVector dateTimes = timeSeries.dateTimes();
-        for (const openstudio::DateTime& dt : dateTimes) {
-          if (dt.time().totalDays() > 0) {
-            times.push_back(dt.time());
-          } else {  // this is 00:00:00 from the next day
-            openstudio::Time t(0, 24, 0);
-            times.push_back(t);
+
+        if (t0 == time) {
+          double value = values[i];
+        } else if (t1 == time) {
+          double value = values[i + 1];
+        } else if ((t0 < time) && (time < t1)) {
+          double value = values[i + 1];
+        }
+      }
+
+      return value;
+    }
+
+    openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
+      auto timestep = this->model().getUniqueModelObject<Timestep>();
+      int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
+
+      Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
+      DateTime startDateTime(startDate, Time(0, 0, 0));
+
+      DateTimeVector tsDateTimes;
+      int minutes = 60 / numberOfTimestepsPerHour;
+      for (size_t hour = 0; hour < 24; ++hour) {
+        for (size_t minute = minutes; minute <= 60; minute += minutes) {
+          if (minute == 60) {
+            openstudio::Time t(0, hour + 1, 0);
+            tsDateTimes.push_back(startDateTime + t);
+          } else {
+            openstudio::Time t(0, hour, minute);
+            tsDateTimes.push_back(startDateTime + t);
           }
         }
       }
 
+      std::vector<double> values = this->values();          // these are already sorted
+      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+
       unsigned N = times.size();
       OS_ASSERT(values.size() == N);
 
+      TimeSeries result;
       if (N == 0) {
-        return 0.0;
+        return result;
       }
 
-      openstudio::Vector x(N + 2);
-      openstudio::Vector y(N + 2);
+      Vector x(N + 2);
+      Vector y(N + 2);
 
       x[0] = -0.000001;
       y[0] = 0.0;
@@ -225,62 +251,50 @@ namespace model {
       x[N + 1] = 1.000001;
       y[N + 1] = 0.0;
 
-      InterpMethod interpMethod;
-      if (istringEqual("No", interpolatetoTimestep)) {
-        interpMethod = LinearInterp;
-      } else if (istringEqual("Average", interpolatetoTimestep)) {
-        interpMethod = AverageInterp;
-      } else if (istringEqual("Linear", interpolatetoTimestep)) {
-        interpMethod = LinearInterp;
+      std::string interpolatetoTimestep = this->interpolatetoTimestep();
+      Vector tsValues(tsDateTimes.size());
+      for (unsigned j = 0; j < tsDateTimes.size(); ++j) {
+        openstudio::Time t0 = tsDateTimes[j].time();
+        if (t0.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+          t0 = openstudio::Time(0, 24, 0);
+        }
+
+        if (istringEqual("No", interpolatetoTimestep)) {
+          double val = interp(x, y, t0.totalDays(), HoldNextInterp, NoneExtrap);
+          tsValues[j] = val;
+        } else if (istringEqual("Average", interpolatetoTimestep)) {
+          if (j == 0) {
+            tsValues[j] = values[0];
+          } else if (j == tsDateTimes.size() - 1) {
+            tsValues[j] = values[-1];
+          } else {
+            openstudio::Time t1 = tsDateTimes[j - 1].time();
+            if (t1.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+              t1 = openstudio::Time(0, 24, 0);
+            }
+
+            for (unsigned i = 0; i < times.size(); ++i) {
+              if ((t1 < times[i]) && (times[i] < t0)) {                // schedule value is between timesteps
+                double interval = (t0 - t1).totalDays();               // timestep interval
+                double int1 = (times[i] - t1).totalDays() / interval;  // fraction that is the value before the schedule change
+                double int2 = (t0 - times[i]).totalDays() / interval;  // fraction that is the value after the schedule change
+                tsValues[j] = (values[i] * int1) + (values[i + 1] * int2);
+                break;
+              } else if (t0 <= times[i]) {
+                tsValues[j] = values[i];
+                break;
+              }
+            }
+          }
+        } else if (istringEqual("Linear", interpolatetoTimestep)) {
+          double val = interp(x, y, t0.totalDays(), LinearInterp, NoneExtrap);
+          tsValues[j] = val;
+        }
       }
 
-      double result = interp(x, y, time.totalDays(), interpMethod, NoneExtrap);
+      result = TimeSeries(tsDateTimes, tsValues, "");
 
       return result;
-    }
-
-    openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
-      auto timestep = this->model().getUniqueModelObject<Timestep>();
-      int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
-
-      Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
-      DateTime startDateTime(startDate, Time(0, 0, 0));
-
-      DateTimeVector dateTimes;
-      int minutes = 60 / numberOfTimestepsPerHour;
-      for (size_t hour = 0; hour < 24; ++hour) {
-        for (size_t minute = minutes; minute <= 60; minute += minutes) {
-          if (minute == 60) {
-            openstudio::Time t(0, hour + 1, 0);
-            dateTimes.push_back(startDateTime + t);
-          } else {
-            openstudio::Time t(0, hour, minute);
-            dateTimes.push_back(startDateTime + t);
-          }
-        }
-      }
-
-      std::vector<double> values = this->values();          // these are already sorted
-      std::vector<openstudio::Time> times = this->times();  // these are already sorted
-
-      openstudio::Time dtt;
-      Vector values2(dateTimes.size());
-      for (unsigned i = 0; i < dateTimes.size(); ++i) {
-        dtt = dateTimes[i].time();
-        if (dtt.totalDays() == 0.0) {  // this is 00:00:00 from the next day
-          dtt = openstudio::Time(0, 24, 0);
-        }
-        for (unsigned j = 0; j < times.size(); ++j) {
-          if (dtt <= times[j]) {
-            values2[i] = values[j];
-            break;
-          }
-        }
-      }
-
-      TimeSeries timeSeries(dateTimes, values2, "");
-
-      return timeSeries;
     }
 
     bool ScheduleDay_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {

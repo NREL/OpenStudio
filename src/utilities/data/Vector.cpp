@@ -142,10 +142,6 @@ double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMe
         // set to next value
         result = y(info.ib);
         break;
-      case AverageInterp:
-        // average interpolation
-        result = info.wa * y(info.ia) + info.wb * y(info.ib);  // FIXME
-        break;
     }
   }
 
