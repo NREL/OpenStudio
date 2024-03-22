@@ -120,13 +120,13 @@ namespace model {
       /** @name Other */
       //@{
 
-      boost::optional<double> wattsperUnit() const;
+      boost::optional<double> designLevel() const;
 
-      boost::optional<double> wattsperZoneFloorArea() const;
+      boost::optional<double> powerPerFloorArea() const;
 
-      double getWattsperUnit(double floorArea) const;
+      double getDesignLevel(double floorArea) const;
 
-      double getWattsperZoneFloorArea(double floorArea) const;
+      double getPowerPerFloorArea(double floorArea) const;
 
       //@}
      protected:
