@@ -138,11 +138,11 @@ public:
 
 /// linear interpolation of the function v = f(x, y) at point xi, yi
 /// assumes that x and y are strictly increasing
-double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap);
+double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap, double ti = 0.0);
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
-Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap);
+Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi, InterpMethod interpMethod = linearInterp, ExtrapMethod extrapMethod = noneExtrap, double ti = 0.0);
 
 /// outer product
 Matrix outerProd(const Vector& lhs, const Vector& rhs);
