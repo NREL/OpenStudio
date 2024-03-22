@@ -96,7 +96,7 @@ InterpInfo interpInfo(const Vector& x, double xi, double ti) {
 
     result.ia = (unsigned)(it - begin - 1);
     result.ib = (unsigned)(it - begin);
-    if (ti == 0.0)  {
+    if (ti == 0.0) {
       result.wa = (x(result.ib) - xi) / (x(result.ib) - x(result.ia));
       result.wb = (xi - x(result.ia)) / (x(result.ib) - x(result.ia));
     } else {
@@ -109,7 +109,7 @@ InterpInfo interpInfo(const Vector& x, double xi, double ti) {
         result.wa = 0.0;
         result.wb = 1.0;
       }
-    }     
+    }
   }
 
   return result;
