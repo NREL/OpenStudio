@@ -261,35 +261,13 @@ namespace model {
         }
 
         if (istringEqual("No", interpolatetoTimestep)) {
-          double val = interp(x, y, t0.totalDays(), HoldNextInterp, NoneExtrap);
-          tsValues[j] = val;
+          tsValues[j] = interp(x, y, t0.totalDays(), HoldNextInterp, NoneExtrap);
         } else if (istringEqual("Average", interpolatetoTimestep)) {
-          if (j == 0) {
-            tsValues[j] = values[0];
-          } else if (j == tsDateTimes.size() - 1) {
-            tsValues[j] = values[-1];
-          } else {
-            openstudio::Time t1 = tsDateTimes[j - 1].time();
-            if (t1.totalDays() == 0.0) {  // this is 00:00:00 from the next day
-              t1 = openstudio::Time(0, 24, 0);
-            }
-
-            for (unsigned i = 0; i < times.size(); ++i) {
-              if ((t1 < times[i]) && (times[i] < t0)) {                // schedule value is between timesteps
-                double interval = (t0 - t1).totalDays();               // timestep interval
-                double int1 = (times[i] - t1).totalDays() / interval;  // fraction that is the value before the schedule change
-                double int2 = (t0 - times[i]).totalDays() / interval;  // fraction that is the value after the schedule change
-                tsValues[j] = (values[i] * int1) + (values[i + 1] * int2);
-                break;
-              } else if (t0 <= times[i]) {
-                tsValues[j] = values[i];
-                break;
-              }
-            }
-          }
+          double minutes = 60.0 / numberOfTimestepsPerHour;
+          double ti = minutes / (60.0 * 24.0);  // total days of the timestep interval
+          tsValues[j] = interp(x, y, t0.totalDays(), AverageInterp, NoneExtrap, ti);
         } else if (istringEqual("Linear", interpolatetoTimestep)) {
-          double val = interp(x, y, t0.totalDays(), LinearInterp, NoneExtrap);
-          tsValues[j] = val;
+          tsValues[j] = interp(x, y, t0.totalDays(), LinearInterp, NoneExtrap);
         }
       }
 
