@@ -113,7 +113,7 @@ namespace model {
     boost::optional<double> designLevel() const;
     OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperUnit() const;
 
-    /** Returns the designLevel if possible based on the underlying data of electricEquipmentITEAirCooledDefinition(). */
+    /** Returns the powerPerFloorArea (Design Level) if possible based on the underlying data of electricEquipmentITEAirCooledDefinition(). */
     boost::optional<double> powerPerFloorArea() const;
     OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperZoneFloorArea() const;
 
