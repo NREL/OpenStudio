@@ -8,18 +8,14 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "Singleton.hpp"
-#include "Exception.hpp"
-#include "Compare.hpp"
+#include "Compare.hpp"  // NOTE that this this is not needed for this header but so many compilation errors if I omit it
+                        // since other files transitively use Compare
+#include "LogMessage.hpp"
 #include "LogSink.hpp"
-
-#include <boost/shared_ptr.hpp>
+#include "Exception.hpp"
 
 #include <sstream>
-#include <set>
-#include <map>
 #include <memory>
-#include <shared_mutex>
 
 /// defines method logChannel() to get a logger for a class
 #define REGISTER_LOGGER(__logChannel__) \
@@ -51,21 +47,24 @@
 namespace openstudio {
 
 class OSWorkflow;
+class LogSink;
+namespace detail {
+  class Logger_Impl;
+  class LogSink_Impl;
+}  // namespace detail
 
 /// convenience function for SWIG, prefer macros in C++
 UTILITIES_API void logFree(LogLevel level, const std::string& channel, const std::string& message);
 
-class Logger;
-
-/** Primary logging class.
-   */
-class UTILITIES_API LoggerImpl
+class UTILITIES_API Logger
 {
-  friend class Logger;
-
  public:
-  /// destructor, cleans up, writes xml file footers, etc
-  ~LoggerImpl();
+  static Logger& instance();
+
+  Logger(const Logger& other) = delete;
+  Logger(Logger&& other) = delete;
+  Logger& operator=(const Logger&) = delete;
+  Logger& operator=(Logger&&) = delete;
 
   /// get logger for standard out
   LogSink standardOutLogger() const;
@@ -94,40 +93,10 @@ class UTILITIES_API LoggerImpl
   void addTimeStampToLogger();
 
  private:
-  /// private constructor
-  LoggerImpl();
+  Logger();
+  ~Logger() = default;
 
-  mutable std::shared_mutex m_mutex;
-
-  /// standard out logger
-  LogSink m_standardOutLogger;
-
-  /// standard err logger
-  LogSink m_standardErrLogger;
-
-  /// map of std::string to logger
-  using LoggerMapType = std::map<std::string, LoggerType, openstudio::IstringCompare>;
-  LoggerMapType m_loggerMap;
-
-  /// current sinks, kept here so don't destruct when LogSink wrapper goes out of scope
-  using SinkSetType = std::set<boost::shared_ptr<LogSinkBackend>>;
-  SinkSetType m_sinks;
-};
-
-class UTILITIES_API Logger
-{
- public:
-  Logger() = delete;
-
-  static LoggerImpl& instance() {
-    if (!obj) {
-      obj = std::shared_ptr<LoggerImpl>(new LoggerImpl());
-    }
-    return *obj;
-  }
-
- private:
-  static std::shared_ptr<LoggerImpl> obj;
+  std::shared_ptr<detail::Logger_Impl> m_impl;
 };
 
 }  // namespace openstudio
