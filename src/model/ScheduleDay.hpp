@@ -70,7 +70,7 @@ namespace model {
     /// If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
 
-    /// Returns the values for the timesteps per hour.
+    /// Returns the timeseries corresponding to simulation timestep and chosen interpolation method.
     openstudio::TimeSeries timeSeries() const;
 
     //@}
