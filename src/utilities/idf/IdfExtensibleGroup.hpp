@@ -40,9 +40,12 @@ class UTILITIES_API IdfExtensibleGroup
   /** @name Getters */
   //@{
 
-  /** Returns this extensible group's fields. Return value will be empty() if this group is
-   *  empty(). */
+  /** Returns this extensible group's fields. Return value will be empty() if this group is empty(). */
   std::vector<std::string> fields(bool returnDefault = false) const;
+
+  /** Returns this extensible group's fields. Return value will be empty() if this group is empty().
+    * Unlike fields(), in the case it's a WorkspaceObject_Impl, it uses handles as string and not the name of the target object */
+  std::vector<std::string> fieldsWithHandles(bool returnDefault = false) const;
 
   /** Returns the comments associated with this extensible group's fields. */
   std::vector<std::string> fieldComments(bool returnDefault = false) const;
@@ -53,6 +56,10 @@ class UTILITIES_API IdfExtensibleGroup
   /** Returns the string value of this extensible group's field fieldIndex, if that field
    *  exists (isValid(fieldIndex)). */
   boost::optional<std::string> getString(unsigned fieldIndex, bool returnDefault = false) const;
+
+  /** Like getString except for reference fields getString will return the name of the referenced object.
+   * This method, getField, will always return the string value  of the field.   */
+  boost::optional<std::string> getField(unsigned index, bool returnDefault = false) const;
 
   /** Returns true if the field is empty. */
   bool isEmpty(unsigned fieldIndex) const;

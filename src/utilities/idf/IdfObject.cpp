@@ -209,6 +209,10 @@ namespace detail {
     return boost::none;
   }
 
+  boost::optional<std::string> IdfObject_Impl::getField(unsigned index, bool returnDefault) const {
+    return IdfObject_Impl::getString(index, returnDefault, false);
+  }
+
   boost::optional<double> IdfObject_Impl::getDouble(unsigned index, bool returnDefault) const {
     OptionalDouble result;
     OptionalString value = getString(index, returnDefault, false);
@@ -687,7 +691,7 @@ namespace detail {
       unsigned i = numExtensibleGroups() - 1;
       IdfExtensibleGroup eg = getExtensibleGroup(i);
       OS_ASSERT(!eg.empty());
-      IdfExtensibleGroup temp = pushExtensibleGroup(eg.fields(), checkValidity);
+      IdfExtensibleGroup temp = pushExtensibleGroup(eg.fieldsWithHandles(), checkValidity);
       if (temp.empty()) {
         OS_ASSERT(numFields() == n);
         OS_ASSERT(m_diffs.size() == diffSize);
@@ -701,7 +705,7 @@ namespace detail {
         --i;
         IdfExtensibleGroup peg = getExtensibleGroup(i);
         OS_ASSERT(!peg.empty());
-        ok = eg.setFields(peg.fields(), false);
+        ok = eg.setFields(peg.fieldsWithHandles(), false);
         if (!ok) {
           // roll back
           i += 2;
@@ -710,7 +714,7 @@ namespace detail {
             OS_ASSERT(!peg.empty());
             eg = getExtensibleGroup(i + 1);
             OS_ASSERT(!eg.empty());
-            peg.setFields(eg.fields(), false);
+            peg.setFields(eg.fieldsWithHandles(), false);
             ++i;
           }
           popExtensibleGroup(false);
@@ -734,7 +738,7 @@ namespace detail {
           ++i;
           eg = getExtensibleGroup(i);
           OS_ASSERT(!eg.empty());
-          peg.setFields(eg.fields(), false);
+          peg.setFields(eg.fieldsWithHandles(), false);
           peg = eg;
         }
         popExtensibleGroup(false);
@@ -774,7 +778,7 @@ namespace detail {
       IdfExtensibleGroup egToPop = getExtensibleGroup(numExtensibleGroups() - 1);
       OS_ASSERT(!egToPop.empty());
       UnsignedVector indices = egToPop.mf_indices();
-      result = egToPop.fields();
+      result = egToPop.fieldsWithHandles();
       OS_ASSERT(result.size() == groupSize);
 
       // record diffs for each field going backwards
@@ -825,14 +829,14 @@ namespace detail {
       StringVector temp = result;
       IdfExtensibleGroup eg = getExtensibleGroup(i);
       OS_ASSERT(!eg.empty());
-      result = eg.fields();
+      result = eg.fieldsWithHandles();
       ok = eg.setFields(temp, checkValidity);
       if (!ok) {
         // roll back changes and return
         for (unsigned j = i + 1, n = numExtensibleGroups(); j < n; ++j) {
           eg = getExtensibleGroup(j);
           OS_ASSERT(!eg.empty());
-          result = eg.fields();
+          result = eg.fieldsWithHandles();
           OS_ASSERT(result.size() == temp.size());
           eg.setFields(temp, false);
           temp = result;
@@ -884,7 +888,7 @@ namespace detail {
       if (indices.empty()) {
         indices = eg.mf_indices();
       }
-      rollbackValues.push_back(eg.fields());
+      rollbackValues.push_back(eg.fieldsWithHandles());
       rollbackComments.push_back(eg.fieldComments());
       // try to pop
       StringVector result = popExtensibleGroup(checkValidity);
@@ -2061,6 +2065,10 @@ bool IdfObject::isEmpty(unsigned index) const {
 
 boost::optional<std::string> IdfObject::getString(unsigned index, bool returnDefault, bool returnUninitializedEmpty) const {
   return m_impl->getString(index, returnDefault, returnUninitializedEmpty);
+}
+
+boost::optional<std::string> IdfObject::getField(unsigned index, bool returnDefault) const {
+  return m_impl->getField(index, returnDefault);
 }
 
 boost::optional<double> IdfObject::getDouble(unsigned index, bool returnDefault) const {

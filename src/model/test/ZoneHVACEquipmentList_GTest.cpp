@@ -160,6 +160,10 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_ModelObject_Is_First)
   Model m;
   ThermalZone z(m);
 
+  auto eqlists = m.getConcreteModelObjects<ZoneHVACEquipmentList>();
+  EXPECT_EQ(1, eqlists.size());
+  auto& eqlist = eqlists.front();
+
   ZoneHVACBaseboardConvectiveElectric bb_delete(m);
 
   ScheduleConstant bb_sch(m);
@@ -174,11 +178,39 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_ModelObject_Is_First)
   EXPECT_TRUE(bb_delete.addToThermalZone(z));
   EXPECT_TRUE(bb.addToThermalZone(z));
 
-  auto objects = m.getObjectsByName(bb.nameString());
-  EXPECT_EQ(2, objects.size());
-  EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), objects.front().iddObject().type());
+  {
+    EXPECT_EQ(2, eqlist.numExtensibleGroups());
+    auto idf_egs = eqlist.extensibleGroups();
+    for (const auto& idf_eg : idf_egs) {
+      // Using getField so we don't resolve object name, but get the handle string
+      const auto val_ = idf_eg.getField(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+      const auto uid = openstudio::toUUID(*val_);
+      auto obj_ = m.getObject(uid);
+      ASSERT_TRUE(obj_);
+      EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+    }
+  }
+
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), objects.front().iddObject().type());
+  }
 
   EXPECT_NO_THROW(bb_delete.remove());
+
+  {
+    EXPECT_EQ(1, eqlist.numExtensibleGroups());
+    auto idf_egs = eqlist.extensibleGroups();
+    for (const auto& idf_eg : idf_egs) {
+      // Using getField so we don't resolve object name, but get the handle string
+      const auto val_ = idf_eg.getField(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+      const auto uid = openstudio::toUUID(*val_);
+      auto obj_ = m.getObject(uid);
+      ASSERT_TRUE(obj_);
+      EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+    }
+  }
 }
 
 TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First) {
@@ -204,23 +236,39 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First) {
   EXPECT_TRUE(bb_delete.addToThermalZone(z));
   EXPECT_TRUE(bb.addToThermalZone(z));
 
-  EXPECT_EQ(2, eqlist.numExtensibleGroups());
-  // I deliberately use idfObject.extensibleGroups so the handles aren't resolved to object name
-  auto idf_egs = eqlist.idfObject().extensibleGroups();
-
-  for (const auto& idf_eg : idf_egs) {
-    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
-    const auto uid = openstudio::toUUID(val);
-    auto obj_ = m.getObject(uid);
-    ASSERT_TRUE(obj_);
-    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  {
+    EXPECT_EQ(2, eqlist.numExtensibleGroups());
+    auto idf_egs = eqlist.extensibleGroups();
+    for (const auto& idf_eg : idf_egs) {
+      // Using getField so we don't resolve object name, but get the handle string
+      const auto val_ = idf_eg.getField(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+      const auto uid = openstudio::toUUID(*val_);
+      auto obj_ = m.getObject(uid);
+      ASSERT_TRUE(obj_);
+      EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+    }
   }
 
-  auto objects = m.getObjectsByName(bb.nameString());
-  EXPECT_EQ(2, objects.size());
-  EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+  }
 
   EXPECT_NO_THROW(bb_delete.remove());
+
+  {
+    EXPECT_EQ(1, eqlist.numExtensibleGroups());
+    auto idf_egs = eqlist.extensibleGroups();
+    for (const auto& idf_eg : idf_egs) {
+      // Using getField so we don't resolve object name, but get the handle string
+      const auto val_ = idf_eg.getField(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+      const auto uid = openstudio::toUUID(*val_);
+      auto obj_ = m.getObject(uid);
+      ASSERT_TRUE(obj_);
+      EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+    }
+  }
 }
 
 TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First_OnlyPop) {
@@ -306,10 +354,11 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_OnlyPop_Work
     EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
   }
 
-  eqlist.idfObject().eraseExtensibleGroup(0);
+  auto i = eqlist.idfObject();
+  i.eraseExtensibleGroup(0);
 
-  EXPECT_EQ(1, eqlist.numExtensibleGroups());
-  idf_egs = eqlist.idfObject().extensibleGroups();
+  EXPECT_EQ(1, i.numExtensibleGroups());
+  idf_egs = i.extensibleGroups();
   for (const auto& idf_eg : idf_egs) {
     const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
     const auto uid = openstudio::toUUID(val);
