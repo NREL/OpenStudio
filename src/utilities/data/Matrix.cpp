@@ -69,6 +69,10 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
         // linear interpolation
         // no-op
         break;
+      case AverageInterp:
+        // average interpolation
+        // no-op
+        break;
       case NearestInterp:
         // pick closest point
         if (xInfo.wa > xInfo.wb) {
@@ -110,6 +114,10 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
     switch (interpMethod) {
       case LinearInterp:
         // linear interpolation
+        // no-op
+        break;
+      case AverageInterp:
+        // average interpolation
         // no-op
         break;
       case NearestInterp:
