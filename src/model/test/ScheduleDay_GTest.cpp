@@ -196,10 +196,10 @@ TEST_F(ModelFixture, Schedule_Day_Interp) {
   EXPECT_FALSE(daySchedule.isInterpolatetoTimestepDefaulted());
 
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, -1, 0)), tol);
-  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 0, 0)), tol);  // FIXME: Fails. Should be 1.0?
-  EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 6, 0)), tol);  // FIXME: Fails. Should be 1.0?
+  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 0, 0)), tol);
+  EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 6, 0)), tol);
   EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 12, 0)), tol);
-  EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 18, 0)), tol);  // FIXME: Fails. Should be 0.0?
+  EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 18, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 }

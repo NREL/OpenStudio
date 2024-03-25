@@ -10,6 +10,7 @@
 #include "ScheduleBase_Impl.hpp"
 
 #include "../utilities/time/Time.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 
 namespace openstudio {
 
@@ -119,6 +120,7 @@ namespace model {
 
       mutable boost::optional<std::vector<openstudio::Time>> m_cachedTimes;
       mutable boost::optional<std::vector<double>> m_cachedValues;
+      mutable boost::optional<openstudio::TimeSeries> m_cachedTimeSeries;
     };
 
   }  // namespace detail
