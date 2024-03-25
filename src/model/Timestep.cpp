@@ -9,6 +9,7 @@
 #include "SimulationControl_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ScheduleDay_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Timestep_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
