@@ -3,16 +3,27 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#include <algorithm>
-
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+
+#include "../ZoneHVACEquipmentList.hpp"
+#include "../ZoneHVACEquipmentList_Impl.hpp"
+
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleTypeLimits.hpp"
+
+#include "../../utilities/idd/IddObject.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+#include <algorithm>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -142,4 +153,168 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_ScheduleTypeLimits) {
   boost::optional<ScheduleTypeLimits> _sch_lim = _sch->scheduleTypeLimits();
   ASSERT_TRUE(_sch_lim);
   EXPECT_EQ("Dimensionless", _sch_lim->unitType());
+}
+
+TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_ModelObject_Is_First) {
+
+  Model m;
+  ThermalZone z(m);
+
+  ZoneHVACBaseboardConvectiveElectric bb_delete(m);
+
+  ScheduleConstant bb_sch(m);
+
+  ZoneHVACBaseboardConvectiveElectric bb(m);
+
+  bb.setName("Baseboard");
+  bb_sch.setName(bb.nameString());
+  EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
+  EXPECT_TRUE(bb_delete.addToThermalZone(z));
+  EXPECT_TRUE(bb.addToThermalZone(z));
+
+  auto objects = m.getObjectsByName(bb.nameString());
+  EXPECT_EQ(2, objects.size());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), objects.front().iddObject().type());
+
+  EXPECT_NO_THROW(bb_delete.remove());
+}
+
+TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First) {
+
+  Model m;
+  ThermalZone z(m);
+
+  auto eqlists = m.getConcreteModelObjects<ZoneHVACEquipmentList>();
+  EXPECT_EQ(1, eqlists.size());
+  auto& eqlist = eqlists.front();
+
+  ZoneHVACBaseboardConvectiveElectric bb_delete(m);
+
+  ZoneHVACBaseboardConvectiveElectric bb(m);
+
+  ScheduleConstant bb_sch(m);
+
+  bb.setName("Baseboard");
+  bb_sch.setName(bb.nameString());
+  EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
+  EXPECT_TRUE(bb_delete.addToThermalZone(z));
+  EXPECT_TRUE(bb.addToThermalZone(z));
+
+  EXPECT_EQ(2, eqlist.numExtensibleGroups());
+  // I deliberately use idfObject.extensibleGroups so the handles aren't resolved to object name
+  auto idf_egs = eqlist.idfObject().extensibleGroups();
+
+  for (const auto& idf_eg : idf_egs) {
+    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
+    const auto uid = openstudio::toUUID(val);
+    auto obj_ = m.getObject(uid);
+    ASSERT_TRUE(obj_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  }
+
+  auto objects = m.getObjectsByName(bb.nameString());
+  EXPECT_EQ(2, objects.size());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+
+  EXPECT_NO_THROW(bb_delete.remove());
+}
+
+TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First_OnlyPop) {
+
+  Model m;
+  ThermalZone z(m);
+
+  auto eqlists = m.getConcreteModelObjects<ZoneHVACEquipmentList>();
+  EXPECT_EQ(1, eqlists.size());
+  auto& eqlist = eqlists.front();
+
+  ZoneHVACBaseboardConvectiveElectric bb_delete(m);
+
+  ZoneHVACBaseboardConvectiveElectric bb(m);
+
+  ScheduleConstant bb_sch(m);
+
+  bb.setName("Baseboard");
+  bb_sch.setName(bb.nameString());
+  EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
+  EXPECT_TRUE(bb_delete.addToThermalZone(z));
+  EXPECT_TRUE(bb.addToThermalZone(z));
+
+  EXPECT_EQ(2, eqlist.numExtensibleGroups());
+  // I deliberately use idfObject.extensibleGroups so the handles aren't resolved to object name
+  auto idf_egs = eqlist.idfObject().extensibleGroups();
+
+  for (const auto& idf_eg : idf_egs) {
+    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
+    const auto uid = openstudio::toUUID(val);
+    auto obj_ = m.getObject(uid);
+    ASSERT_TRUE(obj_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  }
+
+  eqlist.eraseExtensibleGroup(0);
+
+  EXPECT_EQ(1, eqlist.numExtensibleGroups());
+  idf_egs = eqlist.idfObject().extensibleGroups();
+  for (const auto& idf_eg : idf_egs) {
+    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
+    const auto uid = openstudio::toUUID(val);
+    auto obj_ = m.getObject(uid);
+    ASSERT_TRUE(obj_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  }
+}
+
+TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_OnlyPop_Works_With_IdfObject) {
+
+  Model m;
+  ThermalZone z(m);
+
+  auto eqlists = m.getConcreteModelObjects<ZoneHVACEquipmentList>();
+  EXPECT_EQ(1, eqlists.size());
+  auto& eqlist = eqlists.front();
+
+  ZoneHVACBaseboardConvectiveElectric bb_delete(m);
+
+  ZoneHVACBaseboardConvectiveElectric bb(m);
+
+  ScheduleConstant bb_sch(m);
+
+  bb.setName("Baseboard");
+  bb_sch.setName(bb.nameString());
+  EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
+  EXPECT_TRUE(bb_delete.addToThermalZone(z));
+  EXPECT_TRUE(bb.addToThermalZone(z));
+
+  EXPECT_EQ(2, eqlist.numExtensibleGroups());
+  // I deliberately use idfObject.extensibleGroups so the handles aren't resolved to object name
+  auto idf_egs = eqlist.idfObject().extensibleGroups();
+
+  for (const auto& idf_eg : idf_egs) {
+    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
+    const auto uid = openstudio::toUUID(val);
+    auto obj_ = m.getObject(uid);
+    ASSERT_TRUE(obj_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  }
+
+  eqlist.idfObject().eraseExtensibleGroup(0);
+
+  EXPECT_EQ(1, eqlist.numExtensibleGroups());
+  idf_egs = eqlist.idfObject().extensibleGroups();
+  for (const auto& idf_eg : idf_egs) {
+    const std::string val = idf_eg.getString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment).get();
+    const auto uid = openstudio::toUUID(val);
+    auto obj_ = m.getObject(uid);
+    ASSERT_TRUE(obj_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
+  }
 }
