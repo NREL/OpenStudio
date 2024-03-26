@@ -53,6 +53,7 @@ TEST_F(ModelFixture, Schedule_Day) {
 
   EXPECT_EQ(0.0, daySchedule.getValue(Time(0, -1, 0)));
   EXPECT_EQ(1.0, daySchedule.getValue(Time(0, 0, 0)));
+  EXPECT_EQ(1.0, daySchedule.getValue(Time(0, 0, 1)));
   EXPECT_EQ(1.0, daySchedule.getValue(Time(0, 6, 0)));
   EXPECT_EQ(1.0, daySchedule.getValue(Time(0, 8, 0)));
   EXPECT_EQ(1.0, daySchedule.getValue(Time(0, 9, 0)));
@@ -197,9 +198,23 @@ TEST_F(ModelFixture, Schedule_Day_Interp) {
 
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, -1, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 0, 0)), tol);
+  EXPECT_NEAR(0.013890, daySchedule.getValue(Time(0, 0, 1)), tol);
   EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 6, 0)), tol);
   EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 12, 0)), tol);
   EXPECT_NEAR(0.5, daySchedule.getValue(Time(0, 18, 0)), tol);
+  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
+  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
+
+  daySchedule.setInterpolatetoTimestep("Average");
+  EXPECT_EQ("Average", daySchedule.interpolatetoTimestep());
+  EXPECT_FALSE(daySchedule.isInterpolatetoTimestepDefaulted());
+
+  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, -1, 0)), tol);
+  EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 0, 0)), tol);
+  EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 0, 1)), tol);
+  EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 6, 0)), tol);
+  EXPECT_NEAR(1.0, daySchedule.getValue(Time(0, 12, 0)), tol);
+  EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 18, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 }
