@@ -180,6 +180,11 @@ class UTILITIES_API BCLSearchResult
   std::vector<BCLFile> files() const;
   std::vector<BCLCost> costs() const;
 
+  std::string org() const;
+  std::string repo() const;
+  std::string releaseTag() const;
+  std::string versionModified() const;
+
  private:
   REGISTER_LOGGER("openstudio.BCLSearchResult");
 
@@ -196,6 +201,11 @@ class UTILITIES_API BCLSearchResult
   std::vector<Attribute> m_attributes;
   std::vector<BCLFile> m_files;
   std::vector<BCLCost> m_costs;
+
+  std::string m_org;
+  std::string m_repo;
+  std::string m_releaseTag;
+  std::string m_versionModified;  // ISO8601 string, or empty
 };
 
 /// This is a generic interface that can be used for searching either the local or remote bcl.

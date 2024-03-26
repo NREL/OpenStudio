@@ -10,6 +10,7 @@
 
 #include "../core/Assert.hpp"
 #include "../core/StringHelpers.hpp"
+#include "../time/DateTime.hpp"
 
 #include <pugixml.hpp>
 
@@ -128,24 +129,33 @@ BCLFile::BCLFile(const pugi::xml_node& fileElement) {
 
   m_softwareProgram = softwareProgramElement.text().as_string();
   m_identifier = identifierElement.text().as_string();
+
+  // Avoids gettings lots of 'Could not parse '' as a version string'
+  auto parseVersionIfExistsAndNotEmpty = [](const pugi::xml_node& vElement) -> boost::optional<VersionString> {
+    if (!vElement) {
+      return boost::none;
+    }
+    const std::string vstr = vElement.text().as_string();
+    if (vstr.empty()) {
+      return boost::none;
+    }
+    boost::optional<VersionString> result;
+
+    try {
+      result = VersionString(vstr);
+    } catch (const std::exception&) {
+    }
+    return result;
+  };
+
   if (!minCompatibleElement) {
-    try {
-      // if minCompatibleVersion not explicitly set, assume identifier is min
-      m_minCompatibleVersion = VersionString(m_identifier);
-    } catch (const std::exception&) {
-    }
+    m_minCompatibleVersion = parseVersionIfExistsAndNotEmpty(identifierElement);
   } else {
-    try {
-      m_minCompatibleVersion = VersionString(minCompatibleElement.text().as_string());
-    } catch (const std::exception&) {
-    }
+    m_minCompatibleVersion = parseVersionIfExistsAndNotEmpty(minCompatibleElement);
   }
-  if (maxCompatibleElement) {
-    try {
-      m_maxCompatibleVersion = VersionString(maxCompatibleElement.text().as_string());
-    } catch (const std::exception&) {
-    }
-  }
+
+  m_maxCompatibleVersion = parseVersionIfExistsAndNotEmpty(maxCompatibleElement);
+
   m_filename = filenameElement.text().as_string();
   m_url = urlElement.text().as_string();
   m_filetype = filetypeElement.text().as_string();
@@ -350,7 +360,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
   auto provenanceElement = provenancesElement.child("provenance");
   while (provenanceElement) {
     if (provenanceElement.first_child() != nullptr) {
-      m_provenances.push_back(BCLProvenance(provenanceElement));
+      m_provenances.emplace_back(provenanceElement);
     } else {
       break;
     }
@@ -359,7 +369,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
   auto provenanceRequiredElement = provenancesElement.child("provenance_required");
   if (provenanceRequiredElement) {
     std::string required = provenanceRequiredElement.text().as_string();
-    m_provenanceRequired = (required == "true") ? true : false;
+    m_provenanceRequired = (required == "true");
   }
 
   auto tagElement = tagsElement.child("tag");
@@ -418,7 +428,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
   auto fileElement = filesElement.child("file");
   while (fileElement) {
     if (fileElement.first_child() != nullptr) {
-      m_files.push_back(BCLFile(fileElement));
+      m_files.emplace_back(fileElement);  // BCLFile
     } else {
       break;
     }
@@ -429,11 +439,30 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
     auto costElement = costsElement.child("cost");
     while (costElement) {
       if (costElement.first_child() != nullptr) {
-        m_costs.push_back(BCLCost(costElement));
+        m_costs.emplace_back(costElement);  // BCLCost
       } else {
         break;
       }
       costElement = costElement.next_sibling("cost");
+    }
+  }
+
+  if (auto orgElement = componentElement.child("org")) {
+    m_org = orgElement.text().as_string();
+  }
+  if (auto repoElement = componentElement.child("repo")) {
+    m_repo = repoElement.text().as_string();
+  }
+  if (auto release_tagElement = componentElement.child("release_tag")) {
+    m_releaseTag = release_tagElement.text().as_string();
+  }
+  if (auto versionModifiedElement = componentElement.child("version_modified")) {
+    const std::string versionModified = versionModifiedElement.text().as_string();
+    if (!versionModified.empty()) {
+      // fromXsdDateTime forwards to fromISO8601 and handles both formats
+      if (auto dt_ = openstudio::DateTime::fromXsdDateTime(versionModified)) {
+        m_versionModified = dt_->toISO8601();
+      }
     }
   }
 }
@@ -488,6 +517,19 @@ std::vector<BCLFile> BCLSearchResult::files() const {
 
 std::vector<BCLCost> BCLSearchResult::costs() const {
   return m_costs;
+}
+
+std::string BCLSearchResult::org() const {
+  return m_org;
+}
+std::string BCLSearchResult::repo() const {
+  return m_repo;
+}
+std::string BCLSearchResult::releaseTag() const {
+  return m_releaseTag;
+}
+std::string BCLSearchResult::versionModified() const {
+  return m_versionModified;
 }
 
 BCL::BCL() = default;
