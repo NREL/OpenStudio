@@ -200,7 +200,7 @@ set(ENERGYPLUS_BUILD_SHA "c3ab25e7c7")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v24.1.0-RC2")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0-RC3")
 
 set(ENERGYPLUS_REPO "NREL")
 
@@ -628,7 +628,7 @@ if(UNIX)
       set(ENERGYPLUS_EXPECTED_HASH f27b5abefcbe850f9107b1a84ec313b2)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 17819846a562cd7d39bb1c3fa57fe448)
+      set(ENERGYPLUS_EXPECTED_HASH be087b7cede56ed7606ed5c524367850)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
