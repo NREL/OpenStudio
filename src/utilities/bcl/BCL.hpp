@@ -12,6 +12,7 @@
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
 #include "../data/Attribute.hpp"
+#include "../time/DateTime.hpp"
 
 namespace pugi {
 class xml_node;
@@ -183,7 +184,7 @@ class UTILITIES_API BCLSearchResult
   std::string org() const;
   std::string repo() const;
   std::string releaseTag() const;
-  std::string versionModified() const;
+  boost::optional<openstudio::DateTime> versionModified() const;
 
  private:
   REGISTER_LOGGER("openstudio.BCLSearchResult");
@@ -205,7 +206,7 @@ class UTILITIES_API BCLSearchResult
   std::string m_org;
   std::string m_repo;
   std::string m_releaseTag;
-  std::string m_versionModified;  // ISO8601 string, or empty
+  boost::optional<openstudio::DateTime> m_versionModified;
 };
 
 /// This is a generic interface that can be used for searching either the local or remote bcl.

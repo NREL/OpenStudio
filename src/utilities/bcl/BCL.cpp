@@ -461,7 +461,7 @@ BCLSearchResult::BCLSearchResult(const pugi::xml_node& componentElement) : m_com
     if (!versionModified.empty()) {
       // fromXsdDateTime forwards to fromISO8601 and handles both formats
       if (auto dt_ = openstudio::DateTime::fromXsdDateTime(versionModified)) {
-        m_versionModified = dt_->toISO8601();
+        m_versionModified = *dt_;
       }
     }
   }
@@ -528,7 +528,7 @@ std::string BCLSearchResult::repo() const {
 std::string BCLSearchResult::releaseTag() const {
   return m_releaseTag;
 }
-std::string BCLSearchResult::versionModified() const {
+boost::optional<openstudio::DateTime> BCLSearchResult::versionModified() const {
   return m_versionModified;
 }
 
