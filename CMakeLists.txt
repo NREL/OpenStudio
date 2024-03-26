@@ -697,9 +697,7 @@ elseif(WIN32)
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
   endif()
-
 endif()
 
 if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
