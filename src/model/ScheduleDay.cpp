@@ -197,7 +197,14 @@ namespace model {
       Vector y(N + 2);
 
       x[0] = 0.0;
-      y[0] = values[0];
+      std::string interpolatetoTimestep = this->interpolatetoTimestep();
+      if (istringEqual("No", interpolatetoTimestep)) {
+        y[0] = values[0];
+      } else if (istringEqual("Average", interpolatetoTimestep)) {
+        y[0] = values[0];
+      } else if (istringEqual("Linear", interpolatetoTimestep)) {
+        y[0] = 0.0;
+      }
 
       for (unsigned i = 0; i < N; ++i) {
         openstudio::Time t = dateTimes[i].time();
