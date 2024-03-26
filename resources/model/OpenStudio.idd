@@ -4130,7 +4130,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
   A4 , \field Design Power Input Calculation Method
        \note The entered calculation method is used to specify the design power input
        \note Watts/Unit => Watts per Unit -- Design Power = Watts per Unit * Number of Units
-       \note Watts/Area => Watts per Zone Floor Area -- Design Power = Watts per Zone Floor Area * Floor Area
+       \note Watts/Area => Watts per Space Floor Area -- Design Power = Watts per Space Floor Area * Floor Area
        \type choice
        \key Watts/Unit
        \key Watts/Area
@@ -4140,7 +4140,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \units W
        \ip-units W
        \minimum 0
-  N2 , \field Watts per Zone Floor Area
+  N2 , \field Watts per Space Floor Area
        \type real
        \units W/m2
        \ip-units W/ft2

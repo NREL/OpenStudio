@@ -92,7 +92,7 @@ end
 # Save to CSV (and make a copy of old CSV)
 def output_to_csv(new_table)
   # Create a copy of the old CSV
-  FileUtils.cp('deprecated_methods.csv', 'deprecated_methods.csv.bak')
+  FileUtils.cp(DEPRECATED_CSV_PATH, "#{DEPRECATED_CSV_PATH}.bak")
 
   CSV.open(DEPRECATED_CSV_PATH, "wb") do |csv|
     csv << new_table.first.keys # adds the header
