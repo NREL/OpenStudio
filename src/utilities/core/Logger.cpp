@@ -60,19 +60,15 @@ LoggerType& Logger::loggerFromChannel(const LogChannel& logChannel) {
 
   auto it = m_loggerMap.find(logChannel);
   if (it == m_loggerMap.end()) {
-    //LoggerType newLogger(boost::log::keywords::channel = logChannel, boost::log::keywords::severity = Debug);
-    LoggerType newLogger(boost::log::keywords::channel = logChannel);
-
-    std::pair<LogChannel, LoggerType> newPair(logChannel, newLogger);
-
     // Drop the read lock and grab a write lock - we need to add the new file to the map
     // this will reduce contention when multiple threads trying to log at once.
     l.unlock();
     std::unique_lock l2{m_mutex};
 
-    std::pair<LoggerMapType::iterator, bool> inserted = m_loggerMap.insert(newPair);
+    //LoggerType newLogger(boost::log::keywords::channel = logChannel, boost::log::keywords::severity = Debug);
+    auto [it, inserted] = m_loggerMap.try_emplace(logChannel, LoggerType(boost::log::keywords::channel = logChannel));
 
-    return inserted.first->second;
+    return it->second;
   }
 
   return it->second;
