@@ -469,11 +469,14 @@ TEST_F(IdfFixture, ExtensibleGroup_Erase) {
   objects[3].setName("Gypsum");
   WorkspaceObjectVector temp = ws.addObjects(objects);
   ASSERT_EQ(static_cast<unsigned>(4), temp.size());
-  ASSERT_TRUE(temp[0].iddObject().type() == IddObjectType::Construction);
-  ASSERT_TRUE(temp[1].name().get() == "Brick");
-  ASSERT_TRUE(temp[2].name().get() == "Insulation");
-  ASSERT_TRUE(temp[3].name().get() == "Gypsum");
-  WorkspaceObject wsConstruction = temp[0];
+  WorkspaceObject& wsConstruction = temp[0];
+  WorkspaceObject& wsBrick = temp[1];
+  WorkspaceObject& wsInsulation = temp[2];
+  WorkspaceObject& wsGypsum = temp[3];
+  ASSERT_TRUE(wsConstruction.iddObject().type() == IddObjectType::Construction);
+  ASSERT_TRUE(wsBrick.name().get() == "Brick");
+  ASSERT_TRUE(wsInsulation.name().get() == "Insulation");
+  ASSERT_TRUE(wsGypsum.name().get() == "Gypsum");
 
   values[0] = "Brick";
   eg = wsConstruction.pushExtensibleGroup(values);
@@ -488,17 +491,19 @@ TEST_F(IdfFixture, ExtensibleGroup_Erase) {
   ASSERT_FALSE(eg.empty());  // Brick, Insulation, Insulation, Gypsum
 
   // erase and check pointers
-  EXPECT_EQ(static_cast<unsigned>(2), temp[2].numSources());
+  EXPECT_EQ(static_cast<unsigned>(2), wsInsulation.numSources());
   values = wsConstruction.eraseExtensibleGroup(1);
   ASSERT_EQ(static_cast<unsigned>(1), values.size());
-  EXPECT_EQ("Insulation", values[0]);  // Brick, Insulation, Gypsum
-  EXPECT_EQ(static_cast<unsigned>(1), temp[2].numSources());
+  EXPECT_EQ(openstudio::toString(wsInsulation.handle()), values[0]);  // Brick, Insulation, Gypsum
+  EXPECT_EQ(static_cast<unsigned>(1), wsInsulation.numSources());
+
   values = wsConstruction.eraseExtensibleGroup(2);
   ASSERT_EQ(static_cast<unsigned>(1), values.size());
-  EXPECT_EQ("Gypsum", values[0]);  // Brick, Insulation
-  EXPECT_EQ(static_cast<unsigned>(1), temp[1].numSources());
-  EXPECT_EQ(static_cast<unsigned>(1), temp[2].numSources());
-  EXPECT_EQ(static_cast<unsigned>(0), temp[3].numSources());
+  EXPECT_EQ(openstudio::toString(wsGypsum.handle()), values[0]);  // Brick, Insulation
+
+  EXPECT_EQ(static_cast<unsigned>(1), wsBrick.numSources());
+  EXPECT_EQ(static_cast<unsigned>(1), wsInsulation.numSources());
+  EXPECT_EQ(static_cast<unsigned>(0), wsGypsum.numSources());
   ASSERT_EQ(static_cast<unsigned>(3), wsConstruction.numFields());
   EXPECT_EQ("Brick", wsConstruction.getString(1).get());
   EXPECT_EQ("Insulation", wsConstruction.getString(2).get());

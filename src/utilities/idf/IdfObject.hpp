@@ -144,6 +144,11 @@ class UTILITIES_API IdfObject
    */
   boost::optional<std::string> getString(unsigned index, bool returnDefault = false, bool returnUninitializedEmpty = false) const;
 
+  /** Like getString except for reference fields getString will return the name of the referenced object.
+    * This method, getField, will always return the string value of the field.
+    * For IdfObject, this is the same as getString */
+  boost::optional<std::string> getField(unsigned index, bool returnDefault = false) const;
+
   /** Get the value of the field at index, converted to double, if possible. Returns an
    *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
    *  if the conversion fails, the field is RealType, and the field is not equal to

@@ -10,8 +10,13 @@
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
+
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/OS_ZoneHVAC_Baseboard_Convective_Electric_FieldEnums.hxx>
+#include <utilities/idd/OS_Schedule_Constant_FieldEnums.hxx>
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include "../WorkspaceExtensibleGroup.hpp"
@@ -19,6 +24,7 @@
 #include "../IdfObject.hpp"
 #include "../Workspace.hpp"
 #include "../WorkspaceObject.hpp"
+#include "../WorkspaceObject_Impl.hpp"
 
 #include "../../core/Optional.hpp"
 
@@ -582,6 +588,59 @@ TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
         EXPECT_NE(objs[0].nameString(), objs[1].nameString()) << "Name unicity isn't enforced for " << iddObject.name();
       }
     }
+  }
+}
+
+TEST_F(IdfFixture, WorkspaceObject_eraseExtensibleGroups) {
+
+  Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  WorkspaceObject eqlist = w.addObject(IdfObject(IddObjectType::OS_ZoneHVAC_EquipmentList)).get();
+
+  WorkspaceObject bb_delete = w.addObject(IdfObject(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric)).get();
+  {
+    auto weg = eqlist.pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    EXPECT_TRUE(weg.setPointer(0, bb_delete.handle()));
+    EXPECT_TRUE(weg.setUnsigned(1, 1));
+    EXPECT_TRUE(weg.setUnsigned(2, 1));
+  }
+
+  WorkspaceObject bb = w.addObject(IdfObject(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric)).get();
+
+  WorkspaceObject bb_sch = w.addObject(IdfObject(IddObjectType::OS_Schedule_Constant)).get();
+  EXPECT_TRUE(bb.setPointer(2, bb_sch.handle()));
+
+  {
+    auto weg = eqlist.pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    EXPECT_TRUE(weg.setPointer(0, bb.handle()));
+    EXPECT_TRUE(weg.setUnsigned(1, 1));
+    EXPECT_TRUE(weg.setUnsigned(2, 1));
+  }
+
+  EXPECT_TRUE(bb.setName("Baseboard"));
+  EXPECT_TRUE(bb_sch.setName(bb.nameString()));
+
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
+  auto objects = w.getObjectsByName(bb.nameString());
+  EXPECT_EQ(2, objects.size());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+
+  EXPECT_EQ(2, eqlist.numExtensibleGroups());
+  for (const auto& eg : eqlist.extensibleGroups()) {
+    const auto weg = eg.cast<WorkspaceExtensibleGroup>();
+    auto target_ = weg.getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    ASSERT_TRUE(target_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), target_->iddObject().type());
+  }
+
+  eqlist.eraseExtensibleGroup(0);
+
+  EXPECT_EQ(1, eqlist.numExtensibleGroups());
+  for (const auto& eg : eqlist.extensibleGroups()) {
+    const auto weg = eg.cast<WorkspaceExtensibleGroup>();
+    auto target_ = weg.getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    ASSERT_TRUE(target_);
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), target_->iddObject().type());
   }
 }
 

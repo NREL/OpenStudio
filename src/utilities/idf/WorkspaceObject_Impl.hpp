@@ -129,7 +129,7 @@ namespace detail {
      *  (non-extensible) fields and fields with empty data, if a default exists. */
     virtual boost::optional<std::string> getString(unsigned index, bool returnDefault = false, bool returnUninitializedEmpty = false) const override;
 
-    boost::optional<std::string> getField(unsigned index) const;
+    virtual boost::optional<std::string> getField(unsigned index, bool returnDefault = false) const override;
 
     /** Returns the object pointed to by the field at index, if it exists. */
     boost::optional<WorkspaceObject> getTarget(unsigned index) const;

@@ -188,7 +188,7 @@ namespace detail {
     return IdfObject_Impl::getString(index, returnDefault, returnUninitializedEmpty);
   }
 
-  boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index) const {
+  boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index, bool returnDefault) const {
     boost::optional<std::string> result;
 
     // IdfObject_Impl::getString won't work if this is a source field... since m_fields will be blank
@@ -212,7 +212,7 @@ namespace detail {
       }
     } else {
       // If not source, then call getString
-      result = IdfObject_Impl::getString(index, false, false);
+      result = IdfObject_Impl::getString(index, returnDefault, false);
     }
 
     return result;
@@ -1374,10 +1374,6 @@ bool WorkspaceObject::objectListFieldsEqual(const WorkspaceObject& other) const 
 
 bool WorkspaceObject::objectListFieldsNonConflicting(const WorkspaceObject& other) const {
   return getImpl<WorkspaceObject_Impl>()->objectListFieldsNonConflicting(other);
-}
-
-boost::optional<std::string> WorkspaceObject::getField(unsigned index) const {
-  return getImpl<WorkspaceObject_Impl>()->getField(index);
 }
 
 // SERIALIZATION

@@ -66,12 +66,6 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   /** Returns all objects of type that point to this object, filtering for duplicate objects. */
   std::vector<WorkspaceObject> getSources(IddObjectType type) const;
 
-  /** Like getString except for reference fields getString will return the
-   *  name of the referenced object. This method, getField, will always return the string value
-   *  of the field.
-   */
-  boost::optional<std::string> getField(unsigned index) const;
-
   //@}
   /** @name Setters */
   //@{
