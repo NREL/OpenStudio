@@ -8,20 +8,22 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "Compare.hpp"  // NOTE that this this is not needed for this header but so many compilation errors if I omit it
-                        // since other files transitively use Compare
+#include "Compare.hpp"
 #include "LogMessage.hpp"
 #include "LogSink.hpp"
 #include "Exception.hpp"
 
-#include <sstream>
+#include <boost/shared_ptr.hpp>
+
+#include <map>
 #include <memory>
+#include <set>
+#include <shared_mutex>
+#include <sstream>
 
 /// defines method logChannel() to get a logger for a class
-#define REGISTER_LOGGER(__logChannel__)        \
-  static openstudio::LogChannel logChannel() { \
-    return __logChannel__;                     \
-  }
+#define REGISTER_LOGGER(__logChannel__) \
+  static openstudio::LogChannel logChannel() { return __logChannel__; }
 
 /// log a message from within a registered class
 #define LOG(__level__, __message__) LOG_FREE(__level__, logChannel(), __message__);
@@ -51,7 +53,6 @@ namespace openstudio {
 class OSWorkflow;
 class LogSink;
 namespace detail {
-  class Logger_Impl;
   class LogSink_Impl;
 }  // namespace detail
 
@@ -98,7 +99,21 @@ class UTILITIES_API Logger
   Logger();
   ~Logger() = default;
 
-  std::shared_ptr<detail::Logger_Impl> m_impl;
+  mutable std::shared_mutex m_mutex;
+
+  /// standard out logger
+  LogSink m_standardOutLogger;
+
+  /// standard err logger
+  LogSink m_standardErrLogger;
+
+  /// map of std::string to logger
+  using LoggerMapType = std::map<std::string, LoggerType, openstudio::IstringCompare>;
+  LoggerMapType m_loggerMap;
+
+  /// current sinks, kept here so don't destruct when LogSink wrapper goes out of scope
+  using SinkSetType = std::set<boost::shared_ptr<LogSinkBackend>>;
+  SinkSetType m_sinks;
 };
 
 }  // namespace openstudio

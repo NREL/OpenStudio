@@ -18,9 +18,10 @@
 
 namespace openstudio {
 
+class Logger;
+
 namespace detail {
   class LogSink_Impl;
-  class Logger_Impl;
 }  // namespace detail
 
 /// LogSink is a class for managing sinks for log messages, e.g. files, streams, etc.
@@ -77,7 +78,7 @@ class UTILITIES_API LogSink
   void setFormatter(const boost::log::formatter& fmter);
 
  protected:
-  friend class detail::Logger_Impl;
+  friend class Logger;
 
   // does not register in the global logger
   LogSink();
