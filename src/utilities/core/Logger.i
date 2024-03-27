@@ -22,7 +22,7 @@
 
 %ignore std::vector<openstudio::LogMessage>::vector(size_type);
 %ignore std::vector<openstudio::LogMessage>::resize(size_type);
-%ignore openstudio::LoggerImpl::loggerFromChannel;
+%ignore openstudio::Logger::loggerFromChannel;
 %ignore openstudio::LogSink::setFormatter;
 
 %template(LogMessageVector) std::vector<openstudio::LogMessage>;
