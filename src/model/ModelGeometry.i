@@ -6,6 +6,7 @@
 #endif
 
 
+%include <utilities/UtilitiesAPI.hpp>
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
 %import <model/ModelSimulation.i>

@@ -5,7 +5,7 @@
 %module openstudiogltf
 #endif
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define MODEL_API
 #define GLTF_API
 
