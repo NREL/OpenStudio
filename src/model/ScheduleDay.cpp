@@ -265,11 +265,11 @@ namespace model {
         y[0] = 0.0;
 
         for (unsigned i = 0; i < N; ++i) {
-          x[i + 1] = times[i].totalDays();
+          x[i + 1] = times[i].totalSeconds();
           y[i + 1] = values[i];
         }
 
-        x[N + 1] = 1.000001;
+        x[N + 1] = 86400.000001;
         y[N + 1] = 0.0;
 
         std::string interpolatetoTimestep = this->interpolatetoTimestep();
@@ -281,13 +281,13 @@ namespace model {
           }
 
           if (istringEqual("No", interpolatetoTimestep)) {
-            tsValues[j] = interp(x, y, t.totalDays(), HoldNextInterp, NoneExtrap);
+            tsValues[j] = interp(x, y, t.totalSeconds(), HoldNextInterp, NoneExtrap);
           } else if (istringEqual("Average", interpolatetoTimestep)) {
             double minutes = 60.0 / numberOfTimestepsPerHour;
             double ti = minutes / (60.0 * 24.0);  // total days of the timestep interval
-            tsValues[j] = interp(x, y, t.totalDays(), AverageInterp, NoneExtrap, ti);
+            tsValues[j] = interp(x, y, t.totalSeconds(), AverageInterp, NoneExtrap, ti);
           } else if (istringEqual("Linear", interpolatetoTimestep)) {
-            tsValues[j] = interp(x, y, t.totalDays(), LinearInterp, NoneExtrap);
+            tsValues[j] = interp(x, y, t.totalSeconds(), LinearInterp, NoneExtrap);
           }
         }
 
