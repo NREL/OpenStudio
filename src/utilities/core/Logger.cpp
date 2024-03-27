@@ -66,9 +66,10 @@ LoggerType& Logger::loggerFromChannel(const LogChannel& logChannel) {
     std::unique_lock l2{m_mutex};
 
     //LoggerType newLogger(boost::log::keywords::channel = logChannel, boost::log::keywords::severity = Debug);
-    auto [it, inserted] = m_loggerMap.try_emplace(logChannel, LoggerType(boost::log::keywords::channel = logChannel));
+    // No need for try_emplace, this we checked it wasn't in the map
+    auto [it2, inserted] = m_loggerMap.emplace(logChannel, LoggerType(boost::log::keywords::channel = logChannel));
 
-    return it->second;
+    return it2->second;
   }
 
   return it->second;
