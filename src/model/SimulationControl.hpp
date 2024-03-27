@@ -60,14 +60,17 @@ namespace model {
     /** @name Getters */
     //@{
 
+    // When defaulted, this will return true if you have DesignDays in your model and any zone with a Zonal HVAC equipment, false otherwise
     bool doZoneSizingCalculation() const;
 
     bool isDoZoneSizingCalculationDefaulted() const;
 
+    // When defaulted, this will return true only if you have DesignDays and at least one AirLoopHVAC in your model
     bool doSystemSizingCalculation() const;
 
     bool isDoSystemSizingCalculationDefaulted() const;
 
+    // When defaulted, this will return true only if you have DesignDays and at least one PlantLoop in your model
     bool doPlantSizingCalculation() const;
 
     bool isDoPlantSizingCalculationDefaulted() const;
@@ -100,6 +103,7 @@ namespace model {
 
     bool isMinimumNumberofWarmupDaysDefaulted() const;
 
+    // When defaulted, this will return true only if you have DesignDays and at least one PlantLoop with a Sizing Plant having a 'Coincident' Sizing Option
     bool doHVACSizingSimulationforSizingPeriods() const;
     bool isDoHVACSizingSimulationforSizingPeriodsDefaulted() const;
 
