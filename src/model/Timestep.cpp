@@ -9,6 +9,7 @@
 #include "SimulationControl_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ScheduleDay.hpp"
 #include "ScheduleDay_Impl.hpp"
 #include "../utilities/core/Assert.hpp"
 #include <utilities/idd/OS_Timestep_FieldEnums.hxx>
@@ -67,11 +68,20 @@ namespace model {
     }
 
     bool Timestep_Impl::setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour) {
+      int currentNumberOfTimestepsPerHour = numberOfTimestepsPerHour();
+      if (currentNumberOfTimestepsPerHour != numberOfTimestepsPerHour) {
+        for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
+          sch_day.getImpl<ScheduleDay_Impl>()->clearCachedVariables();
+        }
+      }
       bool result = setInt(OS_TimestepFields::NumberofTimestepsperHour, numberOfTimestepsPerHour);
       return result;
     }
 
     void Timestep_Impl::resetNumberOfTimestepsPerHour() {
+      for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
+        sch_day.getImpl<ScheduleDay_Impl>()->clearCachedVariables();
+      }
       bool result = setString(OS_TimestepFields::NumberofTimestepsperHour, "");
       OS_ASSERT(result);
     }
