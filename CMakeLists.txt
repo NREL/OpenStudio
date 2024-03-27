@@ -426,6 +426,7 @@ endif()
 
 ###############################################################################
 # Conan
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}")
 
 if(BUILD_RUBY_BINDINGS)
   find_package(Ruby)
