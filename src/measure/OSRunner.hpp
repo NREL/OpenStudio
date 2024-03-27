@@ -231,6 +231,17 @@ namespace measure {
                                                                                        const std::map<std::string, OSArgument>& user_arguments,
                                                                                        const openstudio::Workspace& workspace);
 
+    /** Call this method to retrieve the values of OSArguments of all types. */
+    Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
+
+    //
+    Json::Value getPastStepValuesForMeasure(const std::string& measure_name);
+    // {arg1 => val1, arg2 => val2, ...}
+
+    //
+    Json::Value getPastStepValuesForName(const std::string& step_name);
+    // {measure1 => val1, measure2 => val2, ...}
+
     //@}
 
     // reset the runner to re-run the workflow

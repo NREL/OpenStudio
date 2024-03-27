@@ -784,6 +784,141 @@ namespace measure {
     return result;
   }
 
+  Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
+    Json::Value argument_values;
+    OSArgumentType type;
+    for (const OSArgument& script_argument : script_arguments) {
+      if (script_argument.required()) {
+        switch (script_argument.type().value()) {
+          case OSArgumentType::Boolean:
+            argument_values[script_argument.name()] = getBoolArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::Double:
+            argument_values[script_argument.name()] = getDoubleArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::Integer:
+            argument_values[script_argument.name()] = getIntegerArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::String:
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::Choice:
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
+          case OSArgumentType::Path:
+            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
+            break;
+          default:
+            OS_ASSERT(false);
+        }
+      } else {
+        switch (script_argument.type().value()) {
+          case OSArgumentType::Boolean:
+            if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optB_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          case OSArgumentType::Double:
+            if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optD_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          case OSArgumentType::Integer:
+            if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optI_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          case OSArgumentType::String:
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          case OSArgumentType::Choice:
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          case OSArgumentType::Path:
+            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
+              argument_values[script_argument.name()] = optS_.get();
+            } else {
+              argument_values[script_argument.name()] = Json::nullValue;
+            }
+            break;
+          default:
+            OS_ASSERT(false);
+        }
+      }
+    }
+    return argument_values;
+  }
+
+  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measure_name) {
+    Json::Value step_values;
+    WorkflowJSON workflow_ = workflow();
+    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
+    for (const WorkflowStep& workflow_step : workflow_steps) {
+      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
+        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
+        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
+        if (workflow_step_result_.get().value() == StepResult::Success) {
+          if (istringEqual(measure_name, measure_name_.get())) {
+            for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
+              if (workflow_step_value.variantType() == VariantType::String) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsString();
+              } else if (workflow_step_value.variantType() == VariantType::Double) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsDouble();
+              } else if (workflow_step_value.variantType() == VariantType::Integer) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsInteger();
+              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
+                step_values[workflow_step_value.name()] = workflow_step_value.valueAsBoolean();
+              }
+            }
+          }
+        }
+      }
+    }
+    return step_values;
+  }
+
+  Json::Value OSRunner::getPastStepValuesForName(const std::string& step_name) {
+    Json::Value step_values;
+    WorkflowJSON workflow_ = workflow();
+    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
+    for (const WorkflowStep& workflow_step : workflow_steps) {
+      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
+        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
+        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
+        if (workflow_step_result_.get().value() == StepResult::Success) {
+          for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
+            if (istringEqual(step_name, workflow_step_value.name())) {
+              if (workflow_step_value.variantType() == VariantType::String) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsString();
+              } else if (workflow_step_value.variantType() == VariantType::Double) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsDouble();
+              } else if (workflow_step_value.variantType() == VariantType::Integer) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsInteger();
+              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
+                step_values[measure_name_.get()] = workflow_step_value.valueAsBoolean();
+              }
+            }
+          }
+        }
+      }
+    }
+    return step_values;
+  }
+
   void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel) {
     m_lastOpenStudioModel = lastOpenStudioModel;
     m_lastOpenStudioModelPath.reset();
