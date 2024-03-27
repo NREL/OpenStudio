@@ -288,8 +288,10 @@ class UTILITIES_API RemoteBCL : public BCL
   bool validDevAuthKey;
 
   std::vector<BCLSearchResult> m_componentsWithUpdates;
+  std::map<std::string, std::vector<std::string>> m_outdatedComponentVersionIdMap;
 
   std::vector<BCLSearchResult> m_measuresWithUpdates;
+  std::map<std::string, std::vector<std::string>> m_outdatedMeasureVersionIdMap;
 
   unsigned m_timeOutSeconds;
 };
