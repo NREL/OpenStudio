@@ -111,6 +111,10 @@ namespace model {
 
       virtual bool okToResetScheduleTypeLimits() const override;
 
+      void clearCachedTimeSeries();
+
+      friend class detail::Timestep_Impl;
+
       //private slots:
      private:
       void clearCachedVariables();

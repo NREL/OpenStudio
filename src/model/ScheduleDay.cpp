@@ -457,6 +457,10 @@ namespace model {
       m_cachedTimeSeries.reset();
     }
 
+    void ScheduleDay_Impl::clearCachedTimeSeries() {
+      m_cachedTimeSeries.reset();
+    }
+
   }  // namespace detail
 
   ScheduleDay::ScheduleDay(const Model& model) : ScheduleBase(ScheduleDay::iddObjectType(), model) {
