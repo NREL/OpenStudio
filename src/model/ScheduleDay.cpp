@@ -284,7 +284,7 @@ namespace model {
             tsValues[j] = interp(x, y, t.totalSeconds(), HoldNextInterp, NoneExtrap);
           } else if (istringEqual("Average", interpolatetoTimestep)) {
             double minutes = 60.0 / numberOfTimestepsPerHour;
-            double ti = minutes / (60.0 * 24.0);  // total days of the timestep interval
+            double ti = minutes * 60.0;  // total seconds of the timestep interval
             tsValues[j] = interp(x, y, t.totalSeconds(), AverageInterp, NoneExtrap, ti);
           } else if (istringEqual("Linear", interpolatetoTimestep)) {
             tsValues[j] = interp(x, y, t.totalSeconds(), LinearInterp, NoneExtrap);

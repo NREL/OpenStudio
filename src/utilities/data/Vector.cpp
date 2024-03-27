@@ -102,12 +102,12 @@ InterpInfo interpInfo(const Vector& x, double xi, double ti) {
     } else {
       result.wb = xi - x(result.ia);
       result.wa = ti - result.wb;
-      result.ti = 1.0;
       if ((result.wb > 0.0) && (result.wb < ti)) {
         result.ti = ti;
       } else {
         result.wa = 0.0;
         result.wb = 1.0;
+        result.ti = 1.0;
       }
     }
   }
