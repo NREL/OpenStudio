@@ -6,7 +6,7 @@
 #endif
 
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define UTILITIES_TEMPLATE_EXT
 
 %include <utilities/core/CommonInclude.i>

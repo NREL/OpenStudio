@@ -5,7 +5,7 @@
 %module openstudioisomodel
 #endif
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define ISOMODEL_API
 
 %include <utilities/core/CommonInclude.i>

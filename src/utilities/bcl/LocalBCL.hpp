@@ -97,6 +97,12 @@ class UTILITIES_API LocalBCL : public BCL
   // cppcheck-suppress constParameter
   bool removeMeasure(BCLMeasure& measure);
 
+  // Removes all components with uid but NOT currentVersionId
+  size_t removeOutdatedLocalComponents(const std::string& uid, const std::string& currentVersionId);
+
+  // Removes all measures with uid but NOT currentVersionId
+  size_t removeOutdatedLocalMeasures(const std::string& uid, const std::string& currentVersionId);
+
   /// Search for components with attributes matching those in searchTerms
   std::vector<BCLComponent> componentAttributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms) const;
 

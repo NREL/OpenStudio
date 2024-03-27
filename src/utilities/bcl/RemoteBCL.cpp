@@ -290,14 +290,11 @@ void RemoteBCL::updateComponents() {
   }
 
   for (const BCLSearchResult& component : m_componentsWithUpdates) {
-    downloadMeasure(component.uid());
+    downloadComponent(component.uid());
     boost::optional<BCLComponent> newComponent = waitForComponentDownload();
 
     if (newComponent) {
-      boost::optional<BCLComponent> oldComponent = LocalBCL::instance().getComponent(newComponent->uid());
-      if (oldComponent && oldComponent->versionId() != newComponent->versionId()) {
-        LocalBCL::instance().removeComponent(*oldComponent);
-      }
+      LocalBCL::instance().removeOutdatedLocalComponents(newComponent->uid(), newComponent->versionId());
     }
   }
 }
@@ -312,10 +309,7 @@ void RemoteBCL::updateMeasures() {
     boost::optional<BCLMeasure> newMeasure = waitForMeasureDownload();
 
     if (newMeasure) {
-      boost::optional<BCLMeasure> oldMeasure = LocalBCL::instance().getMeasure(newMeasure->uid());
-      if (oldMeasure && oldMeasure->versionId() != newMeasure->versionId()) {
-        LocalBCL::instance().removeMeasure(*oldMeasure);
-      }
+      LocalBCL::instance().removeOutdatedLocalMeasures(newMeasure->uid(), newMeasure->versionId());
     }
   }
 }

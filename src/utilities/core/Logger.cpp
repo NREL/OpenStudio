@@ -11,8 +11,7 @@
 
 #include <boost/core/null_deleter.hpp>
 
-namespace sinks = boost::log::sinks;
-namespace keywords = boost::log::keywords;
+#include <utility>
 
 namespace openstudio {
 
@@ -21,7 +20,13 @@ void logFree(LogLevel level, const std::string& channel, const std::string& mess
   BOOST_LOG_SEV(openstudio::Logger::instance().loggerFromChannel(channel), level) << message;
 }
 
-LoggerSingleton::LoggerSingleton() {
+// Meyers' singleton
+Logger& Logger::instance() {
+  static Logger instance;
+  return instance;
+}
+
+Logger::Logger() {
   // Make current thread id attribute available to logging
   boost::log::core::get()->add_global_attribute("ThreadId", boost::log::attributes::make_function(&std::this_thread::get_id));
 
@@ -38,47 +43,39 @@ LoggerSingleton::LoggerSingleton() {
   //this->addSink(m_standardErrLogger.sink());
 }
 
-LoggerSingleton::~LoggerSingleton() {
-  // unregister Qt message handler
-  //qInstallMsgHandler(consoleLogQtMessage);
-}
-
-LogSink LoggerSingleton::standardOutLogger() const {
+LogSink Logger::standardOutLogger() const {
   std::shared_lock l{m_mutex};
 
   return m_standardOutLogger;
 }
 
-LogSink LoggerSingleton::standardErrLogger() const {
+LogSink Logger::standardErrLogger() const {
   std::shared_lock l{m_mutex};
 
   return m_standardErrLogger;
 }
 
-LoggerType& LoggerSingleton::loggerFromChannel(const LogChannel& logChannel) {
+LoggerType& Logger::loggerFromChannel(const LogChannel& logChannel) {
   std::shared_lock l{m_mutex};
 
   auto it = m_loggerMap.find(logChannel);
   if (it == m_loggerMap.end()) {
-    //LoggerType newLogger(keywords::channel = logChannel, keywords::severity = Debug);
-    LoggerType newLogger(keywords::channel = logChannel);
-
-    std::pair<LogChannel, LoggerType> newPair(logChannel, newLogger);
-
     // Drop the read lock and grab a write lock - we need to add the new file to the map
     // this will reduce contention when multiple threads trying to log at once.
     l.unlock();
     std::unique_lock l2{m_mutex};
 
-    std::pair<LoggerMapType::iterator, bool> inserted = m_loggerMap.insert(newPair);
+    //LoggerType newLogger(boost::log::keywords::channel = logChannel, boost::log::keywords::severity = Debug);
+    // No need for try_emplace, this we checked it wasn't in the map
+    auto [it2, inserted] = m_loggerMap.emplace(logChannel, LoggerType(boost::log::keywords::channel = logChannel));
 
-    return inserted.first->second;
+    return it2->second;
   }
 
   return it->second;
 }
 
-bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink) {
+bool Logger::findSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::unique_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -86,7 +83,7 @@ bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink) {
   return (it != m_sinks.end());
 }
 
-void LoggerSingleton::addSink(boost::shared_ptr<LogSinkBackend> sink) {
+void Logger::addSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::shared_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -104,7 +101,7 @@ void LoggerSingleton::addSink(boost::shared_ptr<LogSinkBackend> sink) {
   }
 }
 
-void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
+void Logger::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
   std::shared_lock l{m_mutex};
 
   auto it = m_sinks.find(sink);
@@ -122,7 +119,7 @@ void LoggerSingleton::removeSink(boost::shared_ptr<LogSinkBackend> sink) {
   }
 }
 
-void LoggerSingleton::addTimeStampToLogger() {
+void Logger::addTimeStampToLogger() {
   std::unique_lock l{m_mutex};
 
   // Add a TimeStamp attribute, same as boost::log::add_common_attributes() would do

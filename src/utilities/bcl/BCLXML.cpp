@@ -64,17 +64,27 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     }
   }
 
+  // Avoids gettings lots of 'Could not parse '' as a version string'
+  auto parseVersionIfExistsAndNotEmpty = [](const pugi::xml_node& vElement) -> boost::optional<VersionString> {
+    if (!vElement) {
+      return boost::none;
+    }
+    const std::string vstr = vElement.text().as_string();
+    if (vstr.empty()) {
+      return boost::none;
+    }
+    boost::optional<VersionString> result;
+
+    try {
+      result = VersionString(vstr);
+    } catch (const std::exception&) {
+    }
+    return result;
+  };
+
   // get schema version to see if we need to upgrade anything
   // added in schema version 3
-  VersionString startingVersion("2.0");
-  auto subelement = element.child("schema_version");
-  if (subelement) {
-    try {
-      startingVersion = VersionString(subelement.text().as_string());
-    } catch (const std::exception&) {
-      // Yuck
-    }
-  }
+  const VersionString startingVersion = parseVersionIfExistsAndNotEmpty(element.child("schema_version")).get_value_or(VersionString("2.0"));
 
   // validate the gbxml prior to reverse translation
   auto bclXMLValidator = XMLValidator::bclXMLValidator(m_bclXMLType, startingVersion);
@@ -101,12 +111,14 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     m_error = errorElement.text().as_string();
   }
 
-  subelement = element.child("version_modified");
-  if (subelement) {
+  if (auto subelement = element.child("version_modified")) {
     m_versionModified = subelement.text().as_string();
-    if (!DateTime::fromXsdDateTime(m_versionModified)) {
-      // not an allowable date time
-      m_versionModified = "";
+    if (m_versionModified.empty()) {
+      // fromXsdDateTime forwards to fromISO8601 and handles both formats
+      if (!DateTime::fromXsdDateTime(m_versionModified)) {
+        // not an allowable date time
+        m_versionModified = "";
+      }
     }
   }
 
@@ -127,8 +139,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
   if (m_bclXMLType == BCLXMLType::MeasureXML) {
     m_modelerDescription = decodeString(element.child("modeler_description").text().as_string());
 
-    subelement = element.child("arguments");
-    if (subelement) {
+    if (auto subelement = element.child("arguments")) {
       for (auto& arg : subelement.children("argument")) {
         try {
           m_arguments.emplace_back(arg);
@@ -138,8 +149,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
       }
     }
 
-    subelement = element.child("outputs");
-    if (subelement) {
+    if (auto subelement = element.child("outputs")) {
       for (auto& outputElement : subelement.children("output")) {
         if (outputElement.first_child() != nullptr) {
           try {
@@ -152,8 +162,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     }
   }
 
-  subelement = element.child("files");
-  if (subelement) {
+  if (auto subelement = element.child("files")) {
     for (auto& fileElement : subelement.children("file")) {
       if (fileElement.first_child() != nullptr) {
 
@@ -163,32 +172,23 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
         boost::optional<VersionString> maxCompatibleVersion;
         auto versionElement = fileElement.child("version");
         if (versionElement) {
-          softwareProgram = versionElement.child("software_program").text().as_string();
-          softwareProgramVersion = versionElement.child("identifier").text().as_string();
+          auto softwareProgramElement = versionElement.child("software_program");
+          softwareProgram = softwareProgramElement.text().as_string();
+          auto softwareProgramVersionElement = versionElement.child("identifier");
+          softwareProgramVersion = softwareProgramVersionElement.text().as_string();
 
           // added in schema version 3
           auto minCompatibleVersionElement = versionElement.child("min_compatible");
+
           if (!minCompatibleVersionElement) {
-            try {
-              // if minCompatibleVersion not explicitly set, assume softwareProgramVersion is min
-              minCompatibleVersion = VersionString(softwareProgramVersion);
-            } catch (const std::exception&) {
-            }
+            minCompatibleVersion = parseVersionIfExistsAndNotEmpty(softwareProgramVersionElement);
           } else {
-            try {
-              minCompatibleVersion = VersionString(minCompatibleVersionElement.text().as_string());
-            } catch (const std::exception&) {
-            }
+            minCompatibleVersion = parseVersionIfExistsAndNotEmpty(minCompatibleVersionElement);
           }
 
           // added in schema version 3
           auto maxCompatibleVersionElement = versionElement.child("max_compatible");
-          if (maxCompatibleVersionElement) {
-            try {
-              maxCompatibleVersion = VersionString(maxCompatibleVersionElement.text().as_string());
-            } catch (const std::exception&) {
-            }
-          }
+          maxCompatibleVersion = parseVersionIfExistsAndNotEmpty(maxCompatibleVersionElement);
         }
         const std::string fileName = fileElement.child("filename").text().as_string();
         //std::string fileType = fileElement.firstChildElement("filetype").firstChild().nodeValue().toStdString();
@@ -229,16 +229,15 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     }
   }
 
-  subelement = element.child("attributes");
-  if (subelement) {
+  if (auto subelement = element.child("attributes")) {
     for (auto& attributeElement : subelement.children("attribute")) {
       if (attributeElement.first_child() != nullptr) {
-        std::string name = attributeElement.child("name").text().as_string();
-        std::string value = attributeElement.child("value").text().as_string();
-        std::string datatype = attributeElement.child("datatype").text().as_string();
+        const std::string name = attributeElement.child("name").text().as_string();
+        const std::string value = attributeElement.child("value").text().as_string();
+        const std::string datatype = attributeElement.child("datatype").text().as_string();
 
         // Units are optional
-        std::string units = attributeElement.child("units").text().as_string();
+        const std::string units = attributeElement.child("units").text().as_string();
 
         if (datatype == "float") {
           if (units.empty()) {
@@ -273,8 +272,7 @@ BCLXML::BCLXML(const openstudio::path& xmlPath) : m_path(openstudio::filesystem:
     }
   }
 
-  subelement = element.child("tags");
-  if (subelement) {
+  if (auto subelement = element.child("tags")) {
     for (auto& tagElement : subelement.children("tag")) {
       auto text = tagElement.text();
       if (!text.empty()) {

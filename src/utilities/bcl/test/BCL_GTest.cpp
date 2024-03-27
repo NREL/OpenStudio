@@ -417,3 +417,45 @@ TEST_F(BCLFixture, RemoteBCL_EncodingURI) {
   std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("ashrae 4A", 127);
   ASSERT_GT(responses.size(), 0u);
 }
+
+TEST_F(BCLFixture, RemoteBCL_BCLSearchResult) {
+  RemoteBCL remoteBCL;
+
+  const std::string openstudio_results_uid = "a25386cd-60e4-46bc-8b11-c755f379d916";
+  // get openstudio_results
+  // std::vector<BCLSearchResult> responses = remoteBCL.searchMeasureLibrary("openstudio_results", 980);
+  std::vector<BCLSearchResult> responses = remoteBCL.searchMeasureLibrary(openstudio_results_uid, 980);
+
+  ASSERT_EQ(1, responses.size());
+  auto& response = responses.front();
+
+  EXPECT_FALSE(response.name().empty());
+  EXPECT_EQ("Openstudio results", response.name());
+
+  EXPECT_FALSE(response.uid().empty());
+  EXPECT_EQ(openstudio_results_uid, response.uid());
+
+  EXPECT_FALSE(response.versionId().empty());
+  EXPECT_FALSE(response.description().empty());
+  EXPECT_FALSE(response.modelerDescription().empty());
+  EXPECT_TRUE(response.fidelityLevel().empty());
+  EXPECT_EQ("measure", response.componentType());
+
+  EXPECT_FALSE(response.provenanceRequired());
+  EXPECT_TRUE(response.provenances().empty());
+  EXPECT_FALSE(response.tags().empty());
+  EXPECT_FALSE(response.attributes().empty());
+  EXPECT_FALSE(response.files().empty());
+  EXPECT_TRUE(response.costs().empty());
+
+  EXPECT_FALSE(response.org().empty());
+  EXPECT_EQ("NREL", response.org());
+  EXPECT_FALSE(response.repo().empty());
+  EXPECT_EQ("openstudio-common-measures-gem", response.repo());
+  EXPECT_FALSE(response.releaseTag().empty());
+
+  auto dt_ = response.versionModified();
+  ASSERT_TRUE(dt_);
+  const openstudio::DateTime dateTime(Date(MonthOfYear::Nov, 14, 2022));
+  EXPECT_GT(*dt_, dateTime);
+}

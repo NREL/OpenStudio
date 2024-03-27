@@ -8,17 +8,18 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "Singleton.hpp"
-#include "Exception.hpp"
 #include "Compare.hpp"
+#include "LogMessage.hpp"
 #include "LogSink.hpp"
+#include "Exception.hpp"
 
 #include <boost/shared_ptr.hpp>
 
-#include <sstream>
-#include <set>
 #include <map>
+#include <memory>
+#include <set>
 #include <shared_mutex>
+#include <sstream>
 
 /// defines method logChannel() to get a logger for a class
 #define REGISTER_LOGGER(__logChannel__)        \
@@ -52,21 +53,23 @@
 namespace openstudio {
 
 class OSWorkflow;
+class LogSink;
+namespace detail {
+  class LogSink_Impl;
+}  // namespace detail
 
 /// convenience function for SWIG, prefer macros in C++
 UTILITIES_API void logFree(LogLevel level, const std::string& channel, const std::string& message);
 
-/** Singleton logger class.  Singleton Logger object maintains logging state throughout
-   *   program execution.
-   */
-class UTILITIES_API LoggerSingleton
+class UTILITIES_API Logger
 {
-
-  friend class Singleton<LoggerSingleton>;
-
  public:
-  /// destructor, cleans up, writes xml file footers, etc
-  ~LoggerSingleton();
+  static Logger& instance();
+
+  Logger(const Logger& other) = delete;
+  Logger(Logger&& other) = delete;
+  Logger& operator=(const Logger&) = delete;
+  Logger& operator=(Logger&&) = delete;
 
   /// get logger for standard out
   LogSink standardOutLogger() const;
@@ -95,8 +98,8 @@ class UTILITIES_API LoggerSingleton
   void addTimeStampToLogger();
 
  private:
-  /// private constructor
-  LoggerSingleton();
+  Logger();
+  ~Logger() = default;
 
   mutable std::shared_mutex m_mutex;
 
@@ -115,15 +118,6 @@ class UTILITIES_API LoggerSingleton
   SinkSetType m_sinks;
 };
 
-#if _WIN32 || _MSC_VER
-
-/// Explicitly instantiate and export LoggerSingleton Singleton template instance
-/// so that the same instance is shared between the DLL's that link to Utilities.dll
-UTILITIES_TEMPLATE_EXT template class UTILITIES_API openstudio::Singleton<LoggerSingleton>;
-
-#endif
-
-using Logger = openstudio::Singleton<LoggerSingleton>;
 }  // namespace openstudio
 
 #endif  // UTILITIES_CORE_LOGGER_HPP
