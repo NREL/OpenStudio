@@ -1003,6 +1003,15 @@ namespace energyplus {
         }
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage: {
+        auto coil = modelObject.cast<CoilCoolingDXSingleSpeedThermalStorage>();
+        if (isHVACComponentWithinUnitary(coil)) {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(coil);
+        } else {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorage(coil);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed: {
         auto coil = modelObject.cast<CoilCoolingDXMultiSpeed>();
         retVal = translateCoilCoolingDXMultiSpeed(coil);
@@ -3459,6 +3468,7 @@ namespace energyplus {
       // IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed,
 
       IddObjectType::OS_Coil_Cooling_DX_SingleSpeed,
+      // IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage,
       IddObjectType::OS_Coil_Cooling_DX_TwoSpeed,
       IddObjectType::OS_Coil_Cooling_Water,
       IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,
