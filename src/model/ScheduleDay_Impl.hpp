@@ -22,6 +22,8 @@ namespace model {
 
   namespace detail {
 
+    class Timestep_Impl;
+
     /** ScheduleDay_Impl is a ResourceObject_Impl that is the implementation class for ScheduleDay.*/
     class MODEL_API ScheduleDay_Impl : public ScheduleBase_Impl
     {
@@ -111,9 +113,8 @@ namespace model {
 
       virtual bool okToResetScheduleTypeLimits() const override;
 
+      friend class Timestep_Impl;
       void clearCachedTimeSeries();
-
-      friend class detail::Timestep_Impl;
 
       //private slots:
      private:
