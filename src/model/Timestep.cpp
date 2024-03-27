@@ -68,11 +68,8 @@ namespace model {
     }
 
     bool Timestep_Impl::setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour) {
-      int currentNumberOfTimestepsPerHour = numberOfTimestepsPerHour();
-      if (currentNumberOfTimestepsPerHour != numberOfTimestepsPerHour) {
-        for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
-          sch_day.getImpl<ScheduleDay_Impl>()->clearCachedVariables();
-        }
+      for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
+        sch_day.getImpl<ScheduleDay_Impl>()->clearCachedTimeSeries();
       }
       bool result = setInt(OS_TimestepFields::NumberofTimestepsperHour, numberOfTimestepsPerHour);
       return result;
@@ -80,7 +77,7 @@ namespace model {
 
     void Timestep_Impl::resetNumberOfTimestepsPerHour() {
       for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
-        sch_day.getImpl<ScheduleDay_Impl>()->clearCachedVariables();
+        sch_day.getImpl<ScheduleDay_Impl>()->clearCachedTimeSeries();
       }
       bool result = setString(OS_TimestepFields::NumberofTimestepsperHour, "");
       OS_ASSERT(result);
