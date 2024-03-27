@@ -9,6 +9,8 @@
 #include "ModelAPI.hpp"
 #include "SpaceLoadDefinition.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -63,9 +65,11 @@ namespace model {
 
     std::string designPowerInputCalculationMethod() const;
 
-    boost::optional<double> wattsperUnit() const;
+    boost::optional<double> designLevel() const;
+    OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperUnit() const;
 
-    boost::optional<double> wattsperZoneFloorArea() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    OS_DEPRECATED(3, 8, 0) boost::optional<double> wattsperZoneFloorArea() const;
 
     Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
 
@@ -121,11 +125,13 @@ namespace model {
 
     bool setAirFlowCalculationMethod(const std::string& airFlowCalculationMethod);
 
-    bool setDesignPowerInputCalculationMethod(const std::string& designPowerInputCalculationMethod, double floorArea);
+    /** Also sets setDesignPowerInputCalculationMethod accordingly. */
+    bool setDesignLevel(double designLevel);
+    OS_DEPRECATED(3, 8, 0) bool setWattsperUnit(double designLevel);
 
-    bool setWattsperUnit(double wattsperUnit);
-
-    bool setWattsperZoneFloorArea(double wattsperZoneFloorArea);
+    /** Also sets setDesignPowerInputCalculationMethod accordingly. */
+    bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
+    OS_DEPRECATED(3, 8, 0) bool setWattsperZoneFloorArea(double wattsperSpaceFloorArea);
 
     bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
@@ -189,9 +195,17 @@ namespace model {
     /** @name Other */
     //@{
 
-    double getWattsperUnit(double floorArea) const;
+    /** Returns the design level represented by this definition, assuming floorArea (m^2). */
+    double getDesignLevel(double floorArea) const;
+    OS_DEPRECATED(3, 8, 0) double getWattsperUnit(double floorArea) const;
 
-    double getWattsperZoneFloorArea(double floorArea) const;
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) */
+    double getPowerPerFloorArea(double floorArea) const;
+    OS_DEPRECATED(3, 8, 0) double getWattsperZoneFloorArea(double floorArea) const;
+
+    /** If method is a \link validDesignPowerInputCalculationMethodValues valid design power input calculation method \endlink,
+      * changes this definition to an equivalent power level, under the assumptions of floorArea (m^2). */
+    bool setDesignPowerInputCalculationMethod(const std::string& designPowerInputCalculationMethod, double floorArea);
 
     //@}
    protected:

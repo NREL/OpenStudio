@@ -44,6 +44,8 @@
 #include "../../model/OutputVariable_Impl.hpp"
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
+#include "../../model/YearDescription.hpp"
+#include "../../model/YearDescription_Impl.hpp"
 #include "../../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
 #include "../../model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
@@ -64,13 +66,14 @@
 
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <future>
-
 #include <resources.hxx>
 
+#include <future>
 #include <sstream>
-
 #include <vector>
+
+#include <fmt/format.h>
+#include <fmt/ranges.h>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -557,8 +560,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
 }
 */
 
-/* This test fails because objects of the same type share state across the Logger 
-See detailed notes below. This test is disabled and commented out. 
+/* This test fails because objects of the same type share state across the Logger
+See detailed notes below. This test is disabled and commented out.
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultipleTranslatorsInScope) {
   Model model;
   Space space(model); // not in thermal zone will generate a warning
@@ -632,8 +635,8 @@ class ForwardTranslatorThread
   std::future<Workspace> future;
 };
 
-/* ForwardTranslatorTest_MultiThreadedLogMessages is disabled. 
-See notes below for reasons why this tests fails due to race conditions. 
+/* ForwardTranslatorTest_MultiThreadedLogMessages is disabled.
+See notes below for reasons why this tests fails due to race conditions.
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
 
   // Logger::instance().standardOutLogger().enable();
@@ -960,4 +963,26 @@ TEST_F(EnergyPlusFixture, Ensure_Name_Unicity_ZoneAndZoneListAndSpaceAndSpaceLis
     EXPECT_NE(s1_.get(), s2_.get());
     EXPECT_NE(wos[i1].nameString(), wos[i2].nameString());
   }
+}
+
+TEST_F(EnergyPlusFixture, NoUselessWarnings) {
+  // Test for #5116
+  Model m;
+  auto yd = m.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Tuesday"));
+
+  ForwardTranslator ft;
+  StringStreamLogSink sink;
+  sink.setLogLevel(Warn);
+
+  Workspace w = ft.translateModel(m);
+  EXPECT_EQ(0u, ft.errors().size());
+  EXPECT_EQ(0u, ft.warnings().size());
+
+  std::vector<openstudio::LogMessage> logMessages = sink.logMessages();
+
+  std::vector<std::string> logStrings;
+  std::transform(logMessages.cbegin(), logMessages.cend(), std::back_inserter(logStrings),
+                 [](const auto& logMessage) { return logMessage.logMessage(); });
+  EXPECT_EQ(0, logMessages.size()) << fmt::format("Expected no messages logged, got: {}", logStrings);
 }

@@ -61,7 +61,7 @@ The 3.8.0 is a **major** release. This update includes several new features, per
 
 ## C++ Workflow code
 
-As of OpenStudio SDK 3.7.0 a re-written workflow written in C++ is used by default in place of the Ruby based Workflow Gem that had been used in the past. This enhancement is in support of Python measures being used in an OpenStudio workflow, including mixed language workflows that include both Ruby Measures and Python Measures. If you need to use the older Workflow Gem implementation, you can do that by using the `classic` subcommand after `openstudio`. `classic` will be deprecated in a future version of OpenStudio. 
+As of OpenStudio SDK 3.7.0 a re-written workflow written in C++ is used by default in place of the Ruby based Workflow Gem that had been used in the past. This enhancement is in support of Python measures being used in an OpenStudio workflow, including mixed language workflows that include both Ruby Measures and Python Measures. If you need to use the older Workflow Gem implementation, you can do that by using the `classic` subcommand after `openstudio`. `classic` will be deprecated in a future version of OpenStudio.
 
 ## Python Bindings
 
@@ -75,13 +75,21 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## New Features, Major Fixes and API-breaking changes
 
-* 
-* 
-* 
+For a list of deprecated and removed methods, please refer to [deprecated_methods.csv](../../ruby/deprecated_methods.csv)
+
+* [#TDB]() - Update to EnergyPlus 24.1.0
+
+* [#5099](https://github.com/NREL/OpenStudio/pull/5099) - HeatExchangerAirToAirSensibleAndLatent changes for effectiveness
+    * To conform to E+ 24.1.0, where "Sensible/Latent Effectiveness at 75% Heating/Cooling" numeric fields have been replaced with a curve, the numeric getters / setters are now deprecated in favor of the new curves getters / setters: `sensibleEffectivenessofHeatingAirFlowCurve`, `latentEffectivenessofHeatingAirFlowCurve`, `sensibleEffectivenessofCoolingAirFlowCurve`, `latentEffectivenessofCoolingAirFlowCurve`
+    * The constructor will no longer assign an effectiveness at 75% and assume a constant effectiveness. A helper method `bool assignHistoricalEffectivenessCurves()` is provided to create and assign 4 `TableLookup`s that will match the pre E+ 24.1.0 defaults for Sensible/Latent Effectiveness at 75% Heating/Cooling airflow
+* [#5105](https://github.com/NREL/OpenStudio/pull/5105) - ElectricEquipmentITEAirCooled / ElectricEquipmentITEAirCooledDefinition - align objects with other SpaceLoads
+    * A number of methods have been renamed (and the old ones deprecated) to conform to the API for other `SpaceLoadInstance` / `SpaceLoadDefinition` objects
+    * Mostly `getWattsperUnit` is changed to `getDesignLevel` and `getWattsperZoneFloorArea` is changed to `getPowerPerFloorArea`
+    * Refer to [deprecated_methods.csv](../../ruby/deprecated_methods.csv) for the complete list
 
 ## Minor changes and bug fixes
 
-* 
+*
 *
 *
 

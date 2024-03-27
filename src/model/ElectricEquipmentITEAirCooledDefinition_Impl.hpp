@@ -51,9 +51,9 @@ namespace model {
 
       std::string designPowerInputCalculationMethod() const;
 
-      boost::optional<double> wattsperUnit() const;
+      boost::optional<double> designLevel() const;
 
-      boost::optional<double> wattsperZoneFloorArea() const;
+      boost::optional<double> wattsperSpaceFloorArea() const;
 
       Curve cPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
       boost::optional<Curve> optionalCPUPowerInputFunctionofLoadingandAirTemperatureCurve() const;
@@ -113,9 +113,9 @@ namespace model {
 
       bool setDesignPowerInputCalculationMethod(const std::string& designPowerInputCalculationMethod, double floorArea);
 
-      bool setWattsperUnit(boost::optional<double> wattsperUnit);
+      bool setDesignLevel(boost::optional<double> designLevel);
 
-      bool setWattsperZoneFloorArea(boost::optional<double> wattsperZoneFloorArea);
+      bool setWattsperSpaceFloorArea(boost::optional<double> wattsperSpaceFloorArea);
 
       bool setCPUPowerInputFunctionofLoadingandAirTemperatureCurve(const Curve& curve);
 
@@ -179,9 +179,9 @@ namespace model {
       /** @name Other */
       //@{
 
-      double getWattsperUnit(double floorArea) const;
+      double getDesignLevel(double floorArea) const;
 
-      double getWattsperZoneFloorArea(double floorArea) const;
+      double getPowerPerFloorArea(double floorArea) const;
 
       //@}
      protected:

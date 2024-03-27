@@ -3927,6 +3927,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeedStageData);
     REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeed);
+    REGISTER_CONSTRUCTOR(CoilCoolingDXSingleSpeedThermalStorage);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoSpeed);
     REGISTER_CONSTRUCTOR(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_CONSTRUCTOR(CoilCoolingDXVariableRefrigerantFlow);
@@ -4499,6 +4500,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeed);
+    REGISTER_COPYCONSTRUCTORS(CoilCoolingDXSingleSpeedThermalStorage);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXTwoStageWithHumidityControlMode);
     REGISTER_COPYCONSTRUCTORS(CoilCoolingDXVariableRefrigerantFlow);
