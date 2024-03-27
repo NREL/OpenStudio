@@ -441,7 +441,7 @@ TEST_F(BCLFixture, RemoteBCL_BCLSearchResult) {
   EXPECT_TRUE(response.fidelityLevel().empty());
   EXPECT_EQ("measure", response.componentType());
 
-  EXPECT_TRUE(response.provenanceRequired());
+  EXPECT_FALSE(response.provenanceRequired());
   EXPECT_TRUE(response.provenances().empty());
   EXPECT_FALSE(response.tags().empty());
   EXPECT_FALSE(response.attributes().empty());
