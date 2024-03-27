@@ -18,8 +18,10 @@
 #include <memory>
 
 /// defines method logChannel() to get a logger for a class
-#define REGISTER_LOGGER(__logChannel__) \
-  static openstudio::LogChannel logChannel() { return __logChannel__; }
+#define REGISTER_LOGGER(__logChannel__)        \
+  static openstudio::LogChannel logChannel() { \
+    return __logChannel__;                     \
+  }
 
 /// log a message from within a registered class
 #define LOG(__level__, __message__) LOG_FREE(__level__, logChannel(), __message__);
