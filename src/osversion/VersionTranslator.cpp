@@ -9177,8 +9177,9 @@ namespace osversion {
               } else {
                 newObject.setString(3, "No");
               }
+            } else {
+              newObject.setString(i, value.get());
             }
-            newObject.setString(i, value.get());
           }
         }
 
