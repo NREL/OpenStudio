@@ -9,8 +9,6 @@
 #include "ModelAPI.hpp"
 #include "ScheduleBase.hpp"
 
-#include "../utilities/core/Deprecated.hpp"
-
 namespace openstudio {
 
 class Time;
@@ -80,7 +78,6 @@ namespace model {
     //@{
 
     bool setInterpolatetoTimestep(const std::string& interpolatetoTimestep);
-    OS_DEPRECATED(3, 8, 0) bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 

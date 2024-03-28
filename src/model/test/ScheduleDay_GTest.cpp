@@ -192,7 +192,7 @@ TEST_F(ModelFixture, Schedule_Day_Interp) {
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 24, 0)), tol);
   EXPECT_NEAR(0.0, daySchedule.getValue(Time(0, 25, 0)), tol);
 
-  daySchedule.setInterpolatetoTimestep("Linear");
+  EXPECT_TRUE(daySchedule.setInterpolatetoTimestep("Linear"));
   EXPECT_EQ("Linear", daySchedule.interpolatetoTimestep());
   EXPECT_FALSE(daySchedule.isInterpolatetoTimestepDefaulted());
 
