@@ -380,7 +380,7 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
     value = sch_day.getValue(t0800);
     EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t0805);
-    EXPECT_NEAR(1.0, value, tol);  // FIXME: should this be 0.1?
+    EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0810);
     EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0818);
@@ -397,7 +397,7 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
     value = sch_day.getValue(t0800);
     EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t0805);
-    EXPECT_NEAR(1.0, value, tol);  // FIXME: should this be 0.1?
+    EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0810);
     EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0818);
@@ -414,7 +414,7 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
     value = sch_day.getValue(t0800);
     EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t0805);
-    EXPECT_NEAR(1.0, value, tol);  // FIXME: should this be 0.1?
+    EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0810);
     EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0818);
@@ -431,7 +431,24 @@ TEST_F(ModelFixture, Schedule_Day_timeSeries) {
     value = sch_day.getValue(t0800);
     EXPECT_NEAR(0.1, value, tol);
     value = sch_day.getValue(t0805);
-    EXPECT_NEAR(1.0, value, tol);  // FIXME: should this be 0.1?
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t0810);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t0818);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t0820);
+    EXPECT_NEAR(1.0, value, tol);
+    value = sch_day.getValue(t0900);
+    EXPECT_NEAR(1.0, value, tol);
+
+    EXPECT_TRUE(timestep.setNumberOfTimestepsPerHour(12));
+    timeSeries = sch_day.timeSeries();
+    EXPECT_EQ(24 * 12, timeSeries.dateTimes().size());
+    EXPECT_EQ(24 * 12, timeSeries.values().size());
+    value = sch_day.getValue(t0800);
+    EXPECT_NEAR(0.1, value, tol);
+    value = sch_day.getValue(t0805);
+    EXPECT_NEAR(0.1, value, tol);  // at this timestep, we do return the 0.1
     value = sch_day.getValue(t0810);
     EXPECT_NEAR(1.0, value, tol);
     value = sch_day.getValue(t0818);
