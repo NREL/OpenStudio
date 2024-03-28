@@ -68,8 +68,7 @@ namespace model {
     }
 
     bool Timestep_Impl::setNumberOfTimestepsPerHour(int numberOfTimestepsPerHour) {
-      const int currentNumberOfTimestepsPerHour = numberOfTimestepsPerHour();
-      if (currentNumberOfTimestepsPerHour != numberOfTimestepsPerHour) {
+      if (numberOfTimestepsPerHour != this->numberOfTimestepsPerHour()) {
         for (auto& sch_day : model().getConcreteModelObjects<ScheduleDay>()) {
           sch_day.getImpl<ScheduleDay_Impl>()->clearCachedTimeSeries();
         }

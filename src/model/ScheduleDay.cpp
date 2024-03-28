@@ -532,7 +532,7 @@ namespace model {
 
   // DEPRECATED
 
-  bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) const {
+  bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
     DEPRECATED_AT_MSG(3, 8, 0, "Use setInterpolatetoTimestep(No, Average, Linear) instead.");
     if (interpolatetoTimestep) {
       return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep("Average");

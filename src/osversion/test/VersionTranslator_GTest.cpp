@@ -4201,9 +4201,9 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   WorkspaceObject sch_day = sch_days[0];
 
   EXPECT_EQ("Schedule Day 1", sch_day.getString(1).get());  // Name
-  EXPECT_TRUE(sch_day.isEmpty(2));               // Schedule Type Limits Name
-  EXPECT_EQ("Average", sch_day.getString(3).get());                      // Interpolate to Timestep
-  EXPECT_EQ(24, sch_day.getInt(4));                               // Hour 1
-  EXPECT_EQ(0, sch_day.getInt(5));                               // Minute 1
-  EXPECT_EQ(0, sch_day.getDouble(6).get());                    // Value Until Time 1
+  EXPECT_TRUE(sch_day.isEmpty(2));                          // Schedule Type Limits Name
+  EXPECT_EQ("Average", sch_day.getString(3).get());         // Interpolate to Timestep
+  EXPECT_EQ(24, sch_day.getInt(4).get());                   // Hour 1
+  EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
+  EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
