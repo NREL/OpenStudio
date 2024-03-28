@@ -30,8 +30,6 @@
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/data/Vector.hpp"
 
-#include "../utilities/core/DeprecatedHelpers.hpp"  // For deprecation
-
 namespace openstudio {
 namespace model {
 
@@ -528,17 +526,6 @@ namespace model {
 
   void ScheduleDay::clearValues() {
     getImpl<detail::ScheduleDay_Impl>()->clearValues();
-  }
-
-  // DEPRECATED
-
-  bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-    DEPRECATED_AT_MSG(3, 8, 0, "Use setInterpolatetoTimestep(No, Average, Linear) instead.");
-    if (interpolatetoTimestep) {
-      return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep("Average");
-    } else {
-      return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep("No");
-    }
   }
 
   /// @cond
