@@ -10,14 +10,19 @@
 #include "ScheduleBase_Impl.hpp"
 
 #include "../utilities/time/Time.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 
 namespace openstudio {
+
+class TimeSeries;
 
 namespace model {
 
   class ScheduleTypeLimits;
 
   namespace detail {
+
+    class Timestep_Impl;
 
     /** ScheduleDay_Impl is a ResourceObject_Impl that is the implementation class for ScheduleDay.*/
     class MODEL_API ScheduleDay_Impl : public ScheduleBase_Impl
@@ -57,7 +62,7 @@ namespace model {
 
       bool isScheduleTypeLimitsDefaulted() const;
 
-      bool interpolatetoTimestep() const;
+      std::string interpolatetoTimestep() const;
 
       bool isInterpolatetoTimestepDefaulted() const;
 
@@ -69,8 +74,12 @@ namespace model {
       /// Returns a vector of values in the same order and with the same number of elements as times.
       virtual std::vector<double> values() const override;
 
-      /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
+      /// Returns the value in effect at the given time.
+      /// If time is less than 0 days or greater than 1 day, 0 is returned.
       double getValue(const openstudio::Time& time) const;
+
+      /// Returns the timeseries corresponding to simulation timestep and chosen interpolation method.
+      openstudio::TimeSeries timeSeries() const;
 
       //@}
       /** @name Setters */
@@ -80,7 +89,7 @@ namespace model {
 
       virtual bool resetScheduleTypeLimits() override;
 
-      bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+      bool setInterpolatetoTimestep(const std::string& interpolatetoTimestep);
 
       void resetInterpolatetoTimestep();
 
@@ -104,6 +113,9 @@ namespace model {
 
       virtual bool okToResetScheduleTypeLimits() const override;
 
+      friend class Timestep_Impl;
+      void clearCachedTimeSeries();
+
       //private slots:
      private:
       void clearCachedVariables();
@@ -113,6 +125,7 @@ namespace model {
 
       mutable boost::optional<std::vector<openstudio::Time>> m_cachedTimes;
       mutable boost::optional<std::vector<double>> m_cachedValues;
+      mutable boost::optional<openstudio::TimeSeries> m_cachedTimeSeries;
     };
 
   }  // namespace detail

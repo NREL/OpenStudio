@@ -1,0 +1,14 @@
+
+OS:Version,
+  {9d4d2ac6-81f7-466e-be47-92edf03bbde0}, !- Handle
+  3.7.0;                                  !- Version Identifier
+
+OS:Schedule:Day,
+  {b39f42af-eb9f-4079-ad11-5a527a726900}, !- Handle
+  Schedule Day 1,                         !- Name
+  ,                                       !- Schedule Type Limits Name
+  Yes,                                    !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  0;                                      !- Value Until Time 1
+

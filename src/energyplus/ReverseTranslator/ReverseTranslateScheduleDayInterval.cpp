@@ -50,13 +50,7 @@ namespace energyplus {
 
     s = workspaceObject.getString(Schedule_Day_IntervalFields::InterpolatetoTimestep);
     if (s) {
-      if (openstudio::istringEqual(*s, "No")) {
-        scheduleDay.setInterpolatetoTimestep(false);
-      } else if (openstudio::istringEqual(*s, "Linear")) {
-        scheduleDay.setInterpolatetoTimestep(true);
-      } else if (openstudio::istringEqual(*s, "Average")) {
-        scheduleDay.setInterpolatetoTimestep(true);
-      }
+      scheduleDay.setInterpolatetoTimestep(*s);
     }
 
     //get extensible groups

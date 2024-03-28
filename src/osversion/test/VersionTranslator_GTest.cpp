@@ -4186,3 +4186,24 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_PeopleDefinition) {
   EXPECT_TRUE(def.isEmpty(9));                               // Enable ASHRAE 55 Comfort Warnings
   EXPECT_EQ("EnclosureAveraged", def.getString(10).get());   // Mean Radiant Temperature Calculation Type
 }
+
+TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_8_0/test_vt_ScheduleDay.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_8_0/test_vt_ScheduleDay_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> sch_days = model->getObjectsByType("OS:Schedule:Day");
+  ASSERT_EQ(1u, sch_days.size());
+  WorkspaceObject sch_day = sch_days[0];
+
+  EXPECT_EQ("Schedule Day 1", sch_day.getString(1).get());  // Name
+  EXPECT_TRUE(sch_day.isEmpty(2));                          // Schedule Type Limits Name
+  EXPECT_EQ("Average", sch_day.getString(3).get());         // Interpolate to Timestep
+  EXPECT_EQ(24, sch_day.getInt(4).get());                   // Hour 1
+  EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
+  EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
+}

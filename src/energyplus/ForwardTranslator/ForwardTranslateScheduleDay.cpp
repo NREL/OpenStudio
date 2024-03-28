@@ -39,11 +39,7 @@ namespace energyplus {
       }
     }
 
-    if (modelObject.interpolatetoTimestep()) {
-      scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "Average");
-    } else {
-      scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "No");
-    }
+    scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, modelObject.interpolatetoTimestep());
 
     std::vector<double> values = modelObject.values();
     std::vector<openstudio::Time> times = modelObject.times();

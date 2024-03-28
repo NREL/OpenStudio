@@ -167,23 +167,24 @@ struct UTILITIES_API InterpInfo{
   bool extrapolated; // was point out of range
   unsigned ia, ib; // indices of two nearest points
   double wa, wb; // weights of two nearest points
+  double ti; // length of interval
 };
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
  *  increasing. */
-UTILITIES_API InterpInfo interpInfo(const Vector& x, double xi);
+UTILITIES_API InterpInfo interpInfo(const Vector& x, double xi, double ti);
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
  *  increasing */
 UTILITIES_API double interp(const Vector& x, const Vector& y, double xi,
                             InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = 0.0);
 
 /** Linear interpolation of the function y = f(x) at points xi. Assumes that x is strictly
  *  increasing. */
 UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi,
                             InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = 0.0);
 
 //@}
 /** @name Common Methods and Vector Operations */
