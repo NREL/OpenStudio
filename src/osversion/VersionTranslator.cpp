@@ -9160,15 +9160,15 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
-      } else if (iddname == "OS:Schedule:Day" ) {
+      } else if (iddname == "OS:Schedule:Day") {
 
         // 1 Field has been added from 3.7.0 to 3.8.0:
         // ----------------------------------------------
         // * Interpolate to Timestep * 3
-  
+
         auto iddObject = idd_3_8_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
-        
+
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
             if (i == 3) {
@@ -9184,7 +9184,7 @@ namespace osversion {
 
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
-  
+
         // No-op
       } else {
         ss << object;
