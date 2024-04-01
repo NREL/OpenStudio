@@ -492,6 +492,42 @@ TEST(Filetypes, EpwFile_NoDesign) {
   }
 }
 
+TEST(Filetypes, EpwFile_IncompleteDesign) {
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3_IncompleteDesign.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
+    // Up to here, everything should be the same as the first test. Now ask for the design conditions
+    std::vector<EpwDesignCondition> designs = epwFile.designConditions();
+    EXPECT_EQ(1, designs.size());
+    EXPECT_EQ("Climate Design Data 2009 ASHRAE Handbook", designs[0].titleOfDesignCondition());
+    EXPECT_EQ(12, designs[0].heatingColdestMonth());
+    EXPECT_EQ(-18.8, designs[0].heatingDryBulb99pt6());
+    EXPECT_EQ(-18.8, designs[0].getFieldByName("Heating Dry Bulb Temperature 99.6%").get());
+    EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
+    EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
+    EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
+    EXPECT_NE(0.0, designs[0].heatingDryBulb99());
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_LeapTimeSeries) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw");
