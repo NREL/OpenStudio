@@ -40,6 +40,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-leapday.epw
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday.epw
+  utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3_IncompleteDesign.epw
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
