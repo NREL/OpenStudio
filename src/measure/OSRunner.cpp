@@ -786,77 +786,15 @@ namespace measure {
 
   Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
     Json::Value argument_values;
-    OSArgumentType type;
+    std::string name;
     for (const OSArgument& script_argument : script_arguments) {
-      if (script_argument.required()) {
-        switch (script_argument.type().value()) {
-          case OSArgumentType::Boolean:
-            argument_values[script_argument.name()] = getBoolArgumentValue(script_argument.name(), user_arguments);
-            break;
-          case OSArgumentType::Double:
-            argument_values[script_argument.name()] = getDoubleArgumentValue(script_argument.name(), user_arguments);
-            break;
-          case OSArgumentType::Integer:
-            argument_values[script_argument.name()] = getIntegerArgumentValue(script_argument.name(), user_arguments);
-            break;
-          case OSArgumentType::String:
-            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
-            break;
-          case OSArgumentType::Choice:
-            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
-            break;
-          case OSArgumentType::Path:
-            argument_values[script_argument.name()] = getStringArgumentValue(script_argument.name(), user_arguments);
-            break;
-          default:
-            OS_ASSERT(false);
-        }
-      } else {
-        switch (script_argument.type().value()) {
-          case OSArgumentType::Boolean:
-            if (boost::optional<bool> optB_ = getOptionalBoolArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optB_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          case OSArgumentType::Double:
-            if (boost::optional<double> optD_ = getOptionalDoubleArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optD_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          case OSArgumentType::Integer:
-            if (boost::optional<int> optI_ = getOptionalIntegerArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optI_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          case OSArgumentType::String:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optS_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          case OSArgumentType::Choice:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optS_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          case OSArgumentType::Path:
-            if (boost::optional<std::string> optS_ = getOptionalStringArgumentValue(script_argument.name(), user_arguments)) {
-              argument_values[script_argument.name()] = optS_.get();
-            } else {
-              argument_values[script_argument.name()] = Json::nullValue;
-            }
-            break;
-          default:
-            OS_ASSERT(false);
+      name = script_argument.name();
+      auto it = user_arguments.find(name);
+      if (it != user_arguments.end()) {
+        Json::Value root = it->second.toJSON();
+        auto value = root.find("value");
+        if (value != root.end()) {
+          argument_values[name] = value->second;
         }
       }
     }

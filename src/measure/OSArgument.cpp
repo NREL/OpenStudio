@@ -1069,6 +1069,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsDouble();
       }
+      if (hasValue()) {
+        root["value"] = valueAsBool();
+      }
       if (hasDomain()) {
         auto domain = domainAsDouble();
         if (domain.size() != 2) {
@@ -1092,6 +1095,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsDouble();
       }
+      if (hasValue()) {
+        root["value"] = valueAsDouble();
+      }
 
     } else if (m_type == OSArgumentType::Integer) {
       if (m_units) {
@@ -1099,6 +1105,9 @@ namespace measure {
       }
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsInteger();
+      }
+      if (hasValue()) {
+        root["value"] = valueAsInteger();
       }
       if (hasDomain()) {
         auto domain = domainAsInteger();
@@ -1118,9 +1127,15 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsString();
       }
+      if (hasValue()) {
+        root["value"] = valueAsString();
+      }
     } else if (m_type == OSArgumentType::Choice) {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsString();
+      }
+      if (hasValue()) {
+        root["value"] = valueAsString();
       }
       auto& choiceValues = root["choice_values"];
       choiceValues = Json::arrayValue;  // Without this line, it's "null" (/nil in Ruby) if m_choices is empty, while old CLI had it as `[]`
