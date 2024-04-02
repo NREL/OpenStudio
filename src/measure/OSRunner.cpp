@@ -792,9 +792,8 @@ namespace measure {
       auto it = user_arguments.find(name);
       if (it != user_arguments.end()) {
         Json::Value root = it->second.toJSON();
-        auto value = root.find("value");
-        if (value != root.end()) {
-          argument_values[name] = value->second;
+        if (auto value = root["value"]) {
+          argument_values[name] = value;
         }
       }
     }
