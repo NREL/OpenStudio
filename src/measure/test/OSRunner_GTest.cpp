@@ -174,7 +174,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   displayNames.push_back(boiler2.nameString());
 
   OSArgument optionalChoiceArgument2 = OSArgument::makeChoiceArgument("optional_choice2", choiceHandles, displayNames, false);
-  optionalChoiceArgument2.setValue(boiler2.handle());
+  optionalChoiceArgument2.setValue(openstudio::toString(boiler2.handle()));
   argumentVector.push_back(optionalChoiceArgument2);
 
   std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
@@ -200,7 +200,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
   EXPECT_EQ("Off", c);
 
-  boost::optional<openstudio::WorkspaceObject> w = runner.getOptionalWorkspaceObjectChoiceValue(optionalChoiceArgument2.name(), argumentMap);
+  boost::optional<openstudio::WorkspaceObject> w = runner.getOptionalWorkspaceObjectChoiceValue(optionalChoiceArgument2.name(), argumentMap, m);
   EXPECT_TRUE(w);
 
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
