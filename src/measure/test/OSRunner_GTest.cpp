@@ -108,9 +108,9 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   WorkflowJSON workflow;
   OSRunner runner(workflow);
 
-  Model m;
-  BoilerHotWater boiler1(m);
-  BoilerHotWater boiler2(m);
+  model::Model m;
+  model::BoilerHotWater boiler1(m);
+  model::BoilerHotWater boiler2(m);
 
   std::vector<OSArgument> argumentVector;
 
@@ -173,7 +173,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   displayNames.push_back(boiler1.nameString());
   displayNames.push_back(boiler2.nameString());
 
-  OSArgument optionalChoiceArgument2 = OSArgument::makeChoiceArgument("optional_choice2", choiceHandle, displayNames, false);
+  OSArgument optionalChoiceArgument2 = OSArgument::makeChoiceArgument("optional_choice2", choiceHandles, displayNames, false);
   optionalChoiceArgument2.setValue(boiler2.handle());
   argumentVector.push_back(optionalChoiceArgument2);
 
