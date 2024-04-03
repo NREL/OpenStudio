@@ -786,8 +786,7 @@ namespace measure {
     return result;
   }
 
-  Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments,
-                                          const openstudio::Workspace& workspace) {
+  Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
     Json::Value argument_values;
     std::string name;
     for (const OSArgument& script_argument : script_arguments) {
@@ -796,13 +795,7 @@ namespace measure {
       if (it != user_arguments.end()) {
         Json::Value root = it->second.toJSON();
         if (auto value = root["value"]) {
-          std::string s = boost::lexical_cast<std::string>(value);
-          Handle handle = toUUID(s);
-          if (boost::optional<WorkspaceObject> result = workspace.getObject(handle)) {
-            argument_values[name] = *result;
-          } else {
-            argument_values[name] = value;
-          }
+          argument_values[name] = value;
         }
       }
     }

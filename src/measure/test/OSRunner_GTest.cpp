@@ -225,7 +225,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   EXPECT_EQ("Off", argumentValues["required_choice"].asString());
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
-  EXPECT_EQ("", argumentValues["optional_choice2"].asString());
+  EXPECT_EQ(boiler2.handle(), argumentValues["optional_choice2"].asString());
 }
 
 TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
