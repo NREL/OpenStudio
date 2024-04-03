@@ -836,7 +836,7 @@ namespace measure {
             if (istringEqual(step_name, workflow_step_value.name())) {
               Json::Value root = workflow_step_value.toJSON();
               if (auto value = root["value"]) {
-                step_values[workflow_step_value.name()] = value;
+                step_values[measure_name_.get()] = value;
               }
             }
           }
