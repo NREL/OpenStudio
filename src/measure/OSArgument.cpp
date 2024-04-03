@@ -1061,7 +1061,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsBool();
       }
-
+      if (hasValue()) {
+        root["value"] = valueAsBool();
+      }
     } else if (m_type == OSArgumentType::Double) {
       if (m_units) {
         root["units"] = *m_units;
@@ -1070,7 +1072,7 @@ namespace measure {
         root["default_value"] = defaultValueAsDouble();
       }
       if (hasValue()) {
-        root["value"] = valueAsBool();
+        root["value"] = valueAsDouble();
       }
       if (hasDomain()) {
         auto domain = domainAsDouble();
@@ -1152,7 +1154,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = openstudio::toString(defaultValueAsPath());
       }
-
+      if (hasValue()) {
+        root["value"] = openstudio::toString(valueAsPath());
+      }
     } else if (m_type == OSArgumentType::Separator) {
       // No-op
     } else {
