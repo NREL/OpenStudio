@@ -17,6 +17,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
+#include <boost/lexical_cast.hpp>
+
 #include <fmt/format.h>
 #include <cstdio>
 #include <cstdlib>
@@ -794,7 +796,8 @@ namespace measure {
       if (it != user_arguments.end()) {
         Json::Value root = it->second.toJSON();
         if (auto value = root["value"]) {
-          Handle handle = toUUID(*(std::get_if<std::string>(value)));
+          std::string s = boost::lexical_cast<std::string>(value);
+          Handle handle = toUUID(s);
           if ((boost::optional<WorkspaceObject> result = workspace.getObject(handle))) {
             argument_values[name] = *result;
           } else {
