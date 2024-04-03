@@ -798,7 +798,7 @@ namespace measure {
         if (auto value = root["value"]) {
           std::string s = boost::lexical_cast<std::string>(value);
           Handle handle = toUUID(s);
-          if ((boost::optional<WorkspaceObject> result = workspace.getObject(handle))) {
+          if (boost::optional<WorkspaceObject> result = workspace.getObject(handle)) {
             argument_values[name] = *result;
           } else {
             argument_values[name] = value;
