@@ -811,14 +811,9 @@ namespace measure {
         if (workflow_step_result_.get().value() == StepResult::Success) {
           if (istringEqual(measure_name, measure_name_.get())) {
             for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
-              if (workflow_step_value.variantType() == VariantType::String) {
-                step_values[workflow_step_value.name()] = workflow_step_value.valueAsString();
-              } else if (workflow_step_value.variantType() == VariantType::Double) {
-                step_values[workflow_step_value.name()] = workflow_step_value.valueAsDouble();
-              } else if (workflow_step_value.variantType() == VariantType::Integer) {
-                step_values[workflow_step_value.name()] = workflow_step_value.valueAsInteger();
-              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
-                step_values[workflow_step_value.name()] = workflow_step_value.valueAsBoolean();
+              Json::Value root = workflow_step_value.toJSON();
+              if (auto value = root["value"]) {
+                step_values[workflow_step_value.name()] = value;
               }
             }
           }
@@ -839,14 +834,9 @@ namespace measure {
         if (workflow_step_result_.get().value() == StepResult::Success) {
           for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
             if (istringEqual(step_name, workflow_step_value.name())) {
-              if (workflow_step_value.variantType() == VariantType::String) {
-                step_values[measure_name_.get()] = workflow_step_value.valueAsString();
-              } else if (workflow_step_value.variantType() == VariantType::Double) {
-                step_values[measure_name_.get()] = workflow_step_value.valueAsDouble();
-              } else if (workflow_step_value.variantType() == VariantType::Integer) {
-                step_values[measure_name_.get()] = workflow_step_value.valueAsInteger();
-              } else if (workflow_step_value.variantType() == VariantType::Boolean) {
-                step_values[measure_name_.get()] = workflow_step_value.valueAsBoolean();
+              Json::Value root = workflow_step_value.toJSON();
+              if (auto value = root["value"]) {
+                step_values[workflow_step_value.name()] = value;
               }
             }
           }
