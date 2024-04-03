@@ -165,9 +165,9 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   OSArgument optionalChoiceArgument = OSArgument::makeChoiceArgument("optional_choice", choices, false);
   argumentVector.push_back(optionalChoiceArgument);
 
-  std::vector<Handle> choiceHandles;
-  choiceHandles.push_back(boiler1.handle());
-  choiceHandles.push_back(boiler2.handle());
+  std::vector<std::string> choiceHandles;
+  choiceHandles.push_back(openstudio::toString(boiler1.handle()));
+  choiceHandles.push_back(openstudio::toString(boiler2.handle()));
 
   std::vector<std::string> displayNames;
   displayNames.push_back(boiler1.nameString());
@@ -225,7 +225,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   EXPECT_EQ("Off", argumentValues["required_choice"].asString());
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
-  EXPECT_EQ(boiler2.handle(), argumentValues["optional_choice2"].asString());
+  EXPECT_EQ(openstudio::toString(boiler2.handle()), argumentValues["optional_choice2"].asString());
 }
 
 TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
