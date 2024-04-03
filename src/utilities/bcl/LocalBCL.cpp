@@ -1360,6 +1360,28 @@ bool LocalBCL::removeMeasure(BCLMeasure& measure) {
   return true;
 }
 
+size_t LocalBCL::removeOutdatedLocalComponents(const std::string& uid, const std::string& currentVersionId) {
+  size_t num_removed = 0;
+  for (auto& component : components()) {
+    if ((component.uid() == uid) && (component.versionId() != currentVersionId)) {
+      ++num_removed;
+      removeComponent(component);
+    }
+  }
+  return num_removed;
+}
+
+size_t LocalBCL::removeOutdatedLocalMeasures(const std::string& uid, const std::string& currentVersionId) {
+  size_t num_removed = 0;
+  for (auto& measure : measures()) {
+    if ((measure.uid() == uid) && (measure.versionId() != currentVersionId)) {
+      ++num_removed;
+      removeMeasure(measure);
+    }
+  }
+  return num_removed;
+}
+
 std::vector<BCLComponent> LocalBCL::componentAttributeSearch(const std::vector<std::pair<std::string, std::string>>& searchTerms) const {
   auto uids = attributeSearch(searchTerms, "component");
   if (uids.empty()) {

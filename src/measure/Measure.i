@@ -6,7 +6,7 @@
 #endif
 
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define MODEL_API
 #define STANDARDSINTERFACE_API
 #define MEASURE_API

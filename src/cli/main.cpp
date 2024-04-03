@@ -80,14 +80,6 @@ int main(int argc, char* argv[]) {
                "└{0:─^{2}}┘",
                "", "The `classic` command is deprecated and will be removed in a future release", 80);
     fmt::print("\n");
-#if defined _WIN32
-    // Poor man's hack #4847
-    // Disable this logger, we have a duplicate in the ruby shared lib
-    openstudio::Logger::instance().standardOutLogger().disable();
-    openstudio::Logger::instance().standardErrLogger().disable();
-    // Avoid getting some messages during getOpenStudioModule() when we locate the DLL
-    openstudio::StringStreamLogSink sink;
-#endif
     result = openstudio::rubyCLI(rubyEngine);
   } else {
     CLI::App app{"openstudio"};

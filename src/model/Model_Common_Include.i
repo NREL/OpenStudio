@@ -1,7 +1,7 @@
 #ifndef MODEL_COMMON_INCLUDE_I
 #define MODEL_COMMON_INCLUDE_I
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define MODEL_API
 
 %include <utilities/core/CommonInclude.i>

@@ -22,13 +22,11 @@
 
 %ignore std::vector<openstudio::LogMessage>::vector(size_type);
 %ignore std::vector<openstudio::LogMessage>::resize(size_type);
-%ignore openstudio::LoggerSingleton::loggerFromChannel;
+%ignore openstudio::Logger::loggerFromChannel;
 %ignore openstudio::LogSink::setFormatter;
 
 %template(LogMessageVector) std::vector<openstudio::LogMessage>;
 %template(OptionalLogMessage) boost::optional<openstudio::LogMessage>;
-
-%template(Logger) openstudio::Singleton<openstudio::LoggerSingleton>;
 
 // Ignore std::thread::id stuff
 %ignore openstudio::LogSink::threadId;

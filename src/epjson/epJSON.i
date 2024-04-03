@@ -6,7 +6,7 @@
 #endif
 
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define EPJSON_API
 
 // You're better off just loading the json directly in the target language, so ignore

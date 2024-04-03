@@ -1,7 +1,7 @@
 #ifndef RADIANCE_ANNUALILLUMINANCEMAP_I
 #define RADIANCE_ANNUALILLUMINANCEMAP_I
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define RADIANCE_API
 
 %include <utilities/core/CommonInclude.i>

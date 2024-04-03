@@ -30,8 +30,8 @@ target_include_directories(pythonengine
 target_link_libraries(
   pythonengine
   PRIVATE
+  openstudiolib
   openstudio_scriptengine
-  openstudio_utilities_minimal
   CONAN_PKG::fmt
   Python::Python
 )
