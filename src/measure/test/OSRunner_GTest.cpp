@@ -12,6 +12,7 @@
 #include "../OSArgument.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/BoilerHotWater.hpp"
 
 #include "../../utilities/filetypes/WorkflowJSON.hpp"
 #include "../../utilities/filetypes/WorkflowStep.hpp"
@@ -107,6 +108,10 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   WorkflowJSON workflow;
   OSRunner runner(workflow);
 
+  Model m;
+  BoilerHotWater boiler1(m);
+  BoilerHotWater boiler2(m);
+
   std::vector<OSArgument> argumentVector;
 
   OSArgument requiredBoolArgument = OSArgument::makeBoolArgument("required_bool", true);
@@ -160,6 +165,18 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   OSArgument optionalChoiceArgument = OSArgument::makeChoiceArgument("optional_choice", choices, false);
   argumentVector.push_back(optionalChoiceArgument);
 
+  std::vector<Handle> choiceHandles;
+  choiceHandles.push_back(boiler1.handle());
+  choiceHandles.push_back(boiler2.handle());
+
+  std::vector<std::string> displayNames;
+  displayNames.push_back(boiler1.nameString());
+  displayNames.push_back(boiler2.nameString());
+
+  OSArgument optionalChoiceArgument2 = OSArgument::makeChoiceArgument("optional_choice2", choiceHandle, displayNames, false);
+  optionalChoiceArgument2.setValue(boiler2.handle());
+  argumentVector.push_back(optionalChoiceArgument2);
+
   std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
   bool b = runner.getBoolArgumentValue(requiredBoolArgument.name(), argumentMap);
@@ -183,6 +200,9 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
   EXPECT_EQ("Off", c);
 
+  boost::optional<openstudio::WorkspaceObject> w = runner.getOptionalWorkspaceObjectChoiceValue(optionalChoiceArgument2.name(), argumentMap);
+  EXPECT_TRUE(w);
+
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
 
   EXPECT_FALSE(argumentValues["required_bool"].isNull());
@@ -205,6 +225,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   EXPECT_EQ("Off", argumentValues["required_choice"].asString());
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
+  EXPECT_EQ("", argumentValues["optional_choice2"].asString());
 }
 
 TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
