@@ -165,16 +165,16 @@ namespace energyplus {
     // this is to get rid of the warning message for leaving the Number of Units field blank.
     idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::NumberofUnits, 1.0);
 
-    double multiplier = modelObject.multiplier();
+    const double multiplier = modelObject.multiplier();
 
-    OptionalDouble d = definition.wattsperUnit();
+    OptionalDouble d = definition.designLevel();
     if (d) {
       idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperUnit, (*d) * multiplier);
     }
 
-    d = definition.wattsperZoneFloorArea();
+    d = definition.wattsperSpaceFloorArea();
     if (d) {
-      idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperZoneFloorArea, (*d) * multiplier);
+      idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::WattsperFloorArea, (*d) * multiplier);
     }
 
     boost::optional<Schedule> designPowerInputSchedule = modelObject.designPowerInputSchedule();

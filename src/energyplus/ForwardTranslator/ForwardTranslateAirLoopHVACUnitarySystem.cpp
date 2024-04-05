@@ -59,6 +59,7 @@
 #include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
@@ -347,6 +348,13 @@ namespace energyplus {
     d = modelObject.designSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperationWhenNoCoolingorHeatingisRequired();
     if (d) {
       unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRatePerUnitofCapacityDuringHeatingOperation, d.get());
+    }
+
+    // No Load Supply Air Flow Rate Control Set To Low Speed
+    if (modelObject.noLoadSupplyAirFlowRateControlSetToLowSpeed()) {
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "Yes");
+    } else {
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::NoLoadSupplyAirFlowRateControlSetToLowSpeed, "No");
     }
 
     // Maximum Supply Air Temperature
@@ -676,6 +684,9 @@ namespace energyplus {
       if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName, inletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName, outletNodeName);
+      } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage) {
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirInletNodeName, inletNodeName);
+        _coolingCoil->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::EvaporatorAirOutletNodeName, outletNodeName);
       } else if (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoSpeed) {
         _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName, inletNodeName);
         _coolingCoil->setString(Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName, outletNodeName);

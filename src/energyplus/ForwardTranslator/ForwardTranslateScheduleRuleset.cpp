@@ -283,11 +283,38 @@ namespace energyplus {
         if (date == dec31) {
 
           // we may now think of date as being the next saturday on or after 12/31
+          // we may need 2 more week schedules:
+          // 1 if the week that includes 12/31 is the same as the last week schedule
+          // 2 if the week that includes 12/31 is different from the last week schedule
 
           // set last week schedule before we overwrite week schedule
-          lastDate = date - Time(1);
-          while (lastDate.dayOfWeek().value() != DayOfWeek::Saturday) {
-            lastDate = lastDate - Time(1);
+          bool isSaturday = (date.dayOfWeek().value() == DayOfWeek::Saturday);
+          if (!isSaturday) {  // if it was Saturday, we've already written this week out
+            switch (date.dayOfWeek().value()) {
+              case DayOfWeek::Sunday:
+                lastDate = date - Time(1);
+                break;
+              case DayOfWeek::Monday:
+                lastDate = date - Time(2);
+                break;
+              case DayOfWeek::Tuesday:
+                lastDate = date - Time(3);
+                break;
+              case DayOfWeek::Wednesday:
+                lastDate = date - Time(4);
+                break;
+              case DayOfWeek::Thursday:
+                lastDate = date - Time(5);
+                break;
+              case DayOfWeek::Friday:
+                lastDate = date - Time(6);
+                break;
+              case DayOfWeek::Saturday:
+                // do nothing
+                break;
+              default:
+                OS_ASSERT(false);
+            }
             lastWeekSchedule = weekSchedule;
           }
 
@@ -307,7 +334,8 @@ namespace energyplus {
           weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
           // check if this schedule is equal to last week schedule
-          if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))) {
+          if (weekSchedule && lastWeekSchedule && (!(weekSchedule.get() == lastWeekSchedule.get()))
+              && (!isSaturday)) {  // if it was Saturday, we've already written this week out
             // if not write out last week schedule
 
             // get last extensible group, if any, to find start date otherwise use jan1

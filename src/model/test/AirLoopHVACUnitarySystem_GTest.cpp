@@ -65,6 +65,13 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_DefaultConstructors) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
+
+  EXPECT_TRUE(testObject.noLoadSupplyAirFlowRateControlSetToLowSpeed());
+  EXPECT_TRUE(testObject.setNoLoadSupplyAirFlowRateControlSetToLowSpeed(false));
+  EXPECT_FALSE(testObject.noLoadSupplyAirFlowRateControlSetToLowSpeed());
 }
 
 TEST_F(ModelFixture, AirLoopHVACUnitarySystem_Remove) {

@@ -74,6 +74,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeedThermalStorage.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoStageWithHumidityControlMode.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXVariableRefrigerantFlow.cpp
@@ -692,6 +693,7 @@ set(${target_name}_test_src
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
   Test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   Test/CoilCoolingDXSingleSpeed_GTest.cpp
+  Test/CoilCoolingDXSingleSpeedThermalStorage_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp

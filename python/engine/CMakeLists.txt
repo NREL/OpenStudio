@@ -30,8 +30,9 @@ target_include_directories(pythonengine
 target_link_libraries(
   pythonengine
   PRIVATE
+  openstudiolib
   openstudio_scriptengine
-  openstudio_utilities_minimal
+  #openstudio_utilities_minimal
   fmt::fmt
   Python::Python
 )

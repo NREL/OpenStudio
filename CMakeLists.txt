@@ -18,7 +18,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.7.0)
+project(OpenStudio VERSION 3.8.0)
 
 include(CMake/compiler_flags.cmake)
 
@@ -161,7 +161,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "")
+set(PROJECT_VERSION_PRERELEASE "beta")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -191,18 +191,18 @@ if(hasParent)
 endif()
 
 # EnergyPlus Idd version
-set(ENERGYPLUS_VERSION_MAJOR 23)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MAJOR 24)
+set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "7636e6b3e9")
+set(ENERGYPLUS_BUILD_SHA "9d7789a3ac")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v23.2.0-WithMacStaticLibs")
+set(ENERGYPLUS_RELEASE_NAME "v24.1.0")
 
-set(ENERGYPLUS_REPO "jmarrec") # TODO: temp
+set(ENERGYPLUS_REPO "NREL")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -635,25 +635,24 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 72948a3f884ce9fe44145210eceb8259)
+      set(ENERGYPLUS_EXPECTED_HASH 3b465e87fc07e18db458e1d058da447b)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 219c1a5cfec7b6fd6bd8507c043b82ab)
-      set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
+      set(ENERGYPLUS_EXPECTED_HASH 4f15adccac3df1e699d26f815800c783)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS11.6-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-    # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 0edcf8a13c7f0e05b65e1559cb7624cd)
+    set(ENERGYPLUS_EXPECTED_HASH c31dfb86d8967636fca0a1ecf4052f22)
     set(ENERGYPLUS_PLATFORM "Linux-CentOS7.9.2009-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
       if (ARCH MATCHES "arm64")
-        set(ENERGYPLUS_EXPECTED_HASH 363c537aff1f9c664192451139a85964)
+        set(ENERGYPLUS_EXPECTED_HASH 2e1e9516b39ca8046b7cf79ad3a81fa7)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH 773dc61ddb6f3dc633ac4df0bdaa3337)
+        set(ENERGYPLUS_EXPECTED_HASH fb171a5da7d41da80da7868686b41126)
       endif()
     elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH b8644c02e287e3ffee89023e98ac5a13)
+      set(ENERGYPLUS_EXPECTED_HASH 4ea21126c3989cad35078a711573572e)
     else() # 18.04
       message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
     endif()
@@ -689,11 +688,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 7fbc694629ba6abbe400854661ebe1ae)
+    set(ENERGYPLUS_EXPECTED_HASH c9dd8a23b64d1327d00c5d85896b46bb)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 379929e4c46e3d22d79f37b905e56a0e)
+    set(ENERGYPLUS_EXPECTED_HASH NOT_AVAILABLE_ON_RELEASE)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)

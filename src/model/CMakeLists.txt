@@ -326,6 +326,9 @@ set(${target_name}_src
   CoilCoolingDXSingleSpeed.hpp
   CoilCoolingDXSingleSpeed_Impl.hpp
   CoilCoolingDXSingleSpeed.cpp
+  CoilCoolingDXSingleSpeedThermalStorage.hpp
+  CoilCoolingDXSingleSpeedThermalStorage_Impl.hpp
+  CoilCoolingDXSingleSpeedThermalStorage.cpp
   CoilCoolingDXTwoSpeed.hpp
   CoilCoolingDXTwoSpeed_Impl.hpp
   CoilCoolingDXTwoSpeed.cpp
@@ -1958,6 +1961,7 @@ set(${target_name}_test_src
   test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
   test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
+  test/CoilCoolingDXSingleSpeedThermalStorage_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
   test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp

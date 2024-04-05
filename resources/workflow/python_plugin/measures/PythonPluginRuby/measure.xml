@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>python_plugin_ruby</name>
+  <uid>42a4a936-5f9a-48fd-9157-e4981b9a9dca</uid>
+  <version_id>3c230ca8-d85a-49bf-b4fb-4addb24d940b</version_id>
+  <version_modified>2024-02-16T08:51:46Z</version_modified>
+  <xml_checksum>5872977E</xml_checksum>
+  <class_name>PythonPluginRuby</class_name>
+  <display_name>Python Plugin Ruby.</display_name>
+  <description>Generates an EnergyPlus PythonPlugin python file</description>
+  <modeler_description>Uses an ERB template to render the PythonPlugin</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Opaque</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Function</name>
+      <value>Measure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Requires EnergyPlus Results</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Uses SketchUp API</name>
+      <value>false</value>
+      <datatype>boolean</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.6.0</identifier>
+        <min_compatible>3.6.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>A35AA6E2</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program.csv</filename>
+      <filetype>csv</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>56A3E864</checksum>
+    </file>
+    <file>
+      <filename>python_plugin_program.py.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>C734EFAE</checksum>
+    </file>
+  </files>
+</measure>

@@ -112,6 +112,18 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_ZoneHVACPackagedTerm
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::FanConstantVolume fan(m);
+  auto s = m.alwaysOnDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+
+  EXPECT_TRUE(ptac.noLoadSupplyAirFlowRateControlSetToLowSpeed());
+  EXPECT_TRUE(ptac.setNoLoadSupplyAirFlowRateControlSetToLowSpeed(false));
+  EXPECT_FALSE(ptac.noLoadSupplyAirFlowRateControlSetToLowSpeed());
 }
 
 TEST_F(ModelFixture, ZoneHVACPackagedTerminalAirConditioner_clone) {

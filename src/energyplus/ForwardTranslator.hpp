@@ -110,6 +110,7 @@ namespace model {
   class CoilCoolingDXCurveFitSpeed;
   class CoilCoolingDXMultiSpeed;
   class CoilCoolingDXSingleSpeed;
+  class CoilCoolingDXSingleSpeedThermalStorage;
   class CoilCoolingDXTwoSpeed;
   class CoilCoolingDXTwoStageWithHumidityControlMode;
   class CoilCoolingDXVariableRefrigerantFlow;
@@ -503,7 +504,7 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-#define ENERGYPLUS_VERSION "23.2"
+#define ENERGYPLUS_VERSION "24.1"
 
   class ENERGYPLUS_API ForwardTranslator
   {
@@ -758,6 +759,11 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary(model::CoilCoolingDXSingleSpeed& modelObject);
+
+    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedThermalStorage(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject);
+
+    boost::optional<IdfObject>
+      translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(model::CoilCoolingDXSingleSpeedThermalStorage& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
 

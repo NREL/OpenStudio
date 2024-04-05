@@ -280,9 +280,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
     set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
     target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
-    target_include_directories(${swig_target} SYSTEM PRIVATE ${Ruby_INCLUDE_DIRS})
-    target_compile_definitions(${swig_target} PUBLIC -DRUBY_DONT_SUBST)
-
+    target_include_directories(${swig_target} SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
+    target_compile_definitions(${swig_target} PRIVATE SHARED_OS_LIBS PUBLIC -DRUBY_DONT_SUBST)
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
@@ -357,6 +356,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       ${SWIG_WRAPPER}
     )
 
+    target_compile_definitions(${swig_target} PRIVATE SHARED_OS_LIBS)
     set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
     set_target_properties(${swig_target} PROPERTIES PREFIX "")
     set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")

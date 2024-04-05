@@ -6,7 +6,7 @@
 #endif
 
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define GBXML_API
 
 %include <utilities/core/CommonInclude.i>

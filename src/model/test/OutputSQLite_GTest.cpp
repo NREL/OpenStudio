@@ -29,4 +29,7 @@ TEST_F(ModelFixture, OutputSQLite_GettersSetters) {
   EXPECT_FALSE(outputSQLite.setUnitConversionforTabularData("AnotherInvalid"));
   EXPECT_EQ("Simple", outputSQLite.optionType());
   EXPECT_EQ("None", outputSQLite.unitConversionforTabularData());
+
+  EXPECT_TRUE(outputSQLite.setUnitConversionforTabularData("InchPoundExceptElectricity"));
+  EXPECT_EQ("InchPoundExceptElectricity", outputSQLite.unitConversionforTabularData());
 }  // End of Getter_Setters test

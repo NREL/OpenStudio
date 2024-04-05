@@ -54,7 +54,7 @@ namespace energyplus {
         LOG(Error, "LightingLevel value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Watts/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::LightsFields::WattsperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::LightsFields::WattsperFloorArea);
       if (d) {
         definition.setWattsperSpaceFloorArea(*d);
       } else {

@@ -5,7 +5,7 @@
 %module openstudioairflow
 #endif
 
-#define UTILITIES_API
+%include <utilities/UtilitiesAPI.hpp>
 #define AIRFLOW_API
 
 %include <utilities/core/CommonInclude.i>

@@ -1003,6 +1003,15 @@ namespace energyplus {
         }
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage: {
+        auto coil = modelObject.cast<CoilCoolingDXSingleSpeedThermalStorage>();
+        if (isHVACComponentWithinUnitary(coil)) {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorageWithoutUnitary(coil);
+        } else {
+          retVal = translateCoilCoolingDXSingleSpeedThermalStorage(coil);
+        }
+        break;
+      }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed: {
         auto coil = modelObject.cast<CoilCoolingDXMultiSpeed>();
         retVal = translateCoilCoolingDXMultiSpeed(coil);
@@ -3459,6 +3468,7 @@ namespace energyplus {
       // IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed,
 
       IddObjectType::OS_Coil_Cooling_DX_SingleSpeed,
+      // IddObjectType::OS_Coil_Cooling_DX_SingleSpeed_ThermalStorage,
       IddObjectType::OS_Coil_Cooling_DX_TwoSpeed,
       IddObjectType::OS_Coil_Cooling_Water,
       IddObjectType::OS_Coil_Cooling_WaterToAirHeatPump_EquationFit,
@@ -3672,6 +3682,16 @@ namespace energyplus {
 
   void ForwardTranslator::translateSchedules(const model::Model& model) {
 
+    // Make sure these get in the idf file
+    {
+      auto schedule = model.alwaysOnDiscreteSchedule();
+      translateAndMapModelObject(schedule);
+      schedule = model.alwaysOffDiscreteSchedule();
+      translateAndMapModelObject(schedule);
+      schedule = model.alwaysOnContinuousSchedule();
+      translateAndMapModelObject(schedule);
+    }
+
     // loop over schedule type limits
     std::vector<WorkspaceObject> objects = model.getObjectsByType(IddObjectType::OS_ScheduleTypeLimits);
     std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
@@ -3697,16 +3717,6 @@ namespace energyplus {
         auto modelObject = workspaceObject.cast<ModelObject>();
         translateAndMapModelObject(modelObject);
       }
-    }
-
-    // Make sure these get in the idf file
-    {
-      auto schedule = model.alwaysOnDiscreteSchedule();
-      translateAndMapModelObject(schedule);
-      schedule = model.alwaysOffDiscreteSchedule();
-      translateAndMapModelObject(schedule);
-      schedule = model.alwaysOnContinuousSchedule();
-      translateAndMapModelObject(schedule);
     }
   }
 

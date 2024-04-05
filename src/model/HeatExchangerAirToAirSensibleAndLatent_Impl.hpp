@@ -14,6 +14,7 @@ namespace model {
 
   class Schedule;
   class Connection;
+  class Curve;
 
   namespace detail {
 
@@ -84,17 +85,9 @@ namespace model {
 
       double latentEffectivenessat100HeatingAirFlow() const;
 
-      double sensibleEffectivenessat75HeatingAirFlow() const;
-
-      double latentEffectivenessat75HeatingAirFlow() const;
-
       double sensibleEffectivenessat100CoolingAirFlow() const;
 
       double latentEffectivenessat100CoolingAirFlow() const;
-
-      double sensibleEffectivenessat75CoolingAirFlow() const;
-
-      double latentEffectivenessat75CoolingAirFlow() const;
 
       double nominalElectricPower() const;
 
@@ -114,7 +107,13 @@ namespace model {
 
       bool economizerLockout() const;
 
-      boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
+      boost::optional<Curve> sensibleEffectivenessofHeatingAirFlowCurve() const;
+
+      boost::optional<Curve> latentEffectivenessofHeatingAirFlowCurve() const;
+
+      boost::optional<Curve> sensibleEffectivenessofCoolingAirFlowCurve() const;
+
+      boost::optional<Curve> latentEffectivenessofCoolingAirFlowCurve() const;
 
       //@}
       /** @name Setters */
@@ -123,24 +122,15 @@ namespace model {
       bool setAvailabilitySchedule(Schedule& schedule);
 
       bool setNominalSupplyAirFlowRate(boost::optional<double> nominalSupplyAirFlowRate);
-
       void autosizeNominalSupplyAirFlowRate();
 
       bool setSensibleEffectivenessat100HeatingAirFlow(double sensibleEffectivenessat100HeatingAirFlow);
 
       bool setLatentEffectivenessat100HeatingAirFlow(double latentEffectivenessat100HeatingAirFlow);
 
-      bool setSensibleEffectivenessat75HeatingAirFlow(double sensibleEffectivenessat75HeatingAirFlow);
-
-      bool setLatentEffectivenessat75HeatingAirFlow(double latentEffectivenessat75HeatingAirFlow);
-
       bool setSensibleEffectivenessat100CoolingAirFlow(double sensibleEffectivenessat100CoolingAirFlow);
 
       bool setLatentEffectivenessat100CoolingAirFlow(double latentEffectivenessat100CoolingAirFlow);
-
-      bool setSensibleEffectivenessat75CoolingAirFlow(double sensibleEffectivenessat75CoolingAirFlow);
-
-      bool setLatentEffectivenessat75CoolingAirFlow(double latentEffectivenessat75CoolingAirFlow);
 
       bool setNominalElectricPower(double nominalElectricPower);
 
@@ -151,18 +141,27 @@ namespace model {
       bool setFrostControlType(const std::string& frostControlType);
 
       bool setThresholdTemperature(double thresholdTemperature);
-
       void resetThresholdTemperature();
 
       bool setInitialDefrostTimeFraction(boost::optional<double> initialDefrostTimeFraction);
-
       void resetInitialDefrostTimeFraction();
 
       bool setRateofDefrostTimeFractionIncrease(boost::optional<double> rateofDefrostTimeFractionIncrease);
-
       void resetRateofDefrostTimeFractionIncrease();
 
       bool setEconomizerLockout(bool economizerLockout);
+
+      bool setSensibleEffectivenessofHeatingAirFlowCurve(const Curve& sensibleEffectivenessofHeatingAirFlowCurve);
+      void resetSensibleEffectivenessofHeatingAirFlowCurve();
+
+      bool setLatentEffectivenessofHeatingAirFlowCurve(const Curve& latentEffectivenessofHeatingAirFlowCurve);
+      void resetLatentEffectivenessofHeatingAirFlowCurve();
+
+      bool setSensibleEffectivenessofCoolingAirFlowCurve(const Curve& sensibleEffectivenessofCoolingAirFlowCurve);
+      void resetSensibleEffectivenessofCoolingAirFlowCurve();
+
+      bool setLatentEffectivenessofCoolingAirFlowCurve(const Curve& latentEffectivenessofCoolingAirFlowCurve);
+      void resetLatentEffectivenessofCoolingAirFlowCurve();
 
       //@}
       /** @name Other */
@@ -170,6 +169,8 @@ namespace model {
 
       AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
       boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
+      boost::optional<double> autosizedNominalSupplyAirFlowRate() const;
 
       //@}
 

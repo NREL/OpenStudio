@@ -82,6 +82,15 @@ endif()
 ###############################################################################
 
 if(BUILD_TESTING)
+  # openstudio_tests is a test target for C++ based tests that extend across multiple
+  # compiled units such as the case for openstudio cli. 
+  # For example, here is a good place to test issues that are concerned with
+  # the complexities of sharing data between the Python and Ruby script engines.
+  set(openstudio_tests_src
+    "test/Logger_GTest.cpp"
+  )
+  CREATE_TEST_TARGETS(openstudio "${openstudio_tests_src}" openstudiolib openstudio_workflow)
+  add_dependencies(openstudio_tests openstudio)
 
   # Just for convenience: having to VT the seb model which is at 1.11.5 can be very time consuming, especially on debug builds
   add_custom_target(update_seb_osm_in_build_dir
@@ -243,6 +252,15 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
+    COMMAND $<TARGET_FILE:openstudio> run --show-stdout -w python_plugin_jinja_erb.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/python_plugin/"
+  )
+  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES RESOURCE_LOCK "python_plugin")
+  set_tests_properties(OpenStudioCLI.Run_RubyPythonPlugin PROPERTIES
+    PASS_REGULAR_EXPRESSION "HI FROM ERB PYTHON PLUGIN[\r\n\t ]*HI FROM JINJA PYTHON PLUGIN"
+  )
 
   if (Pytest_AVAILABLE)
     add_test(NAME OpenStudioCLI.test_loglevel
