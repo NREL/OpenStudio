@@ -593,6 +593,19 @@ void setGemPathDir(const std::vector<openstudio::path>& gemPathDirs) {
 }
 
 void locateEmbeddedGems(bool use_bundler) {
+  // It is important to find, eval, and call add_spec for all of the gemspecs
+  // that are in the embedded file system. The rubgems find/load mechanims will
+  // attempt to use a number of Ruby file, directory, and path operations that
+  // are not compaitable with the embdded file system. By doing the find, eval,
+  // add_spec routine up front, rubygems will avoid trying to load things off of
+  // the embedded file system itself.
+  //
+  // A previous version of this routine added embedded file paths to the gem
+  // path, such as Gem.paths.path << ':/ruby/3.2.0/gems/'. This is not
+  // sustainable because it requires shims for many of the Ruby file operations
+  // so that they work with embedded files. The solution here avoids File
+  // operations on embdded file system with the exception of our own
+  // EmbeddedScripting::getFileAsString
 
   std::string initCmd = R"ruby(
   Gem::Deprecate.skip = true
