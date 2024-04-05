@@ -7,22 +7,30 @@
 #include "SimulationControl_Impl.hpp"
 
 #include "Model.hpp"
+
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "ConvergenceLimits.hpp"
 #include "ConvergenceLimits_Impl.hpp"
 #include "HeatBalanceAlgorithm.hpp"
 #include "HeatBalanceAlgorithm_Impl.hpp"
 #include "InsideSurfaceConvectionAlgorithm.hpp"
 #include "InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
 #include "OutsideSurfaceConvectionAlgorithm.hpp"
 #include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
 #include "RunPeriod.hpp"
 #include "RunPeriod_Impl.hpp"
 #include "ShadowCalculation.hpp"
 #include "ShadowCalculation_Impl.hpp"
-#include "SizingPeriod.hpp"
-#include "SizingPeriod_Impl.hpp"
 #include "SizingParameters.hpp"
 #include "SizingParameters_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "SizingPlant.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "Timestep.hpp"
 #include "Timestep_Impl.hpp"
 #include "WeatherFile.hpp"
@@ -45,6 +53,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/units/Unit.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -169,9 +179,36 @@ namespace model {
     }
 
     bool SimulationControl_Impl::doZoneSizingCalculation() const {
-      boost::optional<std::string> value = getString(OS_SimulationControlFields::DoZoneSizingCalculation, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+
+      auto shouldItBeOn = [this]() -> bool {
+        const auto m = model();
+        const auto hasSizingPeriods = !m.getModelObjects<SizingPeriod>().empty();
+        if (!hasSizingPeriods) {
+          return false;
+        }
+
+        const auto zones = m.getConcreteModelObjects<ThermalZone>();
+        const auto hasZoneEquipment = std::any_of(zones.cbegin(), zones.cend(), [](const auto& z) { return !z.equipment().empty(); });
+
+        return hasZoneEquipment;
+      };
+
+      if (!isDoZoneSizingCalculationDefaulted()) {
+        boost::optional<std::string> value = getString(OS_SimulationControlFields::DoZoneSizingCalculation, true);
+        OS_ASSERT(value);
+        const auto result = openstudio::istringEqual(value.get(), "Yes");
+        if (!result && shouldItBeOn()) {
+          LOG(Warn, "You have zonal equipment and design days, it's possible you should enable SimulationControl::DoZoneSizingCalculation");
+        }
+        return result;
+      }
+
+      const auto result = shouldItBeOn();
+      if (result) {
+        LOG(Debug, "You have zonal equipment and design days, and SimulationControl::DoZoneSizingCalculation is defaulted: turning on.");
+      }
+
+      return result;
     }
 
     bool SimulationControl_Impl::isDoZoneSizingCalculationDefaulted() const {
@@ -179,9 +216,28 @@ namespace model {
     }
 
     bool SimulationControl_Impl::doSystemSizingCalculation() const {
-      boost::optional<std::string> value = getString(OS_SimulationControlFields::DoSystemSizingCalculation, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+
+      auto shouldItBeOn = [this]() -> bool {
+        const auto m = model();
+        return !m.getModelObjects<SizingPeriod>().empty() && !m.getConcreteModelObjects<AirLoopHVAC>().empty();
+      };
+
+      if (!isDoSystemSizingCalculationDefaulted()) {
+        boost::optional<std::string> value = getString(OS_SimulationControlFields::DoSystemSizingCalculation, true);
+        OS_ASSERT(value);
+        const auto result = openstudio::istringEqual(value.get(), "Yes");
+        if (!result && shouldItBeOn()) {
+          LOG(Warn, "You have AirLoopHVAC(s) and design day(s), it's possible you should enable SimulationControl::DoSystemSizingCalculation");
+        }
+        return result;
+      }
+
+      const auto result = shouldItBeOn();
+      if (result) {
+        LOG(Debug, "You have AirLoopHVAC(s) and design day(s), and SimulationControl::DoSystemSizingCalculation is defaulted: assuming on.");
+      }
+
+      return result;
     }
 
     bool SimulationControl_Impl::isDoSystemSizingCalculationDefaulted() const {
@@ -189,9 +245,28 @@ namespace model {
     }
 
     bool SimulationControl_Impl::doPlantSizingCalculation() const {
-      boost::optional<std::string> value = getString(OS_SimulationControlFields::DoPlantSizingCalculation, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+
+      auto shouldItBeOn = [this]() -> bool {
+        const auto m = model();
+        return !m.getModelObjects<SizingPeriod>().empty() && !m.getConcreteModelObjects<PlantLoop>().empty();
+      };
+
+      if (!isDoPlantSizingCalculationDefaulted()) {
+        boost::optional<std::string> value = getString(OS_SimulationControlFields::DoPlantSizingCalculation, true);
+        OS_ASSERT(value);
+        const auto result = openstudio::istringEqual(value.get(), "Yes");
+        if (!result && shouldItBeOn()) {
+          LOG(Warn, "You have PlantLoop(s) and design days, it's possible you should enable SimulationControl::DoPlantSizingCalculation");
+        }
+        return result;
+      }
+
+      const auto result = shouldItBeOn();
+      if (result) {
+        LOG(Debug, "You have PlantLoop(s) and design days, and SimulationControl::DoPlantSizingCalculation is defaulted: assuming on.");
+      }
+
+      return result;
     }
 
     bool SimulationControl_Impl::isDoPlantSizingCalculationDefaulted() const {
@@ -543,9 +618,42 @@ namespace model {
     }
 
     bool SimulationControl_Impl::doHVACSizingSimulationforSizingPeriods() const {
-      boost::optional<std::string> value = getString(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+
+      auto shouldItBeOn = [this]() -> bool {
+        const auto m = model();
+        const auto hasSizingPeriods = !m.getModelObjects<SizingPeriod>().empty();
+        if (!hasSizingPeriods) {
+          return false;
+        }
+
+        // Sizing:Plant I/O: "The use of 'Coincident' sizing option requires that the object
+        // be set to YES for the input field called Do HVAC Sizing Simulation for Sizing Periods"
+        const auto plantLoops = m.getConcreteModelObjects<PlantLoop>();
+        const auto hasPlantsWithCoincidentSizingOption = std::any_of(plantLoops.begin(), plantLoops.end(), [](const PlantLoop& p) {
+          return openstudio::istringEqual("Coincident", p.sizingPlant().sizingOption());
+        });
+
+        return hasPlantsWithCoincidentSizingOption;
+      };
+
+      if (!isDoHVACSizingSimulationforSizingPeriodsDefaulted()) {
+        boost::optional<std::string> value = getString(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, true);
+        OS_ASSERT(value);
+        const auto result = openstudio::istringEqual(value.get(), "Yes");
+        if (!result && shouldItBeOn()) {
+          LOG(Warn, "You have PlantLoop(s) with 'Coincident' Sizing Option and design day(s), it's possible you should enable "
+                    "SimulationControl::DoHVACSizingSimulationforSizingPeriods");
+        }
+        return result;
+      }
+
+      const auto result = shouldItBeOn();
+      if (result) {
+        LOG(Debug, "You have PlantLoop(s) with 'Coincident' Sizing Option and design day(s), and "
+                   "SimulationControl::DoHVACSizingSimulationforSizingPeriods is defaulted: assuming on.");
+      }
+
+      return result;
     }
 
     bool SimulationControl_Impl::isDoHVACSizingSimulationforSizingPeriodsDefaulted() const {

@@ -9,7 +9,14 @@
 
 #include "../SimulationControl.hpp"
 #include "../SimulationControl_Impl.hpp"
+
+#include "../AirLoopHVAC.hpp"
+#include "../DesignDay.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../PlantLoop.hpp"
+#include "../SizingPlant.hpp"
+#include "../ThermalZone.hpp"
+#include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -195,4 +202,66 @@ TEST_F(ModelFixture, SimulationControl_LifeCycleCost) {
 
   // adding this cost (and many others) would be really weird, expect a throw
   EXPECT_THROW(LifeCycleCost cost(simulationControl), openstudio::Exception);
+}
+
+TEST_F(ModelFixture, SimulationControl_SmartDefaults) {
+
+  Model m;
+
+  auto sc = m.getUniqueModelObject<SimulationControl>();
+
+  auto testDefaults = [&sc](bool doZone, bool doSystem, bool doPlant, bool doHVACForSizing) {
+    EXPECT_EQ(doZone, sc.doZoneSizingCalculation());
+    EXPECT_EQ(doSystem, sc.doSystemSizingCalculation());
+    EXPECT_EQ(doPlant, sc.doPlantSizingCalculation());
+    EXPECT_EQ(doHVACForSizing, sc.doHVACSizingSimulationforSizingPeriods());
+  };
+
+  sc.resetDoHVACSizingSimulationforSizingPeriods();
+  sc.resetDoZoneSizingCalculation();
+  sc.resetDoSystemSizingCalculation();
+  sc.resetDoPlantSizingCalculation();
+
+  // No Design Day, no Zonal / AirLoopHVAC / PlantLoop
+  testDefaults(false, false, false, false);
+
+  DesignDay dd(m);
+  testDefaults(false, false, false, false);
+
+  EXPECT_FALSE(sc.doZoneSizingCalculation());
+  EXPECT_FALSE(sc.doSystemSizingCalculation());
+  EXPECT_FALSE(sc.doPlantSizingCalculation());
+  EXPECT_FALSE(sc.doHVACSizingSimulationforSizingPeriods());
+
+  ThermalZone z(m);
+  testDefaults(false, false, false, false);
+
+  EXPECT_FALSE(sc.doZoneSizingCalculation());
+  EXPECT_FALSE(sc.doSystemSizingCalculation());
+  EXPECT_FALSE(sc.doPlantSizingCalculation());
+  EXPECT_FALSE(sc.doHVACSizingSimulationforSizingPeriods());
+
+  ZoneHVACBaseboardConvectiveElectric b1(m);
+  testDefaults(false, false, false, false);
+
+  // We have design day + a zone with some equipment => precondition for doZoneSizingCalculation is met
+  EXPECT_TRUE(b1.addToThermalZone(z));
+  testDefaults(true, false, false, false);
+
+  // Design Day + AirLoopHVAC => doSystemSizingCalculation
+  AirLoopHVAC a(m);
+  testDefaults(true, true, false, false);
+
+  // Design Day + PlantLoop => doPlantSizingCalculation
+  PlantLoop p(m);
+  EXPECT_TRUE(p.sizingPlant().setSizingOption("NonCoincident"));
+  testDefaults(true, true, true, false);
+
+  // Design Day + Coicident => doHVACSizingSimulationforSizingPeriods
+  EXPECT_TRUE(p.sizingPlant().setSizingOption("Coincident"));
+  testDefaults(true, true, true, true);
+
+  // Remove design day
+  dd.remove();
+  testDefaults(false, false, false, false);
 }
