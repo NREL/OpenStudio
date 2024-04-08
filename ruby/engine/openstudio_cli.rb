@@ -111,7 +111,7 @@ class Specification < BasicSpecification
     _all << spec
     stubs << spec
     (@@stubs_by_name[spec.name] ||= []) << spec
-    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
+    @@stubs_by_name[spec.name].sort_by! { |s| s.version }
     _resort!(_all)
     _resort!(stubs)
   end
@@ -152,16 +152,16 @@ class Specification < BasicSpecification
       test = /bundler\/gems/.match(tmp_loaded_from)
       if test
         @full_gem_path = ':' + (File.dirname tmp_loaded_from)
-        @full_gem_path.untaint
+        # @full_gem_path.untaint
         return @full_gem_path
       else
         @full_gem_path = joined
-        @full_gem_path.untaint
+        # @full_gem_path.untaint
         return @full_gem_path
       end
     else
       @full_gem_path = File.expand_path joined
-      @full_gem_path.untaint
+      # @full_gem_path.untaint
     end
     return @full_gem_path if File.directory? @full_gem_path
 
@@ -363,7 +363,7 @@ def parse_main_args(main_args)
       if dir.nil?
         $logger.error "#{main_args[i]} requires second argument DIR"
         return false
-      elsif !File.exists?(dir) || !File.directory?(dir)
+      elsif !File.exist?(dir) || !File.directory?(dir)
         # DLM: Ruby doesn't warn for this
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
@@ -401,7 +401,7 @@ def parse_main_args(main_args)
       if dir.nil?
         $logger.error "#{main_args[i]} requires second argument DIR"
         return false
-      elsif !File.exists?(dir) || !File.directory?(dir)
+      elsif !File.exist?(dir) || !File.directory?(dir)
         # DLM: Ruby doesn't warn for this
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
@@ -459,8 +459,8 @@ def parse_main_args(main_args)
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
 
-    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.7.0/'"
-    ENV['BUNDLE_PATH'] = ':/ruby/2.7.0/'
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/3.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/3.2.0/'
 
   end
 
@@ -489,8 +489,8 @@ def parse_main_args(main_args)
 
   end
 
-  Gem.paths.path << ':/ruby/2.7.0/gems/'
-  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -561,7 +561,7 @@ def parse_main_args(main_args)
       if original_embedded_gems[spec.name]
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+          if File.exist?(File.join(lp, spec.name)) || File.exist?(File.join(lp, spec.name + '.rb')) || File.exist?(File.join(lp, spec.name + '.so'))
             $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
             do_activate = false
             break
@@ -1475,7 +1475,7 @@ class Measure
       # loop over all directories
       result = []
       Dir.glob("#{directory}/*/").each do |measure_dir|
-        if File.directory?(measure_dir) && File.exists?(File.join(measure_dir, "measure.xml"))
+        if File.directory?(measure_dir) && File.exist?(File.join(measure_dir, "measure.xml"))
           measure = measure_manager.get_measure(measure_dir, true)
           if measure.nil?
             $logger.debug("Directory #{measure_dir} is not a measure")
@@ -1742,7 +1742,7 @@ class ExecuteRubyScript
 
     $logger.debug "ARGV: #{ARGV}"
 
-    unless File.exists? file_path
+    unless File.exist? file_path
       $logger.error "Unable to find the file #{file_path} on the filesystem"
       return 1
     end

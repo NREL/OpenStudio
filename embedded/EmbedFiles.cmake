@@ -1,3 +1,58 @@
+#[=======================================================================[.rst:
+EmbedFiles
+----------
+
+This module defines functions to embed some files as binary into the executable.
+
+.. command:: embed_files
+
+  This is the command responsible for calling CreateEmbeddedSource::
+
+    embed_files(<FILES> <EMBEDDED_LOCATIONS> <CXX_OUTPUT_FILES>)
+
+  The required arguments:
+
+  ``FILES``
+    The list of file paths on disk to embed
+
+  ``EMBEDDED_LOCATIONS``
+    a indexed matched list of paths for each embedded file
+
+  ``CXX_OUTPUT_FILES``
+    a variable that will be set to a list of cxx files to compile executable or library
+
+.. command:: glob_for_file_exts_and_prepare_for_embedded
+
+  This is a helper that will glob recursively for specific file extensions in a base directory and return
+  two lists corresponding to ``FILES`` and ``EMBEDDED_LOCATION`` (a relative path with ``BASE_DIR`` as base)
+
+    glob_for_file_exts_and_prepare_for_embedded(
+      <BASE_DIR> <foundFiles> <foundEmbeddedPaths>
+      [VERBOSE]
+      EXTENSIONS <ext> [<ext>...]
+    )
+
+  The required arguments:
+
+  ``BASE_DIR``
+    The base directory on disk to search in
+
+  ``foundFiles``
+  Result variable for the disk files found that match the extensions requested
+
+  ``foundEmbeddedPaths``
+  Paths relative to the ``BASE_DIR``
+
+  ``EXTENSIONS``
+  a list of extensions to search for. At least one must be provided or it'll throw
+
+  The options are:
+
+  ``VERBOSE``
+  outputs a table with the number of files found for each extension requested
+#]=======================================================================]
+
+#------------------------------------------------------------------------------
 # FILES is a list of file paths to embed
 # EMBEDDED_LOCATIONS is a indexed matched list of paths for each embedded file
 # CXX_OUTPUT_FILES is a variable that will be set to a list of cxx files to compile executable or library
@@ -101,4 +156,69 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
 
   set(${CXX_OUTPUT_FILES} ${EMBED_SOURCE_FILES} PARENT_SCOPE)
 endfunction()
+#------------------------------------------------------------------------------
 
+
+#------------------------------------------------------------------------------
+function(glob_for_file_exts_and_prepare_for_embedded BASE_DIR foundFiles foundEmbeddedPaths)
+  set(prefix "")
+  set(valueLessKeywords VERBOSE)
+  set(singleValueKeywords "")
+  set(multiValueKeywords EXTENSIONS)
+
+  cmake_parse_arguments(
+    PARSE_ARGV 3 # Start at one with NAME is the first param
+      "${prefix}"
+      "${valueLessKeywords}"
+      "${singleValueKeywords}"
+      "${multiValueKeywords}"
+  )
+
+  if (_UNPARSED_ARGUMENTS)
+    message(FATAL_ERROR "Extra unknown arguments were passed: ${_UNPARSED_ARGUMENTS}")
+  endif()
+  if (_KEYWORDS_MISSING_VALUES)
+    message(FATAL_ERROR "Keywords missing values: ${_KEYWORDS_MISSING_VALUES}")
+  endif()
+  if (_VERBOSE)
+    message("Globbing in ${BASE_DIR}:")
+    message("| extension | nFound |")
+    message("| --------- | ------ |")
+  endif()
+
+  if (NOT _EXTENSIONS)
+    message(FATAL_ERROR "EXTENSIONS is required")
+  endif()
+  foreach(_ext ${_EXTENSIONS})
+    file(GLOB_RECURSE _found_files FOLLOW_SYMLINKS "${BASE_DIR}/**/*.${_ext}")
+    if (_VERBOSE)
+      list(LENGTH _found_files _nFound)
+      # message("- Found ${_nFound} files for extension ${_ext}")
+      string(LENGTH ${_ext} _extLength)
+      math(EXPR _spacing "9 - ${_extLength}")
+      string(REPEAT " " ${_spacing} _spaces)
+
+      string(LENGTH ${_nFound} _foundLength)
+      math(EXPR _spacing "6 - ${_foundLength}")
+      string(REPEAT " " ${_spacing} _spaces2)
+
+      message("| ${_ext}${_spaces} | ${_nFound}${_spaces2} |")
+    endif()
+    foreach(_file ${_found_files} )
+      file(RELATIVE_PATH LOCATION ${BASE_DIR} ${_file})
+      list(APPEND _files ${_file})
+      list(APPEND _embeddedPaths ${LOCATION})
+    endforeach()
+  endforeach()
+
+  if (_VERBOSE)
+    list(LENGTH _files _nFound)
+    message("| ========= | ====== |")
+    message("|   Total   |  ${_nFound}  |")
+  endif()
+
+  # Return
+  set(${foundFiles} ${_files} PARENT_SCOPE)
+  set(${foundEmbeddedPaths} ${_embeddedPaths} PARENT_SCOPE)
+endfunction()
+#------------------------------------------------------------------------------

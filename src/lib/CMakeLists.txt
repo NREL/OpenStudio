@@ -24,13 +24,13 @@ target_link_libraries(
 target_link_libraries(
  openstudiolib
  INTERFACE
- CONAN_PKG::boost
- CONAN_PKG::jsoncpp
- CONAN_PKG::cpprestsdk
- CONAN_PKG::openssl
- CONAN_PKG::pugixml
- CONAN_PKG::libxml2
- CONAN_PKG::fmt
+ boost::boost
+ JsonCpp::JsonCpp
+ cpprestsdk::cpprestsdk
+ openssl::openssl
+ pugixml::pugixml
+ LibXml2::LibXml2
+ fmt::fmt
 )
 
 target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")

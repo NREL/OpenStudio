@@ -427,20 +427,34 @@ endif()
 ###############################################################################
 # Conan
 
-# Note JM 2019-04-24: Another option is to globally set "print_run_commands = True" in ~/.conan/conan.conf
-option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
-mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
-if(CONAN_PRINT_RUN_COMMANDS)
-  set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
-  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
-else()
-  unset(ENV{CONAN_PRINT_RUN_COMMANDS})
-  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+if(BUILD_RUBY_BINDINGS)
+  find_package(Ruby)
+  message("Ruby_INCLUDE_DIRS=${Ruby_INCLUDE_DIRS}")
 endif()
-
-# Attempt to run, it'll do the right thing if the calling cmake script already ran it
-set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
-include("${CONAN_INSTALL_FILE}")
+find_package(pugixml)
+find_package(LibXslt)
+find_package(libxml2)
+find_package(jsoncpp)
+find_package(fmt)
+find_package(SQLite3)
+find_package(cpprestsdk)
+find_package(websocketpp)
+find_package(Boost)
+find_package(geographiclib)
+find_package(SWIG 4.1.1 EXACT REQUIRED CONFIG)
+message("SWIG_EXECUTABLE=${SWIG_EXECUTABLE}")
+message("SWIG_DIR=${SWIG_DIR}")
+find_package(TinyGLTF)
+find_package(CLI11)
+find_package(minizip)
+find_package(OpenSSL)
+find_package(ZLIB)
+if(BUILD_TESTING)
+  find_package(GTest)
+endif()
+if(BUILD_BENCHMARK)
+  find_package(benchmark)
+endif()
 
 # A macro to find a conan related value especially when using multi-config builds (MSVC)
 # But it also works with single-config builds
@@ -457,13 +471,9 @@ endmacro()
 
 ###############################################################################
 
-if(BUILD_RUBY_BINDINGS)
-  get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
-endif()
-
 # Export to Parent
 if(hasParent)
-  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+  set(Ruby_INCLUDE_DIRS "${Ruby_INCLUDE_DIRS}" PARENT_SCOPE)
 endif()
 
 ###############################################################################
@@ -741,7 +751,7 @@ else()
 endif()
 
 # Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
-find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED MODULE)
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 
 # Radiance
@@ -824,6 +834,9 @@ if(BUILD_CLI)
 
   set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
 
+  # TODO: temp
+  set(OPENSTUDIO_GEMS_BASEURL "https://github.com/jmarrec/openstudio-gems/releases/download/v3.2.2-3")
+
   # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
   set(USE_OPENSTUDIO_GEMS_PR FALSE)
   if (USE_OPENSTUDIO_GEMS_PR)
@@ -834,19 +847,19 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d4c8d521f7bcb27248046b3023a9d835")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240214-darwin_arm64-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1572d65fd0e0d383320fb280abb2a873")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-darwin.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "dbcc97ba8d86ec602fba9df2d52bf5d0")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240214-darwin-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e8af80ce8468c5c5c55c3a006377568b")
        endif()
      else()
        if (ARCH MATCHES "arm64")
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0628a7304d82540b24e2be3583e27a57")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240214-linux_arm64-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "TDB")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-linux.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cfa0c61a158ee0404a3c37d24a0a2af0")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240214-linux-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b4e50ae9b09e8935c6882fb9cfb95847")
        endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
@@ -854,8 +867,8 @@ if(BUILD_CLI)
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20231102-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e94254443a04d6d5b4d0b9dab499816e")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240214-windows-3.2.2.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3f3cff39bd6ef6f3ba268fcf07565a66")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -915,7 +928,7 @@ endif()
 # Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
 #find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_ROOT NO_DEFAULT_PATH)
 #if(NOT SWIG_EXECUTABLE)
-#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_DIR}}, ${ENV{SWIG_INSTALLER_ROOT}}")
 #endif()
 
 # Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
@@ -924,17 +937,17 @@ endif()
 # I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
 
 # So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
-FindValue(CONAN_SWIG_ROOT)
+FindValue(swig_PACKAGE_FOLDER)
 
-set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_ROOT}/bin/swig")
+# set(SWIG_EXECUTABLE "${CURRENT_swig_PACKAGE_FOLDER}/bin/swig")
 
 # The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
-set(SWIG_LIB "${CURRENT_CONAN_SWIG_ROOT}/bin/swiglib")
+# set(SWIG_DIR "${CURRENT_swig_PACKAGE_FOLDER}/bin/swiglib")
 
 # Export SWIG to parent scope
 if(hasParent)
   set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
-  set(SWIG_LIB "${SWIG_LIB}" PARENT_SCOPE)
+  set(SWIG_DIR "${SWIG_DIR}" PARENT_SCOPE)
 endif()
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list

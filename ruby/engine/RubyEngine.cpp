@@ -215,7 +215,7 @@ extern "C"
 
   int rb_hasFile(const char* t_filename) {
     // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = fmt::format(":/ruby/2.7.0/{}.rb", t_filename);
+    std::string expandedName = fmt::format(":/ruby/3.2.0/{}.rb", t_filename);
     return embedded_files::hasFile(expandedName) ? 1 : 0;
   }
 

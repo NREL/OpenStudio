@@ -1,8 +1,8 @@
 add_executable(install_utility main.cpp)
 
 target_link_libraries(install_utility
-  CONAN_PKG::boost
-  # CONAN_PKG::boost_filesystem
+  boost::boost
+  # boost::boost_filesystem
 )
 
 if( WIN32 )

@@ -19,7 +19,7 @@ add_library(
 )
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
-target_include_directories(openstudio_rb SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
+target_include_directories(openstudio_rb SYSTEM PRIVATE ${Ruby_INCLUDE_DIRS})
 
 # change output directory so the openstudio.pdb file does not conflict between this target and the CLI
 set_target_properties(openstudio_rb PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")

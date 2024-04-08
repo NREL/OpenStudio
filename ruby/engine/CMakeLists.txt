@@ -16,177 +16,81 @@ endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
-set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT}")
-if ("${MODULE_ROOT}" STREQUAL "")
-  set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT_DEBUG}")
-endif()
-
-message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
-file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${MODULE_ROOT}/lib/**/*.rb")
-
-foreach( _FILE ${EXTENSION_RB} )
-  file(RELATIVE_PATH LOCATION ${MODULE_ROOT}/lib ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
+set(configs "RELEASE" "DEBUG" "RELWITHDEBINFO" "MINSIZEREL")
+foreach(_config ${configs})
+  message(DEBUG "Testing config=${config}")
+  set(MODULE_ROOT "${ruby_PACKAGE_FOLDER_${_config}}")
+  if (NOT  "${MODULE_ROOT}" STREQUAL "")
+    message("Found Ruby package folder for config ${_config} at ${MODULE_ROOT}")
+    break()
+  endif()
 endforeach()
 
-set(GEMFILE_FILES "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
-file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.rb")
-file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.erb")
-file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.js")
-file(GLOB_RECURSE CSS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.css")
-file(GLOB_RECURSE GIF_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gif")
-file(GLOB_RECURSE PNG_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.png")
-file(GLOB_RECURSE HTML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.html")
-file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.idf")
-file(GLOB_RECURSE OSM_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.osm")
-file(GLOB_RECURSE EPW_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.epw")
-file(GLOB_RECURSE DDY_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.ddy")
-file(GLOB_RECURSE STAT_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.stat")
-file(GLOB_RECURSE CSV_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.csv")
-file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.json")
-file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gemspec")
-file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gz")
-file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.yml")
-file(GLOB_RECURSE DATA_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.data")
-file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_SOURCE_DIR}/ruby/module/openstudio/**/*.rb")
+if("${MODULE_ROOT}" STREQUAL "")
+  message(FATAL_ERROR "MODULE_ROOT for ruby not found")
+endif()
 
+
+# TODO: Previously just globbing for .rb files, I think we're missing a lot of files, the gemspecs in particular, the .pem SSL certs for rubygems, those rbs files too?
+glob_for_file_exts_and_prepare_for_embedded("${MODULE_ROOT}/lib" rubyFiles rubyEmbeddedPaths VERBOSE EXTENSIONS rb gemspec pem js css gif png json rbs yml)
+list(APPEND FILES ${rubyFiles})
+list(APPEND EMBEDDED_PATHS ${rubyEmbeddedPaths})
+
+set(GEMFILE_FILES
+  # "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec"
+  "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 foreach( _FILE ${GEMFILE_FILES} )
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${RB_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
+# Note: from export-extensions.cmake
+list(LENGTH gemFiles _nFoundGemFiles)
+list(LENGTH gemEmbeddedPaths _nFoundGemsEmbeddedPaths)
+message("gemFiles=${_nFoundGemFiles}, gemEmbeddedPaths=${_nFoundGemsEmbeddedPaths}")
+# glob_for_file_exts_and_prepare_for_embedded("${OPENSTUDIO_GEMS_DIR}" gemFiles gemEmbeddedPaths
+#  VERBOSE
+#  EXTENSIONS rb data erb js css gif png html idf osm epw ddy stat csv json gemspec gz yml
+#)
 
-foreach( _FILE ${DATA_FILES} )
-   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-   list(APPEND FILES ${_FILE})
-   list(APPEND EMBEDDED_PATHS ${LOCATION})
- endforeach()
-
-foreach( _FILE ${ERB_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${JS_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${CSS_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${GIF_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${PNG_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${HTML_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${IDF_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${OSM_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${EPW_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${DDY_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${STAT_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${CSV_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${JSON_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${SPEC_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${GZ_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
-
-foreach( _FILE ${YML_FILES} )
-  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
-  list(APPEND FILES ${_FILE})
-  list(APPEND EMBEDDED_PATHS ${LOCATION})
-endforeach()
+list(APPEND FILES ${gemFiles})
+list(APPEND EMBEDDED_PATHS ${gemEmbeddedPaths})
 
 # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
+file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_SOURCE_DIR}/ruby/module/openstudio/**/*.rb")
 foreach( _FILE ${OS_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_SOURCE_DIR}/ruby/module" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb")
-list(APPEND EMBEDDED_PATHS "embedded_help.rb")
+set(local_rb_files
+  embedded_help.rb
+  openstudio_cli.rb
+  openstudio_init_extended.rb
+  measure_manager.rb
+  measure_manager_server.rb
+)
 
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
-list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
+foreach (_FILE ${local_rb_files})
+  list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/${_FILE}")
+  list(APPEND EMBEDDED_PATHS "${_FILE}")
+endforeach()
 
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_init_extended.rb")
-list(APPEND EMBEDDED_PATHS "openstudio_init_extended.rb")
+set(_contents "")
+foreach(_line ${FILES})
+   set(_contents "${_contents}${_line}\n")
+endforeach()
+file(WRITE "${PROJECT_BINARY_DIR}/embedded_files.txt" "${_contents}")
+set(_contents "")
+foreach(_line ${EMBEDDED_PATHS})
+   set(_contents "${_contents}${_line}\n")
+endforeach()
+file(WRITE "${PROJECT_BINARY_DIR}/embedded_paths.txt" "${_contents}")
 
-
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb")
-list(APPEND EMBEDDED_PATHS "measure_manager.rb")
-
-list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager_server.rb")
-list(APPEND EMBEDDED_PATHS "measure_manager_server.rb")
+list(LENGTH FILES nFoundToEmbed)
+message("Total files to embed: ${nFoundToEmbed} files")
 
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT)
 
@@ -203,7 +107,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
-  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
           "${SWIG_EXECUTABLE}"
           "-ruby"
           "-c++"
@@ -261,7 +165,7 @@ target_link_libraries(rubyengine
   openstudiolib
   rubybindings
   rubyinterpreter
-  CONAN_PKG::fmt
+  fmt::fmt
   ${ruby_extension_libs}
   ${ALL_RUBY_BINDING_TARGETS}
 )
@@ -291,7 +195,7 @@ if(BUILD_TESTING)
   set(rubyengine_test_depends
     openstudio_scriptengine
     openstudiolib
-    CONAN_PKG::fmt
+    fmt::fmt
   )
 
   set(rubyengine_test_src

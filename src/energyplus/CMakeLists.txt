@@ -925,7 +925,7 @@ if(BUILD_BENCHMARK)
     message("bench_name=${bench_name}")
     add_executable( ${bench_name} ${bench_file} )
     target_link_libraries(${bench_name}
-      CONAN_PKG::benchmark
+      benchmark::benchmark_main
       openstudiolib
     )
     set_target_properties(${bench_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/benchmark")

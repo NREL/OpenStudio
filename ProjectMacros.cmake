@@ -28,7 +28,7 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     set(ALL_DEPENDENCIES ${DEPENDENCIES})
 
     target_link_libraries(${BASE_NAME}_tests
-      CONAN_PKG::gtest
+      gtest::gtest
       ${ALL_DEPENDENCIES}
     )
 
@@ -225,7 +225,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(BUILD_RUBY_BINDINGS)
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER}"
-      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
               "${SWIG_EXECUTABLE}"
               "-ruby" "-c++" "-fvirtual" "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
               -module "${MODULE}" -initname "${LOWER_NAME}"
@@ -280,8 +280,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
     set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
     target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
-    target_include_directories(${swig_target} SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
-    target_compile_definitions(${swig_target} PRIVATE SHARED_OS_LIBS)
+    target_include_directories(${swig_target} SYSTEM PRIVATE ${Ruby_INCLUDE_DIRS})
+    target_compile_definitions(${swig_target} PRIVATE SHARED_OS_LIBS PUBLIC -DRUBY_DONT_SUBST)
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
@@ -332,7 +332,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}" "${PYTHON_GENERATED_SRC}"
-      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
               "${SWIG_EXECUTABLE}"
               "-python" ${SWIG_PYTHON_3_FLAGS} "-c++" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
@@ -609,7 +609,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OUTPUT ${SWIG_WRAPPER_FULL_PATH}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
-      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
               "${SWIG_EXECUTABLE}"
               "-csharp" "-c++" -namespace ${NAMESPACE} ${CSHARP_AUTODOC}
               -outdir "${CSHARP_GENERATED_SRC_DIR}"  "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
@@ -703,7 +703,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OUTPUT ${SWIG_WRAPPER}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${JAVA_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${JAVA_GENERATED_SRC_DIR}"
-      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
               "${SWIG_EXECUTABLE}"
               "-java" "-c++"
               -package ${NAMESPACE}
@@ -829,7 +829,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     add_custom_command(
       OUTPUT ${SWIG_WRAPPER}
-      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
               "${SWIG_EXECUTABLE}"
               "-javascript" ${SWIG_ENGINE} "-c++"
               #-namespace ${NAMESPACE}

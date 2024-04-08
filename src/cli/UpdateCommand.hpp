@@ -22,6 +22,9 @@ namespace cli {
 
   void executeGemListCommand(ScriptEngineInstance& rubyEngine);
 
+  void executeRubyRepl(ScriptEngineInstance& rubyEngine);
+  void executePythonRepl(ScriptEngineInstance& pythonEngine);
+
 }  // namespace cli
 }  // namespace openstudio
 

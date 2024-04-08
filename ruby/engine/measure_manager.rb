@@ -264,7 +264,7 @@ class MeasureManager
       readme_out_path = File.join(measure_dir, "README.md")
 
       readme_out_of_date = false
-      if File.exists?(readme_in_path) && !File.exists?(readme_out_path)
+      if File.exist?(readme_in_path) && !File.exist?(readme_out_path)
         readme_out_of_date = true
       end
 
@@ -285,11 +285,11 @@ class MeasureManager
         info.update(result)
 
         # update README.md.erb
-        if File.exists?(readme_in_path)
+        if File.exist?(readme_in_path)
 
           begin
             # delete README.md if it exists
-            File.delete(readme_out_path) if File.exists?(readme_out_path)
+            File.delete(readme_out_path) if File.exist?(readme_out_path)
 
             readme_in = nil
             File.open(readme_in_path, 'r') do |file|

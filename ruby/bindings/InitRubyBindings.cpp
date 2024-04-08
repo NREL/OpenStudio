@@ -19,7 +19,7 @@
 // <conan_fmt>/include/fmt/core.h:405:7: error: expected unqualified-id
 // using int128_t = __int128_t;
 //       ^
-// <conan_openstudio_ruby>include/ruby-2.7.0/arm64-darwin21/ruby/config.h:202:18: note: expanded from macro 'int128_t'
+// <conan_openstudio_ruby>include/ruby-3.2.0/arm64-darwin21/ruby/config.h:202:18: note: expanded from macro 'int128_t'
 // #define int128_t __int128
 
 // #include <ranges>
@@ -492,120 +492,6 @@ if original_arch
   RbConfig::CONFIG['arch'] = original_arch
 end
 
-module Gem
-class Specification < BasicSpecification
-
-  # This isn't ideal but there really is no available method to add specs for our use case.
-  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs
-  def self.add_spec spec
-    warn "Gem::Specification.add_spec is deprecated and will be removed in RubyGems 3.0" unless Gem::Deprecate.skip
-    # TODO: find all extraneous adds
-    # puts
-    # p :add_spec => [spec.full_name, caller.reject { |s| s =~ /minitest/ }]
-
-    # TODO: flush the rest of the crap from the tests
-    # raise "no dupes #{spec.full_name} in #{all_names.inspect}" if
-    #   _all.include? spec
-
-    raise "nil spec!" unless spec # TODO: remove once we're happy with tests
-
-    return if _all.include? spec
-
-    _all << spec
-    stubs << spec
-    (@@stubs_by_name[spec.name] ||= []) << spec
-    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
-    _resort!(_all)
-    _resort!(stubs)
-  end
-
-  def gem_dir
-    embedded = false
-    tmp_loaded_from = loaded_from.clone
-    if tmp_loaded_from.chars.first == ':'
-      tmp_loaded_from[0] = ''
-      embedded = true
-    end
-
-    joined = File.join(gems_dir, full_name)
-    if embedded
-      test = /bundler\/gems/.match(tmp_loaded_from)
-      if test
-        @gem_dir = ':' + (File.dirname tmp_loaded_from)
-      else
-        @gem_dir = joined
-      end
-    else
-      @gem_dir = File.expand_path joined
-    end
-  end
-
-  def full_gem_path
-    # TODO: This is a heavily used method by gems, so we'll need
-    # to aleast just alias it to #gem_dir rather than remove it.
-    embedded = false
-    tmp_loaded_from = loaded_from.clone
-    if tmp_loaded_from.chars.first == ':'
-      tmp_loaded_from[0] = ''
-      embedded = true
-    end
-
-    joined = File.join(gems_dir, full_name)
-    if embedded
-      test = /bundler\/gems/.match(tmp_loaded_from)
-      if test
-        @full_gem_path = ':' + (File.dirname tmp_loaded_from)
-        @full_gem_path.untaint
-        return @full_gem_path
-      else
-        @full_gem_path = joined
-        @full_gem_path.untaint
-        return @full_gem_path
-      end
-    else
-      @full_gem_path = File.expand_path joined
-      @full_gem_path.untaint
-    end
-    return @full_gem_path if File.directory? @full_gem_path
-
-    @full_gem_path = File.expand_path File.join(gems_dir, original_name)
-  end
-
-  def gems_dir
-    # TODO: this logic seems terribly broken, but tests fail if just base_dir
-    @gems_dir = File.join(loaded_from && base_dir || Gem.dir, "gems")
-  end
-
-  def base_dir
-    return Gem.dir unless loaded_from
-
-    embedded = false
-    tmp_loaded_from = loaded_from.clone
-    if tmp_loaded_from.chars.first == ':'
-      tmp_loaded_from[0] = ''
-      embedded = true
-    end
-
-    test = /bundler\/gems/.match(tmp_loaded_from)
-    result = if (default_gem? || test) then
-        File.dirname File.dirname File.dirname tmp_loaded_from
-      else
-        File.dirname File.dirname tmp_loaded_from
-      end
-
-    if embedded
-      result = ':' + result
-    end
-    @base_dir = result
-  end
-
-end
-end
-
-# have to do some forward declaration and pre-require to get around autoload cycles
-#module Bundler
-#end
-
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
   def self.start_session(binding)
@@ -707,11 +593,21 @@ void setGemPathDir(const std::vector<openstudio::path>& gemPathDirs) {
 }
 
 void locateEmbeddedGems(bool use_bundler) {
+  // It is important to find, eval, and call add_spec for all of the gemspecs
+  // that are in the embedded file system. The rubgems find/load mechanims will
+  // attempt to use a number of Ruby file, directory, and path operations that
+  // are not compaitable with the embdded file system. By doing the find, eval,
+  // add_spec routine up front, rubygems will avoid trying to load things off of
+  // the embedded file system itself.
+  //
+  // A previous version of this routine added embedded file paths to the gem
+  // path, such as Gem.paths.path << ':/ruby/3.2.0/gems/'. This is not
+  // sustainable because it requires shims for many of the Ruby file operations
+  // so that they work with embedded files. The solution here avoids File
+  // operations on embdded file system with the exception of our own
+  // EmbeddedScripting::getFileAsString
 
   std::string initCmd = R"ruby(
-
-  Gem.paths.path << ':/ruby/2.7.0/gems/'
-  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -723,6 +619,15 @@ void locateEmbeddedGems(bool use_bundler) {
         begin
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
+
+          # These require io-console, which we don't have on Windows
+	  if Gem.win_platform?
+              next if s.name == 'reline'
+              next if s.name == 'debug'
+              next if s.name == 'irb'
+              next if s.name == 'readline'
+	  end
+
           s.loaded_from = f
           # This is shenanigans because otherwise rubygems will think extensions are missing
           # But we are initing them manually so they are not missing
@@ -782,7 +687,7 @@ void locateEmbeddedGems(bool use_bundler) {
       if original_embedded_gems[spec.name]
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+          if File.exist?(File.join(lp, spec.name)) || File.exist?(File.join(lp, spec.name + '.rb')) || File.exist?(File.join(lp, spec.name + '.so'))
             $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
             do_activate = false
             break
@@ -941,7 +846,7 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
     setRubyEnvVarPath("BUNDLE_PATH", bundleGemDirPath);
   } else if (use_bundler) {
     // bundle was requested but bundle_path was not provided
-    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/2.7.0/'" << std::endl;
+    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/3.2.0/'" << std::endl;
   }
 
   if (!bundleWithoutGroups.empty()) {
