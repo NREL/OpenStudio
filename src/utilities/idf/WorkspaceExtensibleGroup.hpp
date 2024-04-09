@@ -42,12 +42,6 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
    *  if possible. */
   std::vector<unsigned> getSourceFieldIndices(const Handle& targetHandle) const;
 
-  /** Like getString except for reference fields getString will return the
-   *  name of the referenced object. This method, getField, will always return the string value
-   *  of the field.
-   */
-  boost::optional<std::string> getField(unsigned index) const;
-
   //@}
   /** @name Setters */
   //@{

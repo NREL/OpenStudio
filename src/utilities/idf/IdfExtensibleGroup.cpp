@@ -22,6 +22,17 @@ StringVector IdfExtensibleGroup::fields(bool returnDefault) const {
   return result;
 }
 
+StringVector IdfExtensibleGroup::fieldsWithHandles(bool returnDefault) const {
+  StringVector result;
+  const unsigned n = numFields();
+  result.reserve(n);
+  for (unsigned i = 0; i < n; ++i) {
+    OptionalString str = getField(i, returnDefault);
+    result.push_back(str.get_value_or(""));
+  }
+  return result;
+}
+
 StringVector IdfExtensibleGroup::fieldComments(bool returnDefault) const {
   StringVector result;
   for (unsigned i = 0, n = numFields(); i < n; ++i) {
@@ -55,6 +66,13 @@ OptionalString IdfExtensibleGroup::getString(unsigned fieldIndex, bool returnDef
     return boost::none;
   }
   return m_impl->getString(mf_toIndex(fieldIndex), returnDefault);
+}
+
+boost::optional<std::string> IdfExtensibleGroup::getField(unsigned index, bool returnDefault) const {
+  if (!isValid(index)) {
+    return boost::none;
+  }
+  return m_impl->getField(mf_toIndex(index), returnDefault);
 }
 
 OptionalDouble IdfExtensibleGroup::getDouble(unsigned fieldIndex, bool returnDefault) const {
@@ -169,7 +187,7 @@ IdfExtensibleGroup IdfExtensibleGroup::pushClone() const {
     return {p, 0};
   }
 
-  StringVector values = fields();
+  StringVector values = fieldsWithHandles();
   OS_ASSERT(values.size() == numFields());
   return m_impl->pushExtensibleGroup(values);
 }
@@ -180,7 +198,7 @@ IdfExtensibleGroup IdfExtensibleGroup::insertClone(unsigned groupIndex) const {
     return {p, 0};
   }
 
-  StringVector values = fields();
+  StringVector values = fieldsWithHandles();
   OS_ASSERT(values.size() == numFields());
   return m_impl->insertExtensibleGroup(groupIndex, values);
 }
