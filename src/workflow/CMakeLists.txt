@@ -36,6 +36,7 @@ if(BUILD_TESTING)
 
   set(openstudio_workflow_test_src
     test/Util_GTest.cpp
+    test/RunPreProcessMonthlyReports_GTest.cpp
   )
 
   CREATE_TEST_TARGETS(openstudio_workflow "${openstudio_workflow_test_src}" "${openstudio_workflow_test_depends}")
