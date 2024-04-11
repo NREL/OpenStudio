@@ -20,6 +20,7 @@ __**OpenStudio SDK 3.8.0**__
 - Command Line Interface (CLI)
 - Radiance
 - Ruby API
+- Python API
 - C++ SDK
 
 **Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is not included in either the SDK or the OpenStudio Coalition's Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
@@ -49,9 +50,8 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 
 ## Installation Steps
 
-- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
-- Setup a Building Component Library (BCL) account to access online building components and measures. View instructions on how to setup your account and configure the key in OpenStudio.
-- The OpenStudio Application SketchUp Plug-in requires SketchUp 2021-2022 (not available for Linux). The OpenStudio Application SketchUp Plug-in does not support older versions of SketchUp. SketchUp must be installed before OpenStudio Application to automatically activate the plugin. If you install SketchUp after OpenStudio Application, simply re-run the OpenStudio Application installer.
+- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or any third party tool that embedds the OpenStudio SDK into their software such as [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
+- A BCL AUth Key is no longer needed to acccess content on [Building Component Library (BCL)](https://bcl.nrel.gov) BCL is typically accssed through third party OpenStudio applicaitons to provide modelers access to buiding components and OpenStudio measures; however you an also browse it and download content using the BCL link above.
 
 For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
 
@@ -77,7 +77,21 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 For a list of deprecated and removed methods, please refer to [deprecated_methods.csv](../../ruby/deprecated_methods.csv)
 
-* [#TDB]() - Update to EnergyPlus 24.1.0
+* [#5094](https://github.com/NREL/OpenStudio/pull/5094) - Update to EnergyPlus 24.1.0
+
+* [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependancies including Conan, and significant work the continuuse integration (CI) system.
+
+* [#TBD]() Performance Improvments to OpenStudio logging.
+
+* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openSudio-standards Gem or in OpenStuido CC++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStuido 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
+
+* [#TBD]() Update to version 0.6.0 of the openstudio_standards Gem. In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
+
+* [#TBD]() Enhancments to the Building Component Library (BCL)
+    * Support for OpenStudio Python Measures
+    * Updating Measure Details page to inlcude measure language
+    * Direct link to GitHub Repo from Measure Details page
+    * Access to prior verions of a measure from teh Measure Details page
 
 * [#5099](https://github.com/NREL/OpenStudio/pull/5099) - HeatExchangerAirToAirSensibleAndLatent changes for effectiveness
     * To conform to E+ 24.1.0, where "Sensible/Latent Effectiveness at 75% Heating/Cooling" numeric fields have been replaced with a curve, the numeric getters / setters are now deprecated in favor of the new curves getters / setters: `sensibleEffectivenessofHeatingAirFlowCurve`, `latentEffectivenessofHeatingAirFlowCurve`, `sensibleEffectivenessofCoolingAirFlowCurve`, `latentEffectivenessofCoolingAirFlowCurve`
