@@ -235,10 +235,10 @@ namespace measure {
     static Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
 
     /** Call this method to retrieve the values of all workflow steps for a given measure name. */
-    Json::Value getPastStepValuesForMeasure(const std::string& measure_name) const;
+    Json::Value getPastStepValuesForMeasure(const std::string& measureName) const;
 
-    /** Call this method to retrieve the values of all workflow steps for a given step name. */
-    Json::Value getPastStepValuesForName(const std::string& step_name) const;
+    /** Call this method to retrieve the values of all workflow steps for a given step value name. */
+    Json::Value getPastStepValuesForName(const std::string& stepName) const;
 
     //@}
 
