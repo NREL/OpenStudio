@@ -237,87 +237,151 @@ TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
 
   std::vector<WorkflowStep> workflow_steps;
 
-  MeasureStep step1("Step1");
-  step1.setArgument("Argument1", 100);
-  step1.setArgument("Argument2", 200);
-  workflow_steps.push_back(step1);
-  WorkflowStepResult workflow_step_result1;
-  EXPECT_FALSE(workflow_step_result1.measureName());
-  workflow_step_result1.setMeasureName("MeasureName1");
-  ASSERT_TRUE(workflow_step_result1.measureName());
-  EXPECT_EQ("MeasureName1", workflow_step_result1.measureName().get());
-  WorkflowStepValue stepValue1("StepValue1", true);
-  workflow_step_result1.addStepValue(stepValue1);
-  WorkflowStepValue stepValue2("StepValue2", 5);
-  workflow_step_result1.addStepValue(stepValue2);
+  {
+    MeasureStep step1("MeasureName1");
+    workflow_steps.push_back(step1);
 
-  MeasureStep step2("Step2");
-  step2.setArgument("Argument3", 300);
-  step2.setArgument("Argument4", 400);
-  workflow_steps.push_back(step2);
-  WorkflowStepResult workflow_step_result2;
-  EXPECT_FALSE(workflow_step_result2.measureName());
-  workflow_step_result2.setMeasureName("MeasureName2");
-  ASSERT_TRUE(workflow_step_result2.measureName());
-  EXPECT_EQ("MeasureName2", workflow_step_result2.measureName().get());
-  WorkflowStepValue stepValue3("StepValue3", 342.3);
-  workflow_step_result2.addStepValue(stepValue3);
-  EXPECT_EQ(342.3, stepValue3.valueAsDouble());
-  WorkflowStepValue stepValue4("StepValue4", false);
-  workflow_step_result2.addStepValue(stepValue4);
-  EXPECT_FALSE(stepValue4.valueAsBoolean());
-  EXPECT_EQ(2, workflow_step_result2.stepValues().size());
+    step1.setArgument("Argument1", 100);
+    step1.setArgument("Argument2", 200);
+    EXPECT_EQ("MeasureName1", step1.measureDirName());
+    EXPECT_FALSE(step1.name());
+
+    {
+      WorkflowStepResult workflow_step_result1;
+      EXPECT_FALSE(workflow_step_result1.measureName());
+      workflow_step_result1.setMeasureName("measure_name_1");
+      ASSERT_TRUE(workflow_step_result1.measureName());
+      EXPECT_EQ("measure_name_1", workflow_step_result1.measureName().get());
+
+      const WorkflowStepValue stepValue1("StepValue1", true);
+      workflow_step_result1.addStepValue(stepValue1);
+
+      const WorkflowStepValue stepValue2("StepValue2", 5);
+      workflow_step_result1.addStepValue(stepValue2);
+
+      // Setting a Skip + (Completed At so it shows in the JSON)
+      workflow_step_result1.setStepResult(StepResult::Skip);
+      workflow_step_result1.setCompletedAt(DateTime::nowUTC());
+      step1.setResult(workflow_step_result1);
+    }
+  }
+
+  {
+    MeasureStep step2("MeasureName2");
+    workflow_steps.push_back(step2);
+
+    step2.setArgument("Argument3", 300);
+    step2.setArgument("Argument4", 400);
+
+    EXPECT_TRUE(step2.setName("My Step 2"));
+    EXPECT_EQ("MeasureName2", step2.measureDirName());
+    EXPECT_TRUE(step2.name());
+    EXPECT_EQ("My Step 2", step2.name().get());
+
+    {
+      WorkflowStepResult workflow_step_result2;
+      EXPECT_FALSE(workflow_step_result2.measureName());
+
+      workflow_step_result2.setMeasureName("measure_name_2");
+      ASSERT_TRUE(workflow_step_result2.measureName());
+      EXPECT_EQ("measure_name_2", workflow_step_result2.measureName().get());
+
+      const WorkflowStepValue stepValue3("StepValue3", 342.3);
+      workflow_step_result2.addStepValue(stepValue3);
+      EXPECT_EQ(342.3, stepValue3.valueAsDouble());
+
+      const WorkflowStepValue stepValue4("StepValue4", false);
+      workflow_step_result2.addStepValue(stepValue4);
+      EXPECT_FALSE(stepValue4.valueAsBoolean());
+
+      EXPECT_EQ(2, workflow_step_result2.stepValues().size());
+
+      // Step Result + (Completed At so it shows in the JSON)
+      workflow_step_result2.setStepResult(StepResult::Success);
+      workflow_step_result2.setCompletedAt(DateTime::nowUTC());
+      step2.setResult(workflow_step_result2);
+
+      {
+        ASSERT_TRUE(step2.result());
+        const WorkflowStepResult stepResult2_copy = step2.result().get();
+        ASSERT_TRUE(stepResult2_copy.stepResult());
+        EXPECT_EQ(workflow_step_result2.string(), stepResult2_copy.string());
+        ASSERT_TRUE(workflow_step_result2.stepResult());
+        EXPECT_EQ(StepResult::Success, workflow_step_result2.stepResult().get());
+      }
+    }
+  }
+
   EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
   EXPECT_EQ(2, workflow.workflowSteps().size());
   EXPECT_EQ(workflow.string(), runner.workflow().string());
-  workflow_step_result2.setStepResult(StepResult::Success);
-  step2.setResult(workflow_step_result2);
-  ASSERT_TRUE(step2.result());
-  WorkflowStepResult workflow_step_result2_ = step2.result().get();
-  ASSERT_TRUE(workflow_step_result2_.stepResult());
-  EXPECT_EQ(workflow_step_result2.string(), workflow_step_result2_.string());
-  ASSERT_TRUE(workflow_step_result2.stepResult());
-  EXPECT_EQ(StepResult::Success, workflow_step_result2.stepResult().get());
 
-  Json::Value stepValues;
+  workflow.saveAs(scratchDir / "OSRunner_getPastStepValues_2steps.osw");
 
-  stepValues = runner.getPastStepValuesForMeasure("MeasureName1");
-  EXPECT_EQ(0, stepValues.size());  // did not set step result
+  {
+    const Json::Value stepValues = runner.getPastStepValuesForMeasure("MeasureName1");
+    EXPECT_EQ(0, stepValues.size());  // did not set step result as Success
+  }
 
-  stepValues = runner.getPastStepValuesForMeasure("MeasureName2");
-  EXPECT_EQ(2, stepValues.size());
+  {
+    const Json::Value stepValues = runner.getPastStepValuesForMeasure("measure_name_1");
+    EXPECT_EQ(0, stepValues.size());  // did not set step result as Success
+  }
 
-  EXPECT_TRUE(stepValues["Argument3"].isNull());
-  EXPECT_TRUE(stepValues["Argument4"].isNull());
-  EXPECT_TRUE(stepValues["StepValue1"].isNull());
-  EXPECT_TRUE(stepValues["StepValue2"].isNull());
-  EXPECT_FALSE(stepValues["StepValue3"].isNull());
-  EXPECT_EQ(342.3, stepValues["StepValue3"].asDouble());
-  EXPECT_FALSE(stepValues["StepValue4"].isNull());
-  EXPECT_FALSE(stepValues["StepValue4"].asBool());
+  {
+    // possible keys:                      measureDirName, name       , StepResult's measureName
+    for (const std::string possible_key : {"MeasureName2", "My Step 2", "measure_name_2"}) {
+      Json::Value stepValues = runner.getPastStepValuesForMeasure(possible_key);
+      EXPECT_EQ(2, stepValues.size());
 
-  MeasureStep step3("Step3");
-  workflow_steps.push_back(step3);
-  WorkflowStepResult workflow_step_result3;
-  workflow_step_result3.setMeasureName("MeasureName3");
-  workflow_step_result3.setStepResult(StepResult::Success);
-  step3.setResult(workflow_step_result3);
-  WorkflowStepValue stepValue5("StepValue3", 20);
-  workflow_step_result3.addStepValue(stepValue5);
-  EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
-  EXPECT_EQ(3, workflow.workflowSteps().size());
+      EXPECT_TRUE(stepValues["Argument3"].isNull());
+      EXPECT_TRUE(stepValues["Argument4"].isNull());
+      EXPECT_TRUE(stepValues["StepValue1"].isNull());
+      EXPECT_TRUE(stepValues["StepValue2"].isNull());
+      EXPECT_FALSE(stepValues["StepValue3"].isNull());
+      EXPECT_EQ(342.3, stepValues["StepValue3"].asDouble());
+      EXPECT_FALSE(stepValues["StepValue4"].isNull());
+      EXPECT_FALSE(stepValues["StepValue4"].asBool());
+    }
+  }
 
-  stepValues = runner.getPastStepValuesForName("StepValue1");
-  EXPECT_EQ(0, stepValues.size());  // did not set step result
+  {
+    MeasureStep step3("MeasureName3");
+    workflow_steps.push_back(step3);
+    WorkflowStepResult workflow_step_result3;
+    workflow_step_result3.setMeasureName("measure_name_3");
+    workflow_step_result3.setStepResult(StepResult::Success);
+    workflow_step_result3.setCompletedAt(DateTime::nowUTC());
 
-  stepValues = runner.getPastStepValuesForName("StepValue3");
-  EXPECT_EQ(2, stepValues.size());
+    step3.setResult(workflow_step_result3);
+    const WorkflowStepValue stepValue5("StepValue3", 20);
+    workflow_step_result3.addStepValue(stepValue5);
+    EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
+    EXPECT_EQ(3, workflow.workflowSteps().size());
+  }
 
-  EXPECT_TRUE(stepValues["Step1"].isNull());
-  EXPECT_TRUE(stepValues["Step2"].isNull());
-  EXPECT_TRUE(stepValues["MeasureName1"].isNull());
-  EXPECT_FALSE(stepValues["MeasureName2"].isNull());
-  EXPECT_FALSE(stepValues["MeasureName3"].isNull());
-  EXPECT_EQ(342.3, stepValues["MeasureName2"].asDouble());
-  EXPECT_EQ(20, stepValues["MeasureName3"].asInt());
+  workflow.saveAs(scratchDir / "OSRunner_getPastStepValues_3steps.osw");
+
+  {
+    const Json::Value stepValues = runner.getPastStepValuesForName("StepValue1");
+    EXPECT_EQ(0, stepValues.size());  // did not set step result
+  }
+
+  {
+    Json::Value stepValues = runner.getPastStepValuesForName("StepValue3");
+    EXPECT_EQ(2, stepValues.size());
+
+    EXPECT_TRUE(stepValues["MeasureName1"].isNull());
+    EXPECT_TRUE(stepValues["measure_name_1"].isNull());
+
+    // We prefer the step name rather than measureDirName if available
+    EXPECT_TRUE(stepValues["MeasureName2"].isNull());
+    EXPECT_TRUE(stepValues["measure_name_2"].isNull());
+    EXPECT_FALSE(stepValues["My Step 2"].isNull());
+    EXPECT_EQ(342.3, stepValues["My Step 2"].asDouble());
+
+    EXPECT_TRUE(stepValues["measure_name_3"].isNull());
+    EXPECT_FALSE(stepValues["MeasureName3"].isNull());
+    EXPECT_EQ(20, stepValues["MeasureName3"].asInt());
+  }
 }

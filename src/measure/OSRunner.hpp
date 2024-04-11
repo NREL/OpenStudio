@@ -234,7 +234,8 @@ namespace measure {
     /** Call this method to retrieve the values of OSArguments of all types. */
     static Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
 
-    /** Call this method to retrieve the values of all workflow steps for a given measure name. */
+    /** Call this method to retrieve the values of all workflow steps for a given measure name.
+     *  measureName can be: the WorkflowStep's measureDirName or name, or the WorkflowStepResult's measureName */
     Json::Value getPastStepValuesForMeasure(const std::string& measureName) const;
 
     /** Call this method to retrieve the values of all workflow steps for a given step value name. */

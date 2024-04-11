@@ -8,14 +8,15 @@
 #include "OSArgument.hpp"
 #include "OSMeasure.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/math/FloatCompare.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
-#include "../utilities/core/StringHelpers.hpp"
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/PathHelpers.hpp"
 
 #include <fmt/format.h>
 #include <cstdio>
@@ -800,15 +801,21 @@ namespace measure {
   }
 
   Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measureName) const {
-    Json::Value step_values;
-    for (const WorkflowStep& step : m_workflow.workflowSteps()) {
+    Json::Value step_values(Json::objectValue);
+    for (const MeasureStep& step : subsetCastVector<MeasureStep>(m_workflow.workflowSteps())) {
       boost::optional<WorkflowStepResult> stepResult_ = step.result();
-      if (!stepResult_ || stepResult_->value() != StepResult::Success) {
+      if (!stepResult_ || !stepResult_->stepResult() || stepResult_->stepResult().get() != StepResult::Success) {
         continue;
       }
-
-      boost::optional<std::string> measure_name_ = stepResult_->measureName();  // TODO: it could be empty!
-      if (!istringEqual(measureName, measure_name_.get())) {
+      // TODO: should we match on any of these three?
+      if (istringEqual(measureName, step.measureDirName())) {  // The directory name, eg `IncreaseWallRValue`
+        LOG(Trace, "Step matches on measureDirName");
+      } else if (auto s_ = step.name(); istringEqual(measureName, *s_)) {  // An optional, abritrary one
+        LOG(Trace, "Step matches on name");
+      } else if (auto s_ = stepResult_->measureName();
+                 istringEqual(measureName, *s_)) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
+        LOG(Trace, "Step matches on Step Result's measureName");
+      } else {
         continue;
       }
 
@@ -818,23 +825,34 @@ namespace measure {
           step_values[step_value.name()] = value;
         }
       }
+      break;
     }
     return step_values;
   }
 
   Json::Value OSRunner::getPastStepValuesForName(const std::string& stepName) const {
-    Json::Value step_values;
-    for (const WorkflowStep& step : m_workflow.workflowSteps()) {
+    // This function aims to replace OsLib_HelperMethods.check_upstream_measure_for_arg
+    Json::Value step_values(Json::objectValue);
+    for (const MeasureStep& step : subsetCastVector<MeasureStep>(m_workflow.workflowSteps())) {
       boost::optional<WorkflowStepResult> stepResult_ = step.result();
-      if (!stepResult_ || stepResult_->value() != StepResult::Success) {
+      if (!stepResult_ || !stepResult_->stepResult() || stepResult_->stepResult().get() != StepResult::Success) {
         continue;
       }
-      boost::optional<std::string> measure_name_ = stepResult_->measureName();  // TODO: it could be empty!
+
+      std::string measure_name = step.measureDirName();  // The directory name, eg `IncreaseWallRValue`
+      if (auto s_ = step.name()) {                       // An optional, abritrary one
+        measure_name = std::move(*s_);
+      }
+      // if (auto s_ = stepResult_->measureName()) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
+      //   measure_name = std::move(*s_);
+      // }
+
       for (const WorkflowStepValue& stepValue : stepResult_->stepValues()) {
         if (istringEqual(stepName, stepValue.name())) {
           Json::Value root = stepValue.toJSON();
           if (auto value = root["value"]) {
-            step_values[*measure_name_] = value;
+            step_values[measure_name] = value;
+            // TODO: check_upstream_measure_for_arg was breaking early, and returning a {:value => value, :measure_name => measure_name} format
           }
         }
       }
