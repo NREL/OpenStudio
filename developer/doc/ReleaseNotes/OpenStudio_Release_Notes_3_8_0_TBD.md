@@ -37,7 +37,7 @@ __**OpenStudio SDK 3.8.0**__
 OpenStudio SDK 3.8.0 is supported on:
 
 * 64-bit Windows 7 – 11
-* macOS: 10.15+ x86_64, 12.1+ arm64
+* macOS: 11.6+ x86_64, 12.1+ arm64
 * Ubuntu: 20.04 x86_64, 22.04 x86_64, 22.04 arm64
 * Centos7
 
