@@ -50,8 +50,8 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 
 ## Installation Steps
 
-- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or any third party tool that embedds the OpenStudio SDK into their software such as [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
-- A BCL AUth Key is no longer needed to acccess content on [Building Component Library (BCL)](https://bcl.nrel.gov) BCL is typically accssed through third party OpenStudio applicaitons to provide modelers access to buiding components and OpenStudio measures; however you an also browse it and download content using the BCL link above.
+- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or any third party tool that embeds the OpenStudio SDK into their software such as [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
+- A BCL AUth Key is no longer needed to access content on [Building Component Library (BCL)](https://bcl.nrel.gov) BCL is typically accessed through third party OpenStudio applications to provide modelers access to building components and OpenStudio measures; however you an also browse it and download content using the BCL link above.
 
 For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
 
@@ -79,19 +79,19 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
 
 * [#5094](https://github.com/NREL/OpenStudio/pull/5094) - Update to EnergyPlus 24.1.0
 
-* [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependancies including Conan, and significant work the continuuse integration (CI) system.
+* [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependencies including Conan, and significant work the continues integration (CI) system.
 
-* [#TBD]() Performance Improvments to OpenStudio logging.
+* [#TBD]() Performance Improvements to OpenStudio logging. 
 
-* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openSudio-standards Gem or in OpenStuido CC++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStuido 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
+* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openstudio-standards Gem or in OpenStudio CC++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
 
 * [#TBD]() Update to version 0.6.0 of the openstudio_standards Gem. In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
 
-* [#TBD]() Enhancments to the Building Component Library (BCL)
+* [#TBD]() Enhancements to the Building Component Library (BCL)
     * Support for OpenStudio Python Measures
-    * Updating Measure Details page to inlcude measure language
-    * Direct link to GitHub Repo from Measure Details page
-    * Access to prior verions of a measure from teh Measure Details page
+    * Updating Measure Details page to include measure language
+    * Link to GitHub Repo from Measure Details page
+    * Access to prior versions of a measure from the Measure Details page
 
 * [#5099](https://github.com/NREL/OpenStudio/pull/5099) - HeatExchangerAirToAirSensibleAndLatent changes for effectiveness
     * To conform to E+ 24.1.0, where "Sensible/Latent Effectiveness at 75% Heating/Cooling" numeric fields have been replaced with a curve, the numeric getters / setters are now deprecated in favor of the new curves getters / setters: `sensibleEffectivenessofHeatingAirFlowCurve`, `latentEffectivenessofHeatingAirFlowCurve`, `sensibleEffectivenessofCoolingAirFlowCurve`, `latentEffectivenessofCoolingAirFlowCurve`
