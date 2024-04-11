@@ -132,10 +132,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
     }
 
-    // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
-    // std::bad_variant_access which isn't available on mac prior to 10.14
-    // No need to check if get_if succeeds because we checked the type above
-    return *(std::get_if<bool>(&m_value));
+    return std::get<bool>(m_value);
   }
 
   double OSArgument::valueAsDouble() const {
@@ -148,9 +145,9 @@ namespace measure {
 
     double result;
     if (type() == OSArgumentType::Double) {
-      result = *(std::get_if<double>(&m_value));
+      result = std::get<double>(m_value);
     } else {
-      result = *(std::get_if<int>(&m_value));
+      result = std::get<int>(m_value);
       LOG(Warn, "This argument is of type 'Integer' but returning as a Double as requested. You should consider using valueAsInteger instead");
     }
 
@@ -165,7 +162,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
     }
 
-    return *(std::get_if<int>(&m_value));
+    return std::get<int>(m_value);
   }
 
   std::string OSArgument::valueAsString() const {
@@ -184,7 +181,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
     }
 
-    return *(std::get_if<openstudio::path>(&m_value));
+    return std::get<openstudio::path>(m_value);
   }
 
   bool OSArgument::hasDefaultValue() const {
@@ -199,7 +196,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
     }
 
-    return *(std::get_if<bool>(&m_defaultValue));
+    return std::get<bool>(m_defaultValue);
   }
 
   double OSArgument::defaultValueAsDouble() const {
@@ -210,7 +207,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
     }
 
-    return *(std::get_if<double>(&m_defaultValue));
+    return std::get<double>(m_defaultValue);
   }
 
   int OSArgument::defaultValueAsInteger() const {
@@ -221,7 +218,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
     }
 
-    return *(std::get_if<int>(&m_defaultValue));
+    return std::get<int>(m_defaultValue);
   }
 
   std::string OSArgument::defaultValueAsString() const {
@@ -240,7 +237,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
     }
 
-    return *(std::get_if<openstudio::path>(&m_defaultValue));
+    return std::get<openstudio::path>(m_defaultValue);
   }
 
   bool OSArgument::hasDomain() const {
@@ -262,7 +259,7 @@ namespace measure {
     std::vector<bool> result;
 
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<bool>(&value)));
+      result.push_back(std::get<bool>(value));
     }
     return result;
   }
@@ -279,14 +276,14 @@ namespace measure {
 
     if (type() == OSArgumentType::Double) {
       for (const OSArgumentVariant& value : m_domain) {
-        result.push_back(*(std::get_if<double>(&value)));
+        result.push_back(std::get<double>(value));
       }
     } else {
       // It's an int
       LOG(Warn, "This argument is of type 'Integer' but returning Domain as a Double as requested. "
                 "You should consider using domainAsInteger instead");
       for (const OSArgumentVariant& value : m_domain) {
-        result.push_back(*(std::get_if<int>(&value)));
+        result.push_back(std::get<int>(value));
       }
     }
     return result;
@@ -303,7 +300,7 @@ namespace measure {
     std::vector<int> result;
 
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<int>(&value)));
+      result.push_back(std::get<int>(value));
     }
     return result;
   }
@@ -319,7 +316,7 @@ namespace measure {
     std::vector<openstudio::path> result;
 
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<openstudio::path>(&value)));
+      result.push_back(std::get<openstudio::path>(value));
     }
     return result;
   }
