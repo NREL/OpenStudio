@@ -130,7 +130,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   argumentVector.push_back(requiredDoubleArgument);
 
   OSArgument requiredDoubleArgument2 = OSArgument::makeDoubleArgument("required_double2", true);
-  EXPECT_TRUE(requiredDoubleArgument2.setValue(234892384234.39485923845834534));
+  EXPECT_TRUE(requiredDoubleArgument2.setValue(1786.45));
   argumentVector.push_back(requiredDoubleArgument2);
 
   OSArgument optionalDoubleArgument = OSArgument::makeDoubleArgument("optional_double", false);
@@ -154,10 +154,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   OSArgument optionalStringArgument = OSArgument::makeStringArgument("optional_string", false);
   argumentVector.push_back(optionalStringArgument);
 
-  std::vector<std::string> choices;
-  choices.push_back("On");
-  choices.push_back("Off");
-
+  std::vector<std::string> choices{"On", "Off"};
   OSArgument requiredChoiceArgument = OSArgument::makeChoiceArgument("required_choice", choices, true);
   requiredChoiceArgument.setValue("Off");
   argumentVector.push_back(requiredChoiceArgument);
@@ -179,28 +176,32 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
 
   std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
 
-  bool b = runner.getBoolArgumentValue(requiredBoolArgument.name(), argumentMap);
+  // Create an extra argument that is just in the argumentMap and wouldn't be in the original measure argument vector
+  OSArgument extraArgument = OSArgument::makeStringArgument("an_extra_argument_not_expected", false);
+  argumentMap.emplace("an_extra_argument_not_expected", extraArgument);
+
+  const bool b = runner.getBoolArgumentValue(requiredBoolArgument.name(), argumentMap);
   EXPECT_TRUE(b);
 
-  bool b2 = runner.getBoolArgumentValue(requiredBoolArgument2.name(), argumentMap);
+  const bool b2 = runner.getBoolArgumentValue(requiredBoolArgument2.name(), argumentMap);
   EXPECT_FALSE(b2);
 
-  double d = runner.getDoubleArgumentValue(requiredDoubleArgument.name(), argumentMap);
+  const double d = runner.getDoubleArgumentValue(requiredDoubleArgument.name(), argumentMap);
   EXPECT_EQ(1.0, d);
 
-  double d2 = runner.getDoubleArgumentValue(requiredDoubleArgument2.name(), argumentMap);
-  EXPECT_EQ(234892384234.39485923845834534, d2);
+  const double d2 = runner.getDoubleArgumentValue(requiredDoubleArgument2.name(), argumentMap);
+  EXPECT_DOUBLE_EQ(1786.45, d2);
 
-  int i = runner.getIntegerArgumentValue(requiredIntegerArgument.name(), argumentMap);
+  const int i = runner.getIntegerArgumentValue(requiredIntegerArgument.name(), argumentMap);
   EXPECT_EQ(2, i);
 
-  std::string s = runner.getStringArgumentValue(requiredStringArgument.name(), argumentMap);
+  const std::string s = runner.getStringArgumentValue(requiredStringArgument.name(), argumentMap);
   EXPECT_EQ("Value", s);
 
-  std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
+  const std::string c = runner.getStringArgumentValue(requiredChoiceArgument.name(), argumentMap);
   EXPECT_EQ("Off", c);
 
-  boost::optional<openstudio::WorkspaceObject> w = runner.getOptionalWorkspaceObjectChoiceValue(optionalChoiceArgument2.name(), argumentMap, m);
+  const boost::optional<openstudio::WorkspaceObject> w = runner.getOptionalWorkspaceObjectChoiceValue(optionalChoiceArgument2.name(), argumentMap, m);
   EXPECT_TRUE(w);
 
   Json::Value argumentValues = runner.getArgumentValues(argumentVector, argumentMap);
@@ -212,7 +213,7 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   EXPECT_TRUE(argumentValues["optional_bool"].isNull());
 
   EXPECT_EQ(1.0, argumentValues["required_double"].asDouble());
-  EXPECT_EQ(234892384234.39485923845834534, argumentValues["required_double2"].asDouble());
+  EXPECT_DOUBLE_EQ(1786.45, argumentValues["required_double2"].asDouble());
   EXPECT_TRUE(argumentValues["optional_double"].isNull());
   EXPECT_FALSE(argumentValues["optional_double2"].isNull());
   EXPECT_EQ(10.5, argumentValues["optional_double2"].asDouble());
@@ -226,6 +227,8 @@ TEST_F(MeasureFixture, OSRunner_getArgumentValues) {
   EXPECT_EQ("Off", argumentValues["required_choice"].asString());
   EXPECT_TRUE(argumentValues["optional_choice"].isNull());
   EXPECT_EQ(openstudio::toString(boiler2.handle()), argumentValues["optional_choice2"].asString());
+
+  EXPECT_FALSE(argumentValues.isMember("an_extra_argument_not_expected"));
 }
 
 TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
