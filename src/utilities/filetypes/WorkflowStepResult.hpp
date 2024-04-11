@@ -104,6 +104,8 @@ class UTILITIES_API WorkflowStepValue
   /// get value as string
   std::string valueAsString() const;
 
+  Json::Value valueAsJSON() const;
+
   //@}
   /** @name Setters */
   //@{

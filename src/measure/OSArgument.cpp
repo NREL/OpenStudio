@@ -184,6 +184,10 @@ namespace measure {
     return std::get<openstudio::path>(m_value);
   }
 
+  Json::Value OSArgument::valueAsJSON() const {
+    return argumentVariantToJSONValue(m_value);
+  }
+
   bool OSArgument::hasDefaultValue() const {
     return (m_defaultValue.index() != 0);
   }
@@ -238,6 +242,10 @@ namespace measure {
     }
 
     return std::get<openstudio::path>(m_defaultValue);
+  }
+
+  Json::Value OSArgument::defaultValueAsJSON() const {
+    return argumentVariantToJSONValue(m_value);
   }
 
   bool OSArgument::hasDomain() const {
@@ -333,6 +341,19 @@ namespace measure {
       result.push_back(printOSArgumentVariant(value));
     }
     return result;
+  }
+
+  Json::Value OSArgument::domainAsJSON() const {
+    if (!hasDomain()) {
+      return Json::nullValue;
+    }
+
+    Json::Value root(Json::arrayValue);
+    for (const OSArgumentVariant& value : m_domain) {
+      root.append(argumentVariantToJSONValue(value));
+    }
+
+    return root;
   }
 
   std::vector<std::string> OSArgument::choiceValues() const {
@@ -951,6 +972,33 @@ namespace measure {
       argVar);
 
     return ss.str();
+  }
+
+  // helper constant for the visitor below so we static assert we didn't miss a type
+  template <class>
+  inline constexpr bool always_false_v = false;
+
+  Json::Value OSArgument::argumentVariantToJSONValue(const OSArgumentVariant& argVar) {
+    return std::visit(
+      [](auto&& arg) -> Json::Value {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+          return Json::nullValue;
+        } else if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+          return arg;
+        } else if constexpr (std::is_same_v<T, double>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, int>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, std::string>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, openstudio::path>) {
+          return openstudio::toString(arg);
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        }
+      },
+      argVar);
   }
 
   OSArgument::OSArgument() : m_uuid(createUUID()), m_versionUUID(createUUID()) {}

@@ -14,6 +14,10 @@
 #include <optional>
 #include <variant>
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 
 // clang-format off
@@ -66,6 +70,8 @@ class UTILITIES_API Variant
 
   /// get value as string
   std::string valueAsString() const;
+
+  Json::Value valueAsJSON() const;
 
  private:
   REGISTER_LOGGER("openstudio.Variant");

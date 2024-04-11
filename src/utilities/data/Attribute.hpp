@@ -304,6 +304,9 @@ class UTILITIES_API Attribute
   Json::Value toJSON(bool short_version = true) const;
   std::string toJSONString() const;
 
+  // Just the value as a Json::Value
+  Json::Value valueAsJSON() const;
+
  protected:
   UTILITIES_API friend std::ostream& operator<<(std::ostream& os, const Attribute& attribute);
   // TODO: remove from public API or make protected/private

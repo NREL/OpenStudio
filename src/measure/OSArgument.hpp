@@ -187,6 +187,10 @@ OPENSTUDIO_ENUM( OSDomainType,
    *  type() != OSArgumentType::Path. */
     openstudio::path valueAsPath() const;
 
+    /** Returns this argument's value as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one */
+    Json::Value valueAsJSON() const;
+
     /** Returns true if this argument's default value has been set. */
     bool hasDefaultValue() const;
 
@@ -209,6 +213,10 @@ OPENSTUDIO_ENUM( OSDomainType,
     /** Returns this argument's default value as an openstudio::path. Throws if not
    *  hasDefaultValue() or if type() != OSArgumentType::Path. */
     openstudio::path defaultValueAsPath() const;
+
+    /** Returns this argument's default value as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one */
+    Json::Value defaultValueAsJSON() const;
 
     /** Returns true if this argument has a non-null domain. */
     bool hasDomain() const;
@@ -238,6 +246,10 @@ OPENSTUDIO_ENUM( OSDomainType,
     /** Returns the domain as a vector of paths. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Path. */
     std::vector<openstudio::path> domainAsPath() const;
+
+    /** Returns this argument's domain as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one, Json::arrayValue otherwise */
+    Json::Value domainAsJSON() const;
 
     //@}
     /** @name Choice Argument Getters */
@@ -403,6 +415,8 @@ OPENSTUDIO_ENUM( OSDomainType,
     bool setStringInternal(OSArgumentVariant& argVar, const std::string& value);
 
     static std::string printOSArgumentVariant(const OSArgumentVariant& argVar);
+
+    static Json::Value argumentVariantToJSONValue(const OSArgumentVariant& argVar);
 
     // This also OS App related
     void onChange();
