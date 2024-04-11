@@ -400,7 +400,7 @@ OPENSTUDIO_ENUM( OSDomainType,
     // we add std::monostate to allow the variant to be empty basically
     using OSArgumentVariant = std::variant<std::monostate, bool, double, int, std::string, openstudio::path>;
 
-    bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
+    bool setStringInternal(OSArgumentVariant& argVar, const std::string& value);
 
     static std::string printOSArgumentVariant(const OSArgumentVariant& argVar);
 
@@ -414,15 +414,15 @@ OPENSTUDIO_ENUM( OSDomainType,
     boost::optional<std::string> m_description;
     OSArgumentType m_type;
     boost::optional<std::string> m_units;
-    bool m_required;
-    bool m_modelDependent;
+    bool m_required = false;
+    bool m_modelDependent = false;
     OSArgumentVariant m_value;
     OSArgumentVariant m_defaultValue;
     OSDomainType m_domainType;
     std::vector<OSArgumentVariant> m_domain;
     std::vector<std::string> m_choices;
     std::vector<std::string> m_choiceDisplayNames;
-    bool m_isRead;
+    bool m_isRead = false;
     std::string m_extension;
   };
 
