@@ -17,8 +17,6 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
-#include <boost/lexical_cast.hpp>
-
 #include <fmt/format.h>
 #include <cstdio>
 #include <cstdlib>
@@ -788,9 +786,8 @@ namespace measure {
 
   Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
     Json::Value argument_values;
-    std::string name;
     for (const OSArgument& script_argument : script_arguments) {
-      name = script_argument.name();
+      const std::string name = script_argument.name();
       auto it = user_arguments.find(name);
       if (it != user_arguments.end()) {
         Json::Value root = it->second.toJSON();
