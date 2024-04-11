@@ -799,7 +799,7 @@ namespace measure {
     return argument_values;
   }
 
-  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measure_name) {
+  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measure_name) const {
     Json::Value step_values;
     WorkflowJSON workflow_ = workflow();
     std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
@@ -822,7 +822,7 @@ namespace measure {
     return step_values;
   }
 
-  Json::Value OSRunner::getPastStepValuesForName(const std::string& step_name) {
+  Json::Value OSRunner::getPastStepValuesForName(const std::string& step_name) const {
     Json::Value step_values;
     WorkflowJSON workflow_ = workflow();
     std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
