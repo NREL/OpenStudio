@@ -799,45 +799,42 @@ namespace measure {
     return argument_values;
   }
 
-  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measure_name) const {
+  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measureName) const {
     Json::Value step_values;
-    WorkflowJSON workflow_ = workflow();
-    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
-    for (const WorkflowStep& workflow_step : workflow_steps) {
-      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
-        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
-        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
-        if (workflow_step_result_.get().value() == StepResult::Success) {
-          if (istringEqual(measure_name, measure_name_.get())) {
-            for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
-              Json::Value root = workflow_step_value.toJSON();
-              if (auto value = root["value"]) {
-                step_values[workflow_step_value.name()] = value;
-              }
-            }
-          }
+    for (const WorkflowStep& step : m_workflow.workflowSteps()) {
+      boost::optional<WorkflowStepResult> stepResult_ = step.result();
+      if (!stepResult_ || stepResult_->value() != StepResult::Success) {
+        continue;
+      }
+
+      boost::optional<std::string> measure_name_ = stepResult_->measureName();  // TODO: it could be empty!
+      if (!istringEqual(measureName, measure_name_.get())) {
+        continue;
+      }
+
+      for (const WorkflowStepValue& step_value : stepResult_->stepValues()) {
+        Json::Value root = step_value.toJSON();
+        if (auto value = root["value"]) {
+          step_values[step_value.name()] = value;
         }
       }
     }
     return step_values;
   }
 
-  Json::Value OSRunner::getPastStepValuesForName(const std::string& step_name) const {
+  Json::Value OSRunner::getPastStepValuesForName(const std::string& stepName) const {
     Json::Value step_values;
-    WorkflowJSON workflow_ = workflow();
-    std::vector<WorkflowStep> workflow_steps = workflow_.workflowSteps();
-    for (const WorkflowStep& workflow_step : workflow_steps) {
-      if (boost::optional<WorkflowStepResult> workflow_step_result_ = workflow_step.result()) {
-        boost::optional<std::string> measure_name_ = workflow_step_result_.get().measureName();
-        std::vector<WorkflowStepValue> workflow_step_values = workflow_step_result_.get().stepValues();
-        if (workflow_step_result_.get().value() == StepResult::Success) {
-          for (const WorkflowStepValue& workflow_step_value : workflow_step_values) {
-            if (istringEqual(step_name, workflow_step_value.name())) {
-              Json::Value root = workflow_step_value.toJSON();
-              if (auto value = root["value"]) {
-                step_values[measure_name_.get()] = value;
-              }
-            }
+    for (const WorkflowStep& step : m_workflow.workflowSteps()) {
+      boost::optional<WorkflowStepResult> stepResult_ = step.result();
+      if (!stepResult_ || stepResult_->value() != StepResult::Success) {
+        continue;
+      }
+      boost::optional<std::string> measure_name_ = stepResult_->measureName();  // TODO: it could be empty!
+      for (const WorkflowStepValue& stepValue : stepResult_->stepValues()) {
+        if (istringEqual(stepName, stepValue.name())) {
+          Json::Value root = stepValue.toJSON();
+          if (auto value = root["value"]) {
+            step_values[*measure_name_] = value;
           }
         }
       }
