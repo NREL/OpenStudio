@@ -402,7 +402,7 @@ OPENSTUDIO_ENUM( OSDomainType,
 
     bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
 
-    std::string printOSArgumentVariant(const OSArgumentVariant& toPrint) const;
+    static std::string printOSArgumentVariant(const OSArgumentVariant& argVar);
 
     // This also OS App related
     void onChange();
