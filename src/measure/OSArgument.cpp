@@ -934,35 +934,21 @@ namespace measure {
     return os;
   }
 
-  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
-    OS_ASSERT(toPrint.index() != 0);
+  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& argVar) {
+    OS_ASSERT(argVar.index() != 0);
     std::stringstream ss;
 
     // We use std::visit, filtering out the case where it's monostate
     // Aside from monostate, every possible type is streamable
-    //std::visit(
-    //[&ss](const auto& val){
-    ////Needed to properly compare the types
-    //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-    //if constexpr (!std::is_same_v<T, std::monostate>) {
-    //ss << val;
-    //}
-    //},
-    //arg);
-
-    // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
-    // So we don't use it here. Same with std::get, so we use get_if instead
-    if (const auto* p = std::get_if<bool>(&toPrint)) {
-      ss << std::boolalpha << *p;
-    } else if (const auto* p = std::get_if<double>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<int>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<std::string>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<openstudio::path>(&toPrint)) {
-      ss << *p;
-    }
+    std::visit(
+      [&ss](const auto& arg) {
+        // Needed to properly compare the types
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (!std::is_same_v<T, std::monostate>) {
+          ss << arg;
+        }
+      },
+      argVar);
 
     return ss.str();
   }
