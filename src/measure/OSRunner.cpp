@@ -181,14 +181,14 @@ namespace measure {
 
     // get list of new files
     if (m_currentDir) {
-      openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
+      const openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
       if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir)) {
         for (boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter; dir_iter != end_iter; ++dir_iter) {
           if (boost::filesystem::is_regular_file(dir_iter->status())) {
             if (m_currentDirFiles.find(dir_iter->path()) == m_currentDirFiles.end()) {
 
-              openstudio::path path = dir_iter->path();
-              OS_ASSERT(path.is_absolute());
+              const openstudio::path& fPath = dir_iter->path();
+              OS_ASSERT(fPath.is_absolute());
 
               // DLM: we need to figure out what these should be
               // are they absolute, relative to root dir, relative to measure dir, valid after reports have been packed up?
@@ -196,7 +196,7 @@ namespace measure {
               //  path = relativePath(path, absoluteRootDir);
               //} catch (const std::exception&){
               //}
-              m_result.addStepFile(path);
+              m_result.addStepFile(fPath);
             }
           }
         }
@@ -233,7 +233,7 @@ namespace measure {
       LOG(Error, "Step already started");
       return;
     }
-    boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+    const boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
     if (!currentStep) {
       LOG(Error, "Cannot find current Workflow Step");
       return;
@@ -316,7 +316,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, bool value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -327,7 +327,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, double value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -351,7 +351,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, int value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -375,7 +375,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, const std::string& value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -410,7 +410,7 @@ namespace measure {
         }
       } else {
         // script_argument is in user_arguments
-        OSArgument user_argument = it->second;
+        const OSArgument& user_argument = it->second;
 
         // check that names still match
         if (user_argument.name() != script_argument.name()) {
@@ -939,7 +939,7 @@ namespace measure {
     m_languagePreference = "en";
   }
 
-  std::string OSRunner::cleanValueName(const std::string& name) const {
+  std::string OSRunner::cleanValueName(const std::string& name) {
     static const boost::regex allowableCharacters("[^0-9a-zA-Z]");
     static const boost::regex leadingUnderscore("^_+");
     static const boost::regex trailingUnderscore("_+$");

@@ -291,7 +291,7 @@ namespace measure {
    private:
     REGISTER_LOGGER("openstudio.measure.OSRunner");
 
-    std::string cleanValueName(const std::string& name) const;
+    static std::string cleanValueName(const std::string& name);
 
     void captureStreams();
     void restoreStreams();
