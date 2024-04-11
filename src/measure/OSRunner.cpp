@@ -786,14 +786,24 @@ namespace measure {
   }
 
   Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
+    // This function aims to replace OsLib_HelperMethods.createRunVariables
+    // TODO: should this call validateUserArguments like the ruby counterpart? At least it validates that the defaults are supposed to match etc
+    if (!validateUserArguments(script_arguments, user_arguments)) {
+      registerError("Invalid argument values.");
+      LOG_AND_THROW("Invalid argument values.");
+    }
+
     Json::Value argument_values;
     for (const OSArgument& script_argument : script_arguments) {
       const std::string name = script_argument.name();
       auto it = user_arguments.find(name);
       if (it != user_arguments.end()) {
-        Json::Value root = it->second.toJSON();
-        if (auto value = root["value"]) {
-          argument_values[name] = value;
+        const auto& arg = it->second;
+        if (arg.hasValue()) {
+          argument_values[name] = arg.valueAsJSON();
+        } else if (arg.hasDefaultValue()) {
+          // TODO: is this wanted?
+          argument_values[name] = arg.defaultValueAsJSON();
         }
       }
     }

@@ -231,8 +231,9 @@ namespace measure {
                                                                                        const std::map<std::string, OSArgument>& user_arguments,
                                                                                        const openstudio::Workspace& workspace);
 
-    /** Call this method to retrieve the values of OSArguments of all types. */
-    static Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
+    /** Call this method to retrieve the values of OSArguments of all types.
+      * It will call validateUserArguments for you and throw if that fails */
+    Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
 
     /** Call this method to retrieve the values of all workflow steps for a given measure name.
      *  measureName can be: the WorkflowStep's measureDirName or name, or the WorkflowStepResult's measureName */
