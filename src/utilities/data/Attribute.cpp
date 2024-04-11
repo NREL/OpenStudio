@@ -119,7 +119,7 @@ namespace detail {
       m_value(value),
       m_units(units) {}
 
-  Attribute_Impl::Attribute_Impl(const pugi::xml_node& element) {
+  Attribute_Impl::Attribute_Impl(const pugi::xml_node& element) {  // NOLINT(misc-no-recursion)
     if (!element) {
       LOG_AND_THROW("Cannot construct Attribute from null pugi::xml_node element");
     }
@@ -230,8 +230,8 @@ namespace detail {
     } else if (m_valueType.value() == AttributeValueType::AttributeVector) {
       std::vector<Attribute> children;
 
-      for (pugi::xml_node& childElement : valueElement.children()) {
-        children.push_back(Attribute(childElement));
+      for (const pugi::xml_node& childElement : valueElement.children()) {
+        children.emplace_back(childElement);
       }
       m_value = children;
 
@@ -486,14 +486,14 @@ namespace detail {
     return ss.str();
   }
 
-  pugi::xml_document Attribute_Impl::toXml() const {
+  pugi::xml_document Attribute_Impl::toXml() const {  // NOLINT(misc-no-recursion)
     pugi::xml_document doc;
     pugi::xml_node element = doc.append_child("Attribute");
     this->writeValues(element);
     return doc;
   }
 
-  bool Attribute_Impl::operator==(const Attribute& other) const {
+  bool Attribute_Impl::operator==(const Attribute& other) const {  // NOLINT(misc-no-recursion)
     bool result = false;
 
     AttributeValueType thisValueType = this->valueType();
@@ -541,7 +541,7 @@ namespace detail {
     return result;
   }
 
-  void Attribute_Impl::writeValues(pugi::xml_node& element) const {
+  void Attribute_Impl::writeValues(pugi::xml_node& element) const {  // NOLINT(misc-no-recursion)
     pugi::xml_node subElement = element.append_child("UUID");
     subElement.text().set(openstudio::toString(m_uuid).c_str());
 
@@ -604,7 +604,7 @@ namespace detail {
     }
   }
 
-  Json::Value Attribute_Impl::toJSON(bool short_version) const {
+  Json::Value Attribute_Impl::toJSON(bool short_version) const {  // NOLINT(misc-no-recursion)
 
     Json::Value root;
     root["name"] = m_name;
@@ -654,6 +654,65 @@ namespace detail {
       root["units"] = *m_units;
     }
     return root;
+  }
+
+  // helper constant for the visitor below so we static assert we didn't miss a type
+  template <class>
+  inline constexpr bool always_false_v = false;
+
+#if 0
+  // helper type for visitor
+  template <class... Ts>
+  struct overloaded : Ts...
+  {
+    using Ts::operator()...;
+  };
+  // explicit deduction guide (not needed as of C++20)
+  template <class... Ts>
+  overloaded(Ts...) -> overloaded<Ts...>;
+
+  Json::Value Attribute_Impl::valueAsJSON() const {
+    return std::visit(overloaded{//
+                                 [](std::monostate) { return Json::Value{Json::nullValue}; },
+                                 [](const std::vector<Attribute>& arg) {
+                                   Json::Value subElement(Json::arrayValue);
+                                   for (const Attribute& attribute : arg) {
+                                     subElement.append(attribute.toJSON());
+                                   }
+                                   return subElement;
+                                 },
+                                 [](auto arg) { return Json::Value(arg); }},
+                      m_value);
+  }
+#endif
+
+  Json::Value Attribute_Impl::valueAsJSON() const {  // NOLINT(misc-no-recursion)
+    return std::visit(
+      [](auto&& arg) -> Json::Value {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+          return Json::nullValue;
+        } else if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+          return arg;
+        } else if constexpr (std::is_same_v<T, double>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, int>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, unsigned int>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, std::string>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, std::vector<Attribute>>) {
+          Json::Value subElement(Json::arrayValue);
+          for (const Attribute& attribute : arg) {
+            subElement.append(attribute.valueAsJSON());
+          }
+          return subElement;
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        }
+      },
+      m_value);
   }
 
 }  // namespace detail
@@ -1031,16 +1090,20 @@ std::string Attribute::toString() const {
 }
 
 // Protected
-pugi::xml_document Attribute::toXml() const {
+pugi::xml_document Attribute::toXml() const {  // NOLINT(misc-no-recursion)
   return m_impl->toXml();
 }
 
-Json::Value Attribute::toJSON(bool short_version) const {
+Json::Value Attribute::toJSON(bool short_version) const {  // NOLINT(misc-no-recursion)
   return m_impl->toJSON(short_version);
 }
 
 std::string Attribute::toJSONString() const {
   return toJSON().toStyledString();
+}
+
+Json::Value Attribute::valueAsJSON() const {
+  return m_impl->valueAsJSON();
 }
 
 bool Attribute::saveToXml(const openstudio::path& path) const {
@@ -1058,7 +1121,7 @@ bool Attribute::saveToXml(const openstudio::path& path) const {
   return result;
 }
 
-bool Attribute::operator==(const Attribute& other) const {
+bool Attribute::operator==(const Attribute& other) const {  // NOLINT(misc-no-recursion)
   return m_impl->operator==(other);
 }
 

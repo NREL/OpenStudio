@@ -4,6 +4,7 @@
 ***********************************************************************************************************************/
 
 #include "Variant.hpp"
+#include <json/value.h>
 
 namespace openstudio {
 
@@ -31,7 +32,6 @@ bool Variant::valueAsBoolean() const {
   } else {
     LOG_AND_THROW("Variant does not hold a boolean");
   }
-  return *(std::get_if<bool>(&m_value));
 }
 
 int Variant::valueAsInteger() const {
@@ -60,6 +60,29 @@ std::string Variant::valueAsString() const {
   } else {
     LOG_AND_THROW("Variant does not hold a string");
   }
+}
+
+// helper constant for the visitor below so we static assert we didn't miss a type
+template <class>
+inline constexpr bool always_false_v = false;
+
+Json::Value Variant::valueAsJSON() const {
+  return std::visit(
+    [](auto&& arg) -> Json::Value {
+      using T = std::decay_t<decltype(arg)>;
+      if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+        return arg;
+      } else if constexpr (std::is_same_v<T, int>) {
+        return arg;
+      } else if constexpr (std::is_same_v<T, double>) {
+        return arg;
+      } else if constexpr (std::is_same_v<T, std::string>) {
+        return arg;
+      } else {
+        static_assert(always_false_v<T>, "non-exhaustive visitor!");
+      }
+    },
+    m_value);
 }
 
 std::ostream& operator<<(std::ostream& os, const Variant& variant) {
