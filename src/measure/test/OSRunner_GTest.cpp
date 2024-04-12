@@ -307,7 +307,7 @@ TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
         ASSERT_TRUE(stepResult2_copy.stepResult());
         EXPECT_EQ(workflow_step_result2.string(), stepResult2_copy.string());
         ASSERT_TRUE(workflow_step_result2.stepResult());
-        EXPECT_EQ(StepResult::Success, workflow_step_result2.stepResult().get());
+        EXPECT_EQ(StepResult{StepResult::Success}, workflow_step_result2.stepResult().get());
       }
     }
   }

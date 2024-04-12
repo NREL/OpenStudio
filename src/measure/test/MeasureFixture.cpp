@@ -88,7 +88,7 @@ void MeasureFixture::SetUpTestSuite() {
   openstudio::Logger::instance().standardOutLogger().disable();
 
   // clear scratch
-  scratchDir = resourcesPath() / openstudio::toPath("measure/scratch");
+  scratchDir = openstudio::getApplicationBuildDirectory() / openstudio::toPath("Testing/Temporary/measure");
   openstudio::filesystem::remove_all(scratchDir);
   openstudio::filesystem::create_directories(scratchDir);
 }
