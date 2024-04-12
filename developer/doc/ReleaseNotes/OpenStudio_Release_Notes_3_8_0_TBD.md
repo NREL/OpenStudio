@@ -79,7 +79,7 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
 
 * [#5094](https://github.com/NREL/OpenStudio/pull/5094) - Update to EnergyPlus 24.1.0
 
-* [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependencies including Conan, and significant work the continues integration (CI) system.
+* [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependencies including Conan, and significant work in the continuous integration (CI) system.
 
 * [#TBD]() Performance Improvements to OpenStudio logging. 
 
