@@ -125,6 +125,9 @@ OPENSTUDIO_ENUM( OSDomainType,
     static OSArgument makeChoiceArgument(const std::string& name, const std::vector<std::string>& choices,
                                          const std::vector<std::string>& displayNames, bool required = true, bool modelDependent = false);
 
+    static OSArgument makeChoiceArgument(const std::string& name, const std::map<std::string, std::string>& choices_to_display_values_map,
+                                         bool required = true, bool modelDependent = false);
+
     /** Creates an OSArgument for path values. Defaults domainType() to OSDomainType::Enumeration. */
     static OSArgument makePathArgument(const std::string& name, bool isRead, const std::string& extension, bool required = true,
                                        bool modelDependent = false);

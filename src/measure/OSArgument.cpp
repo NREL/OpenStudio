@@ -70,6 +70,20 @@ namespace measure {
     return result;
   }
 
+  OSArgument OSArgument::makeChoiceArgument(const std::string& name, const std::map<std::string, std::string>& choices_to_display_values_map,
+                                            bool required, bool modelDependent) {
+    OSArgument result(name, OSArgumentType::Choice, required, modelDependent);
+    result.setDomainType(OSDomainType::Enumeration);
+    const size_t size = choices_to_display_values_map.size();
+    result.m_choices.reserve(size);
+    result.m_choiceDisplayNames.reserve(size);
+    for (const auto& [k, v] : choices_to_display_values_map) {
+      result.m_choices.push_back(k);
+      result.m_choiceDisplayNames.push_back(v);
+    }
+    return result;
+  }
+
   OSArgument OSArgument::makePathArgument(const std::string& name, bool isRead, const std::string& extension, bool required, bool modelDependent) {
     OSArgument result(name, OSArgumentType::Path, required, modelDependent);
     result.setDomainType(OSDomainType::Enumeration);
