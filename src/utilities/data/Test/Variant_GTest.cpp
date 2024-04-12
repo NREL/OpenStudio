@@ -8,6 +8,8 @@
 
 #include "../Variant.hpp"
 
+#include <json/value.h>
+
 using namespace openstudio;
 
 TEST_F(DataFixture, Variant) {
@@ -41,4 +43,34 @@ TEST_F(DataFixture, Variant) {
   EXPECT_THROW(stringVariant.valueAsBoolean(), openstudio::Exception);
   EXPECT_THROW(stringVariant.valueAsInteger(), openstudio::Exception);
   EXPECT_THROW(stringVariant.valueAsDouble(), openstudio::Exception);
+}
+
+TEST_F(DataFixture, Variant_valueAsJSON) {
+  {
+    const Variant boolVariant(true);
+    auto boolJson = boolVariant.valueAsJSON();
+    ASSERT_TRUE(boolJson.isBool());
+    EXPECT_TRUE(boolJson.asBool());
+  }
+
+  {
+    const Variant intVariant(1);
+    auto intJson = intVariant.valueAsJSON();
+    ASSERT_TRUE(intJson.isInt());
+    EXPECT_EQ(1, intJson.asInt());
+  }
+
+  {
+    const Variant doubleVariant(1.0);
+    auto doubleJson = doubleVariant.valueAsJSON();
+    ASSERT_TRUE(doubleJson.isDouble());
+    EXPECT_DOUBLE_EQ(1, doubleJson.asDouble());
+  }
+
+  {
+    const Variant stringVariant("1");
+    auto stringJson = stringVariant.valueAsJSON();
+    ASSERT_TRUE(stringJson.isString());
+    EXPECT_EQ("1", stringJson.asString());
+  }
 }

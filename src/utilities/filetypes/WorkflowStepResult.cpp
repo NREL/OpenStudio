@@ -29,15 +29,8 @@ namespace detail {
       root["units"] = *m_units;
     }
 
-    if (m_value.variantType() == VariantType::String) {
-      root["value"] = m_value.valueAsString();
-    } else if (m_value.variantType() == VariantType::Double) {
-      root["value"] = m_value.valueAsDouble();
-    } else if (m_value.variantType() == VariantType::Integer) {
-      root["value"] = m_value.valueAsInteger();
-    } else if (m_value.variantType() == VariantType::Boolean) {
-      root["value"] = m_value.valueAsBoolean();
-    }
+    root["value"] = m_value.valueAsJSON();
+
     return root;
   }
 
@@ -88,6 +81,10 @@ namespace detail {
 
   std::string WorkflowStepValue_Impl::valueAsString() const {
     return m_value.valueAsString();
+  }
+
+  Json::Value WorkflowStepValue_Impl::valueAsJSON() const {
+    return m_value.valueAsJSON();
   }
 
   void WorkflowStepValue_Impl::setName(const std::string& name) {
@@ -400,7 +397,7 @@ namespace detail {
     for (const auto& stepValue : stepValues()) {
       boost::optional<Attribute> attribute;
 
-      VariantType variantType = stepValue.variantType();
+      const VariantType variantType = stepValue.variantType();
       switch (variantType.value()) {
         case VariantType::Boolean:
           attribute = Attribute(stepValue.name(), stepValue.valueAsBoolean());
@@ -655,11 +652,11 @@ WorkflowStepValue::WorkflowStepValue(const std::string& name, bool value)
 
 boost::optional<WorkflowStepValue> WorkflowStepValue::fromString(const std::string& s) {
   // We let it fail with a warning message
-  Json::CharReaderBuilder rbuilder;
+  const Json::CharReaderBuilder rbuilder;
   std::istringstream ss(s);
   std::string formattedErrors;
   Json::Value value;
-  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
   if (!parsingSuccessful) {
     LOG(Warn, "Couldn't parse WorkflowStepValue from string s='" << s << "'. Error: '" << formattedErrors << "'.");
     return boost::none;
@@ -668,8 +665,8 @@ boost::optional<WorkflowStepValue> WorkflowStepValue::fromString(const std::stri
   boost::optional<WorkflowStepValue> result;
 
   try {
-    std::string name = value["name"].asString();
-    Json::Value v = value["value"];
+    const std::string name = value["name"].asString();
+    const Json::Value v = value["value"];
     if (v.isString()) {
       result = WorkflowStepValue(name, v.asString());
     } else if (v.isIntegral()) {
@@ -733,6 +730,10 @@ std::string WorkflowStepValue::valueAsString() const {
   return getImpl<detail::WorkflowStepValue_Impl>()->valueAsString();
 }
 
+Json::Value WorkflowStepValue::valueAsJSON() const {
+  return getImpl<detail::WorkflowStepValue_Impl>()->valueAsJSON();
+}
+
 void WorkflowStepValue::setName(const std::string& name) {
   getImpl<detail::WorkflowStepValue_Impl>()->setName(name);
 }
@@ -763,11 +764,11 @@ WorkflowStepResult::WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResul
 
 boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::string& s) {
   // We let it fail with a warning message
-  Json::CharReaderBuilder rbuilder;
+  const Json::CharReaderBuilder rbuilder;
   std::istringstream ss(s);
   std::string formattedErrors;
   Json::Value value;
-  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+  const bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
   if (!parsingSuccessful) {
     LOG(Warn, "Couldn't parse WorkflowStepResult from string s='" << s << "'. Error: '" << formattedErrors << "'.");
     return boost::none;
@@ -792,7 +793,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
     }
 
     if (value.isMember("measure_type")) {
-      Json::Value measureType = value["measure_type"];
+      const Json::Value measureType = value["measure_type"];
       try {
         result.setMeasureType(MeasureType(measureType.asString()));
       } catch (const std::exception&) {
@@ -801,23 +802,23 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
     }
 
     if (value.isMember("measure_name")) {
-      Json::Value measureName = value["measure_name"];
+      const Json::Value measureName = value["measure_name"];
       result.setMeasureName(measureName.asString());
     }
 
     if (value.isMember("measure_uid")) {
-      Json::Value measureId = value["measure_uid"];
+      const Json::Value measureId = value["measure_uid"];
       result.setMeasureId(measureId.asString());
     }
 
     if (value.isMember("measure_version_id")) {
-      Json::Value versionId = value["measure_version_id"];
+      const Json::Value versionId = value["measure_version_id"];
       result.setMeasureVersionId(versionId.asString());
     }
 
     if (value.isMember("measure_version_modified")) {
-      Json::Value versionModified = value["measure_version_modified"];
-      std::string str = versionModified.asString();
+      const Json::Value versionModified = value["measure_version_modified"];
+      const std::string str = versionModified.asString();
       boost::optional<DateTime> dateTime = DateTime::fromISO8601(versionModified.asString());
       if (dateTime) {
         result.setMeasureVersionModified(dateTime.get());
@@ -825,27 +826,27 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
     }
 
     if (value.isMember("measure_xml_checksum")) {
-      Json::Value checksum = value["measure_xml_checksum"];
+      const Json::Value checksum = value["measure_xml_checksum"];
       result.setMeasureXmlChecksum(checksum.asString());
     }
 
     if (value.isMember("measure_class_name")) {
-      Json::Value className = value["measure_class_name"];
+      const Json::Value className = value["measure_class_name"];
       result.setMeasureClassName(className.asString());
     }
 
     if (value.isMember("measure_display_name")) {
-      Json::Value displayName = value["measure_display_name"];
+      const Json::Value displayName = value["measure_display_name"];
       result.setMeasureDisplayName(displayName.asString());
     }
 
     if (value.isMember("measure_taxonomy")) {
-      Json::Value taxonomy = value["measure_taxonomy"];
+      const Json::Value taxonomy = value["measure_taxonomy"];
       result.setMeasureTaxonomy(taxonomy.asString());
     }
 
     if (value.isMember("step_result")) {
-      StepResult stepResult(value["step_result"].asString());
+      const StepResult stepResult(value["step_result"].asString());
       result.setStepResult(stepResult);
     }
 
@@ -857,11 +858,10 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
       result.setStepFinalCondition(value["step_final_condition"].asString());
     }
 
-    Json::Value defaultArrayValue(Json::arrayValue);
-    Json::ArrayIndex n;
+    const Json::Value defaultArrayValue(Json::arrayValue);
 
     Json::Value errors = value.get("step_errors", defaultArrayValue);
-    n = errors.size();
+    Json::ArrayIndex n = errors.size();
     for (Json::ArrayIndex i = 0; i < n; ++i) {
       result.addStepError(errors[i].asString());
     }
@@ -886,7 +886,7 @@ boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::st
       // mimic the old StyledWriter behavior:
       wbuilder["indentation"] = "   ";
       for (Json::ArrayIndex i = 0; i < n; ++i) {
-        std::string stepval_str = Json::writeString(wbuilder, stepValues[i]);
+        const std::string stepval_str = Json::writeString(wbuilder, stepValues[i]);
         boost::optional<WorkflowStepValue> workflowStepValue = WorkflowStepValue::fromString(stepval_str);
         if (workflowStepValue) {
           result.addStepValue(*workflowStepValue);

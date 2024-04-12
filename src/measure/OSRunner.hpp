@@ -19,6 +19,7 @@
 
 namespace openstudio {
 
+class OSWorkflow;
 class Workspace;
 class WorkspaceObject;
 
@@ -231,6 +232,17 @@ namespace measure {
                                                                                        const std::map<std::string, OSArgument>& user_arguments,
                                                                                        const openstudio::Workspace& workspace);
 
+    /** Call this method to retrieve the values of OSArguments of all types.
+      * It will call validateUserArguments for you and throw if that fails */
+    Json::Value getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments);
+
+    /** Call this method to retrieve the values of all workflow steps for a given measure name.
+     *  measureName can be: the WorkflowStep's measureDirName or name, or the WorkflowStepResult's measureName */
+    Json::Value getPastStepValuesForMeasure(const std::string& measureName) const;
+
+    /** Call this method to retrieve the values of all workflow steps for a given step value name. */
+    Json::Value getPastStepValuesForName(const std::string& stepName) const;
+
     //@}
 
     // reset the runner to re-run the workflow
@@ -279,10 +291,17 @@ namespace measure {
     bool registerMsgAlsoLogs() const;
     void setRegisterMsgAlsoLogs(bool registerMsgAlsoLogs);
 
+   protected:
+    friend class openstudio::OSWorkflow;
+    // prepareForMeasureRun(OSMeasure) actually doesn't use the OSMeasure, but it's a check that an OSMeasure is there.
+    // This is the actual implementation though, and it's protected by OSWorkflow is friended so it can call it before SKIPPING a step without the
+    // performance penatly of actually loading and resolving the measure just to skip it
+    void prepareForMeasureRun();
+
    private:
     REGISTER_LOGGER("openstudio.measure.OSRunner");
 
-    std::string cleanValueName(const std::string& name) const;
+    static std::string cleanValueName(const std::string& name);
 
     void captureStreams();
     void restoreStreams();

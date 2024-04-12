@@ -12,6 +12,7 @@
 
 #include <boost/regex.hpp>
 
+#include <json/value.h>
 #include <pugixml.hpp>
 #include <sstream>
 #include <limits>
@@ -32,6 +33,11 @@ TEST_F(DataFixture, Attribute_BoolTrue) {
   EXPECT_EQ(true, attribute.valueAsBoolean());
   ASSERT_TRUE(attribute.units());
   EXPECT_EQ("units", attribute.units().get());
+  {
+    auto boolJson = attribute.valueAsJSON();
+    ASSERT_TRUE(boolJson.isBool());
+    EXPECT_TRUE(boolJson.asBool());
+  }
 
   // save to xml
   ASSERT_TRUE(attribute.saveToXml(xmlPath));
@@ -57,6 +63,11 @@ TEST_F(DataFixture, Attribute_Integer) {
   EXPECT_EQ(AttributeValueType::Integer, attribute.valueType().value());
   EXPECT_EQ(1, attribute.valueAsInteger());
   EXPECT_FALSE(attribute.units());
+  {
+    auto intJson = attribute.valueAsJSON();
+    ASSERT_TRUE(intJson.isInt());
+    EXPECT_EQ(1, intJson.asInt());
+  }
 
   // save to xml
   attribute.saveToXml(xmlPath);
@@ -81,7 +92,11 @@ TEST_F(DataFixture, Attribute_Unsigned) {
   EXPECT_EQ(AttributeValueType::Unsigned, attribute.valueType().value());
   EXPECT_EQ(static_cast<unsigned>(1), attribute.valueAsUnsigned());
   EXPECT_FALSE(attribute.units());
-
+  {
+    auto uintJson = attribute.valueAsJSON();
+    ASSERT_TRUE(uintJson.isUInt());
+    EXPECT_EQ(1u, uintJson.asUInt());
+  }
   // save to xml
   attribute.saveToXml(xmlPath);
 
@@ -105,7 +120,11 @@ TEST_F(DataFixture, Attribute_Double_Small) {
   EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
   EXPECT_EQ(1.5, attribute.valueAsDouble());
   EXPECT_FALSE(attribute.units());
-
+  {
+    auto doubleJson = attribute.valueAsJSON();
+    ASSERT_TRUE(doubleJson.isDouble());
+    EXPECT_DOUBLE_EQ(1.5, doubleJson.asDouble());
+  }
   // save to xml
   attribute.saveToXml(xmlPath);
 
@@ -129,7 +148,11 @@ TEST_F(DataFixture, Attribute_Double_Big) {
   EXPECT_EQ(AttributeValueType::Double, attribute.valueType().value());
   EXPECT_DOUBLE_EQ(1.189679819371987395175049501E32, attribute.valueAsDouble());
   EXPECT_FALSE(attribute.units());
-
+  {
+    auto doubleJson = attribute.valueAsJSON();
+    ASSERT_TRUE(doubleJson.isDouble());
+    EXPECT_DOUBLE_EQ(1.189679819371987395175049501E32, doubleJson.asDouble());
+  }
   // save to xml
   attribute.saveToXml(xmlPath);
 
@@ -166,7 +189,11 @@ TEST_F(DataFixture, Attribute_String) {
   EXPECT_EQ(AttributeValueType::String, attribute.valueType().value());
   EXPECT_EQ("value", attribute.valueAsString());
   EXPECT_FALSE(attribute.units());
-
+  {
+    auto stringJson = attribute.valueAsJSON();
+    ASSERT_TRUE(stringJson.isString());
+    EXPECT_EQ("value", stringJson.asString());
+  }
   // save to xml
   attribute.saveToXml(xmlPath);
 
@@ -197,6 +224,22 @@ TEST_F(DataFixture, Attribute_AttributeVector) {
   EXPECT_EQ(AttributeValueType::Boolean, attribute.valueAsAttributeVector()[0].valueType().value());
   EXPECT_EQ(AttributeValueType::Double, attribute.valueAsAttributeVector()[1].valueType().value());
   EXPECT_FALSE(attribute.units());
+
+  {
+    auto arrayJson = attribute.valueAsJSON();
+    ASSERT_TRUE(arrayJson.isArray());
+    ASSERT_EQ(2, arrayJson.size());
+    {
+      const auto& el = arrayJson[0];
+      ASSERT_TRUE(el.isBool());
+      EXPECT_TRUE(el.asBool());
+    }
+    {
+      const auto& el = arrayJson[1];
+      ASSERT_TRUE(el.isDouble());
+      EXPECT_DOUBLE_EQ(1.5, el.asDouble());
+    }
+  }
 
   // save to xml
   attribute.saveToXml(xmlPath);

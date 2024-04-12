@@ -53,6 +53,8 @@ namespace detail {
 
     std::string valueAsString() const;
 
+    Json::Value valueAsJSON() const;
+
     //@}
     /** @name Setters */
     //@{
