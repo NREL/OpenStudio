@@ -83,7 +83,7 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
 
 * [#TBD]() Performance Improvements to OpenStudio logging. 
 
-* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openstudio-standards Gem or in OpenStudio CC++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
+* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openstudio-standards Gem or in OpenStudio C++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
 
 * [#TBD]() Update to version 0.6.0 of the openstudio_standards Gem. In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
 
