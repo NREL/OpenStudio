@@ -226,6 +226,10 @@ namespace measure {
   //}
 
   void OSRunner::prepareForMeasureRun(const OSMeasure& /*measure*/) {
+    prepareForMeasureRun();
+  }
+
+  void OSRunner::prepareForMeasureRun() {
     if (m_halted) {
       LOG(Error, "Wokflow halted, cannot prepate for measure run");
       return;

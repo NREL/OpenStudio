@@ -19,6 +19,7 @@
 
 namespace openstudio {
 
+class OSWorkflow;
 class Workspace;
 class WorkspaceObject;
 
@@ -289,6 +290,13 @@ namespace measure {
       * also LOG an actual message */
     bool registerMsgAlsoLogs() const;
     void setRegisterMsgAlsoLogs(bool registerMsgAlsoLogs);
+
+   protected:
+    friend class openstudio::OSWorkflow;
+    // prepareForMeasureRun(OSMeasure) actually doesn't use the OSMeasure, but it's a check that an OSMeasure is there.
+    // This is the actual implementation though, and it's protected by OSWorkflow is friended so it can call it before SKIPPING a step without the
+    // performance penatly of actually loading and resolving the measure just to skip it
+    void prepareForMeasureRun();
 
    private:
     REGISTER_LOGGER("openstudio.measure.OSRunner");
