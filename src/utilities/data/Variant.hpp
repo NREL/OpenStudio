@@ -73,6 +73,10 @@ class UTILITIES_API Variant
 
   Json::Value valueAsJSON() const;
 
+  // No matter the underlying type, will check if it's true-ish
+  // Used for skipping a measure. eg true, "true", 1, 1.0 are all trueish
+  bool isTrueish() const;
+
  private:
   REGISTER_LOGGER("openstudio.Variant");
 
