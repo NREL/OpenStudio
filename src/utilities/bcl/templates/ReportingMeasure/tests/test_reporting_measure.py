@@ -60,7 +60,7 @@ class TestReportingMeasureName:
         request_model = rt.translateWorkspace(workspace)
 
         translator = openstudio.osversion.VersionTranslator()
-        model = translator.loadModel(openstudio.toPath(str(model_in_path)))
+        model = translator.loadModel(model_in_path)
         assert model.is_initialized()
         model = model.get()
         model.addObjects(request_model.objects())
@@ -122,7 +122,7 @@ class TestReportingMeasureName:
         argument_map["report_drybulb_temp"] = report_drybulb_temp
 
         # temp set path so idf_output_requests work
-        runner.setLastOpenStudioModelPath(openstudio.toPath(str(MODEL_IN_PATH_DEFAULT)))
+        runner.setLastOpenStudioModelPath(MODEL_IN_PATH_DEFAULT)
 
         # get the energyplus output requests, this will be done automatically by OS App and PAT
         idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map)
@@ -138,9 +138,9 @@ class TestReportingMeasureName:
         assert TestReportingMeasureName.sql_path(test_name).exists()
 
         # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
-        runner.setLastOpenStudioModelPath(openstudio.toPath(str(model_out_path)))
-        runner.setLastEpwFilePath(openstudio.toPath(str(epw_path)))
-        runner.setLastEnergyPlusSqlFilePath(openstudio.toPath(str(TestReportingMeasureName.sql_path(test_name))))
+        runner.setLastOpenStudioModelPath(model_out_path)
+        runner.setLastEpwFilePath(epw_path)
+        runner.setLastEnergyPlusSqlFilePath(TestReportingMeasureName.sql_path(test_name))
 
         # delete the output if it exists
         report_path = TestReportingMeasureName.report_path(test_name)
@@ -191,7 +191,7 @@ class TestReportingMeasureName:
         argument_map["report_drybulb_temp"] = report_drybulb_temp
 
         # temp set path so idf_output_requests work
-        runner.setLastOpenStudioModelPath(openstudio.toPath(str(MODEL_IN_PATH_DEFAULT)))
+        runner.setLastOpenStudioModelPath(MODEL_IN_PATH_DEFAULT)
 
         # get the energyplus output requests, this will be done automatically by OS App and PAT
         idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map)
@@ -207,9 +207,9 @@ class TestReportingMeasureName:
         assert TestReportingMeasureName.sql_path(test_name).exists()
 
         # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
-        runner.setLastOpenStudioModelPath(openstudio.toPath(str(model_out_path)))
-        runner.setLastEpwFilePath(openstudio.toPath(str(epw_path)))
-        runner.setLastEnergyPlusSqlFilePath(openstudio.toPath(str(TestReportingMeasureName.sql_path(test_name))))
+        runner.setLastOpenStudioModelPath(model_out_path)
+        runner.setLastEpwFilePath(epw_path)
+        runner.setLastEnergyPlusSqlFilePath(TestReportingMeasureName.sql_path(test_name))
 
         # delete the output if it exists
         report_path = TestReportingMeasureName.report_path(test_name)
