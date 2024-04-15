@@ -45,13 +45,6 @@ std::vector<unsigned> WorkspaceExtensibleGroup::getSourceFieldIndices(const Hand
   return result;
 }
 
-boost::optional<std::string> WorkspaceExtensibleGroup::getField(unsigned index) const {
-  if (!isValid(index)) {
-    return boost::none;
-  }
-  return getImpl<detail::WorkspaceObject_Impl>()->getField(mf_toIndex(index));
-}
-
 // SETTERS
 bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, const Handle& targetHandle) {
   return setPointer(fieldIndex, targetHandle, true);

@@ -125,6 +125,9 @@ OPENSTUDIO_ENUM( OSDomainType,
     static OSArgument makeChoiceArgument(const std::string& name, const std::vector<std::string>& choices,
                                          const std::vector<std::string>& displayNames, bool required = true, bool modelDependent = false);
 
+    static OSArgument makeChoiceArgument(const std::string& name, const std::map<std::string, std::string>& choices_to_display_values_map,
+                                         bool required = true, bool modelDependent = false);
+
     /** Creates an OSArgument for path values. Defaults domainType() to OSDomainType::Enumeration. */
     static OSArgument makePathArgument(const std::string& name, bool isRead, const std::string& extension, bool required = true,
                                        bool modelDependent = false);
@@ -187,6 +190,10 @@ OPENSTUDIO_ENUM( OSDomainType,
    *  type() != OSArgumentType::Path. */
     openstudio::path valueAsPath() const;
 
+    /** Returns this argument's value as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one */
+    Json::Value valueAsJSON() const;
+
     /** Returns true if this argument's default value has been set. */
     bool hasDefaultValue() const;
 
@@ -209,6 +216,10 @@ OPENSTUDIO_ENUM( OSDomainType,
     /** Returns this argument's default value as an openstudio::path. Throws if not
    *  hasDefaultValue() or if type() != OSArgumentType::Path. */
     openstudio::path defaultValueAsPath() const;
+
+    /** Returns this argument's default value as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one */
+    Json::Value defaultValueAsJSON() const;
 
     /** Returns true if this argument has a non-null domain. */
     bool hasDomain() const;
@@ -238,6 +249,10 @@ OPENSTUDIO_ENUM( OSDomainType,
     /** Returns the domain as a vector of paths. Will throw if not hasDomain() or type() !=
    *  OSArgumentType::Path. */
     std::vector<openstudio::path> domainAsPath() const;
+
+    /** Returns this argument's domain as a Json::Value. Will convert nicely to ruby/python native types.
+      * Returns nullValue if it doesn't have one, Json::arrayValue otherwise */
+    Json::Value domainAsJSON() const;
 
     //@}
     /** @name Choice Argument Getters */
@@ -400,9 +415,11 @@ OPENSTUDIO_ENUM( OSDomainType,
     // we add std::monostate to allow the variant to be empty basically
     using OSArgumentVariant = std::variant<std::monostate, bool, double, int, std::string, openstudio::path>;
 
-    bool setStringInternal(OSArgumentVariant& variant, const std::string& value);
+    bool setStringInternal(OSArgumentVariant& argVar, const std::string& value);
 
-    std::string printOSArgumentVariant(const OSArgumentVariant& toPrint) const;
+    static std::string printOSArgumentVariant(const OSArgumentVariant& argVar);
+
+    static Json::Value argumentVariantToJSONValue(const OSArgumentVariant& argVar);
 
     // This also OS App related
     void onChange();
@@ -414,15 +431,15 @@ OPENSTUDIO_ENUM( OSDomainType,
     boost::optional<std::string> m_description;
     OSArgumentType m_type;
     boost::optional<std::string> m_units;
-    bool m_required;
-    bool m_modelDependent;
+    bool m_required = false;
+    bool m_modelDependent = false;
     OSArgumentVariant m_value;
     OSArgumentVariant m_defaultValue;
     OSDomainType m_domainType;
     std::vector<OSArgumentVariant> m_domain;
     std::vector<std::string> m_choices;
     std::vector<std::string> m_choiceDisplayNames;
-    bool m_isRead;
+    bool m_isRead = false;
     std::string m_extension;
   };
 

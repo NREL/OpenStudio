@@ -54,8 +54,8 @@ def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePa
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
 
-    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.7.0/'"
-    ENV['BUNDLE_PATH'] = ':/ruby/2.7.0/'
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/3.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/3.2.0/'
 
   end
 
@@ -78,8 +78,8 @@ def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePa
 
   end
 
-  Gem.paths.path << ':/ruby/2.7.0/gems/'
-  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/gems/'
+  Gem.paths.path << ':/ruby/3.2.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -150,7 +150,7 @@ def setup_embedded_gems() #includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePa
       if original_embedded_gems[spec.name]
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+          if File.exist?(File.join(lp, spec.name)) || File.exist?(File.join(lp, spec.name + '.rb')) || File.exist?(File.join(lp, spec.name + '.so'))
             $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
             do_activate = false
             break

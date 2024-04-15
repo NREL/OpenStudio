@@ -109,7 +109,6 @@
 %template(PolyhedronVector) std::vector<openstudio::Polyhedron>;
 
 %template(SizeTVector) std::vector<size_t>;
-%template(StringStringMap) std::map<std::string, std::string>;
 
 %ignore openstudio::operator<<;
 

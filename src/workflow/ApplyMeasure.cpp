@@ -39,19 +39,8 @@ bool isStepMarkedSkip(const std::map<std::string, openstudio::Variant>& stepArgs
 
   // handle skip first
   if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
-    // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
     const openstudio::Variant& argumentValue = stepArgs.at("__SKIP__");
-    VariantType variantType = argumentValue.variantType();
-
-    if (variantType == VariantType::String) {
-      skip_measure = openstudio::ascii_to_lower_copy(argumentValue.valueAsString()) == "true";
-    } else if (variantType == VariantType::Double) {
-      skip_measure = (argumentValue.valueAsDouble() != 0.0);
-    } else if (variantType == VariantType::Integer) {
-      skip_measure = (argumentValue.valueAsInteger() != 0);
-    } else if (variantType == VariantType::Boolean) {
-      skip_measure = argumentValue.valueAsBoolean();
-    }
+    skip_measure = argumentValue.isTrueish();
   }
   return skip_measure;
 }
@@ -76,20 +65,30 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
 
     auto stepArgs = step.arguments();
     const bool skip_measure = isStepMarkedSkip(stepArgs);
-    if (skip_measure || runner.halted()) {  // TODO: or halted
+    if (skip_measure || runner.halted()) {
       if (!energyplus_output_requests) {
         if (runner.halted()) {
           LOG(Info, fmt::format("Skipping measure '{}' because simulation halted", measureDirName));
         } else {
           LOG(Info, fmt::format("Skipping measure '{}'", measureDirName));
+          // required to update current step
+          runner.prepareForMeasureRun();
+
           WorkflowStepResult result = runner.result();
           runner.incrementStep();
-          // addResultMeasureInfo(result, bclMeasure);  // TODO: Should I really instantiate the BCLMeasure just for this?
+          const auto measureDirPath_ = workflowJSON.findMeasure(measureDirName);
+          if (measureDirPath_) {
+            BCLMeasure bclMeasure(measureDirPath_.get());
+            workflow::util::addResultMeasureInfo(result, bclMeasure);
+            const std::string className = bclMeasure.className();
+            const auto measureName = step.name().value_or(className);
+            output_attributes[measureName]["applicable"] = openstudio::Variant(false);
+          } else {
+            LOG(Warn, "Could not find measure '" << measureDirName << "', but it's marked as skipped anyways so ignoring.");
+            output_attributes[step.name().value_or(measureDirName)]["applicable"] = openstudio::Variant(false);
+          }
           result.setStepResult(StepResult::Skip);
         }
-
-        // Technically here I would need to have gotten className from the measure to match workflow-gem, just to set applicable = false
-        output_attributes[step.name().value_or(measureDirName)]["applicable"] = openstudio::Variant(false);
       }
       continue;
     }

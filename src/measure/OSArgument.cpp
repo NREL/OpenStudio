@@ -34,8 +34,8 @@ namespace measure {
   OSArgument OSArgument::makeBoolArgument(const std::string& name, bool required, bool modelDependent) {
     OSArgument result(name, OSArgumentType::Boolean, required, modelDependent);
     result.setDomainType(OSDomainType::Enumeration);
-    result.m_choices.push_back("true");
-    result.m_choices.push_back("false");
+    result.m_choices.emplace_back("true");
+    result.m_choices.emplace_back("false");
     return result;
   }
 
@@ -67,6 +67,20 @@ namespace measure {
     result.setDomainType(OSDomainType::Enumeration);
     result.m_choices = choices;
     result.m_choiceDisplayNames = displayNames;
+    return result;
+  }
+
+  OSArgument OSArgument::makeChoiceArgument(const std::string& name, const std::map<std::string, std::string>& choices_to_display_values_map,
+                                            bool required, bool modelDependent) {
+    OSArgument result(name, OSArgumentType::Choice, required, modelDependent);
+    result.setDomainType(OSDomainType::Enumeration);
+    const size_t size = choices_to_display_values_map.size();
+    result.m_choices.reserve(size);
+    result.m_choiceDisplayNames.reserve(size);
+    for (const auto& [k, v] : choices_to_display_values_map) {
+      result.m_choices.push_back(k);
+      result.m_choiceDisplayNames.push_back(v);
+    }
     return result;
   }
 
@@ -132,10 +146,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
     }
 
-    // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
-    // std::bad_variant_access which isn't available on mac prior to 10.14
-    // No need to check if get_if succeeds because we checked the type above
-    return *(std::get_if<bool>(&m_value));
+    return std::get<bool>(m_value);
   }
 
   double OSArgument::valueAsDouble() const {
@@ -146,11 +157,11 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
     }
 
-    double result;
+    double result = 0.0;
     if (type() == OSArgumentType::Double) {
-      result = *(std::get_if<double>(&m_value));
+      result = std::get<double>(m_value);
     } else {
-      result = *(std::get_if<int>(&m_value));
+      result = std::get<int>(m_value);
       LOG(Warn, "This argument is of type 'Integer' but returning as a Double as requested. You should consider using valueAsInteger instead");
     }
 
@@ -165,7 +176,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
     }
 
-    return *(std::get_if<int>(&m_value));
+    return std::get<int>(m_value);
   }
 
   std::string OSArgument::valueAsString() const {
@@ -184,7 +195,11 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
     }
 
-    return *(std::get_if<openstudio::path>(&m_value));
+    return std::get<openstudio::path>(m_value);
+  }
+
+  Json::Value OSArgument::valueAsJSON() const {
+    return argumentVariantToJSONValue(m_value);
   }
 
   bool OSArgument::hasDefaultValue() const {
@@ -199,7 +214,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
     }
 
-    return *(std::get_if<bool>(&m_defaultValue));
+    return std::get<bool>(m_defaultValue);
   }
 
   double OSArgument::defaultValueAsDouble() const {
@@ -210,7 +225,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
     }
 
-    return *(std::get_if<double>(&m_defaultValue));
+    return std::get<double>(m_defaultValue);
   }
 
   int OSArgument::defaultValueAsInteger() const {
@@ -221,7 +236,7 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
     }
 
-    return *(std::get_if<int>(&m_defaultValue));
+    return std::get<int>(m_defaultValue);
   }
 
   std::string OSArgument::defaultValueAsString() const {
@@ -240,7 +255,11 @@ namespace measure {
       LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
     }
 
-    return *(std::get_if<openstudio::path>(&m_defaultValue));
+    return std::get<openstudio::path>(m_defaultValue);
+  }
+
+  Json::Value OSArgument::defaultValueAsJSON() const {
+    return argumentVariantToJSONValue(m_value);
   }
 
   bool OSArgument::hasDomain() const {
@@ -260,9 +279,9 @@ namespace measure {
     }
 
     std::vector<bool> result;
-
+    result.reserve(m_domain.size());
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<bool>(&value)));
+      result.push_back(std::get<bool>(value));
     }
     return result;
   }
@@ -279,14 +298,14 @@ namespace measure {
 
     if (type() == OSArgumentType::Double) {
       for (const OSArgumentVariant& value : m_domain) {
-        result.push_back(*(std::get_if<double>(&value)));
+        result.push_back(std::get<double>(value));
       }
     } else {
       // It's an int
       LOG(Warn, "This argument is of type 'Integer' but returning Domain as a Double as requested. "
                 "You should consider using domainAsInteger instead");
       for (const OSArgumentVariant& value : m_domain) {
-        result.push_back(*(std::get_if<int>(&value)));
+        result.push_back(std::get<int>(value));
       }
     }
     return result;
@@ -301,9 +320,9 @@ namespace measure {
     }
 
     std::vector<int> result;
-
+    result.reserve(m_domain.size());
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<int>(&value)));
+      result.push_back(std::get<int>(value));
     }
     return result;
   }
@@ -317,9 +336,9 @@ namespace measure {
     }
 
     std::vector<openstudio::path> result;
-
+    result.reserve(m_domain.size());
     for (const OSArgumentVariant& value : m_domain) {
-      result.push_back(*(std::get_if<openstudio::path>(&value)));
+      result.push_back(std::get<openstudio::path>(value));
     }
     return result;
   }
@@ -331,11 +350,24 @@ namespace measure {
 
     // TODO: add check for arg type?
     std::vector<std::string> result;
-
+    result.reserve(m_domain.size());
     for (const OSArgumentVariant& value : m_domain) {
       result.push_back(printOSArgumentVariant(value));
     }
     return result;
+  }
+
+  Json::Value OSArgument::domainAsJSON() const {
+    if (!hasDomain()) {
+      return Json::nullValue;
+    }
+
+    Json::Value root(Json::arrayValue);
+    for (const OSArgumentVariant& value : m_domain) {
+      root.append(argumentVariantToJSONValue(value));
+    }
+
+    return root;
   }
 
   std::vector<std::string> OSArgument::choiceValues() const {
@@ -348,7 +380,7 @@ namespace measure {
 
   std::string OSArgument::valueDisplayName() const {
     std::string valueString = valueAsString();
-    int index = int(std::find(m_choices.begin(), m_choices.end(), valueString) - m_choices.begin());
+    const int index = int(std::find(m_choices.begin(), m_choices.end(), valueString) - m_choices.begin());
     if (index < int(m_choiceDisplayNames.size())) {
       return m_choiceDisplayNames[index];
     }
@@ -357,7 +389,7 @@ namespace measure {
 
   std::string OSArgument::defaultValueDisplayName() const {
     std::string defaultValueString = defaultValueAsString();
-    int index = int(std::find(m_choices.begin(), m_choices.end(), defaultValueString) - m_choices.begin());
+    const int index = int(std::find(m_choices.begin(), m_choices.end(), defaultValueString) - m_choices.begin());
     if (index < int(m_choiceDisplayNames.size())) {
       return m_choiceDisplayNames[index];
     }
@@ -408,7 +440,7 @@ namespace measure {
 
     } else if (m_type == OSArgumentType::Integer) {
       // Let a double be assigned to an int, only if said double is really an integer expressed as a double
-      int test = (int)floor(value);
+      const int test = (int)floor(value);
       if (test == value) {
         result = setValue(test);
       } else {
@@ -455,7 +487,7 @@ namespace measure {
   }
 
   bool OSArgument::setValue(const std::string& value) {
-    bool result = setStringInternal(m_value, value);
+    const bool result = setStringInternal(m_value, value);
     if (result) {
       OS_ASSERT(hasValue());
       onChange();
@@ -489,7 +521,7 @@ namespace measure {
       result = true;
     } else if (m_type == OSArgumentType::Integer) {
       // Let a double be assigned to an int, only if said double is really an integer expressed as a double
-      int test = (int)floor(defaultValue);
+      const int test = (int)floor(defaultValue);
       if (test == defaultValue) {
         result = setDefaultValue(test);
       } else {
@@ -535,7 +567,7 @@ namespace measure {
   }
 
   bool OSArgument::setDefaultValue(const std::string& defaultValue) {
-    bool result = setStringInternal(m_defaultValue, defaultValue);
+    const bool result = setStringInternal(m_defaultValue, defaultValue);
     if (result) {
       OS_ASSERT(hasDefaultValue());
       onChange();
@@ -581,7 +613,7 @@ namespace measure {
       // could check for uniqueness, but pass on that for now
       m_domain.clear();
       for (bool value : domain) {
-        m_domain.push_back(OSArgumentVariant(value));
+        m_domain.emplace_back(value);
       }
       onChange();
       result = true;
@@ -596,7 +628,7 @@ namespace measure {
         // could check for uniqueness, min < max, but pass on that for now
         m_domain.clear();
         for (double value : domain) {
-          m_domain.push_back(OSArgumentVariant(value));
+          m_domain.emplace_back(value);
         }
         onChange();
         result = true;
@@ -612,7 +644,7 @@ namespace measure {
         // could check for uniqueness, min < max, but pass on that for now
         m_domain.clear();
         for (int value : domain) {
-          m_domain.push_back(OSArgumentVariant(value));
+          m_domain.emplace_back(value);
         }
         onChange();
         result = true;
@@ -622,7 +654,7 @@ namespace measure {
         // could check for uniqueness, min < max, but pass on that for now
         m_domain.clear();
         for (int value : domain) {
-          m_domain.push_back(OSArgumentVariant(double(value)));
+          m_domain.emplace_back(double(value));
         }
         onChange();
         result = true;
@@ -638,7 +670,7 @@ namespace measure {
       // could check for uniqueness, but pass on that for now
       m_domain.clear();
       for (const openstudio::path& value : domain) {
-        m_domain.push_back(OSArgumentVariant(value));
+        m_domain.emplace_back(value);
       }
       onChange();
       result = true;
@@ -650,7 +682,7 @@ namespace measure {
     bool result(false);
     if ((m_domainType != OSDomainType::Interval) || (domain.size() == 2u)) {
       // Store the original, in case we fail to set one element
-      std::vector<OSArgumentVariant> originalDomain = m_domain;
+      const std::vector<OSArgumentVariant> originalDomain = m_domain;
       m_domain.clear();
       for (const std::string& value : domain) {
         OSArgumentVariant newValue;
@@ -673,9 +705,9 @@ namespace measure {
     m_domain.clear();
   }
 
-  bool OSArgument::setMinValue(double minValue) {
+  bool OSArgument::setMinValue(double minValue) {  // NOLINT(misc-no-recursion)
     if (m_type == OSArgumentType::Integer) {
-      int test = (int)floor(minValue);
+      const int test = (int)floor(minValue);
       if (test == minValue) {
         // If int expressed as double (eg: 1.0 when type = int)
         // Then we call the int overload instead
@@ -697,15 +729,15 @@ namespace measure {
 
     m_domainType = OSDomainType::Interval;
     m_domain.clear();
-    m_domain.push_back(OSArgumentVariant(minValue));
-    m_domain.push_back(OSArgumentVariant(maxValue));
+    m_domain.emplace_back(minValue);
+    m_domain.emplace_back(maxValue);
 
     onChange();
 
     return true;
   }
 
-  bool OSArgument::setMinValue(int minValue) {
+  bool OSArgument::setMinValue(int minValue) {  // NOLINT(misc-no-recursion)
     if (m_type == OSArgumentType::Double) {
       auto test = (double)minValue;
       return setMinValue(test);
@@ -723,17 +755,17 @@ namespace measure {
 
     m_domainType = OSDomainType::Interval;
     m_domain.clear();
-    m_domain.push_back(OSArgumentVariant(minValue));
-    m_domain.push_back(OSArgumentVariant(maxValue));
+    m_domain.emplace_back(minValue);
+    m_domain.emplace_back(maxValue);
 
     onChange();
 
     return true;
   }
 
-  bool OSArgument::setMaxValue(double maxValue) {
+  bool OSArgument::setMaxValue(double maxValue) {  // NOLINT(misc-no-recursion)
     if (m_type == OSArgumentType::Integer) {
-      int test = (int)floor(maxValue);
+      const int test = (int)floor(maxValue);
       if (test == maxValue) {
         return setMaxValue(test);
       }
@@ -752,15 +784,15 @@ namespace measure {
 
     m_domainType = OSDomainType::Interval;
     m_domain.clear();
-    m_domain.push_back(OSArgumentVariant(minValue));
-    m_domain.push_back(OSArgumentVariant(maxValue));
+    m_domain.emplace_back(minValue);
+    m_domain.emplace_back(maxValue);
 
     onChange();
 
     return true;
   }
 
-  bool OSArgument::setMaxValue(int maxValue) {
+  bool OSArgument::setMaxValue(int maxValue) {  // NOLINT(misc-no-recursion)
     if (m_type == OSArgumentType::Double) {
       auto test = (double)maxValue;
       return setMaxValue(test);
@@ -778,23 +810,23 @@ namespace measure {
 
     m_domainType = OSDomainType::Interval;
     m_domain.clear();
-    m_domain.push_back(OSArgumentVariant(minValue));
-    m_domain.push_back(OSArgumentVariant(maxValue));
+    m_domain.emplace_back(minValue);
+    m_domain.emplace_back(maxValue);
 
     onChange();
 
     return true;
   }
 
-  bool OSArgument::setStringInternal(OSArgumentVariant& variant, const std::string& value) {
+  bool OSArgument::setStringInternal(OSArgumentVariant& argVar, const std::string& value) {
     bool result = false;
 
     if (m_type == OSArgumentType::Boolean) {
       if (openstudio::istringEqual(value, "true")) {
-        variant = true;
+        argVar = true;
         result = true;
       } else if (openstudio::istringEqual(value, "false")) {
-        variant = false;
+        argVar = false;
         result = true;
       } else {
         LOG(Debug, "Unknown value '" << value << "' for argument of type Bool.");
@@ -802,7 +834,7 @@ namespace measure {
     } else if (m_type == OSArgumentType::Double) {
       try {
         auto const double_val = std::stod(value, nullptr);
-        variant = double_val;
+        argVar = double_val;
         result = true;
       } catch (std::exception&) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Double.");
@@ -810,25 +842,25 @@ namespace measure {
     } else if (m_type == OSArgumentType::Integer) {
       try {
         auto const int_val = std::stoi(value, nullptr);
-        variant = int_val;
+        argVar = int_val;
         result = true;
       } catch (std::exception&) {
         LOG(Debug, "Unable to convert value '" << value << "' to argument of type Integer.");
       }
     } else if (m_type == OSArgumentType::String) {
-      variant = value;
+      argVar = value;
       result = true;
     } else if (m_type == OSArgumentType::Choice) {
       if (std::find(m_choices.begin(), m_choices.end(), value) != m_choices.end()) {
-        variant = value;
+        argVar = value;
         result = true;
       } else {
         // can also set using display name
         auto it = std::find(m_choiceDisplayNames.begin(), m_choiceDisplayNames.end(), value);
         if (it != m_choiceDisplayNames.end()) {
-          int index = int(it - m_choiceDisplayNames.begin());
+          const int index = int(it - m_choiceDisplayNames.begin());
           if (index < int(m_choices.size())) {
-            variant = m_choices[index];
+            argVar = m_choices[index];
             result = true;
           }
         } else {
@@ -836,8 +868,8 @@ namespace measure {
         }
       }
     } else if (m_type == OSArgumentType::Path) {
-      openstudio::path temp = toPath(value);
-      variant = temp;
+      const openstudio::path temp = toPath(value);
+      argVar = temp;
       result = true;
     }
 
@@ -877,7 +909,7 @@ namespace measure {
 
     if (m_type.value() == OSArgumentType::Choice) {
       ss << "Choices:" << '\n';
-      int dnn = m_choiceDisplayNames.size();
+      const int dnn = m_choiceDisplayNames.size();
       for (int i = 0, n = m_choices.size(); i < n; ++i) {
         ss << "  " << m_choices[i];
         if ((i < dnn) && (!m_choiceDisplayNames[i].empty())) {
@@ -937,37 +969,50 @@ namespace measure {
     return os;
   }
 
-  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& toPrint) const {
-    OS_ASSERT(toPrint.index() != 0);
+  std::string OSArgument::printOSArgumentVariant(const OSArgumentVariant& argVar) {
+    OS_ASSERT(argVar.index() != 0);
     std::stringstream ss;
 
     // We use std::visit, filtering out the case where it's monostate
     // Aside from monostate, every possible type is streamable
-    //std::visit(
-    //[&ss](const auto& val){
-    ////Needed to properly compare the types
-    //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-    //if constexpr (!std::is_same_v<T, std::monostate>) {
-    //ss << val;
-    //}
-    //},
-    //arg);
-
-    // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
-    // So we don't use it here. Same with std::get, so we use get_if instead
-    if (const auto* p = std::get_if<bool>(&toPrint)) {
-      ss << std::boolalpha << *p;
-    } else if (const auto* p = std::get_if<double>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<int>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<std::string>(&toPrint)) {
-      ss << *p;
-    } else if (const auto* p = std::get_if<openstudio::path>(&toPrint)) {
-      ss << *p;
-    }
+    std::visit(
+      [&ss](const auto& arg) {
+        // Needed to properly compare the types
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (!std::is_same_v<T, std::monostate>) {
+          ss << arg;
+        }
+      },
+      argVar);
 
     return ss.str();
+  }
+
+  // helper constant for the visitor below so we static assert we didn't miss a type
+  template <class>
+  inline constexpr bool always_false_v = false;
+
+  Json::Value OSArgument::argumentVariantToJSONValue(const OSArgumentVariant& argVar) {
+    return std::visit(
+      [](auto&& arg) -> Json::Value {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+          return Json::nullValue;
+        } else if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+          return arg;
+        } else if constexpr (std::is_same_v<T, double>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, int>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, std::string>) {
+          return arg;
+        } else if constexpr (std::is_same_v<T, openstudio::path>) {
+          return openstudio::toString(arg);
+        } else {
+          static_assert(always_false_v<T>, "non-exhaustive visitor!");
+        }
+      },
+      argVar);
   }
 
   OSArgument::OSArgument() : m_uuid(createUUID()), m_versionUUID(createUUID()) {}
@@ -979,8 +1024,7 @@ namespace measure {
       m_displayName(name),
       m_type(type),
       m_required(required),
-      m_modelDependent(modelDependent),
-      m_isRead(false) {}
+      m_modelDependent(modelDependent) {}
 
   void OSArgument::onChange() {
     m_versionUUID = createUUID();
@@ -988,9 +1032,11 @@ namespace measure {
 
   OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, const IddObjectType& iddObjectType, const Workspace& workspace,
                                                   bool required) {
-    std::vector<std::pair<std::string, std::string>> intermediate;
 
-    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(iddObjectType);
+    const std::vector<WorkspaceObject> objects = workspace.getObjectsByType(iddObjectType);
+    std::vector<std::pair<std::string, std::string>> intermediate;
+    intermediate.reserve(objects.size());
+
     for (const WorkspaceObject& object : objects) {
       std::string objectName;
       if (object.name()) {
@@ -998,12 +1044,12 @@ namespace measure {
       } else {
         objectName = object.iddObject().type().valueName();
       }
-      intermediate.push_back(std::pair<std::string, std::string>(toString(object.handle()), objectName));
+      intermediate.emplace_back(toString(object.handle()), objectName);
     }
 
     std::sort(intermediate.begin(), intermediate.end(), SecondOfPairLess<std::pair<std::string, std::string>>());
 
-    int n = intermediate.size();
+    const int n = intermediate.size();
     StringVector choices(n);
     StringVector displayNames(n);
     for (int i = 0; i < n; ++i) {
@@ -1016,16 +1062,17 @@ namespace measure {
 
   OSArgument makeChoiceArgumentOfWorkspaceObjects(const std::string& name, const std::string& referenceName, const Workspace& workspace,
                                                   bool required) {
-    std::vector<std::pair<std::string, std::string>> intermediate;
 
-    std::vector<WorkspaceObject> objects = workspace.getObjectsByReference(referenceName);
+    const std::vector<WorkspaceObject> objects = workspace.getObjectsByReference(referenceName);
+    std::vector<std::pair<std::string, std::string>> intermediate;
+    intermediate.reserve(objects.size());
     for (const WorkspaceObject& object : objects) {
-      intermediate.push_back(std::pair<std::string, std::string>(toString(object.handle()), object.name().get()));
+      intermediate.emplace_back(toString(object.handle()), object.name().get());
     }
 
     std::sort(intermediate.begin(), intermediate.end(), SecondOfPairLess<std::pair<std::string, std::string>>());
 
-    int n = intermediate.size();
+    const int n = intermediate.size();
     StringVector choices(n);
     StringVector displayNames(n);
     for (int i = 0; i < n; ++i) {
@@ -1061,13 +1108,18 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsBool();
       }
-
+      if (hasValue()) {
+        root["value"] = valueAsBool();
+      }
     } else if (m_type == OSArgumentType::Double) {
       if (m_units) {
         root["units"] = *m_units;
       }
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsDouble();
+      }
+      if (hasValue()) {
+        root["value"] = valueAsDouble();
       }
       if (hasDomain()) {
         auto domain = domainAsDouble();
@@ -1092,6 +1144,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsDouble();
       }
+      if (hasValue()) {
+        root["value"] = valueAsDouble();
+      }
 
     } else if (m_type == OSArgumentType::Integer) {
       if (m_units) {
@@ -1099,6 +1154,9 @@ namespace measure {
       }
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsInteger();
+      }
+      if (hasValue()) {
+        root["value"] = valueAsInteger();
       }
       if (hasDomain()) {
         auto domain = domainAsInteger();
@@ -1118,9 +1176,15 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsString();
       }
+      if (hasValue()) {
+        root["value"] = valueAsString();
+      }
     } else if (m_type == OSArgumentType::Choice) {
       if (hasDefaultValue()) {
         root["default_value"] = defaultValueAsString();
+      }
+      if (hasValue()) {
+        root["value"] = valueAsString();
       }
       auto& choiceValues = root["choice_values"];
       choiceValues = Json::arrayValue;  // Without this line, it's "null" (/nil in Ruby) if m_choices is empty, while old CLI had it as `[]`
@@ -1137,7 +1201,9 @@ namespace measure {
       if (hasDefaultValue()) {
         root["default_value"] = openstudio::toString(defaultValueAsPath());
       }
-
+      if (hasValue()) {
+        root["value"] = openstudio::toString(valueAsPath());
+      }
     } else if (m_type == OSArgumentType::Separator) {
       // No-op
     } else {

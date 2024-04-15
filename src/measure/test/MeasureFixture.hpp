@@ -39,6 +39,8 @@ class MeasureFixture : public ::testing::Test
   /// static data
   static boost::optional<openstudio::FileLogSink> logFile;
 
+  static openstudio::path scratchDir;
+
   virtual ~MeasureFixture() = default;
 };
 

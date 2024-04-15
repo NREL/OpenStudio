@@ -4,6 +4,7 @@
 ***********************************************************************************************************************/
 
 #include "Variant.hpp"
+#include <json/value.h>
 
 namespace openstudio {
 
@@ -24,46 +25,81 @@ VariantType Variant::variantType() const {
 }
 
 bool Variant::valueAsBoolean() const {
-  // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
-  // std::bad_variant_access which isn't available on mac prior to 10.14
-  if (const auto* p = std::get_if<bool>(&m_value)) {
-    return *p;
-  } else {
+  if (m_type != VariantType::Boolean) {
     LOG_AND_THROW("Variant does not hold a boolean");
   }
-  return *(std::get_if<bool>(&m_value));
+  return std::get<bool>(m_value);
 }
 
 int Variant::valueAsInteger() const {
-  if (const auto* p = std::get_if<int>(&m_value)) {
-    return *p;
-  } else {
+  if (m_type != VariantType::Integer) {
     LOG_AND_THROW("Variant does not hold an int");
   }
+  return std::get<int>(m_value);
 }
 
 double Variant::valueAsDouble() const {
   if (m_type == VariantType::Integer) {
-    return (double)valueAsInteger();
+    return static_cast<double>(valueAsInteger());
   }
 
-  if (const auto* p = std::get_if<double>(&m_value)) {
-    return *p;
-  } else {
+  if (m_type != VariantType::Double) {
     LOG_AND_THROW("Variant does not hold a double");
   }
+  return std::get<double>(m_value);
 }
 
 std::string Variant::valueAsString() const {
-  if (const auto* p = std::get_if<std::string>(&m_value)) {
-    return *p;
-  } else {
+  if (m_type != VariantType::String) {
     LOG_AND_THROW("Variant does not hold a string");
   }
+  return std::get<std::string>(m_value);
+}
+
+// helper constant for the visitor below so we static assert we didn't miss a type
+template <class>
+inline constexpr bool always_false_v = false;
+
+Json::Value Variant::valueAsJSON() const {
+  return std::visit(
+    [](auto&& arg) -> Json::Value {
+      using T = std::decay_t<decltype(arg)>;
+      if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+        return arg;
+      } else if constexpr (std::is_same_v<T, int>) {
+        return arg;
+      } else if constexpr (std::is_same_v<T, double>) {
+        return arg;
+      } else if constexpr (std::is_same_v<T, std::string>) {
+        return arg;
+      } else {
+        static_assert(always_false_v<T>, "non-exhaustive visitor!");
+      }
+    },
+    m_value);
+}
+
+bool Variant::isTrueish() const {
+  return std::visit(
+    [](auto&& arg) -> bool {
+      using T = std::decay_t<decltype(arg)>;
+      if constexpr (std::is_same_v<T, bool>) {  // NOLINT(bugprone-branch-clone)
+        return arg;
+      } else if constexpr (std::is_same_v<T, int>) {
+        return arg != 0;
+      } else if constexpr (std::is_same_v<T, double>) {
+        return arg != 0.0;
+      } else if constexpr (std::is_same_v<T, std::string>) {
+        return arg == "true";
+      } else {
+        static_assert(always_false_v<T>, "non-exhaustive visitor!");
+      }
+    },
+    m_value);
 }
 
 std::ostream& operator<<(std::ostream& os, const Variant& variant) {
-  VariantType variantType = variant.variantType();
+  const VariantType variantType = variant.variantType();
   if (variantType == VariantType::String) {
     os << variant.valueAsString();
   } else if (variantType == VariantType::Double) {

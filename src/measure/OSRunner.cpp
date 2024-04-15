@@ -8,14 +8,15 @@
 #include "OSArgument.hpp"
 #include "OSMeasure.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Containers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/WorkspaceObject.hpp"
 #include "../utilities/math/FloatCompare.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
-#include "../utilities/core/StringHelpers.hpp"
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/PathHelpers.hpp"
 
 #include <fmt/format.h>
 #include <cstdio>
@@ -181,14 +182,14 @@ namespace measure {
 
     // get list of new files
     if (m_currentDir) {
-      openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
+      const openstudio::path absoluteRootDir = m_workflow.absoluteRootDir();
       if (boost::filesystem::exists(*m_currentDir) && boost::filesystem::is_directory(*m_currentDir)) {
         for (boost::filesystem::directory_iterator dir_iter(*m_currentDir), end_iter; dir_iter != end_iter; ++dir_iter) {
           if (boost::filesystem::is_regular_file(dir_iter->status())) {
             if (m_currentDirFiles.find(dir_iter->path()) == m_currentDirFiles.end()) {
 
-              openstudio::path path = dir_iter->path();
-              OS_ASSERT(path.is_absolute());
+              const openstudio::path& fPath = dir_iter->path();
+              OS_ASSERT(fPath.is_absolute());
 
               // DLM: we need to figure out what these should be
               // are they absolute, relative to root dir, relative to measure dir, valid after reports have been packed up?
@@ -196,7 +197,7 @@ namespace measure {
               //  path = relativePath(path, absoluteRootDir);
               //} catch (const std::exception&){
               //}
-              m_result.addStepFile(path);
+              m_result.addStepFile(fPath);
             }
           }
         }
@@ -225,6 +226,10 @@ namespace measure {
   //}
 
   void OSRunner::prepareForMeasureRun(const OSMeasure& /*measure*/) {
+    prepareForMeasureRun();
+  }
+
+  void OSRunner::prepareForMeasureRun() {
     if (m_halted) {
       LOG(Error, "Wokflow halted, cannot prepate for measure run");
       return;
@@ -233,7 +238,7 @@ namespace measure {
       LOG(Error, "Step already started");
       return;
     }
-    boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
+    const boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
     if (!currentStep) {
       LOG(Error, "Cannot find current Workflow Step");
       return;
@@ -316,7 +321,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, bool value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -327,7 +332,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, double value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -351,7 +356,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, int value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -375,7 +380,7 @@ namespace measure {
   }
 
   void OSRunner::registerValue(const std::string& name, const std::string& value) {
-    WorkflowStepValue stepValue(cleanValueName(name), value);
+    const WorkflowStepValue stepValue(cleanValueName(name), value);
     m_result.addStepValue(stepValue);
   }
 
@@ -410,7 +415,7 @@ namespace measure {
         }
       } else {
         // script_argument is in user_arguments
-        OSArgument user_argument = it->second;
+        const OSArgument& user_argument = it->second;
 
         // check that names still match
         if (user_argument.name() != script_argument.name()) {
@@ -784,6 +789,91 @@ namespace measure {
     return result;
   }
 
+  Json::Value OSRunner::getArgumentValues(std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
+    // This function aims to replace OsLib_HelperMethods.createRunVariables
+    // TODO: should this call validateUserArguments like the ruby counterpart? At least it validates that the defaults are supposed to match etc
+    if (!validateUserArguments(script_arguments, user_arguments)) {
+      registerError("Invalid argument values.");
+      LOG_AND_THROW("Invalid argument values.");
+    }
+
+    Json::Value argument_values;
+    for (const OSArgument& script_argument : script_arguments) {
+      const std::string name = script_argument.name();
+      auto it = user_arguments.find(name);
+      if (it != user_arguments.end()) {
+        const auto& arg = it->second;
+        if (arg.hasValue()) {
+          argument_values[name] = arg.valueAsJSON();
+        } else if (arg.hasDefaultValue()) {
+          // TODO: is this wanted?
+          argument_values[name] = arg.defaultValueAsJSON();
+        }
+      }
+    }
+    return argument_values;
+  }
+
+  Json::Value OSRunner::getPastStepValuesForMeasure(const std::string& measureName) const {
+    Json::Value step_values(Json::objectValue);
+    for (const MeasureStep& step : subsetCastVector<MeasureStep>(m_workflow.workflowSteps())) {
+      boost::optional<WorkflowStepResult> stepResult_ = step.result();
+      if (!stepResult_ || !stepResult_->stepResult() || stepResult_->stepResult().get() != StepResult::Success) {
+        continue;
+      }
+      // TODO: should we match on any of these three?
+      if (istringEqual(measureName, step.measureDirName())) {  // The directory name, eg `IncreaseWallRValue`
+        LOG(Trace, "Step matches on measureDirName");
+      } else if (auto s_ = step.name(); istringEqual(measureName, *s_)) {  // An optional, abritrary one
+        LOG(Trace, "Step matches on name");
+      } else if (auto s_ = stepResult_->measureName();
+                 istringEqual(measureName, *s_)) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
+        LOG(Trace, "Step matches on Step Result's measureName");
+      } else {
+        continue;
+      }
+
+      for (const WorkflowStepValue& step_value : stepResult_->stepValues()) {
+        Json::Value root = step_value.toJSON();
+        if (auto value = root["value"]) {
+          step_values[step_value.name()] = value;
+        }
+      }
+      break;
+    }
+    return step_values;
+  }
+
+  Json::Value OSRunner::getPastStepValuesForName(const std::string& stepName) const {
+    // This function aims to replace OsLib_HelperMethods.check_upstream_measure_for_arg
+    Json::Value step_values(Json::objectValue);
+    for (const MeasureStep& step : subsetCastVector<MeasureStep>(m_workflow.workflowSteps())) {
+      boost::optional<WorkflowStepResult> stepResult_ = step.result();
+      if (!stepResult_ || !stepResult_->stepResult() || stepResult_->stepResult().get() != StepResult::Success) {
+        continue;
+      }
+
+      std::string measure_name = step.measureDirName();  // The directory name, eg `IncreaseWallRValue`
+      if (auto s_ = step.name()) {                       // An optional, abritrary one
+        measure_name = std::move(*s_);
+      }
+      // if (auto s_ = stepResult_->measureName()) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
+      //   measure_name = std::move(*s_);
+      // }
+
+      for (const WorkflowStepValue& stepValue : stepResult_->stepValues()) {
+        if (istringEqual(stepName, stepValue.name())) {
+          Json::Value root = stepValue.toJSON();
+          if (auto value = root["value"]) {
+            step_values[measure_name] = value;
+            // TODO: check_upstream_measure_for_arg was breaking early, and returning a {:value => value, :measure_name => measure_name} format
+          }
+        }
+      }
+    }
+    return step_values;
+  }
+
   void OSRunner::setLastOpenStudioModel(const openstudio::model::Model& lastOpenStudioModel) {
     m_lastOpenStudioModel = lastOpenStudioModel;
     m_lastOpenStudioModelPath.reset();
@@ -878,7 +968,7 @@ namespace measure {
     m_languagePreference = "en";
   }
 
-  std::string OSRunner::cleanValueName(const std::string& name) const {
+  std::string OSRunner::cleanValueName(const std::string& name) {
     static const boost::regex allowableCharacters("[^0-9a-zA-Z]");
     static const boost::regex leadingUnderscore("^_+");
     static const boost::regex trailingUnderscore("_+$");

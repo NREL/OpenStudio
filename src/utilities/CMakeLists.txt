@@ -263,10 +263,10 @@ source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
-# Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
+# Must call CMake itself in order to set the SWIG_DIR env var for add_custom_command
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_DIR="${SWIG_DIR}"
           "${SWIG_EXECUTABLE}"
           "-v"
           "-ruby"
@@ -436,18 +436,18 @@ set(${target_name}_swig_src
 
 
 set(${target_name}_depends
-  CONAN_PKG::sqlite3
-  CONAN_PKG::jsoncpp
-  CONAN_PKG::minizip
-  CONAN_PKG::zlib
-  CONAN_PKG::fmt
-  CONAN_PKG::pugixml
-  CONAN_PKG::boost
-  CONAN_PKG::cpprestsdk
-  CONAN_PKG::openssl
-  CONAN_PKG::geographiclib
-  CONAN_PKG::libxml2
-  CONAN_PKG::libxslt
+  SQLite::SQLite3
+  JsonCpp::JsonCpp
+  minizip::minizip
+  ZLIB::ZLIB
+  fmt::fmt
+  pugixml::pugixml
+  boost::boost
+  cpprestsdk::cpprestsdk
+  openssl::openssl
+  GeographicLib::GeographicLib
+  LibXml2::LibXml2
+  libxslt::libxslt
 )
 
 if(WIN32)
@@ -519,7 +519,7 @@ if(HAVE_UNISTD_H)
 endif()
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib openstudio_model_resources openstudio_energyplus_resources CONAN_PKG::fmt)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib openstudio_model_resources openstudio_energyplus_resources fmt::fmt)
 endif()
 
 if(BUILD_BENCHMARK)
@@ -541,14 +541,14 @@ if(BUILD_BENCHMARK)
     if (${bench_name} STREQUAL Checksum_Benchmark)
       target_link_libraries(${bench_name}
         PUBLIC
-          CONAN_PKG::benchmark
-          CONAN_PKG::fmt
-          CONAN_PKG::boost
+          benchmark::benchmark_main
+          fmt::fmt
+          boost::boost
       )
     else()
       target_link_libraries(${bench_name}
         PUBLIC
-          CONAN_PKG::benchmark
+          benchmark::benchmark_main
           openstudiolib
           ${${target_name}_depends}
       )

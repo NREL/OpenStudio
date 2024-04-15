@@ -25,12 +25,12 @@ add_executable(${target_name}
 set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS OPENSTUDIO_DIRECT_INCLUDE)
 
 target_link_libraries(${target_name}
-  CONAN_PKG::boost
-  CONAN_PKG::fmt
-  #CONAN_PKG::boost_filesystem
-  #CONAN_PKG::boost_regex
-  #CONAN_PKG::boost_program_options
-  #CONAN_PKG::boost_crc
+  boost::boost
+  fmt::fmt
+  #Boost::filesystem
+  #Boost::regex
+  #Boost::program_options
+  #boost::boost_crc - not sure where that went
 )
 
 # generate the IddFactory files

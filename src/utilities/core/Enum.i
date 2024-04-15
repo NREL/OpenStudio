@@ -42,6 +42,7 @@
     \
     static std::string enumName(); \
     static std::set<int> getValues(); \
+    static const std::map<std::string, int> getLookupMap(); \
   };  \
   ENUM_CONVERSION(_name); \
   inline std::ostream &operator<<(std::ostream &os, const _name &e); \

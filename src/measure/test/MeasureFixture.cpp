@@ -88,9 +88,9 @@ void MeasureFixture::SetUpTestSuite() {
   openstudio::Logger::instance().standardOutLogger().disable();
 
   // clear scratch
-  openstudio::path p = resourcesPath() / openstudio::toPath("ruleset/scratch");
-  openstudio::filesystem::remove_all(p);
-  openstudio::filesystem::create_directories(p);
+  scratchDir = openstudio::getApplicationBuildDirectory() / openstudio::toPath("Testing/Temporary/measure");
+  openstudio::filesystem::remove_all(scratchDir);
+  openstudio::filesystem::create_directories(scratchDir);
 }
 
 void MeasureFixture::TearDownTestSuite() {
@@ -99,3 +99,4 @@ void MeasureFixture::TearDownTestSuite() {
 
 // static variables
 boost::optional<openstudio::FileLogSink> MeasureFixture::logFile;
+openstudio::path MeasureFixture::scratchDir;

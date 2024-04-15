@@ -193,3 +193,23 @@ TEST_F(MeasureFixture, OSArgument_Domain) {
   EXPECT_TRUE(integerArg.setValue(1));
   EXPECT_TRUE(integerArg.setValue(2));
 }
+
+TEST_F(MeasureFixture, OSArgument_MakeChoiceArgumentFromMap) {
+  const std::map<std::string, std::string> choices_to_display_values_map{
+    {"handle1", "choice1"},
+    {"handle2", "choice2"},
+  };
+  const bool required = true;
+  const bool modelDependent = true;
+  OSArgument choiceArgument = OSArgument::makeChoiceArgument("choice", choices_to_display_values_map, required, modelDependent);
+  ASSERT_EQ(2, choiceArgument.choiceValues().size());
+  EXPECT_EQ("handle1", choiceArgument.choiceValues().front());
+  EXPECT_EQ("handle2", choiceArgument.choiceValues().back());
+
+  ASSERT_EQ(2, choiceArgument.choiceValueDisplayNames().size());
+  EXPECT_EQ("choice1", choiceArgument.choiceValueDisplayNames().front());
+  EXPECT_EQ("choice2", choiceArgument.choiceValueDisplayNames().back());
+
+  EXPECT_EQ(required, choiceArgument.required());
+  EXPECT_EQ(modelDependent, choiceArgument.modelDependent());
+}

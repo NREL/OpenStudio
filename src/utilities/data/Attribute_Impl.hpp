@@ -166,6 +166,9 @@ namespace detail {
     // short_version: if false, will include the uuid, versionuuid and source (if any)
     Json::Value toJSON(bool short_version) const;
 
+    // Just the value as a Json::Value
+    Json::Value valueAsJSON() const;
+
     /// comparison
     bool operator==(const Attribute& other) const;
 
