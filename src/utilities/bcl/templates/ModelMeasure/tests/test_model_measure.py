@@ -78,7 +78,7 @@ class TestModelMeasureName:
 
         # load the test model
         translator = openstudio.osversion.VersionTranslator()
-        path = openstudio.toPath(str(Path(__file__).parent.absolute() / "example_model.osm"))
+        path = Path(__file__).parent.absolute() / "example_model.osm"
         model = translator.loadModel(path)
         assert model.is_initialized()
         model = model.get()
@@ -124,5 +124,5 @@ class TestModelMeasureName:
         assert num_spaces_final == num_spaces_seed + 1
 
         # save the model to test output directory
-        output_file_path = openstudio.toPath(str(Path(__file__).parent.absolute() / "output" / "test_output.osm"))
+        output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.osm"
         model.save(output_file_path, True)
