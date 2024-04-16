@@ -130,7 +130,8 @@ module Kernel
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
     'pycall.so' => 'init_pycall',\
     'pycall.dll' => 'init_pycall',\
-    'msgpack/msgpack' => 'init_msgpack'
+    'msgpack/msgpack' => 'init_msgpack',
+    'racc/cparse' => 'init_cparse'
     #'cbor/cbor' => 'init_cbor',\
   }
 

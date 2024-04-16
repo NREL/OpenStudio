@@ -764,6 +764,11 @@ void locateEmbeddedGems(bool use_bundler) {
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
 
+      $logger.info("Bundler.specs_path=#{Bundler.specs_path}")
+      ::Bundler.reset!
+      puts ::Bundler.configure
+      $logger.info("Bundler.specs_path=#{Bundler.specs_path}")
+
       groups = Bundler.definition.groups
       keep_groups = []
       without_groups = ENV['BUNDLE_WITHOUT']

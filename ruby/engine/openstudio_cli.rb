@@ -642,6 +642,64 @@ def parse_main_args(main_args)
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
 
+      # Source rubygems repository https://rubygems.org/ or installed locally is ignoring #<Bundler::StubSpecification name=msgpack version=1.7.2 platform=ruby> because it is missing extensions
+      Bundler.ui.level = "debug"
+
+
+# module Bundler
+#   class RubygemsIntegration
+#     def spec_missing_extensions?(spec, default = true)
+#       return false
+#     end
+#   end
+# end
+
+
+
+      $logger.info("Bundler.specs_path=#{Bundler.specs_path}")
+      Gem.clear_paths
+      ::Bundler.reset!
+      puts ::Bundler.configure
+      $logger.info("Bundler.specs_path=#{Bundler.specs_path}")
+
+      # Dirty hack to force it to think the extensions are ok
+      # An alternative would be to go parse the gemspecs so we look for native
+      # ones, set them as not missing, and check if they are part of the embbeded ones or not
+      x = Bundler.rubygems
+      def x.spec_missing_extensions?(spec, default = true)
+        false
+      end
+
+      # native_exts = []
+      # Bundler.specs_path.glob("*.gemspec").each do |p|
+      #   spec = Bundler.load_gemspec(p)
+      #   next if spec.extensions.empty?
+      #   native_exts << "#{spec.name}-#{spec.version}"
+      #   # or s = eval(p.read); spec.loaded_from = p.expand_path.to_s
+      #   class << spec
+      #     define_method(:missing_extensions?) { false }
+      #   end
+
+      #   Gem::Specification.add_spec(spec)
+      # end
+      # puts "Native exts found: #{native_exts}"
+
+      $logger.info("definition")
+      puts "================="
+      pp Bundler.definition
+      puts "=================\n\n"
+      $logger.info("done")
+
+      $logger.info("dependencies")
+      puts "================="
+      pp Bundler.definition.dependencies
+      puts "=================\n\n"
+
+      $logger.info("specs")
+      puts "================="
+      pp Bundler.definition.specs
+      puts "=================\n\n"
+
       groups = Bundler.definition.groups
       keep_groups = []
       without_groups = ENV['BUNDLE_WITHOUT']
@@ -660,8 +718,9 @@ def parse_main_args(main_args)
       remaining_specs = []
       Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
 
+      # Don't try to load stuff we already have or something?
+      # Bundler.definition.instance_variable_set(:@specs, Bundler.definition.specs.select{|x| x.extensions.empty? || spec not in embedded_gems_to_activate })
       $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
-
 
       Bundler.setup(*keep_groups)
     ensure
