@@ -1,11 +1,16 @@
 """insert your copyright here."""
 
+import sys
 from pathlib import Path
 
 import openstudio
 import pytest
 
+CURRENT_DIR_PATH = Path(__file__).parent.absolute()
+sys.path.insert(0, str(CURRENT_DIR_PATH.parent))
 from measure import ModelMeasureName
+sys.path.pop(0)
+del sys.modules['measure']
 
 
 class TestModelMeasureName:

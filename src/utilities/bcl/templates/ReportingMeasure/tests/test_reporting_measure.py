@@ -3,13 +3,19 @@
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import openstudio
 import pytest
-from measure import ReportingMeasureName
 
 CURRENT_DIR_PATH = Path(__file__).parent.absolute()
+sys.path.insert(0, str(CURRENT_DIR_PATH.parent))
+from measure import ReportingMeasureName
+sys.path.pop(0)
+del sys.modules['measure']
+
+
 MODEL_IN_PATH_DEFAULT = CURRENT_DIR_PATH / "example_model.osm"
 EPW_IN_PATH_DEFAULT = CURRENT_DIR_PATH / "USA_CO_Golden-NREL.724666_TMY3.epw"
 
