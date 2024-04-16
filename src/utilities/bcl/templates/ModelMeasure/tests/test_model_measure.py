@@ -141,6 +141,10 @@ class TestModelMeasureName:
         model.save(output_file_path, True)
 
 
-# This allows running openstudio CLI on this file (`openstudio test_measure.py`)
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`, maybe with extra args)
 if __name__ == "__main__":
-    pytest.main()
+    import sys
+    if len(sys.argv) > 1:
+        pytest.main([__file__] + sys.argv[1:])
+    else:
+        pytest.main()
