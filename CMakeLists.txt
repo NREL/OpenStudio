@@ -1,5 +1,5 @@
 message(STATUS "Using CMake ${CMAKE_VERSION}")
-cmake_minimum_required(VERSION 3.20.0)
+cmake_minimum_required(VERSION 3.23.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
