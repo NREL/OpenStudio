@@ -176,22 +176,22 @@ namespace cli {
 1. Create a Ruby ModelMeasure:
 
 ```
-$ openstudio labs measure new --class-name MyExampleRubyModelMeasure
-$ openstudio labs measure new --class-name MyExampleRubyModelMeasure --type ModelMeasure --language Ruby
+$ openstudio measure new --class-name MyExampleRubyModelMeasure
+$ openstudio measure new --class-name MyExampleRubyModelMeasure --type ModelMeasure --language Ruby
 ```
 
 2. Pass all optional args to create a Python EnergyPlusMeasure:
 
 ```
-$ openstudio labs measure new --class-name MyExamplePythonMeasure --type EnergyPlusMeasure --language Python --name "My Python Measure" --description "This is my measure" --modeler-description "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+$ openstudio measure new --class-name MyExamplePythonMeasure --type EnergyPlusMeasure --language Python --name "My Python Measure" --description "This is my measure" --modeler-description "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
 
-$ openstudio labs measure new -c MyExamplePythonMeasure -t EnergyPlusMeasure -l Python -n "My Python Measure" -d "This is my measure" -m "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+$ openstudio measure new -c MyExamplePythonMeasure -t EnergyPlusMeasure -l Python -n "My Python Measure" -d "This is my measure" -m "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
 ```
 
 3. List taxonomy tags
 ```
-$ openstudio labs measure new --list-taxonomy-tags
-$ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
+$ openstudio measure new --list-taxonomy-tags
+$ openstudio measure new --list-for-first-taxonomy-tag HVAC
 ```
 )";
         newMeasureSubCommand->set_help_flag("-h,--help", "Print this help message and exit")->group(helpOptionsGroupName);
