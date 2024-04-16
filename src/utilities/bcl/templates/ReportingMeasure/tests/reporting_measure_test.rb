@@ -3,8 +3,9 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-require_relative '../measure.rb'
 require 'fileutils'
+
+require_relative '../measure'
 
 class ReportingMeasureNameTest < Minitest::Test
   def model_in_path_default
@@ -142,19 +143,22 @@ class ReportingMeasureNameTest < Minitest::Test
     assert(!File.exist?(report_path(test_name)))
 
     # temporarily change directory to the run directory and run the measure
-    start_dir = Dir.pwd
-    begin
-      Dir.chdir(run_dir(test_name))
-
-      # run the measure
+    Dir.chdir(run_dir(test_name)) do
       measure.run(runner, argument_map)
-      result = runner.result
-      show_output(result)
-      assert_equal('Success', result.value.valueName)
-      assert(result.warnings.empty?)
-    ensure
-      Dir.chdir(start_dir)
     end
+
+    result = runner.result
+    show_output(result)
+    assert_equal('Success', result.value.valueName)
+    assert(result.warnings.empty?)
+
+    sqlFile = runner.lastEnergyPlusSqlFile.get
+    if !sqlFile.connectionOpen
+      sqlFile.reopen
+    end
+    hours = sqlFile.hoursSimulated
+    refute_empty(hours)
+    assert_equal(8760.0, hours.get)
 
     # make sure the report file exists
     assert(File.exist?(report_path(test_name)))
@@ -189,7 +193,8 @@ class ReportingMeasureNameTest < Minitest::Test
     idf_output_requests = measure.energyPlusOutputRequests(runner, argument_map)
     assert_equal(0, idf_output_requests.size)
 
-    # mimic the process of running this measure in OS App or PAT. Optionally set custom model_in_path and custom epw_path.
+    # mimic the process of running this measure in OS App or PAT.
+    # Optionally set custom model_in_path and custom epw_path.
     epw_path = epw_path_default
     setup_test(test_name, idf_output_requests)
 
@@ -209,19 +214,23 @@ class ReportingMeasureNameTest < Minitest::Test
     assert(!File.exist?(report_path(test_name)))
 
     # temporarily change directory to the run directory and run the measure
-    start_dir = Dir.pwd
-    begin
-      Dir.chdir(run_dir(test_name))
-
-      # run the measure
+    Dir.chdir(run_dir(test_name)) do
       measure.run(runner, argument_map)
-      result = runner.result
-      show_output(result)
-      assert_equal('Success', result.value.valueName)
-      assert(result.warnings.empty?)
-    ensure
-      Dir.chdir(start_dir)
     end
+
+    result = runner.result
+    show_output(result)
+    assert_equal('Success', result.value.valueName)
+    assert(result.warnings.empty?)
+
+    # sqlFile = OpenStudio::SqlFile.new(OpenStudio::Path.new(sql_path(test_name)))
+    sqlFile = runner.lastEnergyPlusSqlFile.get
+    if !sqlFile.connectionOpen
+      sqlFile.reopen
+    end
+    hours = sqlFile.hoursSimulated
+    refute_empty(hours)
+    assert_equal(8760.0, hours.get)
 
     # make sure the report file exists
     assert(File.exist?(report_path(test_name)))

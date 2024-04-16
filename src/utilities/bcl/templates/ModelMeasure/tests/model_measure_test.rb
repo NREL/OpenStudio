@@ -3,8 +3,9 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-require_relative '../measure.rb'
 require 'fileutils'
+
+require_relative '../measure'
 
 class ModelMeasureNameTest < Minitest::Test
   # def setup
@@ -118,7 +119,7 @@ class ModelMeasureNameTest < Minitest::Test
     assert_equal(1, model.getSpaces.size - num_spaces_seed)
 
     # save the model to test output directory
-    output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
+    output_file_path = "#{File.dirname(__FILE__)}/output/test_output.osm"
     model.save(output_file_path, true)
   end
 end

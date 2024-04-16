@@ -3,8 +3,9 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-require_relative '../measure.rb'
 require 'fileutils'
+
+require_relative '../measure'
 
 class EnergyPlusMeasureNameTest < Minitest::Test
   # def setup

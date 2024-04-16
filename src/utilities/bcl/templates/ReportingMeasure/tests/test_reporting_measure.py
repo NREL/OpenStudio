@@ -6,7 +6,6 @@ from pathlib import Path
 
 import openstudio
 import pytest
-
 from measure import ReportingMeasureName
 
 CURRENT_DIR_PATH = Path(__file__).parent.absolute()
@@ -151,18 +150,24 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
+        try:
+            # run the measure
+            measure.run(runner, argument_map)
+        finally:
+            os.chdir(start_dir)
 
-        # run the measure
-        measure.run(runner, argument_map)
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
         assert len(result.warnings()) == 0
-        os.chdir(start_dir)
-        # except:
-        #    os.chdir(start_dir)
+
+        sqlFile = runner.lastEnergyPlusSqlFile().get()
+        if not sqlFile.connectionOpen():
+            sqlFile.reopen()
+        hours = sqlFile.hoursSimulated()
+        assert hours.is_initialized()
+        assert hours.get() == 8760.0
 
         # make sure the report file exists
         assert report_path.exists()
@@ -220,18 +225,24 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
+        try:
+            # run the measure
+            measure.run(runner, argument_map)
+        finally:
+            os.chdir(start_dir)
 
-        # run the measure
-        measure.run(runner, argument_map)
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
         assert len(result.warnings()) == 0
-        os.chdir(start_dir)
-        # except:
-        #    os.chdir(start_dir)
+
+        sqlFile = runner.lastEnergyPlusSqlFile().get()
+        if not sqlFile.connectionOpen():
+            sqlFile.reopen()
+        hours = sqlFile.hoursSimulated()
+        assert hours.is_initialized()
+        assert hours.get() == 8760.0
 
         # make sure the report file exists
         assert report_path.exists()
