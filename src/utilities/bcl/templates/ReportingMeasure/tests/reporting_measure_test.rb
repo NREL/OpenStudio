@@ -15,7 +15,7 @@ class ReportingMeasureNameTest < Minitest::Test
   def epw_path_default
     # make sure we have a weather data location
     epw = File.expand_path("#{File.dirname(__FILE__)}/USA_CO_Golden-NREL.724666_TMY3.epw")
-    assert(File.exist?(epw.to_s))
+    assert_path_exists(epw.to_s)
     return epw.to_s
   end
 
@@ -41,13 +41,13 @@ class ReportingMeasureNameTest < Minitest::Test
     if !File.exist?(run_dir(test_name))
       FileUtils.mkdir_p(run_dir(test_name))
     end
-    assert(File.exist?(run_dir(test_name)))
+    assert_path_exists(run_dir(test_name))
 
     if File.exist?(report_path(test_name))
       FileUtils.rm(report_path(test_name))
     end
 
-    assert(File.exist?(model_in_path))
+    assert_path_exists(model_in_path)
 
     if File.exist?(model_out_path(test_name))
       FileUtils.rm(model_out_path(test_name))
@@ -61,7 +61,7 @@ class ReportingMeasureNameTest < Minitest::Test
 
     translator = OpenStudio::OSVersion::VersionTranslator.new
     model = translator.loadModel(model_in_path)
-    assert(!model.empty?)
+    refute_empty(model)
     model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
@@ -127,9 +127,9 @@ class ReportingMeasureNameTest < Minitest::Test
     epw_path = epw_path_default
     setup_test(test_name, idf_output_requests)
 
-    assert(File.exist?(model_out_path(test_name)))
-    assert(File.exist?(sql_path(test_name)))
-    assert(File.exist?(epw_path))
+    assert_path_exists(model_out_path(test_name))
+    assert_path_exists(sql_path(test_name))
+    assert_path_exists(epw_path)
 
     # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
     runner.setLastOpenStudioModelPath(model_out_path(test_name))
@@ -140,7 +140,7 @@ class ReportingMeasureNameTest < Minitest::Test
     if File.exist?(report_path(test_name))
       FileUtils.rm(report_path(test_name))
     end
-    assert(!File.exist?(report_path(test_name)))
+    refute_path_exists(report_path(test_name))
 
     # temporarily change directory to the run directory and run the measure
     Dir.chdir(run_dir(test_name)) do
@@ -150,7 +150,7 @@ class ReportingMeasureNameTest < Minitest::Test
     result = runner.result
     show_output(result)
     assert_equal('Success', result.value.valueName)
-    assert(result.warnings.empty?)
+    assert_empty(result.stepWarnings)
 
     sqlFile = runner.lastEnergyPlusSqlFile.get
     if !sqlFile.connectionOpen
@@ -161,7 +161,7 @@ class ReportingMeasureNameTest < Minitest::Test
     assert_equal(8760.0, hours.get)
 
     # make sure the report file exists
-    assert(File.exist?(report_path(test_name)))
+    assert_path_exists(report_path(test_name))
   end
 
   def test_without_drybulb_temp
@@ -198,9 +198,9 @@ class ReportingMeasureNameTest < Minitest::Test
     epw_path = epw_path_default
     setup_test(test_name, idf_output_requests)
 
-    assert(File.exist?(model_out_path(test_name)))
-    assert(File.exist?(sql_path(test_name)))
-    assert(File.exist?(epw_path))
+    assert_path_exists(model_out_path(test_name))
+    assert_path_exists(sql_path(test_name))
+    assert_path_exists(epw_path)
 
     # set up runner, this will happen automatically when measure is run in PAT or OpenStudio
     runner.setLastOpenStudioModelPath(model_out_path(test_name))
@@ -211,7 +211,7 @@ class ReportingMeasureNameTest < Minitest::Test
     if File.exist?(report_path(test_name))
       FileUtils.rm(report_path(test_name))
     end
-    assert(!File.exist?(report_path(test_name)))
+    refute_path_exists(report_path(test_name))
 
     # temporarily change directory to the run directory and run the measure
     Dir.chdir(run_dir(test_name)) do
@@ -221,7 +221,7 @@ class ReportingMeasureNameTest < Minitest::Test
     result = runner.result
     show_output(result)
     assert_equal('Success', result.value.valueName)
-    assert(result.warnings.empty?)
+    assert_empty(result.stepWarnings)
 
     # sqlFile = OpenStudio::SqlFile.new(OpenStudio::Path.new(sql_path(test_name)))
     sqlFile = runner.lastEnergyPlusSqlFile.get
@@ -233,7 +233,7 @@ class ReportingMeasureNameTest < Minitest::Test
     assert_equal(8760.0, hours.get)
 
     # make sure the report file exists
-    assert(File.exist?(report_path(test_name)))
+    assert_path_exists(report_path(test_name))
   end
 end
 

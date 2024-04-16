@@ -93,7 +93,7 @@ class EnergyPlusMeasureNameTest < Minitest::Test
 
     # check that zone is properly named
     zone = workspace.getObjectsByType('Zone'.to_IddObjectType)[0]
-    assert(!zone.getString(0).empty?)
+    refute_empty(zone.getString(0))
     assert_equal('New Zone', zone.getString(0).get)
 
     # save the workspace to output directory

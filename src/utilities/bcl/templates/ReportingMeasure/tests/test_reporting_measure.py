@@ -160,7 +160,7 @@ class TestReportingMeasureName:
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
-        assert len(result.warnings()) == 0
+        assert len(result.stepWarnings()) == 0
 
         sqlFile = runner.lastEnergyPlusSqlFile().get()
         if not sqlFile.connectionOpen():
@@ -235,7 +235,7 @@ class TestReportingMeasureName:
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
-        assert len(result.warnings()) == 0
+        assert len(result.stepWarnings()) == 0
 
         sqlFile = runner.lastEnergyPlusSqlFile().get()
         if not sqlFile.connectionOpen():

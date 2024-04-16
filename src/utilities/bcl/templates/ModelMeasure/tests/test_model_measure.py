@@ -104,6 +104,9 @@ class TestModelMeasureName:
                 assert temp_arg_var.setValue(args_dict[arg.name()])
                 argument_map[arg.name()] = temp_arg_var
 
+        # Ensure the model did not start with a space named like requested
+        assert "New Space" not in [s.nameString() for s in model.getSpaces()]
+
         # run the measure
         measure.run(model, runner, argument_map)
         result = runner.result()
@@ -114,14 +117,19 @@ class TestModelMeasureName:
 
         # assert that it ran correctly
         assert result.value().valueName() == "Success"
-        assert len(result.info()) == 1
-        assert len(result.warnings()) == 0
-
-        assert result.info()[0].logMessage() == "Space New Space was added."
+        assert len(result.stepWarnings()) == 0
+        assert len(result.stepInfo()) == 1
+        assert result.stepInfo()[0] == "Space New Space was added."
 
         # check that there is now 1 more space
         num_spaces_final = len(model.getSpaces())
         assert num_spaces_final == num_spaces_seed + 1
+        assert "New Space" in [s.nameString() for s in model.getSpaces()]
+        assert result.stepInitialCondition()
+        assert result.stepInitialCondition().get() == 'The building started with 4 spaces.'
+
+        assert result.stepFinalCondition()
+        assert result.stepFinalCondition().get() == 'The building finished with 5 spaces.'
 
         # save the model to test output directory
         output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.osm"
