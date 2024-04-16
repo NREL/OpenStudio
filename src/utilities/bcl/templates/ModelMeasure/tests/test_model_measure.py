@@ -126,11 +126,16 @@ class TestModelMeasureName:
         assert num_spaces_final == num_spaces_seed + 1
         assert "New Space" in [s.nameString() for s in model.getSpaces()]
         assert result.stepInitialCondition()
-        assert result.stepInitialCondition().get() == 'The building started with 4 spaces.'
+        assert result.stepInitialCondition().get() == "The building started with 4 spaces."
 
         assert result.stepFinalCondition()
-        assert result.stepFinalCondition().get() == 'The building finished with 5 spaces.'
+        assert result.stepFinalCondition().get() == "The building finished with 5 spaces."
 
         # save the model to test output directory
         output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.osm"
         model.save(output_file_path, True)
+
+
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`)
+if __name__ == "__main__":
+    pytest.main()

@@ -113,3 +113,8 @@ class TestEnergyPlusMeasureName:
         # save the workspace to test output directory
         output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.idf"
         workspace.save(output_file_path, True)
+
+
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`)
+if __name__ == "__main__":
+    pytest.main()

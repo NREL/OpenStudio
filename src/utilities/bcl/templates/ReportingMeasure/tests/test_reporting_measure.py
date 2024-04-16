@@ -1,6 +1,7 @@
 """Insert your copyright here."""
 
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -40,7 +41,9 @@ class TestReportingMeasureName:
         epw_path: Path = EPW_IN_PATH_DEFAULT,
     ):
         run_dir = TestReportingMeasureName.run_dir(test_name)
-        run_dir.mkdir(parents=True, exist_ok=True)
+        if run_dir.exists():
+            shutil.rmtree(run_dir)
+        run_dir.mkdir(parents=True)
 
         report_path = TestReportingMeasureName.report_path(test_name)
         if report_path.exists():
@@ -246,3 +249,8 @@ class TestReportingMeasureName:
 
         # make sure the report file exists
         assert report_path.exists()
+
+
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`)
+if __name__ == "__main__":
+    pytest.main()
