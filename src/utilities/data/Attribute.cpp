@@ -698,6 +698,8 @@ namespace detail {
           return arg;
         } else if constexpr (std::is_same_v<T, int>) {
           return arg;
+          // cppcheck-suppress identicalConditionAfterEarlyExit
+          // cppcheck-suppress multiCondition
         } else if constexpr (std::is_same_v<T, unsigned int>) {
           return arg;
         } else if constexpr (std::is_same_v<T, std::string>) {
