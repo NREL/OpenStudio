@@ -128,8 +128,6 @@ module Kernel
     'liboga' => 'init_liboga',\
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
-    'pycall.so' => 'init_pycall',\
-    'pycall.dll' => 'init_pycall',\
     'msgpack/msgpack' => 'init_msgpack'
     #'cbor/cbor' => 'init_cbor',\
   }
