@@ -50,6 +50,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 #include <fmt/ranges.h>
 
 #include <boost/optional.hpp>
@@ -367,6 +368,49 @@ $ openstudio measure new --list-for-first-taxonomy-tag HVAC
       fmt::print("{}\n", resultStr);
       return;
     } else if (opt.run_tests) {
+
+      auto canonicalTestDir = openstudio::filesystem::canonical(opt.directoryPath);
+
+      // Pytest
+      fmt::print(fmt::fg(fmt::color::yellow),
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘",
+                 "", "Starting Python Tests", 80);
+      fmt::print("\n");
+      auto pytestOutDir = canonicalTestDir / "test_results" / "pytest";
+      auto runPytestCmd = fmt::format(
+        R"python(
+import pytest
+
+pytest.main([
+  "--junit-xml={junit}",
+  "--cov={test_dir}",
+  "--cov-report=term-missing",
+  "--cov-report=json:{json}",
+  "--cov-report=lcov:{lcov}",
+  "--cov-report=html:{html}",
+  "--cov-report=xml:{xml}",
+  "{test_dir}",
+])
+)python",
+        fmt::arg("junit", (pytestOutDir / "junit.xml").generic_string()),  //
+        fmt::arg("test_dir", canonicalTestDir.generic_string()),           //
+        fmt::arg("json", (pytestOutDir / "python_coverage.json").generic_string()),
+        fmt::arg("lcov", (pytestOutDir / "python_coverage.lcov").generic_string()),
+        fmt::arg("html", (pytestOutDir / "python_coverage_html").generic_string()),
+        fmt::arg("xml", (pytestOutDir / "python_coverage.xml").generic_string()));
+
+      fmt::print("runPytestCmd={}\n", runPytestCmd);
+      pythonEngine->exec(runPytestCmd);
+
+      fmt::print(fmt::fg(fmt::color::red),
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘",
+                 "", "Starting ruby tests", 80);
+      fmt::print("\n");
+
       auto runTestCmd = fmt::format(
         R"ruby(
 # load openstudio_measure_tester gem
@@ -393,7 +437,7 @@ if result != 0
   return 1
 end
 )ruby",
-        openstudio::filesystem::canonical(opt.directoryPath).generic_string());
+        canonicalTestDir.generic_string());
       rubyEngine->exec(runTestCmd);
     }
   }
