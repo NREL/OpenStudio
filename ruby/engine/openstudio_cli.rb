@@ -489,8 +489,6 @@ def parse_main_args(main_args)
 
   end
 
-  Gem.paths.path << ':/ruby/3.2.0/gems/'
-  Gem.paths.path << ':/ruby/3.2.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
@@ -502,6 +500,15 @@ def parse_main_args(main_args)
         begin
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
+
+          # These require io-console, which we don't have on Windows
+	  if Gem.win_platform?
+              next if s.name == 'reline'
+              next if s.name == 'debug'
+              next if s.name == 'irb'
+              next if s.name == 'readline'
+	  end
+
           s.loaded_from = f
           # This is shenanigans because otherwise rubygems will think extensions are missing
           # But we are initing them manually so they are not missing
