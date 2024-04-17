@@ -379,6 +379,12 @@ $ openstudio measure new --list-for-first-taxonomy-tag HVAC
                  "", "Starting Python Tests", 80);
       fmt::print("\n");
       auto pytestOutDir = canonicalTestDir / "test_results" / "pytest";
+
+      // -o junit_familar=legacy is to mimic having a pytest.ini with:
+      // [pytest]
+      // junit_family=legacy
+      // This uses xunit1 format, and adds the line + file at which error occured, something we don't have with xunit2 (default)
+
       auto runPytestCmd = fmt::format(
         R"python(
 import pytest
@@ -391,6 +397,7 @@ pytest.main([
   "--cov-report=lcov:{lcov}",
   "--cov-report=html:{html}",
   "--cov-report=xml:{xml}",
+  "-o", "junit_family=legacy",
   "{test_dir}",
 ])
 )python",
