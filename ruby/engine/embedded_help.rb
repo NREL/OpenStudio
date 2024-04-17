@@ -806,7 +806,7 @@ module Find
       ps = [path]
       while file = ps.shift
         catch(:prune) do
-          yield file.dup.taint
+          yield file.dup # .taint
           begin
             s = File.lstat(file)
           rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
