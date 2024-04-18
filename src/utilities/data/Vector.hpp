@@ -80,18 +80,21 @@ struct UTILITIES_API InterpInfo
 };
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
- *  increasing. */
+ *  increasing. ti is the total seconds of the timestep interval; it is used for
+ *  AverageInterp and must be positive. */
 UTILITIES_API InterpInfo interpInfo(const Vector& x, double xi, double ti);
 
 /** Linear interpolation of the function y = f(x) at point xi. Assumes that x is strictly
- *  increasing */
+ *  increasing. ti is the total seconds of the timestep interval; it is used for
+ *  AverageInterp and must be positive. */
 UTILITIES_API double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap, double ti = 0.0);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 /** Linear interpolation of the function y = f(x) at points xi. Assumes that x is strictly
- *  increasing. */
+ *  increasing. ti is the total seconds of the timestep interval; it is used for
+ *  AverageInterp and must be positive. */
 UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap, double ti = 0.0);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 //@}
 /** @name Common Methods and Vector Operations */
