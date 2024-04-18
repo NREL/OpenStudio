@@ -357,16 +357,16 @@ namespace model {
         }
       }
 
-      // match new to cloned subsurfaces
+      // setAdjacentSurface resets the AdjacentSubSurface on all child subsurfaces
       for (const auto& newSubSurface : newSurface.subSurfaces()) {
-        m_newMergedHandles.insert(newSubSurface.handle());
-        for (auto& cloneSubSurface : clone.subSurfaces()) {
-          if (circularEqual(newSubSurface.vertices(), cloneSubSurface.vertices(), 0.01)) {
-            m_currentToNewHandleMapping[cloneSubSurface.handle()] = newSubSurface.handle();
-            m_newToCurrentHandleMapping[newSubSurface.handle()] = cloneSubSurface.handle();
-
-            boost::optional<SubSurface> newAdjacentSubSurface = newSubSurface.adjacentSubSurface();
-            if (newAdjacentSubSurface) {
+        // for performance reasons, only find matching subsurfaces if there is an AdjacentSubSurface
+        boost::optional<SubSurface> newAdjacentSubSurface = newSubSurface.adjacentSubSurface();
+        if (newAdjacentSubSurface) {
+          for (auto& cloneSubSurface : clone.subSurfaces()) {
+            if (circularEqual(newSubSurface.vertices(), cloneSubSurface.vertices(), 0.01)) {
+              // only subsurfaces with an AdjacentSubSurface will be added to the handle mapping
+              m_currentToNewHandleMapping[cloneSubSurface.handle()] = newSubSurface.handle();
+              m_newToCurrentHandleMapping[newSubSurface.handle()] = cloneSubSurface.handle();
               boost::optional<UUID> currentAdjacentSubSurfaceHandle = getCurrentModelHandle(newAdjacentSubSurface->handle());
               if (currentAdjacentSubSurfaceHandle) {
                 boost::optional<SubSurface> currentAdjacentSubSurface = m_currentModel.getModelObject<SubSurface>(*currentAdjacentSubSurfaceHandle);
@@ -374,8 +374,8 @@ namespace model {
                   cloneSubSurface.setAdjacentSubSurface(*currentAdjacentSubSurface);
                 }
               }
+              break;
             }
-            break;
           }
         }
       }
