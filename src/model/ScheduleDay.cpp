@@ -181,6 +181,11 @@ namespace model {
         return 0.0;
       }
 
+      // We'll calculate the entire day when we request a single value but that's on purpose:
+      // * We're talking about max 60 timesteps * 24 hours = 1440 points,
+      //   but realistically more often than not you'll have a timestep of 6 (our default) or 4 so 96 to 144 points. So not a lot of points
+      // * We cache the timeSeries, and,
+      // * More often than not, the use case is to do it for the entire day anyways (eg: openstudio-standards to determine occupancy schedules)
       TimeSeries ts = this->timeSeries();
 
       DateTimeVector dateTimes = ts.dateTimes();

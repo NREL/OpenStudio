@@ -9162,9 +9162,9 @@ namespace osversion {
 
       } else if (iddname == "OS:Schedule:Day") {
 
-        // 1 Field has been added from 3.7.0 to 3.8.0:
+        // 1 Field has been modified from 3.7.0 to 3.8.0:
         // ----------------------------------------------
-        // * Interpolate to Timestep * 3
+        // * Interpolate to Timestep * 3 - Changed from bool to string choice
 
         auto iddObject = idd_3_8_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
