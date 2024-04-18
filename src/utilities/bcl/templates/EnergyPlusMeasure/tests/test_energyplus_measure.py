@@ -111,5 +111,5 @@ class TestEnergyPlusMeasureName:
         assert zone.getString(0).get() == "New Zone"
 
         # save the workspace to test output directory
-        output_file_path = openstudio.toPath(str(Path(__file__).parent.absolute() / "output" / "test_output.idf"))
+        output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.idf"
         workspace.save(output_file_path, True)

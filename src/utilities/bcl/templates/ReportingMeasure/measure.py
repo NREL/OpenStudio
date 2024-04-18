@@ -51,7 +51,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
 
         report_drybulb_temp = openstudio.measure.OSArgument.makeBoolArgument("report_drybulb_temp", True)
         report_drybulb_temp.setDisplayName("Add output variables for Drybulb Temperature")
-        report_drybulb_temp.setDescription("Will add drybulb temp and report min/mix value in html.")
+        report_drybulb_temp.setDescription("Will add drybulb temp and report min/max values in html.")
         report_drybulb_temp.setValue(True)
         args.append(report_drybulb_temp)
 
@@ -269,7 +269,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
             </tr>
             <tr>
               <th scope="row">Maximum Site Outdoor Air Drybulb Temperature</th>
-              <td>{min(vals):.1f}</td>
+              <td>{max(vals):.1f}</td>
               <td>C</td>
             </tr>
          </tbody>
