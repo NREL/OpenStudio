@@ -191,7 +191,7 @@ namespace model {
       DateTimeVector dateTimes = ts.dateTimes();
       Vector values = ts.values();
 
-      unsigned N = dateTimes.size();
+      const unsigned N = dateTimes.size();
       OS_ASSERT(values.size() == N);
 
       if (N == 0) {
@@ -255,7 +255,7 @@ namespace model {
         std::vector<double> values = this->values();          // these are already sorted
         std::vector<openstudio::Time> times = this->times();  // these are already sorted
 
-        unsigned N = times.size();
+        const unsigned N = times.size();
         OS_ASSERT(values.size() == N);
 
         TimeSeries result;
