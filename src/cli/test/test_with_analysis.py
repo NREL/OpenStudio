@@ -152,6 +152,8 @@ def test_run_log_debug(osclipath, is_labs: bool):
     run_log_path = runDir / "run.log"
     assert run_log_path.is_file()
     run_log = run_log_path.read_text()
+    # Filter out the debug InitRubyBindings
+    run_log = "\n".join([x for x in run_log.splitlines() if ' [ruby] ' not in x])
     assert "No results for objective function IsNonExisting.NonExisting" in run_log
     assert "runner.registerWarning called" in run_log
     assert 50 < len(run_log.splitlines()) < 100
@@ -185,6 +187,8 @@ def test_run_log_toplevel_verbose(osclipath, is_labs: bool):
     run_log_path = runDir / "run.log"
     assert run_log_path.is_file()
     run_log = run_log_path.read_text()
+    # Filter out the debug InitRubyBindings
+    run_log = "\n".join([x for x in run_log.splitlines() if ' [ruby] ' not in x])
     assert "No results for objective function IsNonExisting.NonExisting" in run_log
     assert "runner.registerWarning called" in run_log
     if not is_labs:
