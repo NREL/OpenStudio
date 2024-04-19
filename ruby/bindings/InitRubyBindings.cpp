@@ -662,12 +662,12 @@ void locateEmbeddedGems(bool use_bundler) {
           s = eval(spec)
 
           # These require io-console, which we don't have on Windows
-	  if Gem.win_platform?
+          if Gem.win_platform?
               next if s.name == 'reline'
               next if s.name == 'debug'
               next if s.name == 'irb'
               next if s.name == 'readline'
-	  end
+          end
 
           s.loaded_from = f
           # This is shenanigans because otherwise rubygems will think extensions are missing
@@ -763,9 +763,12 @@ void locateEmbeddedGems(bool use_bundler) {
         begin
           # Activate will manipulate the $LOAD_PATH to include the gem
           spec.activate
-        rescue Gem::LoadError
+        rescue Gem::LoadError => e
           # There may be conflicts between the bundle and the embedded gems,
           # those will be logged here
+          exception_msg = "Error activating gem #{spec.spec_file}: #{e.class}: #{e.message}\nTraceback:\n"
+          exception_msg += e.backtrace.join("\n")
+          STDERR.puts exception_msg
           $logger.error "Error activating gem #{spec.spec_file}"
           activation_errors = true
         end
