@@ -25,9 +25,15 @@ class RubyEngineFixture : public testing::Test
   }
 
   static std::string stripAddressFromErrorMessage(const std::string& error_message) {
-    static std::regex object_address_re("0x[[:alnum:]]*>");
+    static std::regex object_address_re("0x[[:alnum:]]* @__swigtype__=\"_p_openstudio__model__Model\">");
 
     return std::regex_replace(error_message, object_address_re, "ADDRESS>");
+  }
+
+  static std::string stripNumLevels(const std::string& error_message) {
+    static std::regex num_levels_re("[[:alnum:]]+ levels");
+
+    return std::regex_replace(error_message, num_levels_re, "<NUM_LEVELS> levels");
   }
 
  protected:
@@ -123,7 +129,7 @@ Traceback (most recent call last):
 {0}:12:in `s'
 {0}:12:in `s'
 {0}:12:in `s'
-	... 10061 levels...
+	... <NUM_LEVELS> levels...
 {0}:12:in `s'
 {0}:12:in `s'
 {0}:12:in `s'
@@ -144,7 +150,7 @@ Traceback (most recent call last):
     ASSERT_FALSE(true) << "Expected measure arguments(model) to throw";
   } catch (std::exception& e) {
     std::string error = e.what();
-    EXPECT_EQ(expected_exception, stripAddressFromErrorMessage(error));
+    EXPECT_EQ(expected_exception, stripNumLevels(error));
   }
 }
 

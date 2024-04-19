@@ -50,6 +50,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 #include <fmt/ranges.h>
 
 #include <boost/optional.hpp>
@@ -176,22 +177,22 @@ namespace cli {
 1. Create a Ruby ModelMeasure:
 
 ```
-$ openstudio labs measure new --class-name MyExampleRubyModelMeasure
-$ openstudio labs measure new --class-name MyExampleRubyModelMeasure --type ModelMeasure --language Ruby
+$ openstudio measure new --class-name MyExampleRubyModelMeasure
+$ openstudio measure new --class-name MyExampleRubyModelMeasure --type ModelMeasure --language Ruby
 ```
 
 2. Pass all optional args to create a Python EnergyPlusMeasure:
 
 ```
-$ openstudio labs measure new --class-name MyExamplePythonMeasure --type EnergyPlusMeasure --language Python --name "My Python Measure" --description "This is my measure" --modeler-description "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+$ openstudio measure new --class-name MyExamplePythonMeasure --type EnergyPlusMeasure --language Python --name "My Python Measure" --description "This is my measure" --modeler-description "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
 
-$ openstudio labs measure new -c MyExamplePythonMeasure -t EnergyPlusMeasure -l Python -n "My Python Measure" -d "This is my measure" -m "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
+$ openstudio measure new -c MyExamplePythonMeasure -t EnergyPlusMeasure -l Python -n "My Python Measure" -d "This is my measure" -m "This does complicated stuff" --taxonomy-tag "Envelope.Form" ./test_measure
 ```
 
 3. List taxonomy tags
 ```
-$ openstudio labs measure new --list-taxonomy-tags
-$ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
+$ openstudio measure new --list-taxonomy-tags
+$ openstudio measure new --list-for-first-taxonomy-tag HVAC
 ```
 )";
         newMeasureSubCommand->set_help_flag("-h,--help", "Print this help message and exit")->group(helpOptionsGroupName);
@@ -367,6 +368,56 @@ $ openstudio labs measure new --list-for-first-taxonomy-tag HVAC
       fmt::print("{}\n", resultStr);
       return;
     } else if (opt.run_tests) {
+
+      auto canonicalTestDir = openstudio::filesystem::canonical(opt.directoryPath);
+
+      // Pytest
+      fmt::print(fmt::fg(fmt::color::yellow),
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘",
+                 "", "Starting Python Tests", 80);
+      fmt::print("\n");
+      auto pytestOutDir = canonicalTestDir / "test_results" / "pytest";
+
+      // -o junit_familar=legacy is to mimic having a pytest.ini with:
+      // [pytest]
+      // junit_family=legacy
+      // This uses xunit1 format, and adds the line + file at which error occured, something we don't have with xunit2 (default)
+
+      auto runPytestCmd = fmt::format(
+        R"python(
+import pytest
+
+pytest.main([
+  "--junit-xml={junit}",
+  "--cov={test_dir}",
+  "--cov-report=term-missing",
+  "--cov-report=json:{json}",
+  "--cov-report=lcov:{lcov}",
+  "--cov-report=html:{html}",
+  "--cov-report=xml:{xml}",
+  "-o", "junit_family=legacy",
+  "{test_dir}",
+])
+)python",
+        fmt::arg("junit", (pytestOutDir / "junit.xml").generic_string()),  //
+        fmt::arg("test_dir", canonicalTestDir.generic_string()),           //
+        fmt::arg("json", (pytestOutDir / "python_coverage.json").generic_string()),
+        fmt::arg("lcov", (pytestOutDir / "python_coverage.lcov").generic_string()),
+        fmt::arg("html", (pytestOutDir / "python_coverage_html").generic_string()),
+        fmt::arg("xml", (pytestOutDir / "python_coverage.xml").generic_string()));
+
+      fmt::print("runPytestCmd={}\n", runPytestCmd);
+      pythonEngine->exec(runPytestCmd);
+
+      fmt::print(fmt::fg(fmt::color::red),
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘",
+                 "", "Starting ruby tests", 80);
+      fmt::print("\n");
+
       auto runTestCmd = fmt::format(
         R"ruby(
 # load openstudio_measure_tester gem
@@ -393,7 +444,7 @@ if result != 0
   return 1
 end
 )ruby",
-        openstudio::filesystem::canonical(opt.directoryPath).generic_string());
+        canonicalTestDir.generic_string());
       rubyEngine->exec(runTestCmd);
     }
   }

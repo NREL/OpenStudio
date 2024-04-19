@@ -3,8 +3,9 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-require_relative '../measure.rb'
 require 'fileutils'
+
+require_relative '../measure'
 
 class EnergyPlusMeasureNameTest < Minitest::Test
   # def setup
@@ -92,7 +93,7 @@ class EnergyPlusMeasureNameTest < Minitest::Test
 
     # check that zone is properly named
     zone = workspace.getObjectsByType('Zone'.to_IddObjectType)[0]
-    assert(!zone.getString(0).empty?)
+    refute_empty(zone.getString(0))
     assert_equal('New Zone', zone.getString(0).get)
 
     # save the workspace to output directory

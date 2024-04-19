@@ -1,15 +1,21 @@
 """Insert your copyright here."""
 
 import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import openstudio
 import pytest
 
-from measure import ReportingMeasureName
-
 CURRENT_DIR_PATH = Path(__file__).parent.absolute()
+sys.path.insert(0, str(CURRENT_DIR_PATH.parent))
+from measure import ReportingMeasureName
+sys.path.pop(0)
+del sys.modules['measure']
+
+
 MODEL_IN_PATH_DEFAULT = CURRENT_DIR_PATH / "example_model.osm"
 EPW_IN_PATH_DEFAULT = CURRENT_DIR_PATH / "USA_CO_Golden-NREL.724666_TMY3.epw"
 
@@ -41,7 +47,9 @@ class TestReportingMeasureName:
         epw_path: Path = EPW_IN_PATH_DEFAULT,
     ):
         run_dir = TestReportingMeasureName.run_dir(test_name)
-        run_dir.mkdir(parents=True, exist_ok=True)
+        if run_dir.exists():
+            shutil.rmtree(run_dir)
+        run_dir.mkdir(parents=True)
 
         report_path = TestReportingMeasureName.report_path(test_name)
         if report_path.exists():
@@ -151,18 +159,24 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
+        try:
+            # run the measure
+            measure.run(runner, argument_map)
+        finally:
+            os.chdir(start_dir)
 
-        # run the measure
-        measure.run(runner, argument_map)
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
-        assert len(result.warnings()) == 0
-        os.chdir(start_dir)
-        # except:
-        #    os.chdir(start_dir)
+        assert len(result.stepWarnings()) == 0
+
+        sqlFile = runner.lastEnergyPlusSqlFile().get()
+        if not sqlFile.connectionOpen():
+            sqlFile.reopen()
+        hours = sqlFile.hoursSimulated()
+        assert hours.is_initialized()
+        assert hours.get() == 8760.0
 
         # make sure the report file exists
         assert report_path.exists()
@@ -220,18 +234,33 @@ class TestReportingMeasureName:
 
         # temporarily change directory to the run directory and run the measure
         start_dir = Path.cwd()
-        # try:
         os.chdir(TestReportingMeasureName.run_dir(test_name))
+        try:
+            # run the measure
+            measure.run(runner, argument_map)
+        finally:
+            os.chdir(start_dir)
 
-        # run the measure
-        measure.run(runner, argument_map)
         result = runner.result()
         print(result)
         assert result.value().valueName() == "Success"
-        assert len(result.warnings()) == 0
-        os.chdir(start_dir)
-        # except:
-        #    os.chdir(start_dir)
+        assert len(result.stepWarnings()) == 0
+
+        sqlFile = runner.lastEnergyPlusSqlFile().get()
+        if not sqlFile.connectionOpen():
+            sqlFile.reopen()
+        hours = sqlFile.hoursSimulated()
+        assert hours.is_initialized()
+        assert hours.get() == 8760.0
 
         # make sure the report file exists
         assert report_path.exists()
+
+
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`, maybe with extra args)
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:
+        pytest.main([__file__] + sys.argv[1:])
+    else:
+        pytest.main()

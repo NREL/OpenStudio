@@ -3,8 +3,9 @@
 require 'openstudio'
 require 'openstudio/measure/ShowRunnerOutput'
 require 'minitest/autorun'
-require_relative '../measure.rb'
 require 'fileutils'
+
+require_relative '../measure'
 
 class ModelMeasureNameTest < Minitest::Test
   # def setup
@@ -61,8 +62,10 @@ class ModelMeasureNameTest < Minitest::Test
     # show the output
     show_output(result)
 
-    # assert that it ran correctly
+    # assert that it did fail
     assert_equal('Fail', result.value.valueName)
+    assert_equal(1, result.stepErrors.size)
+    assert_match(/empty space name/i, result.stepErrors.first)
   end
 
   def test_good_argument_values
@@ -77,7 +80,7 @@ class ModelMeasureNameTest < Minitest::Test
     translator = OpenStudio::OSVersion::VersionTranslator.new
     path = "#{File.dirname(__FILE__)}/example_model.osm"
     model = translator.loadModel(path)
-    assert(!model.empty?)
+    refute_empty(model)
     model = model.get
 
     # store the number of spaces in the seed model
@@ -102,6 +105,9 @@ class ModelMeasureNameTest < Minitest::Test
       argument_map[arg.name] = temp_arg_var
     end
 
+    # Ensure the model did not start with a space named like requested
+    refute_includes(model.getSpaces.map(&:nameString), "New Space")
+
     # run the measure
     measure.run(model, runner, argument_map)
     result = runner.result
@@ -111,14 +117,21 @@ class ModelMeasureNameTest < Minitest::Test
 
     # assert that it ran correctly
     assert_equal('Success', result.value.valueName)
-    assert(result.info.size == 1)
-    assert(result.warnings.empty?)
+    assert_equal(1, result.stepInfo.size)
+    assert_empty(result.stepWarnings)
 
-    # check that there is now 1 space
+    # check that there is now 1 extra space
     assert_equal(1, model.getSpaces.size - num_spaces_seed)
+    assert_includes(model.getSpaces.map(&:nameString), "New Space")
+
+    refute_empty(result.stepInitialCondition)
+    assert_equal('The building started with 4 spaces.', result.stepInitialCondition.get)
+
+    refute_empty(result.stepFinalCondition)
+    assert_equal('The building finished with 5 spaces.', result.stepFinalCondition.get)
 
     # save the model to test output directory
-    output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
+    output_file_path = "#{File.dirname(__FILE__)}/output/test_output.osm"
     model.save(output_file_path, true)
   end
 end

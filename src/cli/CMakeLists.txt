@@ -283,10 +283,17 @@ if(BUILD_TESTING)
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/outdated_measures/"
     )
 
-  add_test(NAME OpenStudioCLI.test_output_files
+    add_test(NAME OpenStudioCLI.test_output_files
       COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_output_files.py"
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/workflow/output_test/"
     )
+
+    file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/Testing/")
+    add_test(NAME OpenStudioCLI.test_bcl_measure_templates
+      COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_bcl_measure_templates.py"
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Testing/"
+    )
+
 
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed

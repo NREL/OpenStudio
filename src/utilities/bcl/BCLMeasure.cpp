@@ -59,7 +59,7 @@ static constexpr std::array<std::pair<std::string_view, std::string_view>, 3> ap
   {"resources", "resource"},
 }};
 
-static constexpr std::array<std::string_view, 1> ignoredSubFolders{"tests/output"};
+static constexpr std::array<std::string_view, 3> ignoredSubFolders{"tests/output", "__pycache__", "tests/__pycache__"};
 
 // TODO: do we want to keep ignoring the docs/ directory?
 static constexpr std::array<std::string_view, 1> usageTypesIgnoredOnClone{"doc"};

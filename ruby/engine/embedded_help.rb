@@ -128,8 +128,6 @@ module Kernel
     'liboga' => 'init_liboga',\
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
-    'pycall.so' => 'init_pycall',\
-    'pycall.dll' => 'init_pycall',\
     'msgpack/msgpack' => 'init_msgpack'
     #'cbor/cbor' => 'init_cbor',\
   }
@@ -693,7 +691,7 @@ module FileUtils
     alias :original_cp :cp
   end
 
-  def self.cp_r(src, dest, options = {})
+  def self.cp_r(src, dest, ...)
     #puts "cp_r #{src} to #{dest}"
     if src.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(src)
@@ -734,10 +732,10 @@ module FileUtils
       end
     end
 
-    self.original_cp_r(src, dest, options)
+    self.original_cp_r(src, dest, ...)
   end
 
-  def self.cp(src, dest, options = {})
+  def self.cp(src, dest, ...)
     #puts "cp #{src} to #{dest}"
     if src.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(src)
@@ -762,11 +760,11 @@ module FileUtils
       end
     end
 
-    self.original_cp(src, dest, options)
+    self.original_cp(src, dest, ...)
   end
 
-  def self.copy(src, dest, options = {})
-    return self.cp(src, dest, options)
+  def self.copy(src, dest, ...)
+    return self.cp(src, dest, ...)
   end
 end
 
@@ -806,7 +804,7 @@ module Find
       ps = [path]
       while file = ps.shift
         catch(:prune) do
-          yield file.dup.taint
+          yield file.dup # .taint
           begin
             s = File.lstat(file)
           rescue Errno::ENOENT, Errno::EACCES, Errno::ENOTDIR, Errno::ELOOP, Errno::ENAMETOOLONG
