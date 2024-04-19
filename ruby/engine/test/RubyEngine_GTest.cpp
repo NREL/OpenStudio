@@ -25,7 +25,7 @@ class RubyEngineFixture : public testing::Test
   }
 
   static std::string stripAddressFromErrorMessage(const std::string& error_message) {
-    static std::regex object_address_re("0x[[:alnum:]]*>");
+    static std::regex object_address_re("0x[[:alnum:]]* @__swigtype__=\"_p_openstudio__model__Model\">");
 
     return std::regex_replace(error_message, object_address_re, "ADDRESS>");
   }
