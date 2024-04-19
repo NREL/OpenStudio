@@ -7,7 +7,7 @@ require 'openstudio'
 require 'json'
 require 'minitest/autorun'
 
-class Gltf_Test < MiniTest::Unit::TestCase
+class Gltf_Test < Minitest::Test
 
   # def setup
   # end

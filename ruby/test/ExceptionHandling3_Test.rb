@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Exceptions3_Test < MiniTest::Unit::TestCase
+class Exceptions3_Test < Minitest::Test
 
   # def setup
   # end

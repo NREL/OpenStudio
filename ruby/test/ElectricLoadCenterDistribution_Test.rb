@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ElectricLoadCenterDistribution_Test < MiniTest::Unit::TestCase
+class ElectricLoadCenterDistribution_Test < Minitest::Test
 
   def test_ElectricLoadCenterDistribution_Photovoltaics
 

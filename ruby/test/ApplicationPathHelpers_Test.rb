@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ApplicationPathHelpers_Test < MiniTest::Unit::TestCase
+class ApplicationPathHelpers_Test < Minitest::Test
 
   # def setup
   # end

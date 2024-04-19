@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class EpwFile_Test < MiniTest::Unit::TestCase
+class EpwFile_Test < Minitest::Test
 
   def setup
     @epwDir = OpenStudio::Path.new(File.join(File.dirname(__FILE__), "../../resources/utilities/Filetypes/"))

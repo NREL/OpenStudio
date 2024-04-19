@@ -58,7 +58,7 @@ module OpenStudio
   end
 end
 
-class WorkspaceObjectWatcher_Test < MiniTest::Unit::TestCase
+class WorkspaceObjectWatcher_Test < Minitest::Test
 
   # def setup
   # end

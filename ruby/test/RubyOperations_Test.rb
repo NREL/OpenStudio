@@ -9,7 +9,7 @@ require 'set'
 
 require 'minitest/autorun'
 
-class RubyOperations_Test < MiniTest::Unit::TestCase
+class RubyOperations_Test < Minitest::Test
 
   def test_ModelObjectUniq
 

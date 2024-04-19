@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Matrix_Test < MiniTest::Unit::TestCase
+class Matrix_Test < Minitest::Test
 
   # def setup
   # end
