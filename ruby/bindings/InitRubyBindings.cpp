@@ -446,6 +446,10 @@ end # module OpenStudio
 
 void initEmbeddedGems() {
 
+  // Note: We instantiate a global $logger here
+  // It used to be a ruby Logger (require 'logger'), and we would have needed to set the log level based on the CLI parameters passed
+  // Instead, I mimic it by providing a convenience class that forwards to the OpenStudio logger, which takes care of the log level
+
   std::string initScript = R"ruby(
 # This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
@@ -467,15 +471,52 @@ def safe_puts(message=nil, opts=nil)
   end
 end
 
-require 'logger'
 require 'rbconfig'
 
-$logger = Logger.new(STDOUT)
-#$logger.level = Logger::ERROR
-$logger.level = Logger::WARN
+# require 'logger'
+# $logger = Logger.new(STDOUT)
+# $logger.level = Logger::DEBUG #WARN
+# Mimic ruby Logger, but forward to OpenStudio, so we don't have to worry about setting the LogLevel
+class ConvenienceLogger
+
+  attr_accessor :level
+
+  def initialize(log_level)
+    @level = log_level
+  end
+
+  def trace?
+    @level <= OpenStudio::Trace
+  end
+
+  def debug(msg)
+    OpenStudio::logFree(OpenStudio::Debug, "ruby", msg)
+  end
+
+  def info(msg)
+    OpenStudio::logFree(OpenStudio::Info, "ruby", msg)
+  end
+
+  def warn(msg)
+    OpenStudio::logFree(OpenStudio::Warn, "ruby", msg)
+  end
+
+  def error(msg)
+    OpenStudio::logFree(OpenStudio::Error, "ruby", msg)
+  end
+
+  def fatal(msg)
+    OpenStudio::logFree(OpenStudio::Fatal, "ruby", msg)
+  end
+
+end
+$logger = ConvenienceLogger.new(OpenStudio::Logger.instance.standardOutLogger.logLevel.get)
 
 # debug Gem::Resolver, must go before resolver is required
-#ENV['DEBUG_RESOLVER'] = "1"
+if $logger.trace?
+  ENV['DEBUG_RESOLVER'] = "1"
+end
+
 original_arch = nil
 if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
   # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
@@ -715,7 +756,10 @@ void locateEmbeddedGems(bool use_bundler) {
 
     embedded_gems_to_activate.each do |spec|
       if spec.name == "bundler"
-        $logger.debug "Activating gem #{spec.spec_file}"
+        $logger.debug "Activating Bundler gem #{spec.spec_file}"
+        if $logger.trace?
+          pp spec
+        end
         begin
           # Activate will manipulate the $LOAD_PATH to include the gem
           spec.activate
@@ -763,6 +807,10 @@ void locateEmbeddedGems(bool use_bundler) {
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
+
+      if $logger.trace?
+        Bundler.ui.level = "debug"
+      end
 
       groups = Bundler.definition.groups
       keep_groups = []
