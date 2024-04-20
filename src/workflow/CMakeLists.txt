@@ -25,7 +25,7 @@ add_library(openstudio_workflow
   Timer.cpp
 )
 
-target_link_libraries(openstudio_workflow PRIVATE openstudiolib)
+target_link_libraries(openstudio_workflow PUBLIC openstudiolib)
 
 if(BUILD_TESTING)
   set(openstudio_workflow_test_depends
