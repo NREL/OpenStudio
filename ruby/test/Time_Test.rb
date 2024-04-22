@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Time_Test < MiniTest::Unit::TestCase
+class Time_Test < Minitest::Test
 
   # def setup
   # end

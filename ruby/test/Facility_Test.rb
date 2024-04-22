@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Facility_Test < MiniTest::Unit::TestCase
+class Facility_Test < Minitest::Test
 
   def test_facility_attributes
 

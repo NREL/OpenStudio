@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Quantity_Test < MiniTest::Unit::TestCase
+class Quantity_Test < Minitest::Test
   def setup
     @tol = 1.0E-5
   end

@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class SkyTemperature_Test < MiniTest::Unit::TestCase
+class SkyTemperature_Test < Minitest::Test
 
   def test_construction_and_parentage
 

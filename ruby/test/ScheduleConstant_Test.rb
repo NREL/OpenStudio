@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ScheduleConstant_Test < MiniTest::Unit::TestCase
+class ScheduleConstant_Test < Minitest::Test
 
   def test_ScheduleConstant
     model = OpenStudio::Model::Model.new

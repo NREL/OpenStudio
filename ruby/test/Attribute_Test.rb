@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Attribute_Test < MiniTest::Unit::TestCase
+class Attribute_Test < Minitest::Test
 
   # def setup
   # end

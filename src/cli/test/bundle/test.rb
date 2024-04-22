@@ -20,4 +20,4 @@ raise "Tilt version does not match" unless Tilt::VERSION == '2.0.8'
 require 'openstudio'
 require 'openstudio-workflow'
 puts OpenStudio::Workflow::VERSION
-raise "OpenStudio Workflow gem version does not match" unless OpenStudio::Workflow::VERSION == '2.2.0'
+raise "OpenStudio Workflow gem version does not match" unless OpenStudio::Workflow::VERSION == '2.4.0'
