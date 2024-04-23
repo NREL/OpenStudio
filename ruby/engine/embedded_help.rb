@@ -128,7 +128,8 @@ module Kernel
     'liboga' => 'init_liboga',\
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
-    'msgpack/msgpack' => 'init_msgpack'
+    'msgpack/msgpack' => 'init_msgpack',
+    'byebug/byebug' => 'init_byebug'
     #'cbor/cbor' => 'init_cbor',\
   }
 
