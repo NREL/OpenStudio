@@ -69,6 +69,8 @@ namespace cli {
     cmd += fmt::format(R"(
 begin
   require '{}'
+  STDOUT.flush
+  STDERR.flush
   0
 rescue SystemExit => e
   # puts "System Exit"
