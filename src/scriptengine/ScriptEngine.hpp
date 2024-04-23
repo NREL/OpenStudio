@@ -81,32 +81,22 @@ class ScriptEngine
 
   template <typename T>
   T getAs(ScriptObject& obj) {
-    void* result = getAs_impl(obj, typeid(T));
-    if (result) {
-      return static_cast<T>(result);
+    if constexpr (std::is_same_v<T, bool>) {
+      return getAs_impl_bool(obj);
+    } else if constexpr (std::is_same_v<T, int>) {
+      return getAs_impl_int(obj);
+    } else if constexpr (std::is_same_v<T, double>) {
+      return getAs_impl_double(obj);
+    } else if constexpr (std::is_same_v<T, std::string>) {
+      return getAs_impl_string(obj);
     } else {
-      throw std::bad_cast();
+      void* result = getAs_impl(obj, typeid(T));
+      if (result) {
+        return static_cast<T>(result);
+      } else {
+        throw std::bad_cast();
+      }
     }
-  }
-
-  template <>
-  bool getAs<bool>(ScriptObject& obj) {
-    return getAs_impl_bool(obj);
-  }
-
-  template <>
-  int getAs<int>(ScriptObject& obj) {
-    return getAs_impl_int(obj);
-  }
-
-  template <>
-  double getAs<double>(ScriptObject& obj) {
-    return getAs_impl_double(obj);
-  }
-
-  template <>
-  std::string getAs<std::string>(ScriptObject& obj) {
-    return getAs_impl_string(obj);
   }
 
   template <typename T>
