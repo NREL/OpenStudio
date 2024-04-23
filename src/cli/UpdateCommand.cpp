@@ -67,25 +67,26 @@ namespace cli {
       cmd += fmt::format("ARGV << \"{}\"\n", arg);
     }
     cmd += fmt::format(R"(
-begin
-  require '{}'
+at_exit {{
   STDOUT.flush
   STDERR.flush
+}}
+
+begin
+  require '{}'
   0
 rescue SystemExit => e
-  # puts "System Exit"
+  # puts "System Exit: #{{e.status}}"
   if !e.success?
     STDERR.puts
     STDERR.puts "#{{e.class}}: #{{e.message}} with return code #{{e.status}} "
     STDERR.puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
-    STDERR.flush
   end
   e.status
 rescue Exception => e
   STDERR.puts
   STDERR.puts "#{{e.class}}: #{{e.message}}"
   STDERR.puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
-  STDERR.flush
   raise
 end
      )",
@@ -93,7 +94,10 @@ end
     try {
       auto ret_so = rubyEngine->eval(cmd);
       auto ret_code = rubyEngine->getAs<int>(ret_so);
-      exit(ret_code);
+      // fmt::print("ret_code={}\n", ret_code);
+      if (ret_code != 0) {
+        exit(ret_code);
+      }
     } catch (...) {
       // Bail faster though ruby isn't slow like python
       fmt::print(stderr, "Failed to execute '{}'\n", rubyScriptPath.generic_string());
