@@ -44,6 +44,11 @@ class RubyEngine final : public ScriptEngine
   // so the above template function can provide it back to the caller.
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
 
+  bool getAs_impl_bool(ScriptObject& obj) override;
+  int getAs_impl_int(ScriptObject& obj) override;
+  double getAs_impl_double(ScriptObject& obj) override;
+  std::string getAs_impl_string(ScriptObject& obj) override;
+
   void initRubyEngine();
   std::vector<std::string> includePaths;
   RubyInterpreter rubyInterpreter{includePaths};

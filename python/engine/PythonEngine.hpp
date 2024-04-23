@@ -40,6 +40,12 @@ class PythonEngine final : public ScriptEngine
 
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
+
+  bool getAs_impl_bool(ScriptObject& obj) override;
+  int getAs_impl_int(ScriptObject& obj) override;
+  double getAs_impl_double(ScriptObject& obj) override;
+  std::string getAs_impl_string(ScriptObject& obj) override;
+
   void importOpenStudio();
   void pyimport(const std::string& importName, const std::string& includePath);
 

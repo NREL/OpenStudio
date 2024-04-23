@@ -281,6 +281,48 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   return return_value;
 }
 
+bool PythonEngine::getAs_impl_bool(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyBool_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a bool");
+  }
+  return static_cast<bool>(PyObject_IsTrue(val.obj_));
+}
+
+int PythonEngine::getAs_impl_int(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyLong_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a PyLong");
+  }
+
+  return static_cast<int>(PyLong_AsLong(val.obj_));
+}
+
+double PythonEngine::getAs_impl_double(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyFloat_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a PyFloat");
+  }
+
+  return PyFloat_AsDouble(val.obj_);
+}
+
+std::string PythonEngine::getAs_impl_string(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+
+  if (!PyUnicode_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a String");
+  }
+
+  Py_ssize_t size = 0;
+  char const* pc = PyUnicode_AsUTF8AndSize(val.obj_, &size);  // No decref needed
+  if (!pc) {
+    throw std::runtime_error("Unable to convert to std::string in SWIG Python");
+  }
+
+  return std::string{pc, static_cast<size_t>(size)};
+}
+
 std::string PythonEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
 
   auto inferClassNameCmd = fmt::format(R"python(

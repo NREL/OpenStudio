@@ -119,6 +119,40 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   return return_value;
 }
 
+bool RubyEngine::getAs_impl_bool(ScriptObject& obj) {
+  auto val = std::any_cast<VALUE>(obj.object);
+  return RB_TEST(val);
+}
+
+int RubyEngine::getAs_impl_int(ScriptObject& obj) {
+  auto val = std::any_cast<VALUE>(obj.object);
+  if (!RB_FIXNUM_P(val)) {
+    throw std::runtime_error("VALUE is not a FIXNUM");
+  }
+
+  return RB_NUM2INT(val);
+}
+double RubyEngine::getAs_impl_double(ScriptObject& obj) {
+  auto val = std::any_cast<VALUE>(obj.object);
+  if (!RB_FLOAT_TYPE_P(val)) {
+    throw std::runtime_error("VALUE is not a FLOAT");
+  }
+
+  return RB_NUM2INT(val);
+}
+
+std::string RubyEngine::getAs_impl_string(ScriptObject& obj) {
+  auto val = std::any_cast<VALUE>(obj.object);
+
+  if (!RB_TYPE_P(val, RUBY_T_STRING)) {
+    throw std::runtime_error("VALUE is not a String");
+  }
+
+  char* cstr = StringValuePtr(val);
+  size_t size = RSTRING_LEN(val);  // + 1;  From trial and eror, if I had + 1 I get a string with one two many size
+  return std::string{cstr, size};
+}
+
 std::string RubyEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
 
   auto inferClassNameCmd = fmt::format(R"ruby(

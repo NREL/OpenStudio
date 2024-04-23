@@ -89,6 +89,26 @@ class ScriptEngine
     }
   }
 
+  template <>
+  bool getAs<bool>(ScriptObject& obj) {
+    return getAs_impl_bool(obj);
+  }
+
+  template <>
+  int getAs<int>(ScriptObject& obj) {
+    return getAs_impl_int(obj);
+  }
+
+  template <>
+  double getAs<double>(ScriptObject& obj) {
+    return getAs_impl_double(obj);
+  }
+
+  template <>
+  std::string getAs<std::string>(ScriptObject& obj) {
+    return getAs_impl_string(obj);
+  }
+
   template <typename T>
   void registerType(std::string name) {
     types.emplace(std::cref(typeid(T)), std::move(name));
@@ -98,6 +118,11 @@ class ScriptEngine
   // convert the underlying object to the correct type, then return it as a void *
   // so the above template function can provide it back to the caller.
   virtual void* getAs_impl(ScriptObject& obj, const std::type_info&) = 0;
+
+  virtual bool getAs_impl_bool(ScriptObject& obj) = 0;
+  virtual int getAs_impl_int(ScriptObject& obj) = 0;
+  virtual double getAs_impl_double(ScriptObject& obj) = 0;
+  virtual std::string getAs_impl_string(ScriptObject& obj) = 0;
 
   const std::string& getRegisteredTypeName(const std::type_info& type) {
     const auto& found_name = types.find(type);
