@@ -536,7 +536,7 @@ end
 
   openstudio::evalString(initScript);
 
-  const std::string irbPatch = R"ruby(
+  const std::string irbPatch = R"ruby(if $logger.trace?
 require 'irb'
 require 'irb/lc/error'
 
@@ -643,7 +643,7 @@ module IRB # :nodoc:
     end
   end
 end
-)ruby";
+end)ruby";
 
   openstudio::evalString(irbPatch);
 }
@@ -839,40 +839,37 @@ void locateEmbeddedGems(bool use_bundler) {
   if (use_bundler) {
     initCmd += R"ruby(
   # Load the bundle before activating any embedded gems
-  if true # use_bundler
+  embedded_gems_to_activate.each do |spec|
+    if spec.name == "bundler"
+      $logger.debug "Activating Bundler gem #{spec.spec_file}"
+      if $logger.trace?
+        pp spec
+      end
 
-    embedded_gems_to_activate.each do |spec|
-      if spec.name == "bundler"
-        $logger.debug "Activating Bundler gem #{spec.spec_file}"
-        if $logger.trace?
-          pp spec
-        end
-      binding.irb
-
-        begin
-          # Activate will manipulate the $LOAD_PATH to include the gem
-          spec.activate
-        rescue Gem::LoadError => e
-          # There may be conflicts between the bundle and the embedded gems,
-          # those will be logged here
-          exception_msg = "Error activating gem #{spec.spec_file}: #{e.class}: #{e.message}\nTraceback:\n"
-          exception_msg += e.backtrace.join("\n")
-          STDERR.puts exception_msg
-          $logger.error "Error activating gem #{spec.spec_file}"
-          activation_errors = true
-        end
+      begin
+        # Activate will manipulate the $LOAD_PATH to include the gem
+        spec.activate
+      rescue Gem::LoadError => e
+        # There may be conflicts between the bundle and the embedded gems,
+        # those will be logged here
+        exception_msg = "Error activating gem #{spec.spec_file}: #{e.class}: #{e.message}\nTraceback:\n"
+        exception_msg += e.backtrace.join("\n")
+        STDERR.puts exception_msg
+        $logger.error "Error activating gem #{spec.spec_file}"
+        activation_errors = true
       end
     end
+  end
 
-    current_dir = Dir.pwd
+  current_dir = Dir.pwd
 
-    original_arch = nil
-    if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
-      # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
-      original_arch = RbConfig::CONFIG['arch']
-      $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
-      RbConfig::CONFIG['arch'] = 'x64-mingw32'
-    end
+  original_arch = nil
+  if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+    # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+    original_arch = RbConfig::CONFIG['arch']
+    $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
+    RbConfig::CONFIG['arch'] = 'x64-mingw32'
+  end
 
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
@@ -901,49 +898,49 @@ void locateEmbeddedGems(bool use_bundler) {
     require 'bundler/stub_specification'
     require 'bundler'
 
-    begin
-      # activate bundled gems
-      # bundler will look in:
-      # 1) ENV["BUNDLE_GEMFILE"]
-      # 2) find_file("Gemfile", "gems.rb")
-      #require 'bundler/setup'
+  begin
+    # activate bundled gems
+    # bundler will look in:
+    # 1) ENV["BUNDLE_GEMFILE"]
+    # 2) find_file("Gemfile", "gems.rb")
+    #require 'bundler/setup'
 
-      if $logger.trace?
-        Bundler.ui.level = "debug"
+    if $logger.trace?
+      Bundler.ui.level = "debug"
+    end
+
+    groups = Bundler.definition.groups
+    keep_groups = []
+    without_groups = ENV['BUNDLE_WITHOUT']
+    $logger.info "without_groups = #{without_groups}"
+    groups.each do |g|
+      $logger.info "g = #{g}"
+      if without_groups.include?(g.to_s)
+        $logger.info "Bundling without group '#{g}'"
+      else
+        keep_groups << g
       end
+    end
 
-      groups = Bundler.definition.groups
-      keep_groups = []
-      without_groups = ENV['BUNDLE_WITHOUT']
-      $logger.info "without_groups = #{without_groups}"
-      groups.each do |g|
-        $logger.info "g = #{g}"
-        if without_groups.include?(g.to_s)
-          $logger.info "Bundling without group '#{g}'"
-        else
-          keep_groups << g
-        end
-      end
+    $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
 
-      $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
+    remaining_specs = []
+    Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
 
-      remaining_specs = []
-      Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
-
-      $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
+    $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
 
 
-      Bundler.setup(*keep_groups)
-    ensure
+    Bundler.setup(*keep_groups)
+  ensure
 
-      if original_arch
-        $logger.info "Restoring arch '#{original_arch}'"
-        RbConfig::CONFIG['arch'] = original_arch
-      end
+    if original_arch
+      $logger.info "Restoring arch '#{original_arch}'"
+      RbConfig::CONFIG['arch'] = original_arch
+    end
 
       Dir.chdir(current_dir)
     end
-  end)ruby";
+  )ruby";
   }
 
   initCmd += R"ruby(
