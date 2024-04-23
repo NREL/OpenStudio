@@ -804,6 +804,12 @@ void locateEmbeddedGems(bool use_bundler) {
     require 'bundler/uri_credentials_filter'
     require 'bundler/uri_normalizer'
     require 'bundler/index'
+    require 'bundler/digest'
+    require 'bundler/source/git'
+    require 'bundler/source/git/git_proxy'
+    require 'bundler/match_remote_metadata'
+    require 'bundler/remote_specification'
+    require 'bundler/stub_specification'
     require 'bundler'
 
     begin
