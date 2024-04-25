@@ -21,7 +21,8 @@ def test_path():
     """Assert you can load a model with a str or a pathlib.Path without throwing."""
     assert openstudio.model.Model.load("wrong.osm").empty()
     assert openstudio.model.Model.load(Path("wrong.osm")).empty()
-
+    # And we still support toPath
+    assert openstudio.model.Model.load(openstudio.toPath("wrong.osm")).empty()
 
 def test_json():
     """We can return jsoncpp objects to a native python dict."""
