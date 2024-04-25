@@ -312,7 +312,7 @@ namespace openstudio {
         }
     }
 
-    %typemap(in, fragment="SWIG_openstudio_path") (path) {
+    %typemap(in, fragment="SWIG_openstudio_path") path {
 
       // check if input is a path already
       void *vptr = 0;
@@ -326,12 +326,7 @@ namespace openstudio {
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path");
         }
       } else if(PyUnicode_Check($input)) {
-        // Python 3
         std::string s(PyUnicode_AsUTF8($input));
-        $1 = openstudio::toPath(s);
-      } else if(PyString_Check($input)) {
-        // Python2, PyString_Check does PyBytes_Check
-        std::string s(PyString_AsString($input));
         $1 = openstudio::toPath(s);
       } else if (isPathInstance($input)) {
         PyObject * str_obj = PyObject_Str($input);   // New reference
@@ -343,10 +338,10 @@ namespace openstudio {
       }
     }
 
-    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") (path) {
-      bool stringOrPathlibType = PyString_Check($input) || PyUnicode_Check($input) || isPathInstance($input);
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") path {
+      bool stringOrPathlibType = PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (stringOrPathlibType){
+      if (!stringOrPathlibType){
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
@@ -372,7 +367,7 @@ namespace openstudio {
     %apply path { const path };
 
     // handle const path& separately
-    %typemap(in, fragment="SWIG_openstudio_path") (const path&) {
+    %typemap(in, fragment="SWIG_openstudio_path") const path& {
       $1=NULL;
 
       // check if input is a path already
@@ -387,12 +382,7 @@ namespace openstudio {
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
         }
       } else if(PyUnicode_Check($input)) {
-        // Python 3
         std::string s(PyUnicode_AsUTF8($input));
-        $1 = new openstudio::path(openstudio::toPath(s));
-      } else if(PyString_Check($input)) {
-        // Python2, PyString_Check does PyBytes_Check
-        std::string s(PyString_AsString($input));
         $1 = new openstudio::path(openstudio::toPath(s));
       } else if (isPathInstance($input)) {
         PyObject * str_obj = PyObject_Str($input);   // New reference
@@ -404,10 +394,10 @@ namespace openstudio {
       }
     }
 
-    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") (const path&) {
-      bool stringOrPathlibType = PyString_Check($input) || PyUnicode_Check($input) || isPathInstance($input);
+    %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") const path& {
+      bool stringOrPathlibType = PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (stringOrPathlibType) {
+      if (!stringOrPathlibType) {
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
@@ -415,8 +405,8 @@ namespace openstudio {
       $1 = (stringOrPathlibType || pathType) ? 1 : 0;
     }
 
-    %typemap(freearg) (const path&) {
-      if ($1){
+    %typemap(freearg) const path& {
+      if ($1) {
         delete $1;
       }
     }

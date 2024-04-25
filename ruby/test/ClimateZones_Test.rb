@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class ClimateZones_Test < MiniTest::Unit::TestCase
+class ClimateZones_Test < Minitest::Test
 
   def test_basic
 

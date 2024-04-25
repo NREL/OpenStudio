@@ -72,9 +72,10 @@ begin
 rescue SystemExit
   # puts "help was called"
 rescue Exception => e
-  puts
-  puts "Error: #{{e.message}}"
-  puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
+  STDERR.puts
+  STDERR.puts "#{{e.class}}: #{{e.message}}"
+  STDERR.puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
+  STDERR.flush
   raise
 end
      )",

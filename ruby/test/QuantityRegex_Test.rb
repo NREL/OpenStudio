@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class QuantityRegex_Test < MiniTest::Unit::TestCase
+class QuantityRegex_Test < Minitest::Test
   # def setup
   # end
 

@@ -5,6 +5,8 @@
 
 #include "Vector.hpp"
 
+#include "../core/Assert.hpp"
+
 #include <random>
 
 // this should all be moved to a utilities/core/Random.h

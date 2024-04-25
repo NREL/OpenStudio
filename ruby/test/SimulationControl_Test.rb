@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class SimulationControl_Test < MiniTest::Unit::TestCase
+class SimulationControl_Test < Minitest::Test
 
   def test_construct_through_child
 

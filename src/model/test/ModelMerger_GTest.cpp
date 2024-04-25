@@ -894,3 +894,85 @@ TEST_F(ModelFixture, ModelMerger_ClimateZones_4166) {
   EXPECT_EQ(ClimateZones::ashraeInstitutionName(), model1.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].institution());
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<ClimateZones>());
 }
+
+TEST_F(ModelFixture, ModelMerger_Issue_5153) {
+
+  Model model1;
+  Model model2;
+  std::map<UUID, UUID> handleMapping;
+
+  // first model is empty
+
+  // second model has two spaces with adjacency
+
+  // object#_model#
+  std::vector<Point3d> floorprint1_2{
+    {0, 5, 0},
+    {5, 5, 0},
+    {5, 0, 0},
+    {0, 0, 0},
+  };
+
+  std::vector<Point3d> floorprint2_2{
+    {5,  5, 0},
+    {10, 5, 0},
+    {10, 0, 0},
+    {5,  0, 0},
+  };
+
+  // set up model 2
+  boost::optional<Space> space1_2 = Space::fromFloorPrint(floorprint1_2, 3, model2);
+  ASSERT_TRUE(space1_2);
+  space1_2->setName("Space 1 - Model 2");
+  EXPECT_EQ(6u, space1_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space1_2, 0.3));
+
+  boost::optional<Space> space2_2 = Space::fromFloorPrint(floorprint2_2, 3, model2);
+  ASSERT_TRUE(space2_2);
+  space2_2->setName("Space 2 - Model 2");
+  EXPECT_EQ(6u, space2_2->surfaces().size());
+  EXPECT_EQ(4u, setWWR(*space2_2, 0.3));
+
+  space1_2->matchSurfaces(*space2_2);
+
+  auto testModel = [](const Model& model) { 
+
+    unsigned numOutdoorSurfaces = 0;
+    unsigned numGroundSurfaces = 0;
+    unsigned numAdjacentSurfaces = 0;
+    unsigned numOutdoorSubSurfaces = 0;
+    unsigned numAdjacentSubSurfaces = 0;
+  
+    for (const auto& surface : model.getConcreteModelObjects<Surface>()) {
+      if (surface.outsideBoundaryCondition() == "Outdoors") {
+        ++numOutdoorSurfaces;
+      } else if (surface.outsideBoundaryCondition() == "Ground") {
+        ++numGroundSurfaces;
+      } else if (surface.outsideBoundaryCondition() == "Surface") {
+        ++numAdjacentSurfaces;
+      }
+
+      for (const auto& subSurface : surface.subSurfaces()) {
+        if (subSurface.adjacentSubSurface()) {
+          ++numAdjacentSubSurfaces;
+        } else {
+          ++numOutdoorSubSurfaces;
+        }
+      }
+    }
+
+    EXPECT_EQ(8u, numOutdoorSurfaces);
+    EXPECT_EQ(2u, numGroundSurfaces);
+    EXPECT_EQ(2u, numAdjacentSurfaces);
+    EXPECT_EQ(6u, numOutdoorSubSurfaces);
+    EXPECT_EQ(2u, numAdjacentSubSurfaces);
+  };
+
+  testModel(model2);
+
+  // do merge
+  ModelMerger mm;
+  mm.mergeModels(model1, model2, handleMapping);
+
+  testModel(model1);
+}

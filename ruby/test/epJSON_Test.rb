@@ -7,7 +7,7 @@ require 'openstudio'
 require 'json'
 require 'minitest/autorun'
 
-class EpJSON_Test < MiniTest::Unit::TestCase
+class EpJSON_Test < Minitest::Test
 
   def setup
 

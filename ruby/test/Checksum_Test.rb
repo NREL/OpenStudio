@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class Checksum_Test < MiniTest::Unit::TestCase
+class Checksum_Test < Minitest::Test
 
   # def setup
   # end

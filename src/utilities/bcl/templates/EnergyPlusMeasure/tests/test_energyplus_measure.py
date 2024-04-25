@@ -1,11 +1,16 @@
 """Insert your copyright here."""
 
+import sys
 from pathlib import Path
 
 import openstudio
 import pytest
 
+CURRENT_DIR_PATH = Path(__file__).parent.absolute()
+sys.path.insert(0, str(CURRENT_DIR_PATH.parent))
 from measure import EnergyPlusMeasureName
+sys.path.pop(0)
+del sys.modules['measure']
 
 
 class TestEnergyPlusMeasureName:
@@ -113,3 +118,12 @@ class TestEnergyPlusMeasureName:
         # save the workspace to test output directory
         output_file_path = Path(__file__).parent.absolute() / "output" / "test_output.idf"
         workspace.save(output_file_path, True)
+
+
+# This allows running openstudio CLI on this file (`openstudio test_measure.py`, maybe with extra args)
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:
+        pytest.main([__file__] + sys.argv[1:])
+    else:
+        pytest.main()

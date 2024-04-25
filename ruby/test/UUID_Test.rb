@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class UUID_Test < MiniTest::Unit::TestCase
+class UUID_Test < Minitest::Test
 
   # def setup
   # end

@@ -7,7 +7,7 @@ require 'openstudio'
 
 require 'minitest/autorun'
 
-class InteriorPartitionSurface_Test < MiniTest::Unit::TestCase
+class InteriorPartitionSurface_Test < Minitest::Test
 
   def test_hierarchy
     workspace = OpenStudio::Workspace.new
