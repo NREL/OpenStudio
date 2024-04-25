@@ -979,7 +979,11 @@ namespace measure {
       [&ss](const auto& arg) {
         // Needed to properly compare the types
         using T = std::decay_t<decltype(arg)>;
-        if constexpr (!std::is_same_v<T, std::monostate>) {
+        if constexpr (std::is_same_v<T, std::monostate>) {
+          // No-op
+        } else if constexpr (std::is_same_v<T, bool>) {
+          ss << std::boolalpha << arg;
+        } else {
           ss << arg;
         }
       },
