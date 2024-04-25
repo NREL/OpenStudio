@@ -106,9 +106,13 @@ namespace boost {
     optional(const boost::optional<T>& t);
     void reset();
     operator bool() const;
-    //bool operator!() const; // SWIG ignores this
-//    T get();
-//    T* operator->();
+
+
+    // bool operator!() const; // SWIG ignores this
+    // T get();
+    // T* operator->();
+    // T value_or(T& default_value);
+
     T operator*();
     bool is_initialized() const;
 
@@ -131,9 +135,19 @@ namespace boost {
           throw std::runtime_error("Optional not initialized");
         }
       }
+
       void set(const T &t) {
         (*self) = t;
       }
+
+      T value_or(const T& default_value) {
+        if (self->is_initialized()) {
+          return self->get();
+        } else {
+          return default_value;
+        }
+      }
+
     }
   };
 
