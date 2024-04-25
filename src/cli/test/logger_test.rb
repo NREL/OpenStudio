@@ -1,3 +1,5 @@
+require 'logger'
+
 $logger = Logger.new(STDOUT)
 $logger.level = Logger::WARN
 $logger.formatter = proc do |severity, datetime, progname, msg|
