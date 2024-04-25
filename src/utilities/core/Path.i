@@ -341,7 +341,7 @@ namespace openstudio {
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") path {
       bool stringOrPathlibType = PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (stringOrPathlibType){
+      if (!stringOrPathlibType){
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $&1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
@@ -397,7 +397,7 @@ namespace openstudio {
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING, fragment="SWIG_openstudio_path") const path& {
       bool stringOrPathlibType = PyUnicode_Check($input) || isPathInstance($input);
       bool pathType = false;
-      if (stringOrPathlibType) {
+      if (!stringOrPathlibType) {
         void *vptr = 0;
         int res = SWIG_ConvertPtr($input, &vptr, $1_descriptor, 0);
         pathType = (SWIG_IsOK(res) && (vptr != 0));
