@@ -259,11 +259,16 @@ void OSWorkflow::runEnergyPlus() {
         const openstudio::energyplus::ErrorFile errFile(errPath);
         std::string status = errFile.completedSuccessfully() ? "Completed Successfully" : "Failed";
         if (m_show_stdout) {
-          fmt::print("RunEnergyPlus: {} with ", status);
-          fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
-          fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
-          fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());
-          fmt::print("\n");
+          if (m_style_stdout) {
+            fmt::print("RunEnergyPlus: {} with ", status);
+            fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
+            fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
+            fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());
+            fmt::print("\n");
+          } else {
+            fmt::print("RunEnergyPlus: {} with {} Fatal Errors, {} Severe Errors, {} Warnings.\n", status, errFile.fatalErrors().size(),
+                       errFile.severeErrors().size(), errFile.warnings().size());
+          }
         }
         if (!errFile.completedSuccessfully()) {
           throw std::runtime_error("EnergyPlus Terminated with a Fatal Error. Check eplusout.err log.");
