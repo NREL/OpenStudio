@@ -154,6 +154,8 @@ void OSWorkflow::runEnergyPlus() {
     // TODO: is this the right place /Do we want to do that if we chose epJSON?
     detailedTimeBlock("Saving IDF", [this, &inIDF] { workspace_->save(inIDF, true); });
 
+    std::ofstream stdout_ofs(openstudio::toString(runDirPath / "stdout-energyplus"), std::ofstream::trunc);
+
     // TODO: workflow-gem was manually running expandObjects prior to the potential serialization to json
     // Should we rather pass -x to the E+ cmd line?
     if (!workflowJSON.runOptions()->skipExpandObjects()) {
@@ -161,7 +163,21 @@ void OSWorkflow::runEnergyPlus() {
       LOG(Info, "Running command '" << cmd << "'");
 
       int result = 0;
-      detailedTimeBlock("Running ExpandObjects", [&cmd, &result] { result = std::system(cmd.c_str()); });
+      detailedTimeBlock("Running ExpandObjects", [this, /*&cmd,*/ &result, &runDirPath, &runDirResults, &stdout_ofs] {
+        // result = std::system(cmd.c_str());
+        namespace bp = boost::process;
+        bp::ipstream is;
+        std::string line;
+        bp::child c(runDirResults.expandObjectsExe, bp::std_out > is);
+        while (c.running() && std::getline(is, line)) {
+          stdout_ofs << openstudio::ascii_trim_right(line) << '\n';  // Fix for windows...
+          if (m_show_stdout) {
+            fmt::print("{}\n", line);
+          }
+        }
+        c.wait();
+        result = c.exit_code();
+      });
       if (result != 0) {
         LOG(Warn, "ExpandObjects returned a non-zero exit code (" << result << ").");
       }
@@ -201,16 +217,12 @@ void OSWorkflow::runEnergyPlus() {
     int result = 0;
 
     if constexpr (useBoostProcess) {
-      detailedTimeBlock("Running EnergyPlus", [this, /*&cmd,*/ &result, &runDirPath, &runDirResults, &inIDF] {
+      detailedTimeBlock("Running EnergyPlus", [this, /*&cmd,*/ &result, &runDirPath, &runDirResults, &inIDF, &stdout_ofs] {
         // result = std::system(cmd.c_str());
         namespace bp = boost::process;
         bp::ipstream is;
-        // boost::iostream::file_descriptor_sink fl(runDirPath / "stdout-energyplus");
-        // boost::filesystem::ofstream ofs(runDirPath / "stdout-energyplus");
-        std::ofstream stdout_ofs(openstudio::toString(runDirPath / "stdout-energyplus"), std::ofstream::trunc);
         std::string line;
-        // bp::child c(cmd, bp::std_out > is);
-        bp::child c(runDirResults.energyPlusExe, inIDF.filename(), bp::std_out > is);
+        bp::child c(runDirResults.energyPlusExe, inIDF.filename(), (bp::std_out & bp::std_err) > is);
         while (c.running() && std::getline(is, line)) {
           stdout_ofs << openstudio::ascii_trim_right(line) << '\n';  // Fix for windows...
           if (m_show_stdout) {
@@ -240,16 +252,19 @@ void OSWorkflow::runEnergyPlus() {
         if (errContent.find("EnergyPlus Terminated--Fatal Error Detected") != std::string::npos) {
           throw std::runtime_error("EnergyPlus Terminated with a Fatal Error. Check eplusout.err log.");
         }
+
         // TODO: or we use ErrorFile... In which case what's the point of parsing the number of warnings/severe from eplusout.end?
         // Actually, ErrorFile doesn't understand recurring warnings
         // TODO: add a channel filter on the logger to avoid catching all the debug statements in the ErrorFile class
         const openstudio::energyplus::ErrorFile errFile(errPath);
         std::string status = errFile.completedSuccessfully() ? "Completed Successfully" : "Failed";
-        fmt::print("RunEnergyPlus: {} with ", status);
-        fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
-        fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
-        fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());
-        fmt::print("\n");
+        if (m_show_stdout) {
+          fmt::print("RunEnergyPlus: {} with ", status);
+          fmt::print(fmt::fg(fmt::color::red), "{} Fatal Errors, ", errFile.fatalErrors().size());
+          fmt::print(fmt::fg(fmt::color::orange), "{} Severe Errors, ", errFile.severeErrors().size());
+          fmt::print(fmt::fg(fmt::color::yellow), "{} Warnings.", errFile.warnings().size());
+          fmt::print("\n");
+        }
         if (!errFile.completedSuccessfully()) {
           throw std::runtime_error("EnergyPlus Terminated with a Fatal Error. Check eplusout.err log.");
         }
