@@ -102,7 +102,6 @@ InterpInfo interpInfo(const Vector& x, double xi, double ti) {
       result.wa = (x(result.ib) - xi) / (x(result.ib) - x(result.ia));
       result.wb = (xi - x(result.ia)) / (x(result.ib) - x(result.ia));
     } else {
-      OS_ASSERT(ti > 0.0);
       result.wb = xi - x(result.ia);
       result.wa = ti - result.wb;
       if ((result.wb > 0.0) && (result.wb < ti)) {
@@ -128,6 +127,10 @@ double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMe
 
   if (y.size() != N) {
     return result;
+  }
+
+  if (interpMethod == AverageInterp && ti <= 0.0) {
+    LOG_FREE_AND_THROW("openstudio.Vector", "Value of ti must be positive when interpolating using the AverageInterp method.");
   }
 
   InterpInfo info = interpInfo(x, xi, ti);

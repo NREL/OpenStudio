@@ -232,8 +232,12 @@ namespace model {
     openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
       if (!m_cachedTimeSeries) {
 
-        auto timestep = this->model().getUniqueModelObject<Timestep>();
-        int numberOfTimestepsPerHour = timestep.numberOfTimestepsPerHour();
+        int numberOfTimestepsPerHour;
+        if (boost::optional<Timestep> timestep = this->model().getOptionalUniqueModelObject<Timestep>()) {
+          numberOfTimestepsPerHour = timestep->numberOfTimestepsPerHour();
+        } else {
+          numberOfTimestepsPerHour = 6;
+        }
 
         Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
         int minutes = 60 / numberOfTimestepsPerHour;

@@ -914,10 +914,10 @@ TEST_F(ModelFixture, ModelMerger_Issue_5153) {
   };
 
   std::vector<Point3d> floorprint2_2{
-    {5,  5, 0},
+    {5, 5, 0},
     {10, 5, 0},
     {10, 0, 0},
-    {5,  0, 0},
+    {5, 0, 0},
   };
 
   // set up model 2
@@ -935,14 +935,13 @@ TEST_F(ModelFixture, ModelMerger_Issue_5153) {
 
   space1_2->matchSurfaces(*space2_2);
 
-  auto testModel = [](const Model& model) { 
-
+  auto testModel = [](const Model& model) {
     unsigned numOutdoorSurfaces = 0;
     unsigned numGroundSurfaces = 0;
     unsigned numAdjacentSurfaces = 0;
     unsigned numOutdoorSubSurfaces = 0;
     unsigned numAdjacentSubSurfaces = 0;
-  
+
     for (const auto& surface : model.getConcreteModelObjects<Surface>()) {
       if (surface.outsideBoundaryCondition() == "Outdoors") {
         ++numOutdoorSurfaces;
