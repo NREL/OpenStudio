@@ -476,6 +476,17 @@ if(BUILD_TESTING)
     message(AUTHOR_WARNING "Cannot run the python numpy test, as numpy isn't installed on your system python")
   endif()
 
+  if (Python_EXECUTABLE)
+    add_test(NAME OpenStudioCLI.minitest_fail
+      COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_minitest_fail.py" $<TARGET_FILE:openstudio>
+    )
+    if (SYSTEM_RUBY_EXECUTABLE)
+      add_test(NAME RubyTest.minitest_fail
+        COMMAND ${Python_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/test/run_minitest_fail.py" "${SYSTEM_RUBY_EXECUTABLE}"
+      )
+    endif()
+  endif()
+
   file(GLOB RUBY_TEST_SRC
     # find all CLI test
     "test/test*.rb"
@@ -498,13 +509,22 @@ if(BUILD_TESTING)
       string(REGEX MATCH "/?([A-Za-z_0-9 ]+)\\.rb" FILE_NAME ${f})
       string(REGEX REPLACE "/?([A-Za-z_0-9 ]+)\\.rb" "\\1" FILE_NAME ${FILE_NAME})
 
+      set(CTEST_NAME "CLITest-${FILE_NAME}-${TEST_NAME}")
 
-          add_test(NAME "CLITest-${FILE_NAME}-${TEST_NAME}"
-            COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
-            "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
-          )
+      add_test(NAME "${CTEST_NAME}"
+        COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
+        "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
+        )
 
-        set_tests_properties("CLITest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 )
+      set_tests_properties("${CTEST_NAME}" PROPERTIES TIMEOUT 660 )
+
+      if(TEST_NAME MATCHES "should_fail")
+        set_tests_properties("${CTEST_NAME}" PROPERTIES WILL_FAIL TRUE)
+        set_tests_properties("${CTEST_NAME}" PROPERTIES
+          PASS_REGULAR_EXPRESSION "Expected false to be truthy"
+        )
+      endif()
+
     endforeach()
   endforeach()
 endif()
