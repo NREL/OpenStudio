@@ -517,14 +517,8 @@ if(BUILD_TESTING)
         )
 
       set_tests_properties("${CTEST_NAME}" PROPERTIES TIMEOUT 660 )
-
-      if(TEST_NAME MATCHES "should_fail")
-        set_tests_properties("${CTEST_NAME}" PROPERTIES WILL_FAIL TRUE)
-        set_tests_properties("${CTEST_NAME}" PROPERTIES
-          PASS_REGULAR_EXPRESSION "Expected false to be truthy"
-        )
-      endif()
-
     endforeach()
+
   endforeach()
+
 endif()

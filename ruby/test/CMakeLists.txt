@@ -66,14 +66,16 @@ if(BUILD_TESTING)
         string(REGEX MATCH "/?([A-Za-z_0-9 ]+)\\.rb" FILE_NAME ${f})
         string(REGEX REPLACE "/?([A-Za-z_0-9 ]+)\\.rb" "\\1" FILE_NAME ${FILE_NAME})
 
+        set(CTEST_NAME "RubyTest-${FILE_NAME}-${TEST_NAME}")
+
         # Call with Ruby itself
-        add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
+        add_test(NAME "${CTEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
           "${SYSTEM_RUBY_EXECUTABLE}" "-I" "$<TARGET_FILE_DIR:openstudio_rb>" "${f}" "--name=test_${TEST_NAME}"
         )
-
-        set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 )
+        set_tests_properties("${CTEST_NAME}" PROPERTIES TIMEOUT 660 )
       endforeach()
+
     endforeach()
 
   endif()
