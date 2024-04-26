@@ -68,8 +68,12 @@ namespace cli {
     }
     cmd += fmt::format(R"(
 at_exit {{
+  exit_code = ($! and $!.kind_of? SystemExit) ? $!.status : 0
   STDOUT.flush
   STDERR.flush
+  if exit_code != 0
+    Kernel.exit!(exit_code)
+  end
 }}
 
 begin
@@ -94,7 +98,8 @@ end
     try {
       auto ret_so = rubyEngine->eval(cmd);
       auto ret_code = rubyEngine->getAs<int>(ret_so);
-      // fmt::print("ret_code={}\n", ret_code);
+      // If ret_code is already none zero, just exit faster
+      // Otherwise let it be, so that the at_exit(s) can run in particular (for minitest for eg)
       if (ret_code != 0) {
         exit(ret_code);
       }
