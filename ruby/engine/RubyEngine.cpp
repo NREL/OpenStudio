@@ -75,7 +75,13 @@ void RubyEngine::setupEmbeddedGems(const std::vector<openstudio::path>& includeD
 }
 
 RubyEngine::~RubyEngine() {
-  ruby_finalize();
+  // ruby_cleanup calls ruby_finalize
+  int ex = ruby_cleanup(0);
+  if (ex != 0) {
+    fmt::print("RubyEngine return code was {}\n", ex);
+    exit(ex);
+  }
+  //ruby_finalize();
 }
 
 ScriptObject RubyEngine::eval(std::string_view sv) {

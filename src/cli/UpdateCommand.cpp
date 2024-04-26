@@ -67,15 +67,6 @@ namespace cli {
       cmd += fmt::format("ARGV << \"{}\"\n", arg);
     }
     cmd += fmt::format(R"(
-at_exit {{
-  exit_code = ($! and $!.kind_of? SystemExit) ? $!.status : 0
-  STDOUT.flush
-  STDERR.flush
-  if exit_code != 0
-    Kernel.exit!(exit_code)
-  end
-}}
-
 begin
   require '{}'
   0
