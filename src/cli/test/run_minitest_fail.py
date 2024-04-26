@@ -67,8 +67,8 @@ if __name__ == "__main__":
         expected_stdout_message="1 failures",
     )
 
-    # r = subprocess.run(
-    #     [str(args.ruby_or_cli_path), "-e", "at exit { exit 12 }"],
-    #     stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", universal_newlines=True
-    # )
-    # assert r.returncode == 12
+    r = subprocess.run(
+        [str(args.ruby_or_cli_path), "-e", "at exit { exit 12 }"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", universal_newlines=True
+    )
+    assert r.returncode == 12
