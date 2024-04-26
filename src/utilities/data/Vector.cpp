@@ -5,6 +5,8 @@
 
 #include "Vector.hpp"
 
+#include "../core/Assert.hpp"
+
 #include <random>
 
 // this should all be moved to a utilities/core/Random.h
@@ -54,7 +56,7 @@ bool operator!=(const Vector& lhs, const Vector& rhs) {
 
 /// linear interpolation of the function y = f(x) at point xi
 /// assumes that x is strictly increasing
-InterpInfo interpInfo(const Vector& x, double xi) {
+InterpInfo interpInfo(const Vector& x, double xi, double ti) {
   size_t N = x.size();
 
   InterpInfo result;
@@ -64,24 +66,28 @@ InterpInfo interpInfo(const Vector& x, double xi) {
     result.ib = 0;
     result.wa = 1.0;
     result.wb = 0.0;
+    result.ti = 1.0;
     result.extrapolated = false;
   } else if (xi < x(0)) {
     result.ia = 0;
     result.ib = 0;
     result.wa = 1.0;
     result.wb = 0.0;
+    result.ti = 1.0;
     result.extrapolated = true;
   } else if (x(N - 1) == xi) {
     result.ia = N - 1;
     result.ib = N - 1;
     result.wa = 0.0;
     result.wb = 1.0;
+    result.ti = 1.0;
     result.extrapolated = false;
   } else if (xi > x(N - 1)) {
     result.ia = N - 1;
     result.ib = N - 1;
     result.wa = 0.0;
     result.wb = 1.0;
+    result.ti = 1.0;
     result.extrapolated = true;
   } else {
 
@@ -92,8 +98,20 @@ InterpInfo interpInfo(const Vector& x, double xi) {
 
     result.ia = (unsigned)(it - begin - 1);
     result.ib = (unsigned)(it - begin);
-    result.wa = (x(result.ib) - xi) / (x(result.ib) - x(result.ia));
-    result.wb = (xi - x(result.ia)) / (x(result.ib) - x(result.ia));
+    if (ti < 0.0) {
+      result.wa = (x(result.ib) - xi) / (x(result.ib) - x(result.ia));
+      result.wb = (xi - x(result.ia)) / (x(result.ib) - x(result.ia));
+    } else {
+      result.wb = xi - x(result.ia);
+      result.wa = ti - result.wb;
+      if ((result.wb > 0.0) && (result.wb < ti)) {
+        result.ti = ti;
+      } else {
+        result.wa = 0.0;
+        result.wb = 1.0;
+        result.ti = 1.0;
+      }
+    }
   }
 
   return result;
@@ -101,7 +119,7 @@ InterpInfo interpInfo(const Vector& x, double xi) {
 
 /// linear interpolation of the function y = f(x) at point xi
 /// assumes that x is strictly increasing
-double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod, ExtrapMethod extrapMethod) {
+double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMethod, ExtrapMethod extrapMethod, double ti) {
 
   size_t N = x.size();
 
@@ -111,7 +129,11 @@ double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMe
     return result;
   }
 
-  InterpInfo info = interpInfo(x, xi);
+  if (interpMethod == AverageInterp && ti <= 0.0) {
+    LOG_FREE_AND_THROW("openstudio.Vector", "Value of ti must be positive when interpolating using the AverageInterp method.");
+  }
+
+  InterpInfo info = interpInfo(x, xi, ti);
 
   if (info.extrapolated) {
     switch (extrapMethod) {
@@ -129,6 +151,10 @@ double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMe
       case LinearInterp:
         // linear interpolation
         result = info.wa * y(info.ia) + info.wb * y(info.ib);
+        break;
+      case AverageInterp:
+        // average interpolation
+        result = (info.wa * y(info.ia) + info.wb * y(info.ib)) / info.ti;
         break;
       case NearestInterp:
         // pick closest point
@@ -150,7 +176,7 @@ double interp(const Vector& x, const Vector& y, double xi, InterpMethod interpMe
 
 /// linear interpolation of the function y = f(x) at points xi
 /// assumes that x is strictly increasing
-Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod, ExtrapMethod extrapMethod) {
+Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod interpMethod, ExtrapMethod extrapMethod, double ti) {
 
   size_t N = x.size();
 
@@ -161,7 +187,7 @@ Vector interp(const Vector& x, const Vector& y, const Vector& xi, InterpMethod i
   }
 
   for (unsigned i = 0; i < N; ++i) {
-    result(i) = interp(x, y, xi(i), interpMethod, extrapMethod);
+    result(i) = interp(x, y, xi(i), interpMethod, extrapMethod, ti);
   }
 
   return result;

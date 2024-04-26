@@ -16,6 +16,8 @@
 #include "ScheduleRuleset_Impl.hpp"
 #include "ScheduleRule.hpp"
 #include "ScheduleRule_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Schedule_Day_FieldEnums.hxx>
@@ -25,6 +27,7 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "../utilities/time/Time.hpp"
+#include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/data/Vector.hpp"
 
 namespace openstudio {
@@ -115,8 +118,10 @@ namespace model {
       return !getObject<ScheduleDay>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_DayFields::ScheduleTypeLimitsName);
     }
 
-    bool ScheduleDay_Impl::interpolatetoTimestep() const {
-      return getBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep);
+    std::string ScheduleDay_Impl::interpolatetoTimestep() const {
+      boost::optional<std::string> value = getString(OS_Schedule_DayFields::InterpolatetoTimestep, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ScheduleDay_Impl::isInterpolatetoTimestepDefaulted() const {
@@ -176,40 +181,130 @@ namespace model {
         return 0.0;
       }
 
-      std::vector<double> values = this->values();          // these are already sorted
-      std::vector<openstudio::Time> times = this->times();  // these are already sorted
+      // We'll calculate the entire day when we request a single value but that's on purpose:
+      // * We're talking about max 60 timesteps * 24 hours = 1440 points,
+      //   but realistically more often than not you'll have a timestep of 6 (our default) or 4 so 96 to 144 points. So not a lot of points
+      // * We cache the timeSeries, and,
+      // * More often than not, the use case is to do it for the entire day anyways (eg: openstudio-standards to determine occupancy schedules)
+      TimeSeries ts = this->timeSeries();
 
-      unsigned N = times.size();
+      DateTimeVector dateTimes = ts.dateTimes();
+      Vector values = ts.values();
+
+      const unsigned N = dateTimes.size();
       OS_ASSERT(values.size() == N);
 
       if (N == 0) {
         return 0.0;
       }
 
-      openstudio::Vector x(N + 2);
-      openstudio::Vector y(N + 2);
+      Vector x(N + 2);
+      Vector y(N + 2);
 
-      x[0] = -0.000001;
-      y[0] = 0.0;
+      x[0] = 0.0;
+      std::string interpolatetoTimestep = this->interpolatetoTimestep();
+      if (istringEqual("No", interpolatetoTimestep)) {
+        y[0] = values[0];
+      } else if (istringEqual("Average", interpolatetoTimestep)) {
+        y[0] = values[0];
+      } else if (istringEqual("Linear", interpolatetoTimestep)) {
+        y[0] = 0.0;
+      }
 
       for (unsigned i = 0; i < N; ++i) {
-        x[i + 1] = times[i].totalDays();
+        openstudio::Time t = dateTimes[i].time();
+        if (t.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+          t = openstudio::Time(0, 24, 0);
+        }
+
+        x[i + 1] = t.totalDays();
         y[i + 1] = values[i];
       }
 
-      x[N + 1] = 1.000001;
-      y[N + 1] = 0.0;
+      x[N + 1] = 1.0;
+      y[N + 1] = values[N - 1];
 
-      InterpMethod interpMethod;
-      if (this->interpolatetoTimestep()) {
-        interpMethod = LinearInterp;
-      } else {
-        interpMethod = HoldNextInterp;
-      }
-
-      double result = interp(x, y, time.totalDays(), interpMethod, NoneExtrap);
+      double result = interp(x, y, time.totalDays(), HoldNextInterp, NoneExtrap);
 
       return result;
+    }
+
+    openstudio::TimeSeries ScheduleDay_Impl::timeSeries() const {
+      if (!m_cachedTimeSeries) {
+
+        int numberOfTimestepsPerHour;
+        if (boost::optional<Timestep> timestep = this->model().getOptionalUniqueModelObject<Timestep>()) {
+          numberOfTimestepsPerHour = timestep->numberOfTimestepsPerHour();
+        } else {
+          numberOfTimestepsPerHour = 6;
+        }
+
+        Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));  // this is arbitrary
+        int minutes = 60 / numberOfTimestepsPerHour;
+        DateTime startDateTime(startDate, Time(0, 0, 0));
+
+        DateTimeVector tsDateTimes;
+        for (size_t hour = 0; hour < 24; ++hour) {
+          for (size_t minute = minutes; minute <= 60; minute += minutes) {
+            if (minute == 60) {
+              openstudio::Time t(0, hour + 1, 0);
+              tsDateTimes.push_back(startDateTime + t);
+            } else {
+              openstudio::Time t(0, hour, minute);
+              tsDateTimes.push_back(startDateTime + t);
+            }
+          }
+        }
+
+        std::vector<double> values = this->values();          // these are already sorted
+        std::vector<openstudio::Time> times = this->times();  // these are already sorted
+
+        const unsigned N = times.size();
+        OS_ASSERT(values.size() == N);
+
+        TimeSeries result;
+        if (N == 0) {
+          return result;
+        }
+
+        Vector x(N + 2);
+        Vector y(N + 2);
+
+        x[0] = -0.000001;
+        y[0] = 0.0;
+
+        for (unsigned i = 0; i < N; ++i) {
+          x[i + 1] = times[i].totalSeconds();
+          y[i + 1] = values[i];
+        }
+
+        x[N + 1] = 86400.000001;
+        y[N + 1] = 0.0;
+
+        std::string interpolatetoTimestep = this->interpolatetoTimestep();
+        Vector tsValues(tsDateTimes.size());
+        for (unsigned j = 0; j < tsDateTimes.size(); ++j) {
+          openstudio::Time t = tsDateTimes[j].time();
+          if (t.totalDays() == 0.0) {  // this is 00:00:00 from the next day
+            t = openstudio::Time(0, 24, 0);
+          }
+
+          if (istringEqual("No", interpolatetoTimestep)) {
+            tsValues[j] = interp(x, y, t.totalSeconds(), HoldNextInterp, NoneExtrap);
+          } else if (istringEqual("Average", interpolatetoTimestep)) {
+            double minutes = 60.0 / numberOfTimestepsPerHour;
+            double ti = minutes * 60.0;  // total seconds of the timestep interval
+            tsValues[j] = interp(x, y, t.totalSeconds(), AverageInterp, NoneExtrap, ti);
+          } else if (istringEqual("Linear", interpolatetoTimestep)) {
+            tsValues[j] = interp(x, y, t.totalSeconds(), LinearInterp, NoneExtrap);
+          }
+        }
+
+        result = TimeSeries(tsDateTimes, tsValues, "");
+        m_cachedTimeSeries = result;
+      }
+
+      return m_cachedTimeSeries.get();
     }
 
     bool ScheduleDay_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
@@ -229,9 +324,8 @@ namespace model {
       return false;
     }
 
-    bool ScheduleDay_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-      return setBooleanFieldValue(OS_Schedule_DayFields::InterpolatetoTimestep, interpolatetoTimestep);
-      ;
+    bool ScheduleDay_Impl::setInterpolatetoTimestep(const std::string& interpolatetoTimestep) {
+      return setString(OS_Schedule_DayFields::InterpolatetoTimestep, interpolatetoTimestep);
     }
 
     void ScheduleDay_Impl::resetInterpolatetoTimestep() {
@@ -369,6 +463,11 @@ namespace model {
     void ScheduleDay_Impl::clearCachedVariables() {
       m_cachedTimes.reset();
       m_cachedValues.reset();
+      m_cachedTimeSeries.reset();
+    }
+
+    void ScheduleDay_Impl::clearCachedTimeSeries() {
+      m_cachedTimeSeries.reset();
     }
 
   }  // namespace detail
@@ -394,7 +493,7 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->isScheduleTypeLimitsDefaulted();
   }
 
-  bool ScheduleDay::interpolatetoTimestep() const {
+  std::string ScheduleDay::interpolatetoTimestep() const {
     return getImpl<detail::ScheduleDay_Impl>()->interpolatetoTimestep();
   }
 
@@ -414,7 +513,11 @@ namespace model {
     return getImpl<detail::ScheduleDay_Impl>()->getValue(time);
   }
 
-  bool ScheduleDay::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+  openstudio::TimeSeries ScheduleDay::timeSeries() const {
+    return getImpl<detail::ScheduleDay_Impl>()->timeSeries();
+  }
+
+  bool ScheduleDay::setInterpolatetoTimestep(const std::string& interpolatetoTimestep) {
     return getImpl<detail::ScheduleDay_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
   }
 

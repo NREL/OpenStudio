@@ -86,6 +86,10 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
     * A number of methods have been renamed (and the old ones deprecated) to conform to the API for other `SpaceLoadInstance` / `SpaceLoadDefinition` objects
     * Mostly `getWattsperUnit` is changed to `getDesignLevel` and `getWattsperZoneFloorArea` is changed to `getPowerPerFloorArea`
     * Refer to [deprecated_methods.csv](../../ruby/deprecated_methods.csv) for the complete list
+* [#5111](https://github.com/NREL/OpenStudio/pull/5111) - ScheduleDay: new timeseries method and interpolation options
+    * The `ScheduleDay` has API-breaking changes related to setters and getters for its `Interpolate To Timestep` field. They now use `string` rather than `bool` to conform to the IDD type `\choice`
+    * The forward translator for `ScheduleDay` replaces always setting "Average" with the interpolation method stored in `Interpolate to Timestep` field
+    * A new `timeseries()` method is introduced for returning vectors of times and (interpolated) values for the given number of timesteps per hour established by the `Timestep` object; `getValue` references this vector for an interpolated value at a given time
 
 ## Minor changes and bug fixes
 

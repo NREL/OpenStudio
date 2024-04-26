@@ -38,7 +38,8 @@ bool operator!=(const Matrix& lhs, const Matrix& rhs) {
 
 /// linear interpolation of the function v = f(x, y) at point xi, yi
 /// assumes that x and y are strictly increasing
-double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod, ExtrapMethod extrapMethod) {
+double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod, ExtrapMethod extrapMethod,
+              double ti) {
   double result = 0.0;
 
   size_t M = x.size();
@@ -48,7 +49,7 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
     return result;
   }
 
-  InterpInfo xInfo = interpInfo(x, xi);
+  InterpInfo xInfo = interpInfo(x, xi, ti);
 
   if (xInfo.extrapolated) {
     switch (extrapMethod) {
@@ -66,6 +67,10 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
     switch (interpMethod) {
       case LinearInterp:
         // linear interpolation
+        // no-op
+        break;
+      case AverageInterp:
+        // average interpolation
         // no-op
         break;
       case NearestInterp:
@@ -91,7 +96,7 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
     }
   }
 
-  InterpInfo yInfo = interpInfo(y, yi);
+  InterpInfo yInfo = interpInfo(y, yi, ti);
 
   if (yInfo.extrapolated) {
     switch (extrapMethod) {
@@ -109,6 +114,10 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
     switch (interpMethod) {
       case LinearInterp:
         // linear interpolation
+        // no-op
+        break;
+      case AverageInterp:
+        // average interpolation
         // no-op
         break;
       case NearestInterp:
@@ -143,7 +152,8 @@ double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, doub
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
-Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, double yi, InterpMethod interpMethod, ExtrapMethod extrapMethod) {
+Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, double yi, InterpMethod interpMethod, ExtrapMethod extrapMethod,
+              double ti) {
   size_t M = x.size();
 
   Vector result(M);
@@ -153,7 +163,7 @@ Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& x
   }
 
   for (unsigned i = 0; i < M; ++i) {
-    result(i) = interp(x, y, v, xi(i), yi, interpMethod, extrapMethod);
+    result(i) = interp(x, y, v, xi(i), yi, interpMethod, extrapMethod, ti);
   }
 
   return result;
@@ -161,7 +171,8 @@ Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& x
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
-Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, const Vector& yi, InterpMethod interpMethod, ExtrapMethod extrapMethod) {
+Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, const Vector& yi, InterpMethod interpMethod, ExtrapMethod extrapMethod,
+              double ti) {
   size_t N = y.size();
 
   Vector result(N);
@@ -171,7 +182,7 @@ Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, cons
   }
 
   for (unsigned j = 0; j < N; ++j) {
-    result(j) = interp(x, y, v, xi, yi(j), interpMethod, extrapMethod);
+    result(j) = interp(x, y, v, xi, yi(j), interpMethod, extrapMethod, ti);
   }
 
   return result;
@@ -180,7 +191,7 @@ Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, cons
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
 Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi, InterpMethod interpMethod,
-              ExtrapMethod extrapMethod) {
+              ExtrapMethod extrapMethod, double ti) {
   size_t M = x.size();
   size_t N = y.size();
 
@@ -192,7 +203,7 @@ Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& x
 
   for (unsigned i = 0; i < M; ++i) {
     for (unsigned j = 0; j < N; ++j) {
-      result(i, j) = interp(x, y, v, xi(i), yi(j), interpMethod, extrapMethod);
+      result(i, j) = interp(x, y, v, xi(i), yi(j), interpMethod, extrapMethod, ti);
     }
   }
 

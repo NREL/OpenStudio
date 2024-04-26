@@ -32,23 +32,31 @@ UTILITIES_API bool operator!=(const Matrix& lhs, const Matrix& rhs);
 
 /// linear interpolation of the function v = f(x, y) at point xi, yi
 /// assumes that x and y are strictly increasing
+/// ti is the total seconds of the timestep interval; it is used for
+/// AverageInterp and must be positive
 UTILITIES_API double interp(const Vector& x, const Vector& y, const Matrix& v, double xi, double yi, InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
+/// ti is the total seconds of the timestep interval; it is used for
+/// AverageInterp and must be positive
 UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, double yi, InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
+/// ti is the total seconds of the timestep interval; it is used for
+/// AverageInterp and must be positive
 UTILITIES_API Vector interp(const Vector& x, const Vector& y, const Matrix& v, double xi, const Vector& yi, InterpMethod interpMethod = LinearInterp,
-                            ExtrapMethod extrapMethod = NoneExtrap);
+                            ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 /// linear interpolation of the function v = f(x, y) at points xi, yi
 /// assumes that x and y are strictly increasing
+/// ti is the total seconds of the timestep interval; it is used for
+/// AverageInterp and must be positive
 UTILITIES_API Matrix interp(const Vector& x, const Vector& y, const Matrix& v, const Vector& xi, const Vector& yi,
-                            InterpMethod interpMethod = LinearInterp, ExtrapMethod extrapMethod = NoneExtrap);
+                            InterpMethod interpMethod = LinearInterp, ExtrapMethod extrapMethod = NoneExtrap, double ti = -9999.0);
 
 /// matrix product
 UTILITIES_API Matrix prod(const Matrix& lop, const Matrix& rop);

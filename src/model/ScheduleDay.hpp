@@ -54,7 +54,7 @@ namespace model {
    *  inherits one from a Schedule. */
     bool isScheduleTypeLimitsDefaulted() const;
 
-    bool interpolatetoTimestep() const;
+    std::string interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
 
@@ -66,14 +66,18 @@ namespace model {
     /// Returns a vector of values in the same order and with the same number of elements as times.
     std::vector<double> values() const;
 
-    /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
+    /// Returns the value in effect at the given time.
+    /// If time is less than 0 days or greater than 1 day, 0 is returned.
     double getValue(const openstudio::Time& time) const;
+
+    /// Returns the timeseries corresponding to simulation timestep and chosen interpolation method.
+    openstudio::TimeSeries timeSeries() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(const std::string& interpolatetoTimestep);
 
     void resetInterpolatetoTimestep();
 
