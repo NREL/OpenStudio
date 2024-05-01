@@ -657,6 +657,7 @@ ENV.delete('GEM_PATH') if ENV['GEM_PATH']
 ENV.delete('BUNDLE_GEMFILE') if ENV['BUNDLE_GEMFILE']
 ENV.delete('BUNDLE_PATH') if ENV['BUNDLE_PATH']
 ENV.delete('BUNDLE_WITHOUT') if ENV['BUNDLE_WITHOUT']
+ENV.delete('BUNDLER_SETUP') if ENV['BUNDLER_SETUP']
   )ruby";
 
   openstudio::evalString(clearEnvs);
@@ -976,8 +977,8 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
                        const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath, const openstudio::path& bundleGemDirPath,
                        const std::string& bundleWithoutGroups) {
 
-  initEmbeddedGems();
   setupEmbeddedGemsClearEnvVars();
+  initEmbeddedGems();
 
   addIncludeDirsToLoadPaths(includeDirs);
   setGemPathDir(gemPathDirs);
