@@ -652,12 +652,7 @@ void setupEmbeddedGemsClearEnvVars() {
 
   // in hash.c there's lot of env-related functions, but all private, aside from rb_env_clear();
   const std::string clearEnvs = R"ruby(
-ENV.delete('GEM_HOME') if ENV['GEM_HOME']
-ENV.delete('GEM_PATH') if ENV['GEM_PATH']
-ENV.delete('BUNDLE_GEMFILE') if ENV['BUNDLE_GEMFILE']
-ENV.delete('BUNDLE_PATH') if ENV['BUNDLE_PATH']
-ENV.delete('BUNDLE_WITHOUT') if ENV['BUNDLE_WITHOUT']
-ENV.delete('BUNDLER_SETUP') if ENV['BUNDLER_SETUP']
+ENV.reject! { |k, _| ['GEM', 'BUNDLE'].any? { |x| k.start_with?(x) } }
   )ruby";
 
   openstudio::evalString(clearEnvs);
