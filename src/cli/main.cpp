@@ -100,23 +100,18 @@ int main(int argc, char* argv[]) {
 
     app.get_formatter()->column_width(35);
 
-    auto* const verboseOpt = app
-                               .add_flag_function(
-                                 "--verbose",
-                                 [](auto count) {
-                                   if (count == 1) {
-                                     openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
-                                     LOG_FREE(Debug, "openstudio.CLI",
-                                              "Setting Log Level to Debug"
-                                                << "(" << LogLevel::Debug << ")");
-                                   } else if (count == 2) {
-                                     openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
-                                     LOG_FREE(Debug, "openstudio.CLI",
-                                              "Setting Log Level to Trace"
-                                                << "(" << LogLevel::Trace << ")");
-                                   }
-                                 },
-                                 "Print the full log to STDOUT - sets verbosity to Debug if given once and Trace if given twice.");
+    auto* const verboseOpt = app.add_flag_function(
+      "--verbose",
+      [](auto count) {
+        if (count == 1) {
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
+          LOG_FREE(Debug, "openstudio.CLI", "Setting Log Level to Debug (" << LogLevel::Debug << ")");
+        } else if (count == 2) {
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
+          LOG_FREE(Debug, "openstudio.CLI", "Setting Log Level to Trace (" << LogLevel::Trace << ")");
+        }
+      },
+      "Print the full log to STDOUT - sets verbosity to Debug if given once and Trace if given twice.");
 
     // specify string->value mappings
     const std::map<std::string, LogLevel> logLevelMap{
@@ -131,7 +126,7 @@ int main(int argc, char* argv[]) {
                                   [](const LogLevel& level) {
                                     const auto loglLevelStr = logLevelStrs[static_cast<size_t>(level) - static_cast<size_t>(LogLevel::Trace)];
                                     openstudio::Logger::instance().standardOutLogger().setLogLevel(level);
-                                    LOG_FREE(Debug, "openstudio.CLI", "Setting Log Level to " << loglLevelStr << "(" << level << ")");
+                                    LOG_FREE(Debug, "openstudio.CLI", "Setting Log Level to " << loglLevelStr << " (" << level << ")");
                                   },
                                   "LogLevel settings: One of {Trace, Debug, Info, Warn, Error, Fatal} [Default: Warn] Excludes: --verbose")
                                 ->excludes(verboseOpt)
