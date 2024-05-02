@@ -163,7 +163,7 @@ void OSWorkflow::runEnergyPlus() {
       LOG(Info, "Running command '" << cmd << "'");
 
       int result = 0;
-      detailedTimeBlock("Running ExpandObjects", [this, /*&cmd,*/ &result, &runDirPath, &runDirResults, &stdout_ofs] {
+      detailedTimeBlock("Running ExpandObjects", [this, /*&cmd,*/ &result, &runDirResults, &stdout_ofs] {
         // result = std::system(cmd.c_str());
         namespace bp = boost::process;
         bp::ipstream is;
@@ -217,7 +217,7 @@ void OSWorkflow::runEnergyPlus() {
     int result = 0;
 
     if constexpr (useBoostProcess) {
-      detailedTimeBlock("Running EnergyPlus", [this, /*&cmd,*/ &result, &runDirPath, &runDirResults, &inIDF, &stdout_ofs] {
+      detailedTimeBlock("Running EnergyPlus", [this, /*&cmd,*/ &result, &runDirResults, &inIDF, &stdout_ofs] {
         // result = std::system(cmd.c_str());
         namespace bp = boost::process;
         bp::ipstream is;
