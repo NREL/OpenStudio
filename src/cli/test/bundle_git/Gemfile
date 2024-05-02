@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'xml-simple'
-gem 'openstudio-extension', git: 'https://github.com/NREL/openstudio-extension-gem.git', ref: 'v0.4.0'
+# gem 'openstudio-extension', git: 'https://github.com/NREL/openstudio-extension-gem.git', ref: 'v0.8.0'
+gem 'simplecov', git: 'https://github.com/simplecov-ruby/simplecov', ref: 'v0.21.2'
 gem 'tilt', git: 'https://github.com/rtomayko/tilt.git', ref: 'abe77eaf1b5f8da0a7e46135f'
