@@ -1,0 +1,7 @@
+source 'http://rubygems.org'
+
+# Rubocop requires 'json' '~> 2.3'
+# It also indirectly, via parser, require 'racc'
+gem 'rubocop', '1.63.4'
+# Our CLI has json 2.6.3, which satisfies this version
+# racc is also in our CLI

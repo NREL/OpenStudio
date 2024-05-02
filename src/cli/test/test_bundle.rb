@@ -52,7 +52,7 @@ class Bundle_Test < Minitest::Test
     if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
       skip("Native gems not supported on Windows")
     else
-	  skip("Native gems not supported on Unix or Mac")
+      skip("Native gems not supported on Unix or Mac")
     end
 
     rm_if_exist('Gemfile.lock')
@@ -68,6 +68,25 @@ class Bundle_Test < Minitest::Test
 
   ensure
     Dir.chdir(original_dir)
+  end
+
+
+  # Test for #5181 - This adds a bundle dependency on a native gem we DO have it the CLI
+  def test_bundle_native_embedded
+    Dir.chdir(File.join(File.dirname(__FILE__), 'bundle_native_embedded')) do
+
+      rm_if_exist('Gemfile.lock')
+      rm_if_exist('./test_gems')
+      rm_if_exist('./bundle')
+
+      assert(system('bundle install --path ./test_gems'))
+      #assert(system('bundle lock --add_platform ruby'))
+      if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
+        assert(system('bundle lock --add_platform mswin64'))
+      end
+      assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --verbose test.rb"))
+
+    end
   end
 
   def test_bundle_no_install
