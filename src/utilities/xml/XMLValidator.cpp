@@ -140,7 +140,7 @@ openstudio::path XMLValidator::schematronToXslt(const openstudio::path& schemaPa
   saveXmlDocToFile(xsltPath, compiled);
 
   xmlFreeDoc(compiled);
-  LOG(Info, "Saved transformed XSLT Stylesheet at '" << toString(xsltPath) << "'.");
+  LOG(Trace, "Saved transformed XSLT Stylesheet at '" << toString(xsltPath) << "'.");
 
   return xsltPath;
 }
@@ -166,13 +166,13 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
 
   if (schemaPath.extension() == ".xsd") {
     m_validatorType = XMLValidatorType::XSD;
-    logAndStore(Info, "Treating schema as a regular XSD");
+    logAndStore(Trace, "Treating schema as a regular XSD");
   } else if (schemaPath.extension() == ".xslt") {
     m_validatorType = XMLValidatorType::XSLTSchematron;
-    logAndStore(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron.");
+    logAndStore(Trace, "Treating schema as a XLST StyleSheet that derives from a Schematron.");
   } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
     m_validatorType = XMLValidatorType::Schematron;
-    logAndStore(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet.");
+    logAndStore(Trace, "Treating schema as a Schematron, converting to an XSLT StyleSheet.");
     // Let's use a temporary directory for this, so we avoid having two instances trying to write to the same file and we avoid issues where the
     // directory is write protected.
     m_tempDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
@@ -181,7 +181,7 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
                                 toString(schemaPath)));
     }
     m_schemaPath = schematronToXslt(m_schemaPath, m_tempDir.get());
-    logAndStore(Info, fmt::format("Transformed Schematron to an XSLT Stylesheet and saved it at {}.", toString(m_schemaPath)));
+    logAndStore(Trace, fmt::format("Transformed Schematron to an XSLT Stylesheet and saved it at {}.", toString(m_schemaPath)));
   } else {
     std::string logMessage = fmt::format("Schema path extension '{}' not supported.", toString(schemaPath.extension()));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
@@ -193,7 +193,7 @@ XMLValidator::~XMLValidator() {
   if (m_tempDir) {
     try {
       const auto count = openstudio::filesystem::remove_all(m_tempDir.get());
-      logAndStore(Debug, fmt::format("Removed temporary directory with {} files", count));
+      logAndStore(Trace, fmt::format("Removed temporary directory with {} files", count));
     } catch (const std::exception& e) {
       logAndStore(Warn, fmt::format("Error removing temporary directory at {}, Description: {}", toString(m_tempDir.get()), e.what()));
     }
