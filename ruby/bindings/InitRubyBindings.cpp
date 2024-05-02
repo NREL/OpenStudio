@@ -489,6 +489,10 @@ class ConvenienceLogger
     @level <= OpenStudio::Trace
   end
 
+  def trace(msg)
+    OpenStudio::logFree(OpenStudio::Trace, "ruby", msg)
+  end
+
   def debug(msg)
     OpenStudio::logFree(OpenStudio::Debug, "ruby", msg)
   end
@@ -838,9 +842,9 @@ void locateEmbeddedGems(bool use_bundler) {
   embedded_gems_to_activate.each do |spec|
     if spec.name == "bundler"
       $logger.debug "Activating Bundler gem #{spec.spec_file}"
-      if $logger.trace?
-        pp spec
-      end
+      # if $logger.trace?
+      #   pp spec
+      # end
 
       begin
         # Activate will manipulate the $LOAD_PATH to include the gem
@@ -874,6 +878,27 @@ void locateEmbeddedGems(bool use_bundler) {
     require 'bundler/plugin'
     #require 'bundler/rubygems_ext'
     require 'bundler/rubygems_integration'
+
+    # Global list, to be populated below
+    $ignore_native_gem_names = []
+
+    module Bundler
+      class RubygemsIntegration
+
+        alias :ori_spec_missing_extensions? :spec_missing_extensions?
+
+        def spec_missing_extensions?(spec, default = true)
+
+          # This avoids getting an annoying message for no reason
+          if $ignore_native_gem_names.any? {|name| name == spec.name }
+            return false
+          end
+
+          return ori_spec_missing_extensions?(spec, default)
+        end
+      end
+    end
+
     require 'bundler/version'
     require 'bundler/ruby_version'
     #require 'bundler/constants'
@@ -920,6 +945,37 @@ void locateEmbeddedGems(bool use_bundler) {
 
     $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
 
+    # Filter out dependencies with native extensions that we already have embedded in the CLI and that satisfy the requirements
+    locked_specs = Bundler.definition.instance_variable_get(:@locked_specs)
+
+    embedded_gems_to_activate.each do |spec|
+      next if spec.extensions.empty?
+
+      next unless locked_specs.any? {|locked_spec| locked_spec.name == spec.name}
+
+      dep_to_requirements = {}
+      locked_specs.each do |locked_spec|
+        deleted_deps = locked_spec.dependencies.select { |dep| dep.name == spec.name && dep.requirement.satisfied_by?(spec.version) }
+        locked_spec.dependencies.reject! { |dep| dep.name == spec.name && dep.requirement.satisfied_by?(spec.version) }
+        deleted_deps&.each do |dep|
+          dep_to_requirements[locked_spec.name] = dep.requirement.to_s
+        end
+      end
+
+
+      if locked_specs.none? { |locked_spec| locked_spec.dependencies.any? {|x| x.name == spec.name} }
+        locked_spec_v = locked_specs.select{|locked_spec| locked_spec.name == spec.name}.first.version
+        $logger.debug("Removing native gem #{spec.name} from Bundler locked_specs (version #{locked_spec_v}), using the embedded dependency (CLI one has version #{spec.version})")
+        $logger.trace("Gems having #{spec.name} as a dependency: #{dep_to_requirements}")
+        raise "Failed to activate #{spec.name}" unless spec.activate
+        $ignore_native_gem_names << spec.name
+        locked_specs.delete_by_name(spec.name)
+      end
+    end
+
+    # I am pretty sure sure we don't need this. Because internally Bundler.definition.filter_specs will ignore it from the dependencies if it's there as well
+    # Bundler.definition.instance_variable_set(:@dependencies,  Bundler.definition.dependencies.select { |dep| $ignore_native_gem_names.include?(dep.name) } )
+
     remaining_specs = []
     Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
 
@@ -934,8 +990,11 @@ void locateEmbeddedGems(bool use_bundler) {
       RbConfig::CONFIG['arch'] = original_arch
     end
 
-      Dir.chdir(current_dir)
-    end
+    Dir.chdir(current_dir)
+
+    # clean up the global
+    $ignore_native_gem_names = nil
+  end
   )ruby";
   }
 
