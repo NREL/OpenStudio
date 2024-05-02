@@ -11,63 +11,62 @@ class EmbeddedHelp_Test < Minitest::Test
     Dir.chdir(File.join(File.dirname(__FILE__), '..'))
 
     # test things that should work in ruby or CLI
-    no_block_glob = Dir["*.txt", "*.rb"]
+    no_block_glob = Dir["*.txt", "*.cpp"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    puts no_block_glob.index('test_embedded_help.rb')
-    assert_nil(no_block_glob.index('test_embedded_help.rb'))
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_nil(no_block_glob.index('test_main.cpp'))
 
-    no_block_glob = Dir.glob(["*.txt", "*.rb"])
+    no_block_glob = Dir.glob(["*.txt", "*.cpp"])
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    assert_nil(no_block_glob.index('test_embedded_help.rb'))
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_nil(no_block_glob.index('test_main.cpp'))
 
     no_block_glob = Dir.glob("*.txt")
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_nil(no_block_glob.index('embedded_help.rb'))
-    assert_nil(no_block_glob.index('test_embedded_help.rb'))
+    assert_nil(no_block_glob.index('main.cpp'))
+    assert_nil(no_block_glob.index('test_main.cpp'))
 
-    no_block_glob = Dir["**/*.txt", "**/*.rb"]
+    no_block_glob = Dir["**/*.txt", "**/*.cpp"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    assert_includes(no_block_glob, 'test/test_embedded_help.rb')
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_includes(no_block_glob, 'test/Logger_GTest.cpp')
 
-    no_block_glob = Dir["*{.txt,.rb}"]
+    no_block_glob = Dir["*{.txt,.cpp}"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    assert_nil(no_block_glob.index('test_embedded_help.rb'))
-    assert_nil(no_block_glob.index('test/test_embedded_help.rb'))
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_nil(no_block_glob.index('test_main.cpp'))
+    assert_nil(no_block_glob.index('test/Logger_GTest.cpp'))
 
-    no_block_glob = Dir["{,*,*/*}.{txt,rb}"]
+    no_block_glob = Dir["{,*,*/*}.{txt,cpp}"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    assert_includes(no_block_glob, 'test/test_embedded_help.rb')
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_includes(no_block_glob, 'test/Logger_GTest.cpp')
 
-    no_block_glob = Dir.glob("{,*,*/*}.{txt,rb}")
+    no_block_glob = Dir.glob("{,*,*/*}.{txt,cpp}")
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, 'CMakeLists.txt')
-    assert_includes(no_block_glob, 'embedded_help.rb')
-    assert_includes(no_block_glob, 'test/test_embedded_help.rb')
+    assert_includes(no_block_glob, 'main.cpp')
+    assert_includes(no_block_glob, 'test/Logger_GTest.cpp')
 
-    no_block_glob = Dir["./**/*.txt", "./**/*.rb"]
+    no_block_glob = Dir["./**/*.txt", "./**/*.cpp"]
     assert_instance_of(Array, no_block_glob)
     assert_includes(no_block_glob, './CMakeLists.txt')
-    assert_includes(no_block_glob, './embedded_help.rb')
-    assert_includes(no_block_glob, './test/test_embedded_help.rb')
+    assert_includes(no_block_glob, './main.cpp')
+    assert_includes(no_block_glob, './test/Logger_GTest.cpp')
 
     block_glob = []
-    Dir["*.txt", "*.rb"].each do |p|
+    Dir["*.txt", "*.cpp"].each do |p|
       block_glob << p
     end
     assert_includes(block_glob, 'CMakeLists.txt')
-    assert_includes(block_glob, 'embedded_help.rb')
-    assert_nil(block_glob.index('test_embedded_help.rb'))
+    assert_includes(block_glob, 'main.cpp')
+    assert_nil(block_glob.index('test_main.cpp'))
 
     assert(File.fnmatch( "C:/test/help.rb", "C:/test/help.rb", 0))
     assert(File.fnmatch( "C:/test/help.rb", "C:/test/help.rb", File::FNM_EXTGLOB))
