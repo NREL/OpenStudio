@@ -259,7 +259,7 @@ namespace measure {
   }
 
   Json::Value OSArgument::defaultValueAsJSON() const {
-    return argumentVariantToJSONValue(m_value);
+    return argumentVariantToJSONValue(m_defaultValue);
   }
 
   bool OSArgument::hasDomain() const {

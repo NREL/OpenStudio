@@ -807,6 +807,7 @@ namespace measure {
           argument_values[name] = arg.valueAsJSON();
         } else if (arg.hasDefaultValue()) {
           // TODO: is this wanted?
+          // JJR: I believe it is.
           argument_values[name] = arg.defaultValueAsJSON();
         }
       }
