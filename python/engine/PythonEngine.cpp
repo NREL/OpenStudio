@@ -253,32 +253,63 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
   void* return_value = nullptr;
 
-  if (ti == typeid(std::string*)) {
-    // TODO: this sucks, and probably needs a PyDecref or two
-    Py_ssize_t size = 0;
-    char const* pc = PyUnicode_AsUTF8AndSize(val.obj_, &size);
-    if (pc) {
-      return_value = new std::string(pc, size);
-    } else {
-      throw std::runtime_error("Unable to convert to std::string in SWIG Python");
-    }
-  } else {
-    const auto& type_name = getRegisteredTypeName(ti);
+  const auto& type_name = getRegisteredTypeName(ti);
 
-    auto* type = SWIG_Python_TypeQuery(type_name.c_str());
+  auto* type = SWIG_Python_TypeQuery(type_name.c_str());
 
-    if (!type) {
-      throw std::runtime_error("Unable to find type in SWIG");
-    }
+  if (!type) {
+    throw std::runtime_error("Unable to find type in SWIG");
+  }
 
-    const auto result = SWIG_Python_ConvertPtr(val.obj_, &return_value, type, 0);
+  const auto result = SWIG_Python_ConvertPtr(val.obj_, &return_value, type, 0);
 
-    if (!SWIG_IsOK(result)) {
-      throw std::runtime_error(fmt::format("Error getting object from SWIG/Python of supposed type {}, {}\n", ti.name(), type_name.c_str()));
-    }
+  if (!SWIG_IsOK(result)) {
+    throw std::runtime_error(fmt::format("Error getting object from SWIG/Python of supposed type {}, {}\n", ti.name(), type_name.c_str()));
   }
 
   return return_value;
+}
+
+bool PythonEngine::getAs_impl_bool(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyBool_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a bool");
+  }
+  return static_cast<bool>(PyObject_IsTrue(val.obj_));
+}
+
+int PythonEngine::getAs_impl_int(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyLong_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a PyLong");
+  }
+
+  return static_cast<int>(PyLong_AsLong(val.obj_));
+}
+
+double PythonEngine::getAs_impl_double(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+  if (!PyFloat_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a PyFloat");
+  }
+
+  return PyFloat_AsDouble(val.obj_);
+}
+
+std::string PythonEngine::getAs_impl_string(ScriptObject& obj) {
+  auto val = std::any_cast<PythonObject>(obj.object);
+
+  if (!PyUnicode_Check(val.obj_)) {
+    throw std::runtime_error("PyObject is not a String");
+  }
+
+  Py_ssize_t size = 0;
+  char const* pc = PyUnicode_AsUTF8AndSize(val.obj_, &size);  // No decref needed
+  if (!pc) {
+    throw std::runtime_error("Unable to convert to std::string in SWIG Python");
+  }
+
+  return std::string{pc, static_cast<size_t>(size)};
 }
 
 std::string PythonEngine::inferMeasureClassName(const openstudio::path& measureScriptPath) {
@@ -300,7 +331,7 @@ measure_name, measure_typeinfo = class_members[0]
   try {
     exec(inferClassNameCmd);
     ScriptObject measureClassNameObject = eval("measure_name");
-    className = *getAs<std::string*>(measureClassNameObject);
+    className = getAs<std::string>(measureClassNameObject);
   } catch (const std::runtime_error& e) {
     auto msg = fmt::format("Failed to infer measure name from {}: {}", measureScriptPath.generic_string(), e.what());
     fmt::print(stderr, "{}\n", msg);

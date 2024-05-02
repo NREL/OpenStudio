@@ -81,11 +81,21 @@ class ScriptEngine
 
   template <typename T>
   T getAs(ScriptObject& obj) {
-    void* result = getAs_impl(obj, typeid(T));
-    if (result) {
-      return static_cast<T>(result);
+    if constexpr (std::is_same_v<T, bool>) {
+      return getAs_impl_bool(obj);
+    } else if constexpr (std::is_same_v<T, int>) {
+      return getAs_impl_int(obj);
+    } else if constexpr (std::is_same_v<T, double>) {
+      return getAs_impl_double(obj);
+    } else if constexpr (std::is_same_v<T, std::string>) {
+      return getAs_impl_string(obj);
     } else {
-      throw std::bad_cast();
+      void* result = getAs_impl(obj, typeid(T));
+      if (result) {
+        return static_cast<T>(result);
+      } else {
+        throw std::bad_cast();
+      }
     }
   }
 
@@ -98,6 +108,11 @@ class ScriptEngine
   // convert the underlying object to the correct type, then return it as a void *
   // so the above template function can provide it back to the caller.
   virtual void* getAs_impl(ScriptObject& obj, const std::type_info&) = 0;
+
+  virtual bool getAs_impl_bool(ScriptObject& obj) = 0;
+  virtual int getAs_impl_int(ScriptObject& obj) = 0;
+  virtual double getAs_impl_double(ScriptObject& obj) = 0;
+  virtual std::string getAs_impl_string(ScriptObject& obj) = 0;
 
   const std::string& getRegisteredTypeName(const std::type_info& type) {
     const auto& found_name = types.find(type);
