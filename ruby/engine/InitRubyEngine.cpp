@@ -14,6 +14,9 @@ extern "C"
 {
   // static void Init_builtin_prelude(void);
   // void Init_builtin_gem_prelude(void);
+  struct ruby_cmdline_options;
+  typedef struct ruby_cmdline_options ruby_cmdline_options_t;
+  void Init_ruby_description(ruby_cmdline_options_t*);
 }
 
 namespace openstudio {
@@ -21,6 +24,8 @@ namespace openstudio {
 void RubyEngine::initRubyEngine() {
   RUBY_INIT_STACK;
   ruby_init();
+
+  Init_ruby_description(nullptr);
 
   ruby_gc_set_params();
   ruby_init_loadpath();
