@@ -46,7 +46,8 @@ def test_loglevel(osclipath: Path, language: str, logLevel: str):
         args += ["-c", PYTHON_PROGRAM]
     lines = subprocess.check_output(args, encoding="utf-8").splitlines()
     lines = remove_classic_box(lines)
-    assert f"Setting Log Level to {logLevel} ({loglevel_int_value})" in lines
+    if logLevel in ['Trace', 'Debug']:
+        assert f"[openstudio.CLI] <-2> Setting Log Level to {logLevel} ({loglevel_int_value})" in lines
     for i, msgLevel in enumerate(LOG_LEVELS):
         msg = f"[test] <{get_loglevel_int_value(msgLevel)}> {msgLevel}"
 

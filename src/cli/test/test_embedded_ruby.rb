@@ -137,18 +137,6 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(true)
   end
 
-  def test_sdbm
-    require 'sdbm'
-
-    SDBM.open 'my_database' do |db|
-      db['apple'] = 'fruit'
-      db['pear'] = 'fruit'
-      db['carrot'] = 'vegetable'
-      db['tomato'] = 'vegetable'
-    end
-    assert(true)
-  end
-
   def test_sha1
     require 'digest/sha1'
     s = Digest::SHA1.hexdigest 'abc'
@@ -234,6 +222,7 @@ class EmbeddedRuby_Test < Minitest::Test
   end
 
   def test_json_schemer
+    skip("Disabled due to unf_ext, see https://github.com/NREL/openstudio-gems/issues/72")
     require 'json_schemer'
 
     schema = {

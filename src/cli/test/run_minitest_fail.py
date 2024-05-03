@@ -68,7 +68,7 @@ if __name__ == "__main__":
     )
 
     r = subprocess.run(
-        [str(args.ruby_or_cli_path), "-e", "at exit { exit 12 }"],
+        [str(args.ruby_or_cli_path), "-e", "at_exit { exit 12 }"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", universal_newlines=True
     )
     assert r.returncode == 12
