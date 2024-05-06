@@ -92,13 +92,7 @@ class EmbeddedRuby_Test < Minitest::Test
     JSON.generate(my_hash)
     assert_equal(JSON.parser, JSON::Ext::Parser)
     assert_equal(JSON.generator, JSON::Ext::Generator)
-  end
-
-  def test_json_version
-    require 'json'
-    v = JSON::VERSION
-    puts "json version: #{v}"
-    assert(true)
+    assert_equal("2.6.3", JSON::VERSION)
   end
 
   def test_md5
