@@ -90,6 +90,15 @@ class EmbeddedRuby_Test < Minitest::Test
     require 'json'
     my_hash = JSON.parse('{"hello": "goodbye"}')
     JSON.generate(my_hash)
+    assert_equal(JSON.parser, JSON::Ext::Parser)
+    assert_equal(JSON.generator, JSON::Ext::Generator)
+  end
+
+  def test_json_version
+    require 'json'
+    v = JSON::VERSION
+    puts "json version: #{v}"
+    assert(true)
   end
 
   def test_md5
