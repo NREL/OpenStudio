@@ -998,7 +998,7 @@ namespace model {
     }
 
     boost::optional<double> CoilCoolingDXSingleSpeedThermalStorage_Impl::autosizedCondenserDesignAirFlowRate() {
-      return getAutosizedValue("Condenser Air Flow Rate", "W");
+      return getAutosizedValue("Condenser Air Flow Rate", "m3/s");
     }
 
     double CoilCoolingDXSingleSpeedThermalStorage_Impl::condenserAirFlowSizingFactor() const {
