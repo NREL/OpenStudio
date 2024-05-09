@@ -736,6 +736,14 @@ void locateEmbeddedGems(bool use_bundler) {
   // EmbeddedScripting::getFileAsString
 
   std::string initCmd = R"ruby(
+
+  # This will prevent default system paths from creeping in
+  class Gem::PathSupport
+    def default_path
+      return []
+    end
+  end
+
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
