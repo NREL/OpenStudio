@@ -737,7 +737,7 @@ void locateEmbeddedGems(bool use_bundler) {
 
   std::string initCmd = R"ruby(
 
-  # This will prevent default system paths from creeping in
+  # This prevents default system paths from creeping in
   class Gem::PathSupport
     def default_path
       return []
