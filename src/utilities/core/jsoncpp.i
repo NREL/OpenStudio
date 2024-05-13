@@ -78,6 +78,15 @@
 
 %fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {
 
+  extern "C" {
+    struct OnigEncodingTypeST;
+    typedef struct OnigEncodingTypeST OnigEncodingType;
+    typedef const OnigEncodingType rb_encoding;
+
+    rb_encoding *rb_utf8_encoding(void);
+    ID rb_intern3(const char *name, long len, rb_encoding *enc);
+  }
+
   SWIGINTERN VALUE SWIG_From_JsonValue(const Json::Value& value) {
 
     switch(value.type()) {

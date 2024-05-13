@@ -11,17 +11,6 @@
   #include <boost/regex.hpp>
   #include <boost/variant.hpp>
   #include <pugixml.hpp>
-
-#if defined SWIGRUBY
-  extern "C" {
-  #ifdef HAVE_RUBY_ENCODING_H
-    #include "ruby/encoding.h"
-  #endif
-
-    rb_encoding *rb_utf8_encoding(void);
-    ID rb_intern3(const char *name, long len, rb_encoding *enc);
-  }
-#endif
 %}
 
 %include <utilities/core/Deprecated.hpp>
