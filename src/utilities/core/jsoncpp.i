@@ -75,7 +75,9 @@
 #endif
 
 #if defined SWIGRUBY
+
 %fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {
+
   SWIGINTERN VALUE SWIG_From_JsonValue(const Json::Value& value) {
 
     switch(value.type()) {
@@ -107,7 +109,10 @@
     case Json::objectValue: {
       VALUE result = rb_hash_new();
       for( const auto& id : value.getMemberNames()) {
-        rb_hash_aset(result, ID2SYM(rb_intern(id.data())), SWIG_From_JsonValue(value[id]));
+        rb_hash_aset(result,
+                    ID2SYM(rb_intern3(id.data(), id.size(), rb_utf8_encoding())),
+                    SWIG_From_JsonValue(value[id])
+        );
       }
       return result;
     }
