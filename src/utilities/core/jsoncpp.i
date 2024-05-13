@@ -76,16 +76,17 @@
 
 #if defined SWIGRUBY
 
-%fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {
+%fragment("<ruby_encoding>", "header") %{
+#include <ruby/encoding.h>
+%}
 
-  extern "C" {
-    struct OnigEncodingTypeST;
-    typedef struct OnigEncodingTypeST OnigEncodingType;
-    typedef const OnigEncodingType rb_encoding;
-
-    rb_encoding *rb_utf8_encoding(void);
-    ID rb_intern3(const char *name, long len, rb_encoding *enc);
+%fragment("string_to_ruby_utf8_symbol", "header", fragment="<ruby_encoding>") {
+  SWIGINTERN VALUE SWIG_String_to_ruby_utf8_symbol(const std::string& str) {
+    return ID2SYM(rb_intern3(str.data(), str.size(), rb_utf8_encoding()));
   }
+}
+
+%fragment("JsonToDict", "header", fragment="SWIG_FromCharPtrAndSize", fragment="string_to_ruby_utf8_symbol") {
 
   SWIGINTERN VALUE SWIG_From_JsonValue(const Json::Value& value) {
 
@@ -119,7 +120,7 @@
       VALUE result = rb_hash_new();
       for( const auto& id : value.getMemberNames()) {
         rb_hash_aset(result,
-                    ID2SYM(rb_intern3(id.data(), id.size(), rb_utf8_encoding())),
+                    SWIG_String_to_ruby_utf8_symbol(id),
                     SWIG_From_JsonValue(value[id])
         );
       }
