@@ -51,6 +51,10 @@ TEST_F(ModelFixture, TableLookup_GettersSetters) {
   EXPECT_TRUE(tableLookup.setNormalizationDivisor(0.5));
   EXPECT_EQ(0.5, tableLookup.normalizationDivisor());
 
+  // #5145 - We reject 0 as a normalization divisor
+  EXPECT_FALSE(tableLookup.setNormalizationDivisor(0.0));
+  EXPECT_EQ(0.5, tableLookup.normalizationDivisor());
+
   // Minimum Output: Optional Double
   EXPECT_TRUE(tableLookup.setMinimumOutput(0.6));
   ASSERT_TRUE(tableLookup.minimumOutput());
