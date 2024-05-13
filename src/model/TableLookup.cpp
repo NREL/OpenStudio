@@ -165,8 +165,8 @@ namespace model {
       return result;
     }
 
-    bool TableLookup_Impl::setNormalizationDivisor(double normalizationDivisior) {
-      bool result = setDouble(OS_Table_LookupFields::NormalizationDivisor, normalizationDivisior);
+    bool TableLookup_Impl::setNormalizationDivisor(double normalizationDivisor) {
+      bool result = setDouble(OS_Table_LookupFields::NormalizationDivisor, normalizationDivisor);
       return result;
     }
 
@@ -374,8 +374,8 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->setNormalizationMethod(normalizationMethod);
   }
 
-  bool TableLookup::setNormalizationDivisor(double normalizationDivisior) {
-    return getImpl<detail::TableLookup_Impl>()->setNormalizationDivisor(normalizationDivisior);
+  bool TableLookup::setNormalizationDivisor(double normalizationDivisor) {
+    return getImpl<detail::TableLookup_Impl>()->setNormalizationDivisor(normalizationDivisor);
   }
 
   bool TableLookup::setMinimumOutput(double minimumOutput) {
