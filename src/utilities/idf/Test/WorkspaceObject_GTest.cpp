@@ -604,9 +604,34 @@ TEST_F(IdfFixture, WorkspaceObject_eraseExtensibleGroups) {
     EXPECT_TRUE(weg.setUnsigned(2, 1));
   }
 
-  WorkspaceObject bb = w.addObject(IdfObject(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric)).get();
+  IdfObject bb_idf(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric);
+  bb_idf.setName("Baseboard");
 
-  WorkspaceObject bb_sch = w.addObject(IdfObject(IddObjectType::OS_Schedule_Constant)).get();
+  IdfObject bb_sch_idf(IddObjectType::OS_Schedule_Constant);
+  bb_sch_idf.setName(bb_idf.nameString());
+
+  WorkspaceObject bb = w.addObject(bb_idf).get();
+  WorkspaceObject bb_sch = w.addObject(bb_sch_idf).get();
+  // Because underneath in Workspace m_workspaceObjectMap is a std::unordered_map we have no guarantee of order, so in case it's not good (it IS on
+  // Unix, but not on Windows), we redo the insertion in a different order
+  {
+    auto objects = w.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    if (objects.front().iddObject().type() != IddObjectType(IddObjectType::OS_Schedule_Constant)) {
+      bb.remove();
+      bb = w.addObject(bb_idf).get();
+    }
+  }
+
+  // Assert this time the order is good
+  auto objects = w.getObjectsByName(bb.nameString());
+  EXPECT_EQ(2, objects.size());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+
+  EXPECT_EQ("Baseboard", bb.nameString());
+  EXPECT_EQ("Baseboard", bb_sch.nameString());
+  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
+
   EXPECT_TRUE(bb.setPointer(2, bb_sch.handle()));
 
   {
@@ -615,15 +640,6 @@ TEST_F(IdfFixture, WorkspaceObject_eraseExtensibleGroups) {
     EXPECT_TRUE(weg.setUnsigned(1, 1));
     EXPECT_TRUE(weg.setUnsigned(2, 1));
   }
-
-  EXPECT_TRUE(bb.setName("Baseboard"));
-  EXPECT_TRUE(bb_sch.setName(bb.nameString()));
-
-  EXPECT_EQ(bb.nameString(), bb_sch.nameString());
-
-  auto objects = w.getObjectsByName(bb.nameString());
-  EXPECT_EQ(2, objects.size());
-  EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
 
   EXPECT_EQ(2, eqlist.numExtensibleGroups());
   for (const auto& eg : eqlist.extensibleGroups()) {
