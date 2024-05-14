@@ -172,6 +172,26 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_ModelObject_Is_First)
 
   bb.setName("Baseboard");
   bb_sch.setName(bb.nameString());
+
+  // Because underneath in Workspace m_workspaceObjectMap is a std::unordered_map we have no guarantee of order, so in case it's not good (it IS on
+  // Unix, but not on Windows), we redo the insertion in a different order
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    if (objects.front().iddObject().type() != IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric)) {
+      bb_sch.remove();
+      bb_sch = ScheduleConstant(m);
+      bb_sch.setName("Baseboard");
+    }
+  }
+
+  // Assert this time the order is good
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), objects.front().iddObject().type());
+  }
+
   EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
   EXPECT_EQ(bb.nameString(), bb_sch.nameString());
 
@@ -189,12 +209,6 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_ModelObject_Is_First)
       ASSERT_TRUE(obj_);
       EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
     }
-  }
-
-  {
-    auto objects = m.getObjectsByName(bb.nameString());
-    EXPECT_EQ(2, objects.size());
-    EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), objects.front().iddObject().type());
   }
 
   EXPECT_NO_THROW(bb_delete.remove());
@@ -225,11 +239,28 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First) {
   ZoneHVACBaseboardConvectiveElectric bb_delete(m);
 
   ZoneHVACBaseboardConvectiveElectric bb(m);
-
   ScheduleConstant bb_sch(m);
-
   bb.setName("Baseboard");
   bb_sch.setName(bb.nameString());
+  // Because underneath in Workspace m_workspaceObjectMap is a std::unordered_map we have no guarantee of order, so in case it's not good (it IS on
+  // Unix, but not on Windows), we redo the insertion in a different order
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    if (objects.front().iddObject().type() != IddObjectType(IddObjectType::OS_Schedule_Constant)) {
+      bb.remove();
+      bb = ZoneHVACBaseboardConvectiveElectric(m);
+      bb.setName("Baseboard");
+    }
+  }
+
+  // Assert this time the order is good
+  {
+    auto objects = m.getObjectsByName(bb.nameString());
+    EXPECT_EQ(2, objects.size());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
+  }
+
   EXPECT_TRUE(bb.setAvailabilitySchedule(bb_sch));
   EXPECT_EQ(bb.nameString(), bb_sch.nameString());
 
@@ -247,12 +278,6 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_RemoveEquipment_Schedule_Is_First) {
       ASSERT_TRUE(obj_);
       EXPECT_EQ(IddObjectType(IddObjectType::OS_ZoneHVAC_Baseboard_Convective_Electric), obj_->iddObject().type());
     }
-  }
-
-  {
-    auto objects = m.getObjectsByName(bb.nameString());
-    EXPECT_EQ(2, objects.size());
-    EXPECT_EQ(IddObjectType(IddObjectType::OS_Schedule_Constant), objects.front().iddObject().type());
   }
 
   EXPECT_NO_THROW(bb_delete.remove());
