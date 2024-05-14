@@ -35,6 +35,8 @@
 // Remove when deprecated methods are removed
 #include "../utilities/core/DeprecatedHelpers.hpp"
 
+#include <limits>
+
 namespace openstudio {
 
 namespace model {
@@ -1026,8 +1028,13 @@ namespace model {
       return setCurveAt75(*curve_, sensibleEffectivenessat75HeatingAirFlow);
     }
 
-    auto tableLookup = makeTable(sensibleEffectivenessat75HeatingAirFlow, sensibleEffectivenessat100HeatingAirFlow(), model(),
-                                 fmt::format("{}_SensHeatEff", nameString()));
+    const auto val100 = sensibleEffectivenessat100HeatingAirFlow();
+    if (std::abs(val100) < std::numeric_limits<double>::min()) {
+      LOG_AND_THROW("Unable to set " << briefDescription()
+                                     << "'s Sensible Effectiveness at 75 Heating Air Flow because the value at 100 is zero and would lead to a "
+                                        "Normalization divisor equal to zero.");
+    }
+    auto tableLookup = makeTable(sensibleEffectivenessat75HeatingAirFlow, val100, model(), fmt::format("{}_SensHeatEff", nameString()));
     return setSensibleEffectivenessofHeatingAirFlowCurve(tableLookup);
   }
 
@@ -1038,8 +1045,13 @@ namespace model {
       return setCurveAt75(*curve_, latentEffectivenessat75HeatingAirFlow);
     }
 
-    auto tableLookup =
-      makeTable(latentEffectivenessat75HeatingAirFlow, latentEffectivenessat100HeatingAirFlow(), model(), fmt::format("{}_LatHeatEff", nameString()));
+    const auto val100 = latentEffectivenessat100HeatingAirFlow();
+    if (std::abs(val100) < std::numeric_limits<double>::min()) {
+      LOG_AND_THROW("Unable to set " << briefDescription()
+                                     << "'s Latent Effectiveness at 75 Heating Air Flow because the value at 100 is zero and would lead to a "
+                                        "Normalization divisor equal to zero.");
+    }
+    auto tableLookup = makeTable(latentEffectivenessat75HeatingAirFlow, val100, model(), fmt::format("{}_LatHeatEff", nameString()));
     return setLatentEffectivenessofHeatingAirFlowCurve(tableLookup);
   }
 
@@ -1050,8 +1062,13 @@ namespace model {
       return setCurveAt75(*curve_, sensibleEffectivenessat75CoolingAirFlow);
     }
 
-    auto tableLookup = makeTable(sensibleEffectivenessat75CoolingAirFlow, sensibleEffectivenessat100CoolingAirFlow(), model(),
-                                 fmt::format("{}_SensCoolEff", nameString()));
+    const auto val100 = sensibleEffectivenessat100CoolingAirFlow();
+    if (std::abs(val100) < std::numeric_limits<double>::min()) {
+      LOG_AND_THROW("Unable to set " << briefDescription()
+                                     << "'s Sensible Effectiveness at 75 Cooling Air Flow because the value at 100 is zero and would lead to a "
+                                        "Normalization divisor equal to zero.");
+    }
+    auto tableLookup = makeTable(sensibleEffectivenessat75CoolingAirFlow, val100, model(), fmt::format("{}_SensCoolEff", nameString()));
     return setSensibleEffectivenessofCoolingAirFlowCurve(tableLookup);
   }
 
@@ -1062,8 +1079,13 @@ namespace model {
       return setCurveAt75(*curve_, latentEffectivenessat75CoolingAirFlow);
     }
 
-    auto tableLookup =
-      makeTable(latentEffectivenessat75CoolingAirFlow, latentEffectivenessat100CoolingAirFlow(), model(), fmt::format("{}_LatCoolEff", nameString()));
+    const auto val100 = latentEffectivenessat100CoolingAirFlow();
+    if (std::abs(val100) < std::numeric_limits<double>::min()) {
+      LOG_AND_THROW("Unable to set " << briefDescription()
+                                     << "'s Latent Effectiveness at 75 Cooling Air Flow because the value at 100 is zero and would lead to a "
+                                        "Normalization divisor equal to zero.");
+    }
+    auto tableLookup = makeTable(latentEffectivenessat75CoolingAirFlow, val100, model(), fmt::format("{}_LatCoolEff", nameString()));
     return setLatentEffectivenessofCoolingAirFlowCurve(tableLookup);
   }
 

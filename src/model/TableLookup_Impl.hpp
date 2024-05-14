@@ -72,7 +72,7 @@ namespace model {
 
       bool setNormalizationMethod(const std::string& normalizationMethod);
 
-      bool setNormalizationDivisor(double normalizationDivisior);
+      bool setNormalizationDivisor(double normalizationDivisor);
 
       bool setMinimumOutput(double minimumOutput);
       void resetMinimumOutput();
