@@ -401,6 +401,26 @@ TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_Deprecated75Effectiv
     EXPECT_TRUE(hx.setLatentEffectivenessat75CoolingAirFlow(val2));
     EXPECT_DOUBLE_EQ(val2, hx.latentEffectivenessat75CoolingAirFlow());
   }
+
+  // Ensure we protect users against dumb issues that lead to a normalization divisor of zero
+  {
+    // Ensure no curves assigned for now
+    hx.resetSensibleEffectivenessofHeatingAirFlowCurve();
+    hx.resetLatentEffectivenessofHeatingAirFlowCurve();
+    hx.resetSensibleEffectivenessofCoolingAirFlowCurve();
+    hx.resetLatentEffectivenessofCoolingAirFlowCurve();
+
+    // IMHO this doesn't make sense (IDD should be `\minimum> 0.0`), but the E+ IDD and OS IDD have always allowed it, so leaving it untouched
+    EXPECT_TRUE(hx.setSensibleEffectivenessat100HeatingAirFlow(0.0));
+    EXPECT_TRUE(hx.setLatentEffectivenessat100HeatingAirFlow(0.0));
+    EXPECT_TRUE(hx.setSensibleEffectivenessat100CoolingAirFlow(0.0));
+    EXPECT_TRUE(hx.setLatentEffectivenessat100CoolingAirFlow(0.0));
+
+    EXPECT_ANY_THROW(hx.setSensibleEffectivenessat75HeatingAirFlow(0.5));
+    EXPECT_ANY_THROW(hx.setLatentEffectivenessat75HeatingAirFlow(0.5));
+    EXPECT_ANY_THROW(hx.setSensibleEffectivenessat75CoolingAirFlow(0.5));
+    EXPECT_ANY_THROW(hx.setLatentEffectivenessat75CoolingAirFlow(0.5));
+  }
 }
 
 TEST_F(ModelFixture, HeatExchangerAirToAirSensibleAndLatent_assignHistoricalEffectivenessCurves) {
