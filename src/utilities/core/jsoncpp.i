@@ -24,6 +24,10 @@
       return value.asBool() ? Py_True : Py_False;
     }
 
+    if (value.isDouble()) {
+       return PyFloat_FromDouble(value.asDouble());
+    }
+
     if (value.isIntegral()) {
       return PyLong_FromLongLong(value.asInt64());
     }
@@ -82,6 +86,10 @@
 
     if (value.isBool()) {
       return value.asBool() ? Qtrue : Qfalse;
+    }
+
+    if (value.isDouble()) {
+      return DOUBLE2NUM(value.asDouble());
     }
 
     if (value.isIntegral()) {

@@ -8,6 +8,7 @@
 
 #include "../OSArgument.hpp"
 
+#include <json/value.h>
 #include <vector>
 #include <map>
 
@@ -212,4 +213,13 @@ TEST_F(MeasureFixture, OSArgument_MakeChoiceArgumentFromMap) {
 
   EXPECT_EQ(required, choiceArgument.required());
   EXPECT_EQ(modelDependent, choiceArgument.modelDependent());
+}
+
+TEST_F(MeasureFixture, OSArgument_valueAsJSON) {
+  OSArgument doubleArgument = OSArgument::makeDoubleArgument("double");
+  doubleArgument.setValue(10.0);
+  Json::Value val = doubleArgument.valueAsJSON();
+  EXPECT_TRUE(val.isDouble());
+  EXPECT_FALSE(val.isIntegral());
+  EXPECT_TRUE(val.isNumeric());
 }
