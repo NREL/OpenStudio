@@ -825,10 +825,11 @@ namespace measure {
       // TODO: should we match on any of these three?
       if (istringEqual(measureName, step.measureDirName())) {  // The directory name, eg `IncreaseWallRValue`
         LOG(Trace, "Step matches on measureDirName");
-      } else if (auto s_ = step.name(); istringEqual(measureName, *s_)) {  // An optional, abritrary one
+      } else if (auto s_ = step.name(); s_.is_initialized() && istringEqual(measureName, *s_)) {  // An optional, abritrary one
         LOG(Trace, "Step matches on name");
       } else if (auto s_ = stepResult_->measureName();
-                 istringEqual(measureName, *s_)) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
+                 s_.is_initialized()
+                 && istringEqual(measureName, *s_)) {  // The xml one, eg `increase_insulation_r_value_for_exterior_walls_by_percentage`
         LOG(Trace, "Step matches on Step Result's measureName");
       } else {
         continue;

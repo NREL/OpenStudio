@@ -385,3 +385,51 @@ TEST_F(MeasureFixture, OSRunner_getPastStepValues) {
     EXPECT_EQ(20, stepValues["MeasureName3"].asInt());
   }
 }
+
+TEST_F(MeasureFixture, OSRunner_getPastStepValues_step_name_not_initialized) {
+  // #5192 - Produce a segfault on purpose
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+
+  std::vector<WorkflowStep> workflow_steps;
+
+  {
+    MeasureStep step1("MeasureName1");
+    workflow_steps.push_back(step1);
+
+    step1.setArgument("Argument1", 100);
+    step1.setArgument("Argument2", 200);
+    EXPECT_EQ("MeasureName1", step1.measureDirName());
+    EXPECT_FALSE(step1.name());
+
+    {
+      WorkflowStepResult workflow_step_result1;
+      EXPECT_FALSE(workflow_step_result1.measureName());
+      workflow_step_result1.setMeasureName("measure_name_1");
+      ASSERT_TRUE(workflow_step_result1.measureName());
+      EXPECT_EQ("measure_name_1", workflow_step_result1.measureName().get());
+
+      const WorkflowStepValue stepValue1("StepValue1", true);
+      workflow_step_result1.addStepValue(stepValue1);
+
+      const WorkflowStepValue stepValue2("StepValue2", 5);
+      workflow_step_result1.addStepValue(stepValue2);
+
+      // Setting a Skip + (Completed At so it shows in the JSON)
+      workflow_step_result1.setStepResult(StepResult::Success);
+      workflow_step_result1.setCompletedAt(DateTime::nowUTC());
+      step1.setResult(workflow_step_result1);
+    }
+  }
+
+  EXPECT_TRUE(workflow.setWorkflowSteps(workflow_steps));
+  EXPECT_EQ(1, workflow.workflowSteps().size());
+  EXPECT_EQ(workflow.string(), runner.workflow().string());
+
+  workflow.saveAs(scratchDir / "OSRunner_getPastStepValues_step_name_not_initialized.osw");
+
+  {
+    const Json::Value stepValues = runner.getPastStepValuesForMeasure("non_existing");
+    EXPECT_EQ(0, stepValues.size());  // did not set step result as Success
+  }
+}
