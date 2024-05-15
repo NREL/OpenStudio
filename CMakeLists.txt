@@ -1232,9 +1232,8 @@ endif()
 
 # Install additional Documents, such as release notes
 install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_7_0_20231117.pdf" DESTINATION .)
-install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
-install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
-install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/LICENSE.md" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/copyright.txt" DESTINATION .)
 
 ###############################################################################
 
