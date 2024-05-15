@@ -16,33 +16,27 @@
   SWIGINTERN PyObject* SWIG_From_JsonValue(const Json::Value& value) {
     // PyErr_WarnEx(PyExc_UserWarning, "Translating a Json::Value to a PyObject", 1);  // Debugging
 
-    if (value.isNull()) {
+    switch(value.type()) {
+    case Json::nullValue:
       return Py_None;
-    }
 
-    if (value.isBool()) {
+    case Json::booleanValue:
       return value.asBool() ? Py_True : Py_False;
-    }
 
-    if (value.isDouble()) {
-       return PyFloat_FromDouble(value.asDouble());
-    }
-
-    if (value.isIntegral()) {
+    case Json::intValue:
+    case Json::uintValue:
       return PyLong_FromLongLong(value.asInt64());
-    }
 
-    if (value.isNumeric()) {
-       return PyFloat_FromDouble(value.asDouble());
-    }
+    case Json::realValue:
+      return PyFloat_FromDouble(value.asDouble());
 
-    if (value.isString()) {
+    case Json::stringValue: {
       // return PyUnicode_FromString(value.asCString());
       const auto str = value.asString();
       return SWIG_FromCharPtrAndSize(str.data(), str.size());
     }
 
-    if (value.isArray()) {
+    case Json::arrayValue:{
       PyObject* result = PyList_New(value.size());
       Py_ssize_t idx = 0;
       for( const auto& arrayElement : value) {
@@ -54,7 +48,7 @@
       return result;
     }
 
-    if (value.isObject()) {
+    case Json::objectValue: {
       PyObject* result = PyDict_New();
       for( const auto& id : value.getMemberNames()) {
         // recursive call
@@ -63,6 +57,10 @@
         Py_DECREF(val);
       }
       return result;
+    }
+
+    default:
+      assert(false);
     }
 
     return Py_None;
@@ -80,45 +78,41 @@
 %fragment("JsonToDict","header", fragment="SWIG_FromCharPtrAndSize") {
   SWIGINTERN VALUE SWIG_From_JsonValue(const Json::Value& value) {
 
-    if (value.isNull()) {
+    switch(value.type()) {
+    case Json::nullValue:
       return Qnil;
-    }
 
-    if (value.isBool()) {
+    case Json::booleanValue:
       return value.asBool() ? Qtrue : Qfalse;
-    }
 
-    if (value.isDouble()) {
-      return DOUBLE2NUM(value.asDouble());
-    }
-
-    if (value.isIntegral()) {
+    case Json::intValue:
+    case Json::uintValue:
       return INT2NUM(value.asInt64());
-    }
 
-    if (value.isNumeric()) {
-     return DOUBLE2NUM(value.asDouble());
-    }
+    case Json::realValue:
+      return DOUBLE2NUM(value.asDouble());
 
-    if (value.isString()) {
+    case Json::stringValue: {
+      // return PyUnicode_FromString(value.asCString());
       const auto str = value.asString();
       return SWIG_FromCharPtrAndSize(str.data(), str.size());
     }
-
-    if (value.isArray()) {
+    case Json::arrayValue: {
       VALUE result = rb_ary_new2(value.size());
       for( const auto& arrayElement : value) {
         rb_ary_push(result, SWIG_From_JsonValue(arrayElement));
       }
       return result;
     }
-
-    if (value.isObject()) {
+    case Json::objectValue: {
       VALUE result = rb_hash_new();
       for( const auto& id : value.getMemberNames()) {
         rb_hash_aset(result, ID2SYM(rb_intern(id.data())), SWIG_From_JsonValue(value[id]));
       }
       return result;
+    }
+    default:
+      assert(false);
     }
 
     return Qnil;
