@@ -81,7 +81,11 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
 
 * [#5137](https://github.com/NREL/OpenStudio/pull/5137) - Update from Ruby 2.7.2 to Ruby 3.2.2. This required a significant effort in other dependencies including Conan, and significant work in the continuous integration (CI) system.
 
-* [#TBD]() Performance Improvements to OpenStudio logging. 
+* Fix logging related issues. Openstudio version 3.7 introduced a number of new issues related to logging and log files. These issues have been addressed.
+   * [#5030](https://github.com/NREL/OpenStudio/issues/5030)
+   * [#4847](https://github.com/NREL/OpenStudio/issues/4847)
+   * [#5037](https://github.com/NREL/OpenStudio/issues/5037)
+   * [#4918](https://github.com/NREL/OpenStudio/issues/4918)
 
 * [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openstudio-standards Gem or in OpenStudio C++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
 
