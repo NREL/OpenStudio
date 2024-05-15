@@ -8,6 +8,7 @@
 
 #include "../OSArgument.hpp"
 
+#include <json/value.h>
 #include <vector>
 #include <map>
 
@@ -212,4 +213,61 @@ TEST_F(MeasureFixture, OSArgument_MakeChoiceArgumentFromMap) {
 
   EXPECT_EQ(required, choiceArgument.required());
   EXPECT_EQ(modelDependent, choiceArgument.modelDependent());
+}
+
+TEST_F(MeasureFixture, OSArgument_valueAsJSON) {
+
+  {
+    OSArgument boolArgument = OSArgument::makeBoolArgument("bool");
+    Json::Value valNotAssigned = boolArgument.valueAsJSON();
+    EXPECT_TRUE(valNotAssigned.isNull());
+    boolArgument.setValue(true);
+    Json::Value val = boolArgument.valueAsJSON();
+    EXPECT_TRUE(val.isBool());
+    EXPECT_TRUE(val.asBool());
+  }
+
+  {
+    OSArgument doubleArgument = OSArgument::makeDoubleArgument("double");
+    Json::Value valNotAssigned = doubleArgument.valueAsJSON();
+    EXPECT_TRUE(valNotAssigned.isNull());
+    doubleArgument.setValue(10.0);
+    Json::Value val = doubleArgument.valueAsJSON();
+    EXPECT_TRUE(val.isDouble());
+    EXPECT_DOUBLE_EQ(10.0, val.asDouble());
+  }
+
+  {
+    OSArgument integerArgument = OSArgument::makeIntegerArgument("integer");
+    Json::Value valNotAssigned = integerArgument.valueAsJSON();
+    EXPECT_TRUE(valNotAssigned.isNull());
+    integerArgument.setValue(10);
+    Json::Value val = integerArgument.valueAsJSON();
+    EXPECT_TRUE(val.isInt());
+    EXPECT_EQ(10, val.asInt());
+  }
+
+  {
+    OSArgument stringArgument = OSArgument::makeStringArgument("string");
+    Json::Value valNotAssigned = stringArgument.valueAsJSON();
+    EXPECT_TRUE(valNotAssigned.isNull());
+    stringArgument.setValue("hello");
+    Json::Value val = stringArgument.valueAsJSON();
+    EXPECT_TRUE(val.isString());
+    EXPECT_EQ("hello", val.asString());
+  }
+
+  {
+    const std::map<std::string, std::string> choices_to_display_values_map{
+      {"handle1", "choice1"},
+      {"handle2", "choice2"},
+    };
+    OSArgument choiceArgument = OSArgument::makeChoiceArgument("choice", choices_to_display_values_map);
+    Json::Value valNotAssigned = choiceArgument.valueAsJSON();
+    EXPECT_TRUE(valNotAssigned.isNull());
+    choiceArgument.setValue("handle1");
+    Json::Value val = choiceArgument.valueAsJSON();
+    EXPECT_TRUE(val.isString());
+    EXPECT_EQ("handle1", val.asString());
+  }
 }
