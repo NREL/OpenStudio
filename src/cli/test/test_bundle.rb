@@ -23,7 +23,7 @@ class Bundle_Test < Minitest::Test
 
     assert(system('bundle install --path ./test_gems'))
     assert(system('bundle lock --add_platform ruby'))
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --verbose test.rb"))
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --loglevel Trace test.rb"))
 
   ensure
     Dir.chdir(original_dir)
@@ -39,7 +39,7 @@ class Bundle_Test < Minitest::Test
 
     assert(system('bundle install --path ./test_gems'))
     assert(system('bundle lock --add_platform ruby'))
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --verbose test.rb"))
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --loglevel Trace test.rb"))
 
   ensure
     Dir.chdir(original_dir)
@@ -64,7 +64,7 @@ class Bundle_Test < Minitest::Test
     if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
       assert(system('bundle lock --add_platform mswin64'))
     end
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --verbose test.rb"))
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --loglevel Trace test.rb"))
 
   ensure
     Dir.chdir(original_dir)
@@ -84,7 +84,7 @@ class Bundle_Test < Minitest::Test
       if /mingw/.match(RUBY_PLATFORM) || /mswin/.match(RUBY_PLATFORM)
         assert(system('bundle lock --add_platform mswin64'))
       end
-      assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --verbose test.rb"))
+      assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --bundle_path './test_gems' --loglevel Trace test.rb"))
 
     end
   end
@@ -101,7 +101,7 @@ class Bundle_Test < Minitest::Test
     #assert(system('bundle lock --add_platform ruby'))
 
     # intentionally called with dependencies not found in the CLI, expected to fail
-    assert_equal(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --verbose test.rb"), false)
+    assert_equal(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --loglevel Trace test.rb"), false)
 
   ensure
     Dir.chdir(original_dir)
@@ -111,8 +111,8 @@ class Bundle_Test < Minitest::Test
     original_dir = Dir.pwd
     Dir.chdir(File.join(File.dirname(__FILE__), 'no_bundle'))
 
-    puts "'#{OpenStudio::getOpenStudioCLI}' --verbose test.rb"
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --verbose test.rb"))
+    puts "'#{OpenStudio::getOpenStudioCLI}' --loglevel Trace test.rb"
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --loglevel Trace test.rb"))
 
   ensure
     Dir.chdir(original_dir)
@@ -164,11 +164,11 @@ class Bundle_Test < Minitest::Test
     end
 
     # just use embedded gems
-    assert(system("'#{OpenStudio::getOpenStudioCLI}' --verbose test.rb"))
+    assert(system("'#{OpenStudio::getOpenStudioCLI}' --loglevel Trace test.rb"))
 
     # DLM: do we need to be able to pass a Gemfile without a bundle?
     # don't pass bundle_path since we want to use embedded gems
-    #assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle './Gemfile' --verbose test.rb"))
+    #assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle './Gemfile' --loglevel Trace test.rb"))
 
   ensure
     Dir.chdir(original_dir)
