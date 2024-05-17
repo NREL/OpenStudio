@@ -22,6 +22,7 @@ if(BUILD_TESTING)
       "/usr/local/rvm/rubies/ruby-3.2.2/bin/ruby"
       "/usr/share/rvm/rubies/ruby-3.2.2/bin/"
       "$ENV{HOME}/.rvm/rubies/ruby-3.2.2/bin/"
+      "$ENV{HOME}/.rbenv/versions/3.2.2/bin/"
 
       "C:/Ruby32-x64/bin/"
 
