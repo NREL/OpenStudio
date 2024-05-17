@@ -131,7 +131,8 @@ module Kernel
     'msgpack/msgpack' => 'init_msgpack',\
     'byebug/byebug' => 'init_byebug',\
     'json/ext/parser' => 'init_parser',\
-    'json/ext/generator' => 'init_generator'
+    'json/ext/generator' => 'init_generator',\
+    'strscan' => 'init_strscan',
     #'cbor/cbor' => 'init_cbor',\
   }
 
