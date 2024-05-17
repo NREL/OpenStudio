@@ -625,7 +625,7 @@ module IRB # :nodoc:
 
     @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
     # puts @CONF[:PROMPT_MODE]
-    os_version = "3.7.0" # OpenStudio::openStudioVersion
+    os_version = "3.8.0" # OpenStudio::openStudioVersion
     @CONF[:PROMPT][:OPENSTUDIO] = {
       :PROMPT_I=>"(os #{os_version}) :%03n > ",
       :PROMPT_S=>"(os #{os_version}) :%03n%l> ",
