@@ -5,3 +5,4 @@ source 'http://rubygems.org'
 gem 'rubocop', '1.63.4'
 # Our CLI has json 2.6.3, which satisfies this version
 # racc is also in our CLI
+gem 'rexml', '3.2.5' # Avoid strscan native dep
