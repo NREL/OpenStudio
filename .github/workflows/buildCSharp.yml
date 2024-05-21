@@ -44,8 +44,12 @@ jobs:
       run: |
         rm CMakeLists.txt
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
+        rm conan.lock
+        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conan.lock
 
     - uses: actions/setup-python@v5
+      with:
+        python-version: 3.12  # only for conan, version doesn't matter much
 
     - name: Install Conan
       shell: bash
@@ -122,7 +126,7 @@ jobs:
           # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
           conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
         else
-          conan install . --output-folder=./build --build=missing --build='swig/*' -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
         fi
         echo -e "::endgroup::"
 
@@ -141,7 +145,6 @@ jobs:
       shell: cmd
       run: |
         echo "::group::Conan Install"
-        # TODO: can we replace with Ninja...?
         conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
         echo "::engroup::"
 
