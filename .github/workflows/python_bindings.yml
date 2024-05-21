@@ -68,8 +68,8 @@ jobs:
           allow_failure: true  # Possible this fails, don't care yet
     steps:
     - uses: actions/checkout@v4
-      with:
-        ref: v3.8.0
+      # with:
+      #   ref: develop
 
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
@@ -120,7 +120,6 @@ jobs:
         else
           PYTHON_PIP_REPOSITORY=testpypi
         fi;
-        PYTHON_PIP_REPOSITORY=pypi
         echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
 
     - name: Install Conan
@@ -423,7 +422,6 @@ jobs:
           else
             bindings_v=$(python ./python/module/find_pypi_tag.py --current)
           fi;
-          bindings_v=$(python ./python/module/find_pypi_tag.py --pypi)
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
           mkdir wheel
 
@@ -437,7 +435,7 @@ jobs:
   # if python_bindings succeeds but test_python_bindings fails and this is a release,
   # remove that version from testpypi
   upload_python_bindings_to_pypi:
-    # if: contains(github.ref, 'refs/tags')
+    if: contains(github.ref, 'refs/tags')
     needs: test_python_bindings
     name: Upload to PyPi
     runs-on: ubuntu-20.04
