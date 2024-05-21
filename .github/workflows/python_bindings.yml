@@ -24,7 +24,7 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
         include:
         - name: Ubuntu
           os: ubuntu-20.04
@@ -35,8 +35,13 @@ jobs:
           python-version: 3.8
           allow_failure: false
           MACOSX_DEPLOYMENT_TARGET: 10.15
-          SDKROOT: /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-          DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
+          SDKROOT: /Applications/Xcode_13.2.1.app
+        - name: macOS_arm64
+          os: macos-14
+          python-version: 3.8
+          allow_failure: false
+          MACOSX_DEPLOYMENT_TARGET: 12.1
+          SDKROOT: /Applications/Xcode_14.3.1.app
         - name: Windows_py37
           os: windows-2019
           python-version: 3.7
@@ -56,8 +61,11 @@ jobs:
         - name: Windows_py311
           os: windows-2019
           python-version: '3.11'
+          allow_failure: false
+        - name: Windows_py312
+          os: windows-2019
+          python-version: '3.12'
           allow_failure: true  # Possible this fails, don't care yet
-
     steps:
     - uses: actions/checkout@v4
       with:
@@ -65,7 +73,8 @@ jobs:
 
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
-      uses: actions/setup-python@v4
+      # 3.10 is the first one to have a prebuilt binary for macos-14 (arm64) on the actions/setup-python, so I forked it and actions/python-versions to add 3.8
+      uses: jmarrec/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -84,11 +93,11 @@ jobs:
           #echo CXX=g++-10 >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "macOS" ]; then
           echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
-          echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
-          echo SDKROOT=${{ matrix.SDKROOT }} >> $GITHUB_ENV
-          echo DEVELOPER_DIR=${{ matrix.DEVELOPER_DIR }} >> $GITHUB_ENV
+          sudo xcode-select -switch "${{ matrix.SDKROOT }}"
+          sdk_path=$(xcrun --sdk macosx --show-sdk-path)
+          echo "sdk_path=$sdk_path"
           # The MACOSX_DEPLOYMENT_TARGET environment variable sets the default value for the CMAKE_OSX_DEPLOYMENT_TARGET variable.
-          # echo CMAKE_MACOSX_DEPLOYMENT_TARGET='-DCMAKE_OSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET' >> $GITHUB_ENV
+          echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
           echo "Using brew to install ninja"
           brew install ninja
           echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
@@ -291,7 +300,7 @@ jobs:
         tar -cvzf openstudio-${{ matrix.name }}.tar.gz dist/
 
     - name: Upload .whl to artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
         path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
@@ -303,10 +312,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
 
     - name: Install Python dependencies
       run: |
@@ -317,7 +324,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: ./wheels
 
@@ -356,15 +363,19 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
         include:
         - name: Ubuntu
           os: ubuntu-20.04
-          python-version: 3.8
+          python-version: 3.11  # Voluntarily using a newer version than built with for Unix
           allow_failure: false
         - name: macOS
           os: macos-11
-          python-version: 3.8
+          python-version: 3.11
+          allow_failure: false
+        - name: macOS_arm64
+          os: macos-14
+          python-version: 3.11
           allow_failure: false
         - name: Windows_py37
           os: windows-2019
@@ -385,13 +396,17 @@ jobs:
         - name: Windows_py311
           os: windows-2019
           python-version: '3.11'
+          allow_failure: false
+        - name: Windows_py312
+          os: windows-2019
+          python-version: '3.12'
           allow_failure: true  # Possible this fails, don't care yet
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -426,10 +441,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
 
     - name: Install Python dependencies
       run: |
@@ -438,7 +451,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: ./wheels
 
