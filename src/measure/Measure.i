@@ -24,6 +24,15 @@
   // Help in overload resolution preferring std::string over char const *
   %ignore openstudio::measure::OSArgument::setValue(char const*);
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
+
+  // Ignore Json::Value return type (toJSON / fromJSON / valueAsJSON are globally ignored already)
+  %ignore openstudio::measure::OSArgument::defaultValueAsJSON;
+  %ignore openstudio::measure::OSArgument::domainAsJSON;
+  %ignore openstudio::measure::OSRunner::getArgumentValues;
+  %ignore openstudio::measure::OSRunner::getPastStepValuesForMeasure;
+  %ignore openstudio::measure::OSRunner::getPastStepValuesForName;
+
+
 #elif defined(SWIGPYTHON)
   // Avoid triggering a SWIG warning: 'print' is a python keyword
   %rename(toString) openstudio::measure::OSArgument::print;

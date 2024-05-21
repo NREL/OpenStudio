@@ -5,6 +5,7 @@
   // ignores toJSON/fromJSON globally
   %rename("$ignore", regextarget=1, fullname=1) "openstudio::.*::toJSON$";
   %rename("$ignore", regextarget=1, fullname=1) "openstudio::.*::fromJSON$";
+  %rename("$ignore", regextarget=1, fullname=1) "openstudio::.*::valueAsJSON$";
 #else
 %{
   #include <json/value.h>
