@@ -62,23 +62,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: develop
 
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install conan==1.59
-        pip install setuptools wheel twine requests packaging
-        conan --version
-        echo "Enabling conan revisions and setting parallel_download"
-        conan config set general.revisions_enabled=True
-        conan config set general.parallel_download=8
-        conan remote add --insert 0 --force nrel https://conan.openstudio.net/artifactory/api/conan/openstudio
 
     - name: Install System dependencies
       shell: bash
@@ -123,6 +114,58 @@ jobs:
           PYTHON_PIP_REPOSITORY=testpypi
         fi;
         echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
+
+
+    - name: Install Conan
+      shell: bash
+      run: |
+        begin_group() { set +x; echo -e "::group::\033[93m$1\033[0m"; set -x; }
+        end_group() { set +x; echo -e "::endgroup::"; set -x; }
+
+        begin_group "Install other python dependencies"
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine requests packaging
+        end_group
+
+        set -x
+        begin_group "Install conan 2"
+        python --version
+        pip install 'conan>2'
+        conan --version
+        end_group
+
+        begin_group "Default profile"
+        export CONAN_USER_HOME="${{ github.workspace }}${DIR_SEP}conan-cache"
+        echo CONAN_USER_HOME="$CONAN_USER_HOME" >> $GITHUB_ENV
+
+        export CONAN_HOME="$CONAN_USER_HOME${DIR_SEP}.conan2"
+        echo CONAN_HOME="$CONAN_HOME" >> $GITHUB_ENV
+
+        export CONAN_PROFILE_DEFAULT="$CONAN_HOME${DIR_SEP}profiles${DIR_SEP}default"
+        echo CONAN_PROFILE_DEFAULT="$CONAN_PROFILE_DEFAULT" >> $GITHUB_ENV
+
+        conan profile detect --force --name default
+        cat $CONAN_PROFILE_DEFAULT
+        # Mac has the FreeBSD flavor of sed and MUST take a backup suffix...
+        sed -i.bak 's/cppstd=.*$/cppstd=20/g' $CONAN_PROFILE_DEFAULT
+        sed -i.bak 's/build_type=.*$/build_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        # Windows only
+        sed -i.bak 's/compiler.runtime_type=.*$/compiler.runtime_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        rm -Rf $CONAN_PROFILE_DEFAULT.bak || true
+        conan profile show
+        end_group
+
+        begin_group "Global.conf"
+        echo "core:non_interactive = True" >> $CONAN_HOME/global.conf
+        echo "core.download:parallel = {{os.cpu_count() - 2}}" >> $CONAN_HOME/global.conf
+        echo "core.sources:download_cache = $CONAN_USER_HOME/.conan-download-cache" >> $CONAN_HOME/global.conf
+        cat $CONAN_HOME/global.conf
+        end_group
+
+        begin_group "Remotes"
+        conan remote add --force nrel-v2 https://conan.openstudio.net/artifactory/api/conan/conan-v2
+        conan remote list
+        end_group
 
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
@@ -181,51 +224,62 @@ jobs:
         df -h || true
 
     - name: Configure CMake & build (Windows)
-      working-directory: ./build
       if: runner.os == 'Windows'
       shell: cmd
       run: |
-        echo "Using vcvarsall to initialize the development environment"
-        call vcvarsall.bat x64
-        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ^
+        echo "::group::Conan Install"
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release
+        echo "::engroup::"
+
+        echo "::group::CMake Configure"
+        call ./build/conanbuild.bat
+        cmake --preset conan-release ^
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} ^
               -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} ^
-              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} ../
-        ninja
-        ninja python_package
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
+        echo "::engroup::"
 
-    - name: Configure CMake (Unix)
+        echo "::group::Build"
+        cmake --build --preset conan-release
+        echo "::engroup::"
+
+    - name: Configure CMake & build (Windows)
       working-directory: ./build
       if: runner.os != 'Windows'
       shell: bash
       run: |
+        begin_group() { set +x; echo -e "::group::\033[93m$1\033[0m"; set -x; }
+        end_group() { set +x; echo -e "::endgroup::"; set -x; }
         set -x
-        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE:STRING=Release \
+
+        begin_group "Conan install"
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.78 with recent clang
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+        else
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release
+        fi
+        end_group
+
+        begin_group "CMake Configure"
+        cmake --preset conan-release ${{ matrix.extra_cmake_args}} \
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
-              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
-              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} \
-              ../
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} \
+              -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
+        end_group
 
-    - name: Build (Unix)
-      working-directory: ./build
-      if: runner.os != 'Windows'
-      shell: bash
-      run: |
-        set -x
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          cmake --build . --target package -j 1
-        elif [ "$RUNNER_OS" == "macOS" ]; then
-          cmake --build . --target package -j 2
-        fi;
+        begin_group "Build"
+        cmake --build --preset conan-release
+        end_group
+
 
     # We always upload to testpypi
     - name: Build python wheel
       shell: bash
       working-directory: ./build
       run: |
-        cmake --build . --target python_package -j 2
+        cmake --build --preset conan-release --target python_package
         cd Products/python_package/
         python setup.py bdist_wheel
 
