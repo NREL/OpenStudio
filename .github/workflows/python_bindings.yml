@@ -30,7 +30,6 @@ jobs:
           os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
-          extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
         - name: macOS
           os: macos-11
           python-version: 3.8
@@ -38,7 +37,6 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: 10.15
           SDKROOT: /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
           DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
-          extra_cmake_args: ""
         - name: Windows_py37
           os: windows-2019
           python-version: 3.7
@@ -233,7 +231,7 @@ jobs:
       shell: cmd
       run: |
         echo "::group::Conan Install"
-        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
         echo "::engroup::"
 
         echo "::group::CMake Configure"
@@ -257,15 +255,15 @@ jobs:
 
         begin_group "Conan install"
         if [ "$RUNNER_OS" == "macOS" ]; then
-          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.78 with recent clang
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
         else
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
         fi
         echo -e "::endgroup::"
 
         begin_group "CMake Configure"
-        cmake --preset conan-release ${{ matrix.extra_cmake_args}} \
+        cmake --preset conan-release \
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
               -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} \
               -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
