@@ -118,20 +118,19 @@ jobs:
     - name: Install Conan
       shell: bash
       run: |
-        begin_group() { set +x; echo -e "::group::\033[93m$1\033[0m"; set -x; }
-        end_group() { set +x; echo -e "::endgroup::"; set -x; }
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
 
         begin_group "Install other python dependencies"
-          python -m pip install --upgrade pip
-          pip install setuptools wheel twine requests packaging
-        end_group
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests packaging
+        echo -e "::endgroup::"
 
         set -x
         begin_group "Install conan 2"
         python --version
         pip install 'conan>2'
         conan --version
-        end_group
+        echo -e "::endgroup::"
 
         begin_group "Default profile"
         if [ "$RUNNER_OS" == "Windows" ]; then
@@ -159,19 +158,19 @@ jobs:
         sed -i.bak 's/compiler.runtime_type=.*$/compiler.runtime_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
         rm -Rf $CONAN_PROFILE_DEFAULT.bak || true
         conan profile show
-        end_group
+        echo -e "::endgroup::"
 
         begin_group "Global.conf"
         echo "core:non_interactive = True" >> $CONAN_HOME/global.conf
         echo "core.download:parallel = {{os.cpu_count() - 2}}" >> $CONAN_HOME/global.conf
         echo "core.sources:download_cache = $CONAN_USER_HOME/.conan-download-cache" >> $CONAN_HOME/global.conf
         cat $CONAN_HOME/global.conf
-        end_group
+        echo -e "::endgroup::"
 
         begin_group "Remotes"
         conan remote add --force nrel-v2 https://conan.openstudio.net/artifactory/api/conan/conan-v2
         conan remote list
-        end_group
+        echo -e "::endgroup::"
 
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
@@ -249,13 +248,11 @@ jobs:
         cmake --build --preset conan-release
         echo "::engroup::"
 
-    - name: Configure CMake & build (Windows)
-      working-directory: ./build
+    - name: Configure CMake & build (Unix)
       if: runner.os != 'Windows'
       shell: bash
       run: |
-        begin_group() { set +x; echo -e "::group::\033[93m$1\033[0m"; set -x; }
-        end_group() { set +x; echo -e "::endgroup::"; set -x; }
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
         set -x
 
         begin_group "Conan install"
@@ -265,7 +262,7 @@ jobs:
         else
           conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release
         fi
-        end_group
+        echo -e "::endgroup::"
 
         begin_group "CMake Configure"
         cmake --preset conan-release ${{ matrix.extra_cmake_args}} \
@@ -273,11 +270,11 @@ jobs:
               -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} \
               -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
-        end_group
+        echo -e "::endgroup::"
 
         begin_group "Build"
         cmake --build --preset conan-release
-        end_group
+        echo -e "::endgroup::"
 
 
     # We always upload to testpypi
