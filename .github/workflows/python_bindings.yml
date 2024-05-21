@@ -115,7 +115,6 @@ jobs:
         fi;
         echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
 
-
     - name: Install Conan
       shell: bash
       run: |
@@ -135,6 +134,13 @@ jobs:
         end_group
 
         begin_group "Default profile"
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          DIR_SEP="\\"
+        else
+          DIR_SEP="/"
+        fi
+        echo DIR_SEP=$DIR_SEP >> $GITHUB_ENV
+
         export CONAN_USER_HOME="${{ github.workspace }}${DIR_SEP}conan-cache"
         echo CONAN_USER_HOME="$CONAN_USER_HOME" >> $GITHUB_ENV
 
