@@ -24,21 +24,24 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
         include:
         - name: Ubuntu
           os: ubuntu-20.04
           python-version: 3.8
           allow_failure: false
-          extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
         - name: macOS
           os: macos-11
           python-version: 3.8
           allow_failure: false
           MACOSX_DEPLOYMENT_TARGET: 10.15
-          SDKROOT: /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-          DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
-          extra_cmake_args: ""
+          SDKROOT: /Applications/Xcode_13.2.1.app
+        - name: macOS_arm64
+          os: macos-14
+          python-version: 3.8
+          allow_failure: false
+          MACOSX_DEPLOYMENT_TARGET: 12.1
+          SDKROOT: /Applications/Xcode_14.3.1.app
         - name: Windows_py37
           os: windows-2019
           python-version: 3.7
@@ -58,27 +61,22 @@ jobs:
         - name: Windows_py311
           os: windows-2019
           python-version: '3.11'
+          allow_failure: false
+        - name: Windows_py312
+          os: windows-2019
+          python-version: '3.12'
           allow_failure: true  # Possible this fails, don't care yet
-
     steps:
     - uses: actions/checkout@v4
+      # with:
+      #   ref: develop
 
     - name: Set up Python ${{ matrix.python-version }}
       id: setup-python
-      uses: actions/setup-python@v4
+      # 3.10 is the first one to have a prebuilt binary for macos-14 (arm64) on the actions/setup-python, so I forked it and actions/python-versions to add 3.8
+      uses: jmarrec/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install conan==1.59
-        pip install setuptools wheel twine requests packaging
-        conan --version
-        echo "Enabling conan revisions and setting parallel_download"
-        conan config set general.revisions_enabled=True
-        conan config set general.parallel_download=8
-        conan remote add --insert 0 --force nrel https://conan.openstudio.net/artifactory/api/conan/openstudio
 
     - name: Install System dependencies
       shell: bash
@@ -95,11 +93,11 @@ jobs:
           #echo CXX=g++-10 >> $GITHUB_ENV
         elif [ "$RUNNER_OS" == "macOS" ]; then
           echo "Setting up MACOSX_DEPLOYMENT_TARGET and SDKROOT"
-          echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
-          echo SDKROOT=${{ matrix.SDKROOT }} >> $GITHUB_ENV
-          echo DEVELOPER_DIR=${{ matrix.DEVELOPER_DIR }} >> $GITHUB_ENV
+          sudo xcode-select -switch "${{ matrix.SDKROOT }}"
+          sdk_path=$(xcrun --sdk macosx --show-sdk-path)
+          echo "sdk_path=$sdk_path"
           # The MACOSX_DEPLOYMENT_TARGET environment variable sets the default value for the CMAKE_OSX_DEPLOYMENT_TARGET variable.
-          # echo CMAKE_MACOSX_DEPLOYMENT_TARGET='-DCMAKE_OSX_DEPLOYMENT_TARGET=$MACOSX_DEPLOYMENT_TARGET' >> $GITHUB_ENV
+          echo MACOSX_DEPLOYMENT_TARGET=${{ matrix.MACOSX_DEPLOYMENT_TARGET }} >> $GITHUB_ENV
           echo "Using brew to install ninja"
           brew install ninja
           echo CMAKE_GENERATOR='Ninja' >> $GITHUB_ENV
@@ -123,6 +121,63 @@ jobs:
           PYTHON_PIP_REPOSITORY=testpypi
         fi;
         echo "PYTHON_PIP_REPOSITORY=$PYTHON_PIP_REPOSITORY" >> $GITHUB_ENV
+
+    - name: Install Conan
+      shell: bash
+      run: |
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
+
+        begin_group "Install other python dependencies"
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine requests packaging
+        echo -e "::endgroup::"
+
+        set -x
+        begin_group "Install conan 2"
+        python --version
+        pip install 'conan>2'
+        conan --version
+        echo -e "::endgroup::"
+
+        begin_group "Default profile"
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          DIR_SEP="\\"
+        else
+          DIR_SEP="/"
+        fi
+        echo DIR_SEP=$DIR_SEP >> $GITHUB_ENV
+
+        export CONAN_USER_HOME="${{ github.workspace }}${DIR_SEP}conan-cache"
+        echo CONAN_USER_HOME="$CONAN_USER_HOME" >> $GITHUB_ENV
+
+        export CONAN_HOME="$CONAN_USER_HOME${DIR_SEP}.conan2"
+        echo CONAN_HOME="$CONAN_HOME" >> $GITHUB_ENV
+
+        export CONAN_PROFILE_DEFAULT="$CONAN_HOME${DIR_SEP}profiles${DIR_SEP}default"
+        echo CONAN_PROFILE_DEFAULT="$CONAN_PROFILE_DEFAULT" >> $GITHUB_ENV
+
+        conan profile detect --force --name default
+        cat $CONAN_PROFILE_DEFAULT
+        # Mac has the FreeBSD flavor of sed and MUST take a backup suffix...
+        sed -i.bak 's/cppstd=.*$/cppstd=20/g' $CONAN_PROFILE_DEFAULT
+        sed -i.bak 's/build_type=.*$/build_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        # Windows only
+        sed -i.bak 's/compiler.runtime_type=.*$/compiler.runtime_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        rm -Rf $CONAN_PROFILE_DEFAULT.bak || true
+        conan profile show
+        echo -e "::endgroup::"
+
+        begin_group "Global.conf"
+        echo "core:non_interactive = True" >> $CONAN_HOME/global.conf
+        echo "core.download:parallel = {{os.cpu_count() - 2}}" >> $CONAN_HOME/global.conf
+        echo "core.sources:download_cache = $CONAN_USER_HOME/.conan-download-cache" >> $CONAN_HOME/global.conf
+        cat $CONAN_HOME/global.conf
+        echo -e "::endgroup::"
+
+        begin_group "Remotes"
+        conan remote add --force nrel-v2 https://conan.openstudio.net/artifactory/api/conan/conan-v2
+        conan remote list
+        echo -e "::endgroup::"
 
     - name: Create Build Directory
       run: cmake -E make_directory ./build/
@@ -181,51 +236,60 @@ jobs:
         df -h || true
 
     - name: Configure CMake & build (Windows)
-      working-directory: ./build
       if: runner.os == 'Windows'
       shell: cmd
       run: |
-        echo "Using vcvarsall to initialize the development environment"
-        call vcvarsall.bat x64
-        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ^
+        echo "::group::Conan Install"
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+        echo "::engroup::"
+
+        echo "::group::CMake Configure"
+        call ./build/conanbuild.bat
+        cmake --preset conan-release ^
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} ^
               -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} ^
-              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} ../
-        ninja
-        ninja python_package
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
+        echo "::engroup::"
 
-    - name: Configure CMake (Unix)
-      working-directory: ./build
+        echo "::group::Build"
+        cmake --build --preset conan-release
+        echo "::engroup::"
+
+    - name: Configure CMake & build (Unix)
       if: runner.os != 'Windows'
       shell: bash
       run: |
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
         set -x
-        echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE:STRING=Release \
+
+        begin_group "Conan install"
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+        else
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+        fi
+        echo -e "::endgroup::"
+
+        begin_group "CMake Configure"
+        cmake --preset conan-release \
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
-              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
-              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} \
-              ../
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} \
+              -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
+        echo -e "::endgroup::"
 
-    - name: Build (Unix)
-      working-directory: ./build
-      if: runner.os != 'Windows'
-      shell: bash
-      run: |
-        set -x
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          cmake --build . --target package -j 1
-        elif [ "$RUNNER_OS" == "macOS" ]; then
-          cmake --build . --target package -j 2
-        fi;
+        begin_group "Build"
+        cmake --build --preset conan-release
+        echo -e "::endgroup::"
+
 
     # We always upload to testpypi
     - name: Build python wheel
       shell: bash
       working-directory: ./build
       run: |
-        cmake --build . --target python_package -j 2
+        cmake --build --preset conan-release --target python_package
         cd Products/python_package/
         python setup.py bdist_wheel
 
@@ -236,7 +300,7 @@ jobs:
         tar -cvzf openstudio-${{ matrix.name }}.tar.gz dist/
 
     - name: Upload .whl to artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openstudio-${{ matrix.name }}  # something like openstudio-Windows_py37
         path: ./build/Products/python_package/openstudio-${{ matrix.name }}.tar.gz
@@ -248,10 +312,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
 
     - name: Install Python dependencies
       run: |
@@ -262,7 +324,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: ./wheels
 
@@ -301,15 +363,19 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
         include:
         - name: Ubuntu
           os: ubuntu-20.04
-          python-version: 3.8
+          python-version: 3.11  # Voluntarily using a newer version than built with for Unix
           allow_failure: false
         - name: macOS
           os: macos-11
-          python-version: 3.8
+          python-version: 3.11
+          allow_failure: false
+        - name: macOS_arm64
+          os: macos-14
+          python-version: 3.11
           allow_failure: false
         - name: Windows_py37
           os: windows-2019
@@ -330,13 +396,17 @@ jobs:
         - name: Windows_py311
           os: windows-2019
           python-version: '3.11'
+          allow_failure: false
+        - name: Windows_py312
+          os: windows-2019
+          python-version: '3.12'
           allow_failure: true  # Possible this fails, don't care yet
 
     steps:
     - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -371,10 +441,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+    - name: Set up Python
+      uses: actions/setup-python@v5
 
     - name: Install Python dependencies
       run: |
@@ -383,7 +451,7 @@ jobs:
         mkdir wheels
 
     - name: Download ALL wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: ./wheels
 
