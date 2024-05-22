@@ -74,7 +74,7 @@ class OpenStudioBuildRecipe(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
 
-        tc.cache_variables["BUILD_CLI"] = True
+        tc.cache_variables["BUILD_CLI"] = bool(self.options.with_ruby)
         tc.cache_variables["BUILD_RUBY_BINDINGS"] = bool(self.options.with_ruby)
         tc.cache_variables["BUILD_PYTHON_BINDINGS"] = bool(self.options.with_python)
         tc.cache_variables["BUILD_CSHARP_BINDINGS"] = bool(self.options.with_csharp)
