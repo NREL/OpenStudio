@@ -35,25 +35,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      # If you need to rebuild for a specific branch **after** you fixed the workflow...
-      with:
-        ref: v3.8.0
+      # If you need to rebuild for a specific branch or tag **after** you fixed the workflow and you have no other changes or only a few you can download from github
+      # with:
+      #   ref: v3.8.0
 
-    - name: download patched CMakeLists.txt
+#    - name: download patched CMakeLists.txt
+#      shell: bash
+#      run: |
+#        rm CMakeLists.txt
+#        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
+
+    - name: Soft reset to v3.8.0
       shell: bash
       run: |
-        rm CMakeLists.txt
-        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
-        rm conan.lock
-        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conan.lock
-        rm conanfile.py
-        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conanfile.py
-        cd src/measure/
-        rm Measure.i
-        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/src/measure/Measure.i
-        cd ../utilities/core/
-        rm jsoncpp.i
-        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/src/utilities/core/jsoncpp.i
+        git fetch --all
+        git reset --soft v3.8.0
 
     - uses: actions/setup-python@v5
       with:
@@ -197,30 +193,30 @@ jobs:
     - name: build nuget for Windows
       if: runner.os == 'Windows'
       run: |
-        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
 
     - name: build nuget for Linux
       if: runner.os == 'Linux'
       run: |
         cp ./csharp/*.targets ./build/Products
         ls ./build/Products
-        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
 
     - name: Fix dylib and build nuget for Mac
       if: runner.os == 'macOS'
       run: |
         sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_csharp.dylib
-        sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_csharp.dylib
 
         sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_model_csharp.dylib
-        sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_model_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_model_csharp.dylib
 
         sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_translators_csharp.dylib
-        sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_translators_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_translators_csharp.dylib
 
         cp ./csharp/*.targets ./build/Products
         ls ./build/Products
-        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
 
 
     - name: list files
@@ -351,7 +347,7 @@ jobs:
         dotnet test OpenStudio.Tests.x86.csproj --arch x86
 
   Test_Mac_ubuntu:
-    name: "Test x64 nuget packages for macos and ubuntu"
+    name: "Test 64-bit nuget packages for macos and ubuntu"
     runs-on: ${{ matrix.os }}
     strategy:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
@@ -361,10 +357,14 @@ jobs:
         include:
         - name: Ubuntu
           os: ubuntu-latest
+          arch: x64
         - name: macOS
           os: macos-13
+          arch: x64
         - name: macOS_arm64
           os: macos-14
+          arch: arm64
+
     timeout-minutes: 20
     needs: build-csharp
 
@@ -389,4 +389,4 @@ jobs:
         dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
 
         dotnet clean OpenStudio.Tests.csproj
-        dotnet test OpenStudio.Tests.csproj --arch x64
+        dotnet test OpenStudio.Tests.csproj --arch ${{ matrix.arch }} /p:Platform="${{ matrix.arch }}"

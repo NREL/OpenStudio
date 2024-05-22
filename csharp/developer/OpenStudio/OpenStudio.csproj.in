@@ -33,21 +33,21 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>full</DebugType> 
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
 <!-- Linux:
 libopenstudio_csharp.so
 libopenstudio_model_csharp.so
 libopenstudio_translators_csharp.so
-libopenstudiolib.so 
+libopenstudiolib.so
 -->
 
 <!-- Mac:
 libopenstudio_csharp.dylib
 libopenstudio_model_csharp.dylib
 libopenstudio_translators_csharp.dylib
-libopenstudiolib.dylib 
+libopenstudiolib.dylib
 -->
 
 <!-- Windows:
@@ -58,25 +58,45 @@ openstudiolib.dll
  -->
 
   <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <Message Text="DEBUGGING: OS=$(OS) TargetFramework=$(TargetFramework) Architecture=$(Architecture) Platform=$(Platform) RID=$(Rid)" />
+    <Message Text="DEBUGGING: is_osx1=$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX))) is_osx2=$([MSBuild]::IsOsPlatform('OSX'))" />
+    <Message Text="DEBUGGING: System.Runtime.InteropServices.RuntimeInformation: OSArchitecture=$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture), RuntimeIdentifier=$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier), OSDescription=$([System.Runtime.InteropServices.RuntimeInformation]::OSDescription)" />
+    <PropertyGroup>
+      <Rid>$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</Rid>
+      <IsLinux>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))</IsLinux>
+      <IsDarwin>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))</IsDarwin>
+      <IsWindows>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))</IsWindows>
+      <IsArm64>False</IsArm64>
+      <IsArm64 Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64' ">true</IsArm64>
+    </PropertyGroup>
+    <Message Text="DEBUGGING: Rid=$(Rid), IsLinux=$(IsLinux), IsDarwin=$(IsDarwin), IsWindows=$(IsWindows), IsArm64=$(IsArm64), IsNotArm64=$(IsNotArm64)" />
+    <Message Condition=" $(IsDarwin) And !$(IsArm64) " Text="Darwin not arm64" />
+    <Message Condition=" $(IsDarwin) And $(IsArm64) " Text="Darwin arm64" />
     <!-- for Windows -->
-    <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+    <ItemGroup Condition=" $(IsWindows) ">
       <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
       <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
     </ItemGroup>
 
     <!-- for Linux -->
-    <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+    <ItemGroup Condition=" $(IsLinux) ">
       <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="runtimes/linux-x64/native" />
       <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="runtimes/linux-x64/native" />
       <TfmSpecificPackageFile Include="../Products/OpenStudio-linux-x64.targets" PackagePath="build/OpenStudio.targets" />
     </ItemGroup>
 
     <!-- for Mac  -->
-    <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
+    <ItemGroup Condition=" $(IsDarwin) And !$(IsArm64) ">
       <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/osx-x64/native" />
       <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/osx-x64/native" />
       <TfmSpecificPackageFile Include="../Products/OpenStudio-osx-x64.targets" PackagePath="build/OpenStudio.targets" />
     </ItemGroup>
+    <ItemGroup Condition=" $(IsDarwin) And $(IsArm64) ">
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/$(Rid)/native" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/$(Rid)/native" />
+      <TfmSpecificPackageFile Include="../Products/OpenStudio-$(Rid).targets" PackagePath="build/OpenStudio.targets" />
+    </ItemGroup>
+
   </Target>
-  
+
 </Project>
