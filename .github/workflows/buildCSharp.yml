@@ -362,7 +362,9 @@ jobs:
         - name: Ubuntu
           os: ubuntu-latest
         - name: macOS
-          os: macos-latest
+          os: macos-13
+        - name: macOS_arm64
+          os: macos-14
     timeout-minutes: 20
     needs: build-csharp
 
