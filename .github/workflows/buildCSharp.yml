@@ -46,6 +46,12 @@ jobs:
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
         rm conan.lock
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conan.lock
+        cd src/measure/
+        rm Measure.i
+        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/src/measure/Measure.i
+        cd ../utilities/core/
+        rm jsoncpp.i
+        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/src/utilities/core/jsoncpp.i
 
     - uses: actions/setup-python@v5
       with:
