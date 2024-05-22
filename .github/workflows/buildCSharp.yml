@@ -35,21 +35,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      # If you need to rebuild for a specific branch or tag **after** you fixed the workflow and you have no other changes or only a few you can download from github
-      # with:
-      #   ref: v3.8.0
-
+#      # If you need to rebuild for a specific branch or tag **after** you fixed the workflow and you have no other changes or only a few you can download from github
+#      with:
+#        ref: v3.8.0
+#
 #    - name: download patched CMakeLists.txt
 #      shell: bash
 #      run: |
 #        rm CMakeLists.txt
 #        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
-
-    - name: Soft reset to v3.8.0
-      shell: bash
-      run: |
-        git fetch --all
-        git reset --soft v3.8.0
+#
+#    # Alternatively, if you have made lots of changes, just use this
+#    - name: Soft reset to v3.8.0
+#      shell: bash
+#      run: |
+#        git fetch --all
+#        git reset --soft v3.8.0
 
     - uses: actions/setup-python@v5
       with:
