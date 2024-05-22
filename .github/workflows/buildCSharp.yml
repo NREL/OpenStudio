@@ -157,7 +157,7 @@ jobs:
         echo "::engroup::"
 
         echo "::group::Build"
-        cmake --build --preset conan-default --config Release
+        cmake --build --preset conan-release
         echo "::engroup::"
 
     - name: Install Dotnet x86
@@ -183,7 +183,7 @@ jobs:
         echo "::engroup::"
 
         echo "::group::Build"
-        cmake --build --preset conan-default --config Release
+        cmake --build --preset conan-release
         echo "::engroup::"
 
     - name: build nuget for Windows
