@@ -150,13 +150,13 @@ jobs:
 
         echo "::group::CMake Configure"
         call ./build/conanbuild.bat
-        cmake --preset conan-default ^
+        cmake --preset conan-release ^
               -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF
         echo "::engroup::"
 
         echo "::group::Build"
-        cmake --build --preset conan-default --config Release
+        cmake --build --preset conan-release --config Release
         echo "::engroup::"
 
     - name: Install Dotnet x86
