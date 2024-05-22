@@ -15,16 +15,23 @@ class OpenStudioBuildRecipe(ConanFile):
     generators = "CMakeDeps"  # CMakeToolchain explicitly instantiated
 
     options = {
+        "with_ruby": [True, False],
+        "with_python": [True, False],
+        "with_csharp": [True, False],
         "with_testing": [True, False],
         "with_benchmark": [True, False],
     }
     default_options = {
+        "with_ruby": True,
+        "with_python": True,
+        "with_csharp": False,
         "with_testing": True,
         "with_benchmark": True,
     }
 
     def requirements(self):
-        self.requires("ruby/3.2.2")
+        if self.options.with_ruby:
+            self.requires("ruby/3.2.2")
 
         if is_apple_os(self):
             self.requires(
@@ -68,9 +75,11 @@ class OpenStudioBuildRecipe(ConanFile):
         tc = CMakeToolchain(self)
 
         tc.cache_variables["BUILD_CLI"] = True
-        tc.cache_variables["BUILD_RUBY_BINDINGS"] = True
-        tc.cache_variables["BUILD_PYTHON_BINDINGS"] = True
-        tc.cache_variables["BUILD_PYTHON_PIP_PACKAGE"] = False
+        tc.cache_variables["BUILD_RUBY_BINDINGS"] = bool(self.options.with_ruby)
+        tc.cache_variables["BUILD_PYTHON_BINDINGS"] = bool(self.options.with_python)
+        tc.cache_variables["BUILD_CSHARP_BINDINGS"] = bool(self.options.with_csharp)
+        # tc.cache_variables["BUILD_NUGET_PACKAGE"] = False
+        # tc.cache_variables["BUILD_PYTHON_PIP_PACKAGE"] = False
 
         tc.cache_variables["BUILD_TESTING"] = bool(self.options.with_testing)
         tc.cache_variables["BUILD_BENCHMARK"] = bool(self.options.with_benchmark)
@@ -90,18 +99,19 @@ class OpenStudioBuildRecipe(ConanFile):
         tc.cache_variables["CPACK_BINARY_TXZ"] = False
         tc.cache_variables["CPACK_BINARY_TZ"] = False
 
-        v = sys.version_info
-        if (v.major, v.minor) == (3, 8):
-            python_version = f"{v.major}.{v.minor}.{v.micro}"
-            self.output.info(
-                f"Setting PYTHON_VERSION and Python_ROOT_DIR from your current python: {python_version}, '{sys.base_prefix}'"
-            )
-            tc.cache_variables["PYTHON_VERSION"] = python_version
-            tc.cache_variables["Python_ROOT_DIR"] = str(Path(sys.base_prefix))
-        else:
-            self.output.warning(
-                "Your current python is not in the 3.8.x range, which is what we target.\n"
-                "You'll need to pass it properly when configuring CMake\n"
-                "via -DPYTHON_VERSION:STRING='3.8.xx' and -DPython_ROOT_DIR:PATH='/path/to/python3.8/'"
-            )
+        if self.options.with_python:
+            v = sys.version_info
+            if (v.major, v.minor) == (3, 8):
+                python_version = f"{v.major}.{v.minor}.{v.micro}"
+                self.output.info(
+                    f"Setting PYTHON_VERSION and Python_ROOT_DIR from your current python: {python_version}, '{sys.base_prefix}'"
+                )
+                tc.cache_variables["PYTHON_VERSION"] = python_version
+                tc.cache_variables["Python_ROOT_DIR"] = str(Path(sys.base_prefix))
+            else:
+                self.output.warning(
+                    "Your current python is not in the 3.8.x range, which is what we target.\n"
+                    "You'll need to pass it properly when configuring CMake\n"
+                    "via -DPYTHON_VERSION:STRING='3.8.xx' and -DPython_ROOT_DIR:PATH='/path/to/python3.8/'"
+                )
         tc.generate()

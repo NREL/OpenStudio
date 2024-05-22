@@ -46,6 +46,8 @@ jobs:
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
         rm conan.lock
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conan.lock
+        rm conanfile.py
+        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/conanfile.py
         cd src/measure/
         rm Measure.i
         aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/src/measure/Measure.i
@@ -130,9 +132,9 @@ jobs:
         begin_group "Conan install"
         if [ "$RUNNER_OS" == "macOS" ]; then
           # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/*:with_testing=False' -o 'openstudio/*:with_benchmark=False' -o 'openstudio/*:with_ruby=False' -o 'openstudio/*:with_python=False' -o 'openstudio/*:with_csharp=True' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
         else
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/*:with_testing=False' -o 'openstudio/*:with_benchmark=False' -o 'openstudio/*:with_ruby=False' -o 'openstudio/*:with_python=False' -o 'openstudio/*:with_csharp=True'
         fi
         echo -e "::endgroup::"
 
@@ -151,7 +153,7 @@ jobs:
       shell: cmd
       run: |
         echo "::group::Conan Install"
-        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/*:with_testing=False' -o 'openstudio/*:with_benchmark=False' -o 'openstudio/*:with_ruby=False' -o 'openstudio/*:with_python=False' -o 'openstudio/*:with_csharp=True'
         echo "::engroup::"
 
         cmake --list-presets
@@ -178,7 +180,7 @@ jobs:
       shell: cmd
       run: |
         echo "::group::Conan Install"
-        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -s:b arch=x86_64 -s:h arch=x86
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/*:with_testing=False' -o 'openstudio/*:with_benchmark=False' -o 'openstudio/*:with_ruby=False' -o 'openstudio/*:with_python=False' -o 'openstudio/*:with_csharp=True' -s:b arch=x86_64 -s:h arch=x86
         echo "::engroup::"
 
         echo "::group::CMake Configure"
