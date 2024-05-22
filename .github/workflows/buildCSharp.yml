@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  BUILD_TYPE: Release
+
 jobs:
   build-csharp:
     name: ${{ matrix.name }}
@@ -17,174 +20,242 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, Windows64, Windows32]
+        name: [Ubuntu, macOS, macOS_arm64, Windows64, Windows32]
         include:
         - name: Ubuntu
           os: ubuntu-20.04
         - name: macOS
           os: macos-11
+        - name: macOS_arm64
+          os: macos-14
         - name: Windows64
           os: windows-latest
         - name: Windows32
           os: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
-        # If you need to rebuild for a specific branch **after** you fixed the workflow...
-        # with:
-        #   ref: master
+    - uses: actions/checkout@v4
+#      # If you need to rebuild for a specific branch or tag **after** you fixed the workflow and you have no other changes or only a few you can download from github
+#      with:
+#        ref: v3.8.0
+#
+#    - name: download patched CMakeLists.txt
+#      shell: bash
+#      run: |
+#        rm CMakeLists.txt
+#        aria2c https://raw.githubusercontent.com/NREL/OpenStudio/CSharp/CMakeLists.txt
+#
+#    # Alternatively, if you have made lots of changes, just use this
+#    - name: Soft reset to v3.8.0
+#      shell: bash
+#      run: |
+#        git fetch --all
+#        git reset --soft v3.8.0
 
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.8.x'
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.12  # only for conan, version doesn't matter much
 
-      - name: Install conan
-        run: |
-          python --version
-          pip install conan==1.59
-          conan --version
-          echo "Enabling conan revisions and setting parallel_download"
-          conan config set general.revisions_enabled=True
-          conan config set general.parallel_download=8
+    - name: Install Conan
+      shell: bash
+      run: |
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
+
+        set -x
+        begin_group "Install conan 2"
+        python --version
+        pip install 'conan>2'
+        conan --version
+        echo -e "::endgroup::"
+
+        begin_group "Default profile"
+        if [ "$RUNNER_OS" == "Windows" ]; then
+          DIR_SEP="\\"
+        else
+          DIR_SEP="/"
+        fi
+        echo DIR_SEP=$DIR_SEP >> $GITHUB_ENV
+
+        export CONAN_USER_HOME="${{ github.workspace }}${DIR_SEP}conan-cache"
+        echo CONAN_USER_HOME="$CONAN_USER_HOME" >> $GITHUB_ENV
+
+        export CONAN_HOME="$CONAN_USER_HOME${DIR_SEP}.conan2"
+        echo CONAN_HOME="$CONAN_HOME" >> $GITHUB_ENV
+
+        export CONAN_PROFILE_DEFAULT="$CONAN_HOME${DIR_SEP}profiles${DIR_SEP}default"
+        echo CONAN_PROFILE_DEFAULT="$CONAN_PROFILE_DEFAULT" >> $GITHUB_ENV
+
+        conan profile detect --force --name default
+        cat $CONAN_PROFILE_DEFAULT
+        # Mac has the FreeBSD flavor of sed and MUST take a backup suffix...
+        sed -i.bak 's/cppstd=.*$/cppstd=20/g' $CONAN_PROFILE_DEFAULT
+        sed -i.bak 's/build_type=.*$/build_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        # Windows only
+        sed -i.bak 's/compiler.runtime_type=.*$/compiler.runtime_type=${{ env.BUILD_TYPE }}/g' $CONAN_PROFILE_DEFAULT
+        rm -Rf $CONAN_PROFILE_DEFAULT.bak || true
+        conan profile show
+        echo -e "::endgroup::"
+
+        begin_group "Global.conf"
+        echo "core:non_interactive = True" >> $CONAN_HOME/global.conf
+        echo "core.download:parallel = {{os.cpu_count() - 2}}" >> $CONAN_HOME/global.conf
+        echo "core.sources:download_cache = $CONAN_USER_HOME/.conan-download-cache" >> $CONAN_HOME/global.conf
+        cat $CONAN_HOME/global.conf
+        echo -e "::endgroup::"
+
+        begin_group "Remotes"
+        conan remote add --force nrel-v2 https://conan.openstudio.net/artifactory/api/conan/conan-v2
+        conan remote list
+        echo -e "::endgroup::"
 
 
-      - name: Compile Ubuntu
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          set -x
-          sudo apt update && sudo apt install -y ninja-build
-          mkdir build
-          cd build
-          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
-                -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
-                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
-                -DBUILD_PACKAGE:BOOL=OFF \
-                ../
+    - name: Configure CMake & build (Unix)
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        begin_group() { echo -e "::group::\033[93m$1\033[0m"; }
+        set -x
 
-          ninja
-
-
-      - name: Compile macOS
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          set -x
+        begin_group "Install ninja"
+        if [ "$RUNNER_OS" == "macOS" ]; then
           brew install ninja
           export CC=clang
           export CMAKE_OSX_ARCHITECTURES=x86_64
-          mkdir build
-          cd build
-          cmake -G Ninja -DCMAKE_BUILD_TYPE:STRING=Release \
-                -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
-                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF \
-                -DBUILD_PACKAGE:BOOL=OFF \
-                ../
+        else
+          sudo apt update && sudo apt install -y -qq ninja-build
+        fi
+        echo -e "::endgroup::"
 
-           ninja
+        begin_group "Conan install"
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o with_testing=False -o with_benchmark=False -o with_ruby=False -o with_python=False -o with_csharp=True -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+        else
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o with_testing=False -o with_benchmark=False -o with_ruby=False -o with_python=False -o with_csharp=True
+        fi
+        echo -e "::endgroup::"
 
-      - name: Compile Windows 64
-        if: matrix.name == 'Windows64'
-        shell: cmd
-        run: |
-          mkdir build
-          cd build
-          cmake -G "Visual Studio 17 2022" -A x64 ^
-                -DCMAKE_BUILD_TYPE:STRING=Release ^
-                -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
-                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF ^
-                -DBUILD_PACKAGE:BOOL=OFF ^
-                ../
-          cmake --build . --verbose --config Release -j 2
+        begin_group "CMake Configure"
+        cmake --preset conan-release \
+              -DBUILD_CSHARP_BINDINGS:BOOL=ON -DBUILD_NUGET_PACKAGE:BOOL=OFF \
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF
+        echo -e "::endgroup::"
+
+        begin_group "Build"
+        cmake --build --preset conan-release
+        echo -e "::endgroup::"
+
+    - name: Compile Windows 64
+      if: matrix.name == 'Windows64'
+      shell: cmd
+      run: |
+        echo "::group::Conan Install"
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o with_testing=False -o with_benchmark=False -o with_ruby=False -o with_python=False -o with_csharp=True
+        echo "::engroup::"
+
+        cmake --list-presets
+        echo "::group::CMake Configure"
+        call ./build/conanbuild.bat
+        cmake --preset conan-default ^
+              -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF
+        echo "::engroup::"
+
+        echo "::group::Build"
+        cmake --build --preset conan-release
+        echo "::engroup::"
+
+    - name: Install Dotnet x86
+      if: matrix.name == 'Windows32'
+      run: |
+        Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
+        ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
+        dotnet --info
+
+    - name: Compile Windows 32
+      if: matrix.name == 'Windows32'
+      shell: cmd
+      run: |
+        echo "::group::Conan Install"
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o with_testing=False -o with_benchmark=False -o with_ruby=False -o with_python=False -o with_csharp=True -s:b arch=x86_64 -s:h arch=x86
+        echo "::engroup::"
+
+        echo "::group::CMake Configure"
+        call ./build/conanbuild.bat
+        cmake --preset conan-default ^
+              -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
+              -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF
+        echo "::engroup::"
+
+        echo "::group::Build"
+        cmake --build --preset conan-release
+        echo "::engroup::"
+
+    - name: build nuget for Windows
+      if: runner.os == 'Windows'
+      run: |
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
+
+    - name: build nuget for Linux
+      if: runner.os == 'Linux'
+      run: |
+        cp ./csharp/*.targets ./build/Products
+        ls ./build/Products
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
+
+    - name: Fix dylib and build nuget for Mac
+      if: runner.os == 'macOS'
+      run: |
+        sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_csharp.dylib
+
+        sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_model_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_model_csharp.dylib
+
+        sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_translators_csharp.dylib
+        sudo install_name_tool -delete_rpath "${{ github.workspace }}/build/Products"  ./build/Products/libopenstudio_translators_csharp.dylib
+
+        cp ./csharp/*.targets ./build/Products
+        ls ./build/Products
+        dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/ -v normal
 
 
-      - name: Install Dotnet x86
-        if: matrix.name == 'Windows32'
-        run: |
-          Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
-          ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
-          dotnet --info
+    - name: list files
+      run: |
+        echo "Listing the top directory=========================================="
+        ls
 
-      - name: Compile Windows 32
-        if: matrix.name == 'Windows32'
-        shell: cmd
-        run: |
-          mkdir build
-          cd build
-          cmake  -G "Visual Studio 17 2022" -A Win32 ^
-                -DCMAKE_BUILD_TYPE:STRING=Release ^
-                -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
-                -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF ^
-                -DBUILD_PACKAGE:BOOL=OFF ^
-                ../
-          cmake --build . --verbose --config Release -j 2
+        echo "Listing ./build/=========================================="
+        ls ./build/
 
+        echo "Listing ./build/Products/=========================================="
+        ls -R ./build/Products
 
-      - name: build nuget for Windows
-        if: runner.os == 'Windows'
-        run: |
-          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+    - name: Zip Build/Source Artifact
+      run: |
+        7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
+        7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
 
-      - name: build nuget for Linux
-        if: runner.os == 'Linux'
-        run: |
-          cp ./csharp/*.targets ./build/Products
-          ls ./build/Products
-          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CSharp_${{ matrix.name }}
+        path: CSharp_${{ matrix.name }}.zip
 
-      - name: Fix dylib and build nuget for Mac
-        if: runner.os == 'macOS'
-        run: |
-          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_csharp.dylib
-          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_csharp.dylib
+    - name: Upload artifact generated_sources
+      uses: actions/upload-artifact@v4
+      with:
+        name: CSharp_${{ matrix.name }}_Src
+        path: CSharp_${{ matrix.name }}_Src.zip
 
-          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_model_csharp.dylib
-          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_model_csharp.dylib
-
-          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_translators_csharp.dylib
-          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_translators_csharp.dylib
-
-          cp ./csharp/*.targets ./build/Products
-          ls ./build/Products
-          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
-
-
-      - name: list files
-        run: |
-          echo "Listing the top directory=========================================="
-          ls
-
-          echo "Listing ./build/=========================================="
-          ls ./build/
-
-          echo "Listing ./build/Products/=========================================="
-          ls -R ./build/Products
-
-      - name: Zip Build/Source Artifact
-        run: |
-          7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
-          7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: CSharp_${{ matrix.name }}
-          path: CSharp_${{ matrix.name }}.zip
-
-      - name: Upload artifact generated_sources
-        uses: actions/upload-artifact@v3
-        with:
-          name: CSharp_${{ matrix.name }}_Src
-          path: CSharp_${{ matrix.name }}_Src.zip
-
-      - name: Upload artifact (if failed)
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.name }}_Failed
-          path: |
-            ./build/csharp_wrapper/
-            ./build/Products/
+    - name: Upload artifact (if failed)
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.name }}_Failed
+        path: |
+          ./build/csharp_wrapper/
+          ./build/Products/
 
 
   Test_Windows:
@@ -194,123 +265,129 @@ jobs:
     needs: build-csharp
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Download CSharp_Windows32
-        uses: actions/download-artifact@v3
-        with:
-          name: CSharp_Windows32
+    - name: Download CSharp_Windows32
+      uses: actions/download-artifact@v4
+      with:
+        name: CSharp_Windows32
 
-      - name: Download CSharp_Windows64
-        uses: actions/download-artifact@v3
-        with:
-          name: CSharp_Windows64
+    - name: Download CSharp_Windows64
+      uses: actions/download-artifact@v4
+      with:
+        name: CSharp_Windows64
 
-      - name: unzip artifacts
-        run: |
-          Expand-Archive CSharp_Windows32.zip -DestinationPath x86
-          Expand-Archive CSharp_Windows64.zip -DestinationPath x64
+    - name: unzip artifacts
+      run: |
+        Expand-Archive CSharp_Windows32.zip -DestinationPath x86
+        Expand-Archive CSharp_Windows64.zip -DestinationPath x64
 
-          Expand-Archive x86\*.nupkg -DestinationPath x86\package
-          Expand-Archive x64\*.nupkg -DestinationPath x64\package
-          ls -R
+        Expand-Archive x86\*.nupkg -DestinationPath x86\package
+        Expand-Archive x64\*.nupkg -DestinationPath x64\package
+        ls -R
 
-      - name: merge x86 into x64
-        run: |
-          cp x64\package x64x86 -r
-          mv x64x86\lib x64x86\build
+    - name: merge x86 into x64
+      run: |
+        cp x64\package x64x86 -r
+        mv x64x86\lib x64x86\build
 
-          mkdir x64x86\build\netstandard2.0\x64
-          mkdir x64x86\build\net45\x64
-          mkdir x64x86\build\netstandard2.0\x86
-          mkdir x64x86\build\net45\x86
+        mkdir x64x86\build\netstandard2.0\x64
+        mkdir x64x86\build\net45\x64
+        mkdir x64x86\build\netstandard2.0\x86
+        mkdir x64x86\build\net45\x86
 
-          mv x64x86\build\netstandard2.0\*.dll x64x86\build\netstandard2.0\x64
-          mv x64x86\build\net45\*.dll x64x86\build\net45\x64
+        mv x64x86\build\netstandard2.0\*.dll x64x86\build\netstandard2.0\x64
+        mv x64x86\build\net45\*.dll x64x86\build\net45\x64
 
-          mv x86\package\lib\netstandard2.0\* x64x86\build\netstandard2.0\x86
-          mv x86\package\lib\net45\* x64x86\build\net45\x86
+        mv x86\package\lib\netstandard2.0\* x64x86\build\netstandard2.0\x86
+        mv x86\package\lib\net45\* x64x86\build\net45\x86
 
 
-          cp csharp\OpenStudio.targets x64x86\build\netstandard2.0\
-          cp csharp\OpenStudio.targets x64x86\build\net45\
-          cd x64x86
-          ls -R
+        cp csharp\OpenStudio.targets x64x86\build\netstandard2.0\
+        cp csharp\OpenStudio.targets x64x86\build\net45\
+        cd x64x86
+        ls -R
 
-      - name: make a new nupkg for Windows
-        run: |
-          $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
-          echo $VERSION
-          Compress-Archive -U -Path x64x86\* -DestinationPath OpenStudio.$VERSION.nupkg
-          cp *.nupkg x64x86\OpenStudio.nupkg
-          ls
+    - name: make a new nupkg for Windows
+      run: |
+        $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+        echo $VERSION
+        Compress-Archive -U -Path x64x86\* -DestinationPath OpenStudio.$VERSION.nupkg
+        cp *.nupkg x64x86\OpenStudio.nupkg
+        ls
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: CSharp_Windows_x64x86
-          path: x64x86\OpenStudio.nupkg
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: CSharp_Windows_x64x86
+        path: x64x86\OpenStudio.nupkg
 
-      - name: Install Dotnet x86
-        run: |
-          Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
-          ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
-          dotnet --info
+    - name: Install Dotnet x86
+      run: |
+        Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
+        ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
+        dotnet --info
 
-      - name: Tests on Windows
-        run: |
-          $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
-          echo $VERSION
-          cp *.nupkg csharp/examples/OpenStudio.Tests/
-          cd csharp/examples/OpenStudio.Tests/
-          ls
+    - name: Tests on Windows
+      run: |
+        $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+        echo $VERSION
+        cp *.nupkg csharp/examples/OpenStudio.Tests/
+        cd csharp/examples/OpenStudio.Tests/
+        ls
 
-          dotnet remove OpenStudio.Tests.csproj package OpenStudio
-          dotnet remove OpenStudio.Tests.x86.csproj package OpenStudio
-          dotnet restore OpenStudio.Tests.csproj
-          dotnet restore OpenStudio.Tests.x86.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "." -v $VERSION
-          dotnet add OpenStudio.Tests.x86.csproj package OpenStudio -s "." -v $VERSION
+        dotnet remove OpenStudio.Tests.csproj package OpenStudio
+        dotnet remove OpenStudio.Tests.x86.csproj package OpenStudio
+        dotnet restore OpenStudio.Tests.csproj
+        dotnet restore OpenStudio.Tests.x86.csproj
+        dotnet add OpenStudio.Tests.csproj package OpenStudio -s "." -v $VERSION
+        dotnet add OpenStudio.Tests.x86.csproj package OpenStudio -s "." -v $VERSION
 
-          dotnet test OpenStudio.Tests.csproj --arch x64
-          dotnet clean OpenStudio.Tests.csproj
-          dotnet test OpenStudio.Tests.x86.csproj --arch x86
+        dotnet test OpenStudio.Tests.csproj --arch x64
+        dotnet clean OpenStudio.Tests.csproj
+        dotnet test OpenStudio.Tests.x86.csproj --arch x86
 
   Test_Mac_ubuntu:
-    name: "Test x64 nuget packages for macos and ubuntu"
+    name: "Test 64-bit nuget packages for macos and ubuntu"
     runs-on: ${{ matrix.os }}
     strategy:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS]
+        name: [Ubuntu, macOS, macOS_arm64]
         include:
         - name: Ubuntu
           os: ubuntu-latest
+          arch: x64
         - name: macOS
-          os: macos-latest
+          os: macos-13
+          arch: x64
+        - name: macOS_arm64
+          os: macos-14
+          arch: arm64
+
     timeout-minutes: 20
     needs: build-csharp
 
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Download nuget
-        uses: actions/download-artifact@v3
-        with:
-          name: CSharp_${{ matrix.name }}
+    - name: Download nuget
+      uses: actions/download-artifact@v4
+      with:
+        name: CSharp_${{ matrix.name }}
 
-      - name: unzip artifacts
-        run: |
-          7z e CSharp_${{ matrix.name }}.zip -o./nuget
-          ls nuget csharp/*
+    - name: unzip artifacts
+      run: |
+        7z e CSharp_${{ matrix.name }}.zip -o./nuget
+        ls nuget csharp/*
 
-      - name: Tests
-        run: |
-          cd csharp/examples/OpenStudio.Tests/
-          dotnet remove OpenStudio.Tests.csproj package OpenStudio
-          dotnet restore OpenStudio.Tests.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
+    - name: Tests
+      run: |
+        cd csharp/examples/OpenStudio.Tests/
+        dotnet remove OpenStudio.Tests.csproj package OpenStudio
+        dotnet restore OpenStudio.Tests.csproj
+        dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
 
-          dotnet clean OpenStudio.Tests.csproj
-          dotnet test OpenStudio.Tests.csproj --arch x64
+        dotnet clean OpenStudio.Tests.csproj
+        dotnet test OpenStudio.Tests.csproj --arch ${{ matrix.arch }} /p:Platform="${{ matrix.arch }}"

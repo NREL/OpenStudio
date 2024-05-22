@@ -240,7 +240,7 @@ jobs:
       shell: cmd
       run: |
         echo "::group::Conan Install"
-        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+        conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False
         echo "::engroup::"
 
         echo "::group::CMake Configure"
@@ -265,9 +265,9 @@ jobs:
         begin_group "Conan install"
         if [ "$RUNNER_OS" == "macOS" ]; then
           # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False' -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
         else
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False
         fi
         echo -e "::endgroup::"
 
