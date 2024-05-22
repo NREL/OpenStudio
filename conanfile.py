@@ -9,6 +9,8 @@ required_conan_version = ">=2.0"
 
 
 class OpenStudioBuildRecipe(ConanFile):
+    name = "openstudio"
+    description = "Build recipe for OpenStudio SDK which install necessary conan dependencies"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps"  # CMakeToolchain explicitly instantiated
 
