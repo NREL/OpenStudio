@@ -148,15 +148,16 @@ jobs:
         conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator="Visual Studio 17 2022" -s compiler.cppstd=20 -s build_type=${{ env.BUILD_TYPE }} -o 'openstudio/:*with_testing=False' -o 'openstudio/:*with_benchmark=False'
         echo "::engroup::"
 
+        cmake --list-presets
         echo "::group::CMake Configure"
         call ./build/conanbuild.bat
-        cmake --preset conan-release ^
+        cmake --preset conan-default ^
               -DBUILD_CSHARP_BINDINGS:BOOL=ON  -DBUILD_NUGET_PACKAGE:BOOL=OFF ^
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=OFF -DBUILD_PYTHON_BINDINGS:BOOL=OFF -DBUILD_CLI:BOOL=OFF
         echo "::engroup::"
 
         echo "::group::Build"
-        cmake --build --preset conan-release --config Release
+        cmake --build --preset conan-default --config Release
         echo "::engroup::"
 
     - name: Install Dotnet x86
