@@ -471,7 +471,7 @@ def safe_puts(message=nil, opts=nil)
   end
 end
 
-require 'stringio' # JJR: remove this once json-schema is updated to require 'stringio'? (cf https://github.com/voxpupuli/json-schema/pull/512)
+require 'stringio' # TODO: remove this once json-schema version is > 3.4.0, (cf https://github.com/voxpupuli/json-schema/pull/512)
 require 'rbconfig'
 
 # require 'logger'
