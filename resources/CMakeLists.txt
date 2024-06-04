@@ -45,6 +45,7 @@ set(utilities_resources_src
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Filetypes/leapday-test.epw
+  utilities/Filetypes/leapyear-noleapday-test.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Filetypes/test_csv.csv
