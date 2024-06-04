@@ -3666,12 +3666,12 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
       // Time time=m_data[i].time();
       boost::optional<double> value = m_data[i].getField(id);
       if (value) {
-        if (isActual()) {
-          dates.push_back(DateTime(dateTime));
-        } else {
+        /* if (isActual()) { */
+        dates.push_back(DateTime(dateTime));
+/*         } else {
           // Strip year
           dates.push_back(DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time()));
-        }
+        } */
         values.push_back(value.get());
       }
     }
