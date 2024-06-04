@@ -38,7 +38,8 @@ set(utilities_resources_src
   utilities/Checksum/Checksum2.txt
   utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw
   utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw
-  utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday-test.epw
+  utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-leapday.epw
+  utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday.epw
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw
   utilities/Filetypes/USA_CO_Golden-NREL.amy
   utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy
@@ -46,7 +47,7 @@ set(utilities_resources_src
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
   utilities/Filetypes/leapday-test.epw
-  utilities/Filetypes/leapyear-noleapday-test.epw
+  utilities/Filetypes/AMY2012-noleapday.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Filetypes/test_csv.csv

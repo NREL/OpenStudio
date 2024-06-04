@@ -524,15 +524,15 @@ TEST(Filetypes, EpwFile_LeapTimeSeries) {
   }
 }
 
-TEST(Filetypes, EpwFile_LeapTimeSeries_NoLeapDay) {
+TEST(Filetypes, EpwFile_LeapTimeSeries_LeapDays) {
   // Tests for #5214
 
   {
     try {
-      path p = resourcesPath() / toPath("utilities/Filetypes/leapyear-noleapday-test.epw");
+      path p = resourcesPath() / toPath("utilities/Filetypes/AMY2012-noleapday.epw");
       EpwFile epwFile(p);
       boost::optional<TimeSeries> _t;
-      ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature", true));
+      ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
       ASSERT_TRUE(_t);
       // isActual is true, so it should be a timeSeries with the actual year
       boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
@@ -545,7 +545,23 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_NoLeapDay) {
 
   {
     try {
-      path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday-test.epw");
+      path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-leapday.epw");
+      EpwFile epwFile(p);
+      boost::optional<TimeSeries> _t;
+      ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+      ASSERT_TRUE(_t);
+      // isActual is true, so it should be a timeSeries with the actual year
+      boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
+      ASSERT_TRUE(_timeSeriesBaseYear);
+      EXPECT_EQ(2012, _timeSeriesBaseYear.get());
+    } catch (...) {
+      ASSERT_TRUE(false);
+    }
+  }
+
+  {
+    try {
+      path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday.epw");
       EpwFile epwFile(p);
       boost::optional<TimeSeries> _t;
       ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
