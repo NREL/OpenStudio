@@ -524,6 +524,19 @@ TEST(Filetypes, EpwFile_LeapTimeSeries) {
   }
 }
 
+TEST(Filetypes, EpwFile_LeapTimeSeries_NoLeapDay) {
+  // Test for #5214
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/leapyear-noleapday-test.epw");
+    EpwFile epwFile(p);
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+    ASSERT_TRUE(_t);
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_NonActualTimeSeries) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
