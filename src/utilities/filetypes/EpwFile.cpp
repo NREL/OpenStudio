@@ -3630,7 +3630,7 @@ std::vector<EpwDesignCondition> EpwFile::designConditions() {
   return m_designs;
 }
 
-boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
+boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool isActual) {
   if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
@@ -3666,12 +3666,12 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
       // Time time=m_data[i].time();
       boost::optional<double> value = m_data[i].getField(id);
       if (value) {
-        /* if (isActual()) { */
+        if (isActual() || isActual) {
         dates.push_back(DateTime(dateTime));
-/*         } else {
+        } else {
           // Strip year
           dates.push_back(DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time()));
-        } */
+        }
         values.push_back(value.get());
       }
     }

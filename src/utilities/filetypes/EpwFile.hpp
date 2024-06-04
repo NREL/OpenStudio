@@ -921,7 +921,7 @@ class UTILITIES_API EpwFile
 
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
-  boost::optional<TimeSeries> getTimeSeries(const std::string& field);
+  boost::optional<TimeSeries> getTimeSeries(const std::string& field, bool isActual = false);
   /// get a time series of a computed quantity
   boost::optional<TimeSeries> getComputedTimeSeries(const std::string& field);
 
