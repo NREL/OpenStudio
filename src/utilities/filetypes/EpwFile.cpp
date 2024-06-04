@@ -3656,6 +3656,7 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool
     LOG(Warn, "Unrecognized EPW data field '" << name << "'");
     return boost::none;
   }
+  DateTime feb29(Date(MonthOfYear::Feb, 29, 2012), Time(0, 0, 0, 0));  // year is arbitrary here since we won't be using it
   if (!m_data.empty()) {
     std::string units = EpwDataPoint::getUnits(id);
     DateTimeVector dates;
@@ -3669,6 +3670,10 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool
         if (isActual() || isActualOverride) {
           dates.push_back(DateTime(dateTime));
         } else {
+          if ((dateTime.date().monthOfYear() == feb29.date().monthOfYear()) && (dateTime.date().dayOfMonth() == feb29.date().dayOfMonth())
+              && (dateTime.time() == feb29.time())) {  // if we're here then assume we don't actually have a Feb 29
+            DateTime dateTime(Date(MonthOfYear::Mar, 1), dateTime.time());
+          }
           // Strip year
           dates.push_back(DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time()));
         }

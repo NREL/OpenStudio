@@ -539,7 +539,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_LeapDays) {
       ASSERT_TRUE(_timeSeriesBaseYear);
       EXPECT_EQ(2012, _timeSeriesBaseYear.get());
     } catch (...) {
-      ASSERT_TRUE(false);
+      EXPECT_TRUE(false);
     }
   }
 
@@ -555,7 +555,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_LeapDays) {
       ASSERT_TRUE(_timeSeriesBaseYear);
       EXPECT_EQ(2012, _timeSeriesBaseYear.get());
     } catch (...) {
-      ASSERT_TRUE(false);
+      EXPECT_TRUE(false);
     }
   }
 
@@ -571,7 +571,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_LeapDays) {
       ASSERT_TRUE(_timeSeriesBaseYear);
       EXPECT_EQ(2012, _timeSeriesBaseYear.get());
     } catch (...) {
-      ASSERT_TRUE(false);
+      EXPECT_TRUE(false);
     }
   }
 }
