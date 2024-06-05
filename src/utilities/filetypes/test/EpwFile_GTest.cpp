@@ -528,7 +528,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_AMYNoLeapDay) {
   // Tests for #5214
 
   try {
-    path p = resourcesPath() / toPath("utilities/Filetypes/AMY2012-noleapday.epw");
+    path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test-noleapday.epw");
     EpwFile epwFile(p);
     boost::optional<TimeSeries> _t;
     ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
@@ -567,6 +567,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_TMYLeapFebLeapDay) {
   } catch (...) {
     ASSERT_TRUE(true);
   }
+}
 
 TEST(Filetypes, EpwFile_NonActualTimeSeries) {
   try {
