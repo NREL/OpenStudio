@@ -3949,9 +3949,9 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
             }
           }
 
-          // Fix for #5214: for TMY files where Feb is from a leap year, we need xxxx-Mar-01 01:00:00 and not xxxx-Feb-29 00:00:00
-          if (!realYear && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {
-            if (Date(MonthOfYear::Jan, 1, year).isLeapYear()) {
+          // Fix for #5214: for TMY files where Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
+          if (!realYear && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {  // i.e., there is no Feb 29
+            if (date.isLeapYear()) {
               day = 29;
             }
           }

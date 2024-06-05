@@ -565,9 +565,10 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_TMYLeapFebLeapDay) {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-leapday.epw");
     EpwFile epwFile(p);
     boost::optional<TimeSeries> _t;
-    ASSERT_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
-  } catch (...) {
+    _t = epwFile.getTimeSeries("Dry Bulb Temperature");
     ASSERT_TRUE(false);
+  } catch (...) {
+    ASSERT_TRUE(true);
   }
 }
 
