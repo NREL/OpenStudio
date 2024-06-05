@@ -3630,7 +3630,7 @@ std::vector<EpwDesignCondition> EpwFile::designConditions() {
   return m_designs;
 }
 
-boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool isActualOverride) {
+boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
   if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
       LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
@@ -3656,7 +3656,6 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool
     LOG(Warn, "Unrecognized EPW data field '" << name << "'");
     return boost::none;
   }
-  DateTime feb29(Date(MonthOfYear::Feb, 29, 2012), Time(0, 0, 0, 0));  // year is arbitrary here since we won't be using it
   if (!m_data.empty()) {
     std::string units = EpwDataPoint::getUnits(id);
     DateTimeVector dates;
@@ -3667,13 +3666,9 @@ boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name, bool
       // Time time=m_data[i].time();
       boost::optional<double> value = m_data[i].getField(id);
       if (value) {
-        if (isActual() || isActualOverride) {
+        if (isActual()) {
           dates.push_back(DateTime(dateTime));
         } else {
-          if ((dateTime.date().monthOfYear() == feb29.date().monthOfYear()) && (dateTime.date().dayOfMonth() == feb29.date().dayOfMonth())
-              && (dateTime.time() == feb29.time())) {  // if we're here then assume we don't actually have a Feb 29
-            DateTime dateTime(Date(MonthOfYear::Mar, 1), dateTime.time());
-          }
           // Strip year
           dates.push_back(DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time()));
         }
@@ -3953,6 +3948,14 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
               m_minutesMatch = false;
             }
           }
+
+          // Fix for #5214: for TMY files where Feb is from a leap year, we need xxxx-Mar-01 01:00:00 and not xxxx-Feb-29 00:00:00
+          if (!realYear && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {
+            if (Date(MonthOfYear::Jan, 1, year).isLeapYear()) {
+              day = 29;
+            }
+          }
+
           boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
           if (pt) {
             m_data.push_back(pt.get());
