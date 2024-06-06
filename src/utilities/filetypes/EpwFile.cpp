@@ -3938,7 +3938,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
   }
 
   // do another scan for loading m_data
-  int lineNumber = 8;
+  lineNumber = 8;
   OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60 / m_recordsPerHour;
   int currentMinute = 0;
