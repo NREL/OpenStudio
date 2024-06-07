@@ -3887,14 +3887,28 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
     return false;
   }
 
+  struct epw_string
+  {
+    int lineNumber;
+    int year;
+    int month;
+    int day;
+    int hour;
+    int currentMinute;
+    std::vector<std::string> strings;
+  };
+
   // read rest of file
-  // do an initial scan, and get realYear and wrapAround
   int lineNumber = 8;
   boost::optional<Date> startDate;
   boost::optional<Date> lastDate;
   boost::optional<Date> endDate;
   bool realYear = true;
   bool wrapAround = false;
+  OS_ASSERT((60 % m_recordsPerHour) == 0);
+  int minutesPerRecord = 60 / m_recordsPerHour;
+  int currentMinute = 0;
+  std::vector<epw_string> epw_strings;
   while (std::getline(ifs, line)) {
     lineNumber++;
     std::vector<std::string> strings = splitString(line, ',');
@@ -3927,6 +3941,36 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
         }
         lastDate = date;
 
+        // Store the data if requested
+        if (storeData) {
+          int hour = std::stoi(strings[3]);
+          int minutesInFile = std::stoi(strings[4]);
+          // Due to issues with some EPW files, we need to check stuff here
+          if (m_recordsPerHour != 1) {
+            currentMinute += minutesPerRecord;
+            if (currentMinute >= 60) {  // This could really be ==, but >= is used for safety
+              currentMinute = 0;
+            }
+          }
+          // Check for agreement between the file value and the computed value
+          if (currentMinute != minutesInFile) {
+            if (m_minutesMatch) {  // Warn only once
+              LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '" << m_path
+                                           << "' does not agree with computed value (" << currentMinute << "). Using computed value");
+              m_minutesMatch = false;
+            }
+          }
+          epw_string epw_s = {lineNumber, year, month, day, hour, currentMinute, strings};
+          epw_strings.push_back(epw_s);
+          /* boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings); */
+          /*           if (pt) {
+            m_data.push_back(pt.get());
+          } else {
+            LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
+            return false;
+          } */
+        }
+
       } catch (...) {
         LOG(Error, "Could not read line " << lineNumber << " of EPW file '" << m_path << "'");
         return false;
@@ -3937,55 +3981,28 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
     }
   }
 
-  // do another scan for loading m_data
-  lineNumber = 8;
-  OS_ASSERT((60 % m_recordsPerHour) == 0);
-  int minutesPerRecord = 60 / m_recordsPerHour;
-  int currentMinute = 0;
-  while (std::getline(ifs, line)) {
-    lineNumber++;
-    std::vector<std::string> strings = splitString(line, ',');
+  for (int i = 0; i < epw_strings.size(); i++) {
+    int year = epw_strings[i].year;
+    int month = epw_strings[i].month;
+    int day = epw_strings[i].day;
+    int hour = epw_strings[i].hour;
+    int currentMinute = epw_strings[i].currentMinute;
 
-    int year = std::stoi(strings[0]);
-    int month = std::stoi(strings[1]);
-    int day = std::stoi(strings[2]);
-
-    Date date(month, day, year);
-
-    // Store the data if requested
-    if (storeData) {
-      int hour = std::stoi(strings[3]);
-      int minutesInFile = std::stoi(strings[4]);
-      // Due to issues with some EPW files, we need to check stuff here
-      if (m_recordsPerHour != 1) {
-        currentMinute += minutesPerRecord;
-        if (currentMinute >= 60) {  // This could really be ==, but >= is used for safety
-          currentMinute = 0;
-        }
+    // Fix for #5214: for TMY files where 28-day Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
+    // If the TMY file actually contained Feb 29, we still change xxxx-Feb-29 00:00:00 to xxxx-Mar-01 00:00:00, but it doesn't matter since you'd still get Bad Date on xxxx-Feb-29 01:00:00, etc.
+    if ((!realYear) && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {
+      Date date(month, day, year);
+      if (date.isLeapYear()) {
+        day = 29;
       }
-      // Check for agreement between the file value and the computed value
-      if (currentMinute != minutesInFile) {
-        if (m_minutesMatch) {  // Warn only once
-          LOG(Error, "Minutes field (" << minutesInFile << ") on line " << lineNumber << " of EPW file '" << m_path
-                                       << "' does not agree with computed value (" << currentMinute << "). Using computed value");
-          m_minutesMatch = false;
-        }
-      }
+    }
 
-      // Fix for #5214: for TMY (or AMY leap) files where 28-day Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
-      if (!realYear && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {  // i.e., there is no Feb 29
-        if (date.isLeapYear()) {
-          day = 29;
-        }
-      }
-
-      boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
-      if (pt) {
-        m_data.push_back(pt.get());
-      } else {
-        LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-        return false;
-      }
+    boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, epw_strings[i].strings);
+    if (pt) {
+      m_data.push_back(pt.get());
+    } else {
+      LOG(Error, "Failed to parse line " << epw_strings[i].lineNumber << " of EPW file '" << m_path << "'");
+      return false;
     }
   }
 

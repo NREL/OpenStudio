@@ -533,10 +533,9 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_AMYNoLeapDay) {
     boost::optional<TimeSeries> _t;
     ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
     ASSERT_TRUE(_t);
-    // isActual is true, so it should be a timeSeries with the actual year
+    // even though this is AMY, the lack of Feb29 causes it to be TMY
     boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
-    ASSERT_TRUE(_timeSeriesBaseYear);
-    EXPECT_EQ(2012, _timeSeriesBaseYear.get());
+    EXPECT_FALSE(_timeSeriesBaseYear);
   } catch (...) {
     ASSERT_TRUE(false);
   }
