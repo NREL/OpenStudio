@@ -3962,13 +3962,6 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
           }
           epw_string epw_s = {lineNumber, year, month, day, hour, currentMinute, strings};
           epw_strings.push_back(epw_s);
-          /* boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings); */
-          /*           if (pt) {
-            m_data.push_back(pt.get());
-          } else {
-            LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-            return false;
-          } */
         }
 
       } catch (...) {

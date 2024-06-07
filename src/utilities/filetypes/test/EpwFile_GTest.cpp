@@ -533,7 +533,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_AMYNoLeapDay) {
     boost::optional<TimeSeries> _t;
     ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
     ASSERT_TRUE(_t);
-    // even though this is AMY, the lack of Feb29 causes it to be TMY
+    // even though this is AMY, the lack of Feb 29 causes it to be TMY (i.e., successive datapoints greater than 1 day)
     boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
     EXPECT_FALSE(_timeSeriesBaseYear);
   } catch (...) {
@@ -565,7 +565,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries_TMYLeapFebLeapDay) {
     EpwFile epwFile(p);
     boost::optional<TimeSeries> _t;
     _t = epwFile.getTimeSeries("Dry Bulb Temperature");
-    ASSERT_TRUE(false);
+    ASSERT_TRUE(false);  // we don't hit this because we expect getTimeSeries to fail
   } catch (...) {
     ASSERT_TRUE(true);
   }
