@@ -3981,7 +3981,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
     }
   }
 
-  for (int i = 0; i < epw_strings.size(); i++) {
+  for (unsigned int i = 0; i < epw_strings.size(); i++) {
     int year = epw_strings[i].year;
     int month = epw_strings[i].month;
     int day = epw_strings[i].day;
