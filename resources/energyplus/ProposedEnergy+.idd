@@ -40666,7 +40666,7 @@ AirLoopHVAC:OutdoorAirSystem:EquipmentList,
        \memo List equipment in simulation order
        \extensible:2
        \min-fields 3
-       \max-fields 19
+       \max-fields 201
   A1 , \field Name
        \required-field
        \type alpha

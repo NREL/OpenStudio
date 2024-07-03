@@ -86,6 +86,7 @@ namespace model {
   class Component;
   class ComponentData;
   class Schedule;
+  class ScheduleTypeLimits;
   class Node;
   class SpaceType;
 
@@ -353,6 +354,10 @@ namespace model {
       openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
       openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
       openstudio::Date makeDate(unsigned dayOfYear);
+
+      std::string discreteTypeLimitsName() const;
+
+      ScheduleTypeLimits discreteTypeLimits() const;
 
       Schedule alwaysOnDiscreteSchedule() const;
 

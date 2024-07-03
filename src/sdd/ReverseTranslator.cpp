@@ -26,6 +26,8 @@
 #include "../model/Facility_Impl.hpp"
 #include "../model/FanZoneExhaust.hpp"
 #include "../model/FanZoneExhaust_Impl.hpp"
+#include "../model/FanOnOff.hpp"
+#include "../model/FanOnOff_Impl.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/ThermalZone.hpp"
@@ -72,6 +74,10 @@
 #include "../model/Mixer_Impl.hpp"
 #include "../model/OutputMeter.hpp"
 #include "../model/OutputMeter_Impl.hpp"
+#include "../model/MeterCustom.hpp"
+#include "../model/MeterCustomDecrement_Impl.hpp"
+#include "../model/MeterCustomDecrement.hpp"
+#include "../model/MeterCustom_Impl.hpp"
 #include "../model/WaterToWaterComponent.hpp"
 #include "../model/WaterToWaterComponent_Impl.hpp"
 #include "../model/WaterToAirComponent.hpp"
@@ -774,6 +780,11 @@ namespace sdd {
         outlet->setName(zoneComp->name().get() + " Outlet Node");
       }
     }
+ 
+    const auto & zones = result->getModelObjects<model::ThermalZone>();
+    for( auto & z : zones ) {
+      z.zoneAirNode().setName(z.nameString() + " Room Air Node");
+    }
 
     // timestep
     pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");
@@ -936,6 +947,45 @@ namespace sdd {
     meter.setSpecificEndUse("NonReg Ltg");
     meter.setInstallLocationType(InstallLocationType::Facility);
     meter.setReportingFrequency("Hourly");
+
+    if (! m_spaceHeatingWaterHeaters.empty()) {
+      // Custom meter that adds together the standard "Heating:Electricity",
+      // plus the heat pump water heater energy that is used for space heating
+      auto customSpaceHeatingMeter = model::MeterCustom(*result);
+      customSpaceHeatingMeter.setName("Custom Space Heating Electricity");
+      customSpaceHeatingMeter.setFuelType("Electricity");
+      customSpaceHeatingMeter.addKeyVarGroup("", "Heating:Electricity");
+      for(const auto coil : m_spaceHeatingWaterHeaters) {
+        customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Water Heater Electricity Energy");
+      }
+      for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
+        customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+      }
+      for(const auto fan : m_spaceHeatingFans) {
+        customSpaceHeatingMeter.addKeyVarGroup(fan.nameString(), "Fan Electricity Energy");
+      }
+
+      meter = model::OutputMeter(*result);
+      //meter.setFuelType(FuelType::Electricity);
+      meter.setName(customSpaceHeatingMeter.nameString());
+      meter.setReportingFrequency("Hourly");
+
+      // Custom meter that removes the energy from heat pump water heaters,
+      // which are used for space heating
+      auto customSpaceHeatingDecrement = model::MeterCustomDecrement(*result, "WaterSystems:Electricity");
+      customSpaceHeatingDecrement.setName("Custom Water Systems Electricity");
+      customSpaceHeatingDecrement.setFuelType("Electricity");
+      for(const auto coil : m_spaceHeatingWaterHeaters) {
+        customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Water Heater Electricity Energy");
+      }
+      for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
+        customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+      }
+      meter = model::OutputMeter(*result);
+      //meter.setFuelType(FuelType::Electricity);
+      meter.setName(customSpaceHeatingDecrement.nameString());
+      meter.setReportingFrequency("Hourly");
+    }
 
     {
       auto fanZoneExhausts = result->getConcreteModelObjects<model::FanZoneExhaust>();
@@ -1263,10 +1313,22 @@ namespace sdd {
           var.setKeyValue(comp.nameString());
         }
       }
+
+      var = model::OutputVariable("Zone Radiant HVAC Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone Radiant HVAC Electricity Rate",*result);
+      var.setReportingFrequency(interval);
     }
 
     // SimVarsHVACSec
-
     pugi::xml_node simVarsHVACSecElement = projectElement.child("SimVarsHVACSec");
 
     if (simVarsHVACSecElement.text().as_int() == 1) {

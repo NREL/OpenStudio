@@ -18,6 +18,9 @@
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
+#include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../model/WaterHeaterMixed.hpp"
+#include "../model/FanOnOff.hpp"
 
 namespace pugi {
 class xml_node;
@@ -38,6 +41,8 @@ namespace model {
   class Surface;
   class SubSurface;
   class PlantLoop;
+  class FanZoneExhaust;
+  class HeatExchangerAirToAirSensibleAndLatent;
 }  // namespace model
 
 namespace sdd {
@@ -65,6 +70,8 @@ namespace sdd {
     boost::optional<openstudio::model::Model> convert(const pugi::xml_node& root);
     boost::optional<openstudio::model::Model> translateSDD(const pugi::xml_node& root);
 
+    boost::optional<openstudio::model::ModelObject> translateAvailSchRef(const pugi::xml_node& element, openstudio::model::Model& model);
+
     boost::optional<openstudio::model::ModelObject> translateRunPeriod(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSite(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWaterMainsTemperature(const pugi::xml_node& element, openstudio::model::Model& model);
@@ -76,6 +83,8 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateScheduleWeek(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSchedule(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleYear(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateScheduleFile(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateHoliday(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateDoorConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateFenestrationConstruction(const pugi::xml_node& element, openstudio::model::Model& model);
@@ -93,6 +102,7 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translatePump(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateBoiler(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateChiller(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateProcLd(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThrmlEngyStor(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWtrHtr(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateHtRej(const pugi::xml_node& element, openstudio::model::Model& model);
@@ -118,7 +128,8 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateTrmlUnit(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateVRFSys(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
+    boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::ThermalZone& thermalZone);
+    boost::optional<openstudio::model::ModelObject> translateRadiantZnSys(const pugi::xml_node& element, openstudio::model::ThermalZone& thermalZone);
 
     // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // fluidSegInRefElement must correspond to the primary/secondary SUPPLY segment. If the object is supposed to be in the demand side
@@ -145,7 +156,10 @@ namespace sdd {
     pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement);
 
     // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
-    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
+    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement, const std::string & airLoopName);
+
+    // Return the "ThrmlZn" element for the given thrmlZnRefElement
+    pugi::xml_node findThrmlZnElement(const pugi::xml_node& thrmlZnRefElement);
 
     model::Schedule defaultDeckTempSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_defaultDeckTempSchedule;
@@ -164,6 +178,8 @@ namespace sdd {
 
     model::Schedule shadingSchedule(openstudio::model::Model& model, double trans);
     std::map<double, model::Schedule> m_shadingScheduleMap;
+
+    void attachExhFanHX(model::FanZoneExhaust &, model::HeatExchangerAirToAirSensibleAndLatent &);
 
     //helper method to do unit conversions; probably should be in OS proper
     boost::optional<double> unitToUnit(double val, const std::string& ipUnitString, const std::string& siUnitString);
@@ -195,6 +211,22 @@ namespace sdd {
 
     // Map from vrf system to master control zone name
     std::map<std::string, model::AirConditionerVariableRefrigerantFlow> m_vrfSystemControlZones;
+
+    // Map of radiant system name, to vector of radiant surface names
+    struct RadiantSurfaceInfo {
+      std::string name;
+      int srcAftConsAssmLrNum{1};
+      int tempCalcAftConsAssmLrNum{1};
+      int cTFCalcDim{1};
+      double tubeSpacing{0.5};
+    };
+    std::map<std::string, std::vector<RadiantSurfaceInfo> > m_radiantSurfaces;
+
+    // As CoilWaterHeatingAirToWaterHeatPump objects are translated, this is used to record
+    // those that are used for space heating. Custom meters will be setup to do accounting.
+    std::vector<model::CoilWaterHeatingAirToWaterHeatPump> m_spaceHeatingAirToWaterHeatPumps;
+    std::vector<model::FanOnOff> m_spaceHeatingFans;
+    std::vector<model::WaterHeaterMixed> m_spaceHeatingWaterHeaters;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

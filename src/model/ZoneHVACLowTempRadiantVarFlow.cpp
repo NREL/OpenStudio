@@ -223,6 +223,8 @@ namespace model {
                   surfaces.push_back(surface);
                 } else if (istringEqual("Floor", surfaceType) && istringEqual("Floors", surfGrpName)) {
                   surfaces.push_back(surface);
+                } else if (istringEqual("Wall", surfaceType) && istringEqual("Walls", surfGrpName)) {
+                  surfaces.push_back(surface);
                 } else if ((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType))
                            && istringEqual("CeilingsandFloors", surfGrpName)) {
                   surfaces.push_back(surface);

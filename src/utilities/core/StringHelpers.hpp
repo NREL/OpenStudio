@@ -108,7 +108,25 @@ UTILITIES_API std::vector<std::string> splitString(const std::string& string, ch
    *  Note: JM 2018-08-16: The second parameters defaults to the operators currently accepted as of 8.9.0.
    *  The reserved keywords are hardcoded per the same 8.9.0 version.
    */
-UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string& delimiters = " +-*/^=<>&|");
+UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string& delimiters=" +-*/^=<>&|");
+
+/** trim from start (in place) */
+UTILITIES_API void ltrim(std::string& s);
+
+/** trim from end (in place) */
+UTILITIES_API void rtrim(std::string& s);
+
+/** trim from both ends (in place) */
+UTILITIES_API void trim(std::string& s);
+
+/** trim from start (copying) */
+UTILITIES_API std::string ltrim_copy(std::string s);
+
+/** trim from end (copying) */
+UTILITIES_API std::string rtrim_copy(std::string s);
+
+/** trim from both ends (copying) */
+UTILITIES_API std::string trim_copy(std::string s);
 
 UTILITIES_API std::string replace(std::string input, const std::string& before, const std::string& after);
 

@@ -1091,19 +1091,7 @@ namespace model {
 
       schedule.setName(alwaysOffName);
 
-      ScheduleTypeLimits limits(model());
-
-      limits.setName("OnOff");
-
-      limits.setNumericType("Discrete");
-
-      limits.setUnitType("Availability");
-
-      limits.setLowerLimitValue(0.0);
-
-      limits.setUpperLimitValue(1.0);
-
-      schedule.setScheduleTypeLimits(limits);
+      schedule.setScheduleTypeLimits(discreteTypeLimits());
 
       schedule.setValue(0.0);
 
@@ -1141,23 +1129,44 @@ namespace model {
 
       schedule.setName(alwaysOnName);
 
-      ScheduleTypeLimits limits(model());
-
-      limits.setName("OnOff");
-
-      limits.setNumericType("Discrete");
-
-      limits.setUnitType("Availability");
-
-      limits.setLowerLimitValue(0.0);
-
-      limits.setUpperLimitValue(1.0);
-
-      schedule.setScheduleTypeLimits(limits);
-
+      schedule.setScheduleTypeLimits(discreteTypeLimits());
+  
       schedule.setValue(1.0);
 
       return std::move(schedule);
+    }
+  
+    std::string Model_Impl::discreteTypeLimitsName() const
+    {
+      return "On Off Limits";
+    }
+  
+    ScheduleTypeLimits Model_Impl::discreteTypeLimits() const
+    {
+      const auto limits = model().getConcreteModelObjects<ScheduleTypeLimits>();
+  
+      for (const auto & lim : limits) {
+        if( 
+          istringEqual(lim.nameString(), discreteTypeLimitsName()) &&
+          lim.numericType() &&
+          istringEqual(lim.numericType().get(), "Discrete") &&
+          lim.lowerLimitValue() &&
+          openstudio::equal(lim.lowerLimitValue().get(), 0.0) &&
+          lim.upperLimitValue() &&
+          openstudio::equal(lim.upperLimitValue().get(), 1.0)
+        ) {
+          return lim;
+        }
+      }
+  
+      ScheduleTypeLimits lim(model());
+      lim.setName(discreteTypeLimitsName());
+      lim.setNumericType("Discrete");
+      lim.setUnitType("");
+      lim.setLowerLimitValue(0.0);
+      lim.setUpperLimitValue(1.0);
+  
+      return lim;
     }
 
     std::string Model_Impl::alwaysOnDiscreteScheduleName() const {
@@ -1192,17 +1201,11 @@ namespace model {
       schedule.setName(alwaysOnName);
 
       ScheduleTypeLimits limits(model());
-
       limits.setName("Fractional");
-
       limits.setNumericType("Continuous");
-
       limits.setUnitType("");
-
       limits.setLowerLimitValue(0.0);
-
       limits.setUpperLimitValue(1.0);
-
       schedule.setScheduleTypeLimits(limits);
 
       schedule.setValue(1.0);

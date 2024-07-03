@@ -6,9 +6,13 @@
 #include "ReverseTranslator.hpp"
 #include "Helpers.hpp"
 
+#include "../model/ExternalFile.hpp"
+#include "../model/ExternalFile_Impl.hpp"
 #include "../model/Model.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
+#include "../model/ScheduleFile.hpp"
+#include "../model/ScheduleFile_Impl.hpp"
 #include "../model/ScheduleWeek.hpp"
 #include "../model/ScheduleWeek_Impl.hpp"
 #include "../model/ScheduleYear.hpp"
@@ -247,9 +251,9 @@ namespace sdd {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSchedule(const pugi::xml_node& element,
                                                                                        openstudio::model::Model& model) {
-    pugi::xml_node nameElement = element.child("Name");
-    pugi::xml_node typeElement = element.child("Type");
+    boost::optional<openstudio::model::ModelObject> result;
 
+    pugi::xml_node nameElement = element.child("Name");
     std::string name;
     if (!nameElement) {
       LOG(Error, "Sch element 'Name' is empty.")
@@ -257,11 +261,70 @@ namespace sdd {
       name = escapeName(nameElement.text().as_string());
     }
 
+    pugi::xml_node typeElement = element.child("Type");
+
     if (!typeElement) {
       LOG(Error, "Sch element 'Type' is empty for Sch named '" << name << "'.  ScheduleYear will not be created");
       return boost::none;
     }
     std::string type = escapeName(typeElement.text().as_string());
+
+    if (istringEqual("File", type)) {
+      result = translateScheduleFile(element, model);
+    } else {
+      result = translateScheduleYear(element, model);
+    }
+
+    return result;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleFile(const pugi::xml_node& element,
+                                                                                           openstudio::model::Model& model) {
+    const auto name = escapeName(element.child("Name").text().as_string());
+
+    const auto path = element.child("SchFileName").text().as_string();
+    const auto externalFile = openstudio::model::ExternalFile::getExternalFile(model, path);
+    if (!externalFile) {
+      LOG(Error, "The external file path '" << path << "' could not be located");
+      return boost::none;
+    }
+    openstudio::model::ScheduleFile schedule(externalFile.get());
+    schedule.setName(name);
+
+    const auto colIdx = element.child("ColIdx");
+    if (colIdx) {
+      schedule.setColumnNumber(colIdx.text().as_int());
+    }
+
+    const auto rowstoSkipatTop = element.child("RowsToSkipAtTop");
+    if (rowstoSkipatTop) {
+      schedule.setRowstoSkipatTop(rowstoSkipatTop.text().as_int());
+    }
+
+    const auto colSeparator = element.child("ColSeparator");
+    if (colSeparator) {
+      schedule.setColumnSeparator(colSeparator.text().as_string());
+    }
+
+    const auto interpToTimestep = element.child("InterpToTimestep");
+    if (interpToTimestep) {
+      schedule.setInterpolatetoTimestep(interpToTimestep.text().as_bool());
+    }
+
+    const auto minutesPerRow = element.child("MinutesPerRow");
+    if (minutesPerRow) {
+      schedule.setMinutesperItem(minutesPerRow.text().as_int());
+    } else {
+      schedule.setMinutesperItem(60);
+    }
+
+    return schedule;
+  }
+
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateScheduleYear(const pugi::xml_node& element,
+                                                                                           openstudio::model::Model& model) {
+    const auto name = escapeName(element.child("Name").text().as_string());
+    const auto type = escapeName(element.child("Type").text().as_string());
 
     std::vector<pugi::xml_node> endMonthElements = makeVectorOfChildren(element, "EndMonth");
     std::vector<pugi::xml_node> endDayElements = makeVectorOfChildren(element, "EndDay");
