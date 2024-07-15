@@ -48,7 +48,7 @@ namespace model {
   MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
 
   /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */
-  class OS_DEPRECATED(3, 5, 0) MODEL_API TableMultiVariableLookup : public Curve
+  class MODEL_API TableMultiVariableLookup : public Curve
   {
    public:
     /** @name Constructors and Destructors */

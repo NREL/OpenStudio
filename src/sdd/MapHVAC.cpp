@@ -68,6 +68,8 @@
 #include "../model/TableLookup.hpp"
 #include "../model/TableLookup_Impl.hpp"
 #include "../model/TableIndependentVariable.hpp"
+#include "../model/TableMultiVariableLookup.hpp"
+#include "../model/TableMultiVariableLookup_Impl.hpp"
 #include "../model/Duct.hpp"
 #include "../model/Duct_Impl.hpp"
 #include "../model/ScheduleConstant.hpp"
@@ -2240,6 +2242,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   std::string coilName = nameElement.text().as_string();
   pugi::xml_node capTotRtdElement = heatingCoilElement.child("CapTotGrossRtdSim");
 
+  // AvailCtrlByEMS
+  const auto availCtrlByEMS = heatingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+  
+  boost::optional<model::Schedule> availabilitySchedule;
+  if(availCtrlByEMS == 1) {
+    availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+    availabilitySchedule->setName(coilName + " AvailSch");
+  } else {
+    availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  }
+
   // CapTotGrossRtd
   boost::optional<double> capTotGrossRtd;
 
@@ -2292,6 +2305,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     coil.setName(coilName);
 
+    coil.setAvailableSchedule(availabilitySchedule.get());
+
     // CapTotGrossRtd
     if( capTotGrossRtd )
     {
@@ -2336,6 +2351,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilHeatingWater coil(model,schedule);
 
     coil.setName(coilName);
+
+    coil.setAvailableSchedule(availabilitySchedule.get());
 
     pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
 
@@ -2416,6 +2433,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilHeatingElectric coil(model,schedule);
 
     coil.setName(coilName);
+
+    coil.setAvailabilitySchedule(availabilitySchedule.get());
 
     // CapTotGrossRtd
     if( capTotGrossRtd )
@@ -2657,6 +2676,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
       // Name
       heatingCoil.setName(coilName);
+
+      heatingCoil.setAvailabilitySchedule(availabilitySchedule.get());
 
       // FlowCapSim
       if( _flowCap )
@@ -3377,6 +3398,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // Name
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
     std::string coilName = nameElement.text().as_string();
+
+    // AvailCtrlByEMS
+    const auto availCtrlByEMS = coolingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+    
+    boost::optional<model::Schedule> availabilitySchedule;
+    if(availCtrlByEMS == 1) {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+      availabilitySchedule->setName(coilName + " AvailSch");
+    } else {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule();
+    }
+
     // NumClgStages
     pugi::xml_node numClgStagesElement = coolingCoilElement.child("NumClgStages");
 
@@ -3398,6 +3431,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         unitary->setName(coilName + " Unitary");
         unitary->getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("SetPoint");
         unitary->setCoolingCoil(coil);
+        unitary->setAvailabilitySchedule(availabilitySchedule.get());
         result = unitary.get();
       }
 
@@ -3495,8 +3529,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     // Unspecified=assume 1, or specified as 1 stage
     else if( !numClgStagesElement || (numClgStagesElement.text().as_int() == 1) )
     {
-      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
       // Cap_fTempCrvRef
 
       boost::optional<model::Curve> coolingCurveFofTemp;
@@ -3601,7 +3633,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       model::CoilCoolingDXSingleSpeed coilCooling( model,
-                                                   schedule,
+                                                   availabilitySchedule.get(),
                                                    coolingCurveFofTemp.get(),
                                                    coolingCurveFofFlow.get(),
                                                    energyInputRatioFofTemp.get(),
@@ -3688,8 +3720,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
     else if( numClgStagesElement.text().as_int() == 2 )
     {
-      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
       // Cap_fTempCrvRef
 
       boost::optional<model::Curve> coolingCurveFofTemp;
@@ -3794,7 +3824,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       model::CoilCoolingDXTwoSpeed coilCooling( model,
-                                              schedule,
+                                              availabilitySchedule.get(),
                                               coolingCurveFofTemp.get(),
                                               coolingCurveFofFlow.get(),
                                               energyInputRatioFofTemp.get(),
@@ -3914,13 +3944,23 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   // ChilledWater
   if( istringEqual(coilCoolingTypeElement.text().as_string(),"ChilledWater") )
   {
-    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
-    model::CoilCoolingWater coilCooling(model,schedule);
 
     // Name
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
     std::string coilName = nameElement.text().as_string();
+
+    // AvailCtrlByEMS
+    const auto availCtrlByEMS = coolingCoilElement.child("AvailCtrlByEMS").text().as_int(0);
+    
+    boost::optional<model::Schedule> availabilitySchedule;
+    if(availCtrlByEMS == 1) {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule().clone(model).cast<model::Schedule>();
+      availabilitySchedule->setName(coilName + " AvailSch");
+    } else {
+      availabilitySchedule = model.alwaysOnDiscreteSchedule();
+    }
+
+    model::CoilCoolingWater coilCooling(model,availabilitySchedule.get());
 
     coilCooling.setName(coilName);
 
@@ -5537,6 +5577,10 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
     model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
+
+    if( availSch ) {
+      terminal.setAvailabilitySchedule(availSch.get());
+    }
 
     // PriAirFlow
     if( primaryAirFlow )
@@ -10337,6 +10381,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvQ
   return curve;
 }
 
+// copied from old CBECC94 branch -
 boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapDblVar(
     const pugi::xml_node& element,
     openstudio::model::Model& model)
@@ -10345,22 +10390,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return boost::none;
   }
 
-  model::TableLookup table(model);
+  model::TableMultiVariableLookup table(model,2);
 
   auto nameElement = element.child("Name");
   table.setName(nameElement.text().as_string());
-
-  model::TableIndependentVariable var1(model);
-  var1.setName(fmt::format("{}_IndependentVariable1", table.nameString()));
-  var1.setInterpolationMethod("Linear");
-  var1.setExtrapolationMethod("Linear");
-  var1.setUnitType("Dimensionless");
-
-  model::TableIndependentVariable var2(model);
-  var2.setName(fmt::format("{}_IndependentVariable2", table.nameString()));
-  var2.setInterpolationMethod("Linear");
-  var2.setExtrapolationMethod("Linear");
-  var2.setUnitType("Dimensionless");
 
   std::vector<pugi::xml_node> arrayVar1Elements;
   std::vector<pugi::xml_node> arrayVar2Elements;
@@ -10376,87 +10409,76 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     }
   }
 
-  std::vector<double> arrayVar1;
-  std::vector<double> arrayVar2;
-  std::vector<double> arrayOut;
+  if( arrayVar1Elements.size() != arrayOutElements.size() ) {
+    return table;
+  }
+
+  if( arrayVar2Elements.size() != arrayOutElements.size() ) {
+    return table;
+  }
 
   for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
-    const auto _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
-    if(_arrayVar1) { arrayVar1.push_back(_arrayVar1.get()); }
 
-    const auto _arrayVar2 = lexicalCastToDouble(arrayVar2Elements[i]);
-    if(_arrayVar2) { arrayVar2.push_back(_arrayVar2.get()); }
+    boost::optional<double> _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
+    boost::optional<double> _arrayVar2 = lexicalCastToDouble(arrayVar2Elements[i]);
+    boost::optional<double> _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
 
-    const auto _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
-    if(_arrayOut) { arrayOut.push_back(_arrayOut.get()); }
+    if( _arrayVar1 && _arrayVar2 && _arrayOut ) {
+      table.addPoint(_arrayVar1.get(), _arrayVar2.get(), _arrayOut.get());
+    }
   }
-
-  if( arrayVar1.size() != arrayOut.size() ) {
-    return table;
-  }
-
-  if( arrayVar2.size() != arrayOut.size() ) {
-    return table;
-  }
-
-  var1.setValues(arrayVar1);
-  var2.setValues(arrayVar2);
-  table.setOutputValues(arrayOut);
 
   std::string text;
 
   boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
   if( _minOut ) {
-    table.setMinimumOutput(_minOut.get());
+    table.setMinimumTableOutput(_minOut.get());
   }
 
   boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
   if( _maxOut ) {
-    table.setMaximumOutput(_maxOut.get());
+    table.setMaximumTableOutput(_maxOut.get());
   }
 
   text = element.child("UnitTypeVar1").text().as_string();
-  var1.setUnitType(text);
+  table.setInputUnitTypeforX1(text);
 
   text = element.child("UnitTypeVar2").text().as_string();
-  var2.setUnitType(text);
+  table.setInputUnitTypeforX2(text);
 
   text = element.child("UnitTypeOut").text().as_string();
   table.setOutputUnitType(text);
 
   boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
   if( _minVar1 ) {
-    var1.setMinimumValue(_minVar1.get());
+    table.setMinimumValueofX1(_minVar1.get());
   }
 
   boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
   if( _maxVar1 ) {
-    var1.setMaximumValue(_maxVar1.get());
+    table.setMaximumValueofX1(_maxVar1.get());
   }
 
   boost::optional<double> _minVar2 = lexicalCastToDouble(element.child("MinVar2"));
   if( _minVar2 ) {
-    var2.setMinimumValue(_minVar2.get());
+    table.setMinimumValueofX2(_minVar2.get());
   }
 
   boost::optional<double> _maxVar2 = lexicalCastToDouble(element.child("MaxVar2"));
   if( _maxVar2 ) {
-    var2.setMaximumValue(_maxVar2.get());
+    table.setMaximumValueofX2(_maxVar2.get());
   }
 
   text = element.child("InterpMthd").text().as_string();
-  var1.setInterpolationMethod(text);
-  var2.setInterpolationMethod(text);
+  table.setInterpolationMethod(text);
 
   boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
   if( _normalizationPt ) {
-    var1.setNormalizationReferenceValue(_normalizationPt.get());
-    var2.setNormalizationReferenceValue(_normalizationPt.get());
+    table.setNormalizationReference(_normalizationPt.get());
   }
 
-  // TODO: Does this information need to be migrated to TableLookup in some way
-  //text = element.child("Type").text().as_string();
-  //table.setCurveType(text);
+  text = element.child("Type").text().as_string();
+  table.setCurveType(text);
 
   return table;
 }
@@ -10469,16 +10491,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return boost::none;
   }
 
-  model::TableLookup table(model);
+  model::TableMultiVariableLookup table(model,1);
 
   auto nameElement = element.child("Name");
   table.setName(nameElement.text().as_string());
-
-  model::TableIndependentVariable var1(model);
-  var1.setName(fmt::format("{}_IndependentVariable1", table.nameString()));
-  var1.setInterpolationMethod("Linear");
-  var1.setExtrapolationMethod("Linear");
-  var1.setUnitType("Dimensionless");
 
   std::vector<pugi::xml_node> arrayVar1Elements;
   std::vector<pugi::xml_node> arrayOutElements;
@@ -10491,59 +10507,262 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     }
   }
 
-  std::vector<double> arrayVar1;
-  std::vector<double> arrayOut;
-
-  for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
-    const auto _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
-    if(_arrayVar1) { arrayVar1.push_back(_arrayVar1.get()); }
-
-    const auto _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
-    if(_arrayOut) { arrayOut.push_back(_arrayOut.get()); }
-  }
-
-  if( arrayVar1.size() != arrayOut.size() ) {
+  if( arrayVar1Elements.size() != arrayOutElements.size() ) {
     return table;
   }
 
-  var1.setValues(arrayVar1);
-  table.setOutputValues(arrayOut);
+  for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
+    boost::optional<double> _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
+    boost::optional<double> _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
+
+    if( _arrayVar1 && _arrayOut ) {
+      table.addPoint(_arrayVar1.get(), _arrayOut.get());
+    }
+  }
 
   boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
   if( _minOut ) {
-    table.setMinimumOutput(_minOut.get());
+    table.setMinimumTableOutput(_minOut.get());
   }
 
   boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
   if( _maxOut ) {
-    table.setMaximumOutput(_maxOut.get());
+    table.setMaximumTableOutput(_maxOut.get());
   }
 
-  var1.setUnitType(element.child("UnitTypeVar1").text().as_string());
+  table.setInputUnitTypeforX1(element.child("UnitTypeVar1").text().as_string());
 
   table.setOutputUnitType(element.child("UnitTypeOut").text().as_string());
 
   boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
   if( _minVar1 ) {
-    var1.setMinimumValue(_minVar1.get());
+    table.setMinimumValueofX1(_minVar1.get());
   }
 
   boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
   if( _maxVar1 ) {
-    var1.setMaximumValue(_maxVar1.get());
+    table.setMaximumValueofX1(_maxVar1.get());
   }
 
-  var1.setInterpolationMethod(element.child("InterpMthd").text().as_string());
+  table.setInterpolationMethod(element.child("InterpMthd").text().as_string());
 
   boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
   if( _normalizationPt ) {
-    var1.setNormalizationReferenceValue(_normalizationPt.get());
+    table.setNormalizationReference(_normalizationPt.get());
   }
 
-  //table.setCurveType(element.child("Type").text().as_string());
+  table.setCurveType(element.child("Type").text().as_string());
 
   return table;
 }
+// replaced new (below) w/ old (above) - SAC 07/12/24
+// boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapDblVar(
+//     const pugi::xml_node& element,
+//     openstudio::model::Model& model)
+// {
+//   if( ! istringEqual(element.name(),"CrvMapDblVar") ) {
+//     return boost::none;
+//   }
+// 
+//   model::TableLookup table(model);
+// 
+//   auto nameElement = element.child("Name");
+//   table.setName(nameElement.text().as_string());
+// 
+//   model::TableIndependentVariable var1(model);
+//   var1.setName(fmt::format("{}_IndependentVariable1", table.nameString()));
+//   var1.setInterpolationMethod("Linear");
+//   var1.setExtrapolationMethod("Linear");
+//   var1.setUnitType("Dimensionless");
+// 
+//   model::TableIndependentVariable var2(model);
+//   var2.setName(fmt::format("{}_IndependentVariable2", table.nameString()));
+//   var2.setInterpolationMethod("Linear");
+//   var2.setExtrapolationMethod("Linear");
+//   var2.setUnitType("Dimensionless");
+// 
+//   std::vector<pugi::xml_node> arrayVar1Elements;
+//   std::vector<pugi::xml_node> arrayVar2Elements;
+//   std::vector<pugi::xml_node> arrayOutElements;
+// 
+//   for (const pugi::xml_node& child: element.children()) {
+//     if( istringEqual(child.name(),"ArrayVar1") ) {
+//       arrayVar1Elements.push_back(child);
+//     } else if( istringEqual(child.name(),"ArrayVar2") ) {
+//       arrayVar2Elements.push_back(child);
+//     } else if( istringEqual(child.name(),"ArrayOut") ) {
+//       arrayOutElements.push_back(child);
+//     }
+//   }
+// 
+//   std::vector<double> arrayVar1;
+//   std::vector<double> arrayVar2;
+//   std::vector<double> arrayOut;
+// 
+//   for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
+//     const auto _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
+//     if(_arrayVar1) { arrayVar1.push_back(_arrayVar1.get()); }
+// 
+//     const auto _arrayVar2 = lexicalCastToDouble(arrayVar2Elements[i]);
+//     if(_arrayVar2) { arrayVar2.push_back(_arrayVar2.get()); }
+// 
+//     const auto _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
+//     if(_arrayOut) { arrayOut.push_back(_arrayOut.get()); }
+//   }
+// 
+//   if( arrayVar1.size() != arrayOut.size() ) {
+//     return table;
+//   }
+// 
+//   if( arrayVar2.size() != arrayOut.size() ) {
+//     return table;
+//   }
+// 
+//   var1.setValues(arrayVar1);
+//   var2.setValues(arrayVar2);
+//   table.setOutputValues(arrayOut);
+// 
+//   std::string text;
+// 
+//   boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
+//   if( _minOut ) {
+//     table.setMinimumOutput(_minOut.get());
+//   }
+// 
+//   boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
+//   if( _maxOut ) {
+//     table.setMaximumOutput(_maxOut.get());
+//   }
+// 
+//   text = element.child("UnitTypeVar1").text().as_string();
+//   var1.setUnitType(text);
+// 
+//   text = element.child("UnitTypeVar2").text().as_string();
+//   var2.setUnitType(text);
+// 
+//   text = element.child("UnitTypeOut").text().as_string();
+//   table.setOutputUnitType(text);
+// 
+//   boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
+//   if( _minVar1 ) {
+//     var1.setMinimumValue(_minVar1.get());
+//   }
+// 
+//   boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
+//   if( _maxVar1 ) {
+//     var1.setMaximumValue(_maxVar1.get());
+//   }
+// 
+//   boost::optional<double> _minVar2 = lexicalCastToDouble(element.child("MinVar2"));
+//   if( _minVar2 ) {
+//     var2.setMinimumValue(_minVar2.get());
+//   }
+// 
+//   boost::optional<double> _maxVar2 = lexicalCastToDouble(element.child("MaxVar2"));
+//   if( _maxVar2 ) {
+//     var2.setMaximumValue(_maxVar2.get());
+//   }
+// 
+//   text = element.child("InterpMthd").text().as_string();
+//   var1.setInterpolationMethod(text);
+//   var2.setInterpolationMethod(text);
+// 
+//   boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
+//   if( _normalizationPt ) {
+//     var1.setNormalizationReferenceValue(_normalizationPt.get());
+//     var2.setNormalizationReferenceValue(_normalizationPt.get());
+//   }
+// 
+//   // TODO: Does this information need to be migrated to TableLookup in some way
+//   //text = element.child("Type").text().as_string();
+//   //table.setCurveType(text);
+// 
+//   return table;
+// }
+// 
+// boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvMapSglVar(
+//     const pugi::xml_node& element,
+//     openstudio::model::Model& model)
+// {
+//   if( ! istringEqual(element.name(),"CrvMapSglVar") ) {
+//     return boost::none;
+//   }
+// 
+//   model::TableLookup table(model);
+// 
+//   auto nameElement = element.child("Name");
+//   table.setName(nameElement.text().as_string());
+// 
+//   model::TableIndependentVariable var1(model);
+//   var1.setName(fmt::format("{}_IndependentVariable1", table.nameString()));
+//   var1.setInterpolationMethod("Linear");
+//   var1.setExtrapolationMethod("Linear");
+//   var1.setUnitType("Dimensionless");
+// 
+//   std::vector<pugi::xml_node> arrayVar1Elements;
+//   std::vector<pugi::xml_node> arrayOutElements;
+// 
+//   for (const pugi::xml_node& child: element.children()) {
+//     if( istringEqual(child.name(), "ArrayVar1") ) {
+//       arrayVar1Elements.push_back(child);
+//     } else if( istringEqual(child.name(),"ArrayOut") ) {
+//       arrayOutElements.push_back(child);
+//     }
+//   }
+// 
+//   std::vector<double> arrayVar1;
+//   std::vector<double> arrayOut;
+// 
+//   for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
+//     const auto _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
+//     if(_arrayVar1) { arrayVar1.push_back(_arrayVar1.get()); }
+// 
+//     const auto _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
+//     if(_arrayOut) { arrayOut.push_back(_arrayOut.get()); }
+//   }
+// 
+//   if( arrayVar1.size() != arrayOut.size() ) {
+//     return table;
+//   }
+// 
+//   var1.setValues(arrayVar1);
+//   table.setOutputValues(arrayOut);
+// 
+//   boost::optional<double> _minOut = lexicalCastToDouble(element.child("MinOut"));
+//   if( _minOut ) {
+//     table.setMinimumOutput(_minOut.get());
+//   }
+// 
+//   boost::optional<double> _maxOut = lexicalCastToDouble(element.child("MaxOut"));
+//   if( _maxOut ) {
+//     table.setMaximumOutput(_maxOut.get());
+//   }
+// 
+//   var1.setUnitType(element.child("UnitTypeVar1").text().as_string());
+// 
+//   table.setOutputUnitType(element.child("UnitTypeOut").text().as_string());
+// 
+//   boost::optional<double> _minVar1 = lexicalCastToDouble(element.child("MinVar1"));
+//   if( _minVar1 ) {
+//     var1.setMinimumValue(_minVar1.get());
+//   }
+// 
+//   boost::optional<double> _maxVar1 = lexicalCastToDouble(element.child("MaxVar1"));
+//   if( _maxVar1 ) {
+//     var1.setMaximumValue(_maxVar1.get());
+//   }
+// 
+//   var1.setInterpolationMethod(element.child("InterpMthd").text().as_string());
+// 
+//   boost::optional<double> _normalizationPt = lexicalCastToDouble(element.child("NormalizationPt"));
+//   if( _normalizationPt ) {
+//     var1.setNormalizationReferenceValue(_normalizationPt.get());
+//   }
+// 
+//   //table.setCurveType(element.child("Type").text().as_string());
+// 
+//   return table;
+// }
 
 pugi::xml_node ReverseTranslator::findThrmlZnElement(const pugi::xml_node& thrmlZnRefElement)
 {
