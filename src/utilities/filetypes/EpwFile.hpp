@@ -521,131 +521,131 @@ class UTILITIES_API EpwDesignCondition
   /** Returns the title of design condition */
   std::string titleOfDesignCondition() const;
   /** Returns the heating coldest month */
-  int heatingColdestMonth() const;
+  boost::optional<int> heatingColdestMonth() const;
   /** Returns the heating dry bulb temperature 99.6% in degrees C*/
-  double heatingDryBulb99pt6() const;
+  boost::optional<double> heatingDryBulb99pt6() const;
   /** Returns the heating dry bulb temperature 99% in degrees C*/
   boost::optional<double> heatingDryBulb99() const;
   /** Returns the heating humidification dew point temperature 99.6% in degrees C*/
-  double heatingHumidificationDewPoint99pt6() const;
+  boost::optional<double> heatingHumidificationDewPoint99pt6() const;
   /** Returns the heating humidification humidity ratio 99.6% in g of moisture per kg of dry air */
-  double heatingHumidificationHumidityRatio99pt6() const;
+  boost::optional<double> heatingHumidificationHumidityRatio99pt6() const;
   /** Returns the heating humidification mean coincident dry bulb temperature 99.6% in degrees C*/
-  double heatingHumidificationMeanCoincidentDryBulb99pt6() const;
+  boost::optional<double> heatingHumidificationMeanCoincidentDryBulb99pt6() const;
   /** Returns the heating humidification dew point temperature 99% in degrees C*/
-  double heatingHumidificationDewPoint99() const;
+  boost::optional<double> heatingHumidificationDewPoint99() const;
   /** Returns the heating humidification humidity ratio 99% in g of moisture per kg of dry air */
-  double heatingHumidificationHumidityRatio99() const;
+  boost::optional<double> heatingHumidificationHumidityRatio99() const;
   /** Returns the heating humidification mean coincient dry bulb temperature 99% in degrees C */
-  double heatingHumidificationMeanCoincidentDryBulb99() const;
+  boost::optional<double> heatingHumidificationMeanCoincidentDryBulb99() const;
   /** Returns the heating coldest month wind speed 0.4% in m/s */
-  double heatingColdestMonthWindSpeed0pt4() const;
+  boost::optional<double> heatingColdestMonthWindSpeed0pt4() const;
   /** Returns the heating coldest month mean coincident dry bulb temperature 0.4% in degrees C*/
-  double heatingColdestMonthMeanCoincidentDryBulb0pt4() const;
+  boost::optional<double> heatingColdestMonthMeanCoincidentDryBulb0pt4() const;
   /** Returns the heating coldest month wind speed 1% in m/s */
-  double heatingColdestMonthWindSpeed1() const;
+  boost::optional<double> heatingColdestMonthWindSpeed1() const;
   /** Returns the heating coldest month mean coincident dry bulb temperature 1% in degrees C */
-  double heatingColdestMonthMeanCoincidentDryBulb1() const;
+  boost::optional<double> heatingColdestMonthMeanCoincidentDryBulb1() const;
   /** Returns the heating mean coincident wind speed 99.6% in m/s */
-  double heatingMeanCoincidentWindSpeed99pt6() const;
+  boost::optional<double> heatingMeanCoincidentWindSpeed99pt6() const;
   /** Returns the heating prevailing coincident wind direction 99.6% in degrees */
-  int heatingPrevailingCoincidentWindDirection99pt6() const;
+  boost::optional<int> heatingPrevailingCoincidentWindDirection99pt6() const;
   /** Returns the cooling hottest month */
-  int coolingHottestMonth() const;
+  boost::optional<int> coolingHottestMonth() const;
   /** Returns the cooling dry bulb temperature range in degrees C */
-  double coolingDryBulbRange() const;
+  boost::optional<double> coolingDryBulbRange() const;
   /** Returns the cooling dry bulb temperature 0.4% in degrees C */
-  double coolingDryBulb0pt4() const;
+  boost::optional<double> coolingDryBulb0pt4() const;
   /** Returns the cooling mean coincident wet bulb temperature in degrees C */
-  double coolingMeanCoincidentWetBulb0pt4() const;
+  boost::optional<double> coolingMeanCoincidentWetBulb0pt4() const;
   /** Returns the cooling dry bulb temperature 1% in degrees C */
-  double coolingDryBulb1() const;
+  boost::optional<double> coolingDryBulb1() const;
   /** Returns the cooling mean coincident wet bulb temperature 1% in degrees C */
-  double coolingMeanCoincidentWetBulb1() const;
+  boost::optional<double> coolingMeanCoincidentWetBulb1() const;
   /** Returns the cooling dry bulb temperature 2% in degrees C */
-  double coolingDryBulb2() const;
+  boost::optional<double> coolingDryBulb2() const;
   /** Returns the cooling mean coincident wet bulb temperature 2% in degrees C */
-  double coolingMeanCoincidentWetBulb2() const;
+  boost::optional<double> coolingMeanCoincidentWetBulb2() const;
   /** Returns the cooling evaporation wet bulb temperature 0.4% in degrees C */
-  double coolingEvaporationWetBulb0pt4() const;
+  boost::optional<double> coolingEvaporationWetBulb0pt4() const;
   /** Returns the cooling evaporation mean coincident dry bulb temperature 0.4% in degrees C */
-  double coolingEvaporationMeanCoincidentDryBulb0pt4() const;
+  boost::optional<double> coolingEvaporationMeanCoincidentDryBulb0pt4() const;
   /** Returns the cooling evaporation wet bulb temperature 1% in degrees C */
-  double coolingEvaporationWetBulb1() const;
+  boost::optional<double> coolingEvaporationWetBulb1() const;
   /** Returns the cooling evaporation mean coincident dry bulb temperature 1% in degrees C */
-  double coolingEvaporationMeanCoincidentDryBulb1() const;
+  boost::optional<double> coolingEvaporationMeanCoincidentDryBulb1() const;
   /** Returns the cooling evaporation wet bulb temperature 2% in degrees C */
-  double coolingEvaporationWetBulb2() const;
+  boost::optional<double> coolingEvaporationWetBulb2() const;
   /** Returns the cooling evaporation mean coincident dry bulb temperature 2% in degrees C */
-  double coolingEvaporationMeanCoincidentDryBulb2() const;
+  boost::optional<double> coolingEvaporationMeanCoincidentDryBulb2() const;
   /** Returns the cooling mean coincident wind speed 0.4% in m/s */
-  double coolingMeanCoincidentWindSpeed0pt4() const;
+  boost::optional<double> coolingMeanCoincidentWindSpeed0pt4() const;
   /** Returns the cooling prevailing coincident wind direction 0.4% in degrees */
-  int coolingPrevailingCoincidentWindDirection0pt4() const;
+  boost::optional<int> coolingPrevailingCoincidentWindDirection0pt4() const;
   /** Returns the cooling dehumidification dew point temperature 0.4% in degrees C */
-  double coolingDehumidificationDewPoint0pt4() const;
+  boost::optional<double> coolingDehumidificationDewPoint0pt4() const;
   /** Returns the cooling dehumidification humidity ratio 0.4% in g of moisture per kg of dry air */
-  double coolingDehumidificationHumidityRatio0pt4() const;
+  boost::optional<double> coolingDehumidificationHumidityRatio0pt4() const;
   /** Returns the cooling dehumidification mean coincident dry bulb temperature 0.4% in degrees C */
-  double coolingDehumidificationMeanCoincidentDryBulb0pt4() const;
+  boost::optional<double> coolingDehumidificationMeanCoincidentDryBulb0pt4() const;
   /** Returns the cooling dehumidification dew point temperature 1% in degrees C */
-  double coolingDehumidificationDewPoint1() const;
+  boost::optional<double> coolingDehumidificationDewPoint1() const;
   /** Returns the cooling dehumidification humidity ratio 1% in g of moisture per kg of dry air */
-  double coolingDehumidificationHumidityRatio1() const;
+  boost::optional<double> coolingDehumidificationHumidityRatio1() const;
   /** Returns the cooling dehumidification mean coincident dry bulb temperature 1% in degrees C */
-  double coolingDehumidificationMeanCoincidentDryBulb1() const;
+  boost::optional<double> coolingDehumidificationMeanCoincidentDryBulb1() const;
   /** Returns the cooling dehumidification dew point temperature 2% in degrees C */
-  double coolingDehumidificationDewPoint2() const;
+  boost::optional<double> coolingDehumidificationDewPoint2() const;
   /** Returns the cooling dehumidification humidity ratio 2% in g of moisture per kg of dry air */
-  double coolingDehumidificationHumidityRatio2() const;
+  boost::optional<double> coolingDehumidificationHumidityRatio2() const;
   /** Returns the cooling dehumidification mean coincident dry bulb temperature 2% in degrees C */
-  double coolingDehumidificationMeanCoincidentDryBulb2() const;
+  boost::optional<double> coolingDehumidificationMeanCoincidentDryBulb2() const;
   /** Returns the cooling enthalpy 0.4% in kJ/kg */
-  double coolingEnthalpy0pt4() const;
+  boost::optional<double> coolingEnthalpy0pt4() const;
   /** Returns the cooling enthalpy mean coincident dry bulb temperature 0.4% in degrees C */
-  double coolingEnthalpyMeanCoincidentDryBulb0pt4() const;
+  boost::optional<double> coolingEnthalpyMeanCoincidentDryBulb0pt4() const;
   /** Returns the cooling enthalpy 1% in kJ/kg */
-  double coolingEnthalpy1() const;
+  boost::optional<double> coolingEnthalpy1() const;
   /** Returns the cooling enthalpy mean coincident dry bulb temperature 1% in degrees C */
-  double coolingEnthalpyMeanCoincidentDryBulb1() const;
+  boost::optional<double> coolingEnthalpyMeanCoincidentDryBulb1() const;
   /** Returns the cooling enthalpy 2% in kJ/kg */
-  double coolingEnthalpy2() const;
+  boost::optional<double> coolingEnthalpy2() const;
   /** Returns the cooling enthalpy mean coincident dry bulb temperature 2% in degrees C */
-  double coolingEnthalpyMeanCoincidentDryBulb2() const;
+  boost::optional<double> coolingEnthalpyMeanCoincidentDryBulb2() const;
   /** Returns the number of cooling hours between 8am and 4pm with dry bulb temperature between 12.8 and 20.6 degrees C */
-  int coolingHours8To4AndDryBulb12pt8To20pt6() const;
+  boost::optional<int> coolingHours8To4AndDryBulb12pt8To20pt6() const;
   /** Returns the extreme wind speed 1% in m/s */
-  double extremeWindSpeed1() const;
+  boost::optional<double> extremeWindSpeed1() const;
   /** Returns the extreme wind speed 2.5% in m/s */
-  double extremeWindSpeed2pt5() const;
+  boost::optional<double> extremeWindSpeed2pt5() const;
   /** Returns the extreme wind speed 5% in m/s */
-  double extremeWindSpeed5() const;
+  boost::optional<double> extremeWindSpeed5() const;
   /** Returns the extreme maximum wet bulb temperature in degrees C */
-  double extremeMaxWetBulb() const;
+  boost::optional<double> extremeMaxWetBulb() const;
   /** Returns the extreme mean minimum dry bulb temperature in degrees C */
-  double extremeMeanMinDryBulb() const;
+  boost::optional<double> extremeMeanMinDryBulb() const;
   /** Returns the extreme mean maximum dry bulb temperature in degrees C */
-  double extremeMeanMaxDryBulb() const;
+  boost::optional<double> extremeMeanMaxDryBulb() const;
   /** Returns the extreme standard deviation minimum dry bulb temperature in degrees C */
-  double extremeStdDevMinDryBulb() const;
+  boost::optional<double> extremeStdDevMinDryBulb() const;
   /** Returns the extreme standard deviation maximum dry bulb temperature in degrees C */
-  double extremeStdDevMaxDryBulb() const;
+  boost::optional<double> extremeStdDevMaxDryBulb() const;
   /** Returns the extreme n=5 years minimum dry bulb temperature in degrees C */
-  double extremeN5YearsMinDryBulb() const;
+  boost::optional<double> extremeN5YearsMinDryBulb() const;
   /** Returns the extreme n=5 years maximum dry bulb temperature in degrees C */
-  double extremeN5YearsMaxDryBulb() const;
+  boost::optional<double> extremeN5YearsMaxDryBulb() const;
   /** Returns the extreme n=10 years minimum dry bulb temperature in degrees C */
-  double extremeN10YearsMinDryBulb() const;
+  boost::optional<double> extremeN10YearsMinDryBulb() const;
   /** Returns the extreme n=10 years maximum dry bulb temperature in degrees C */
-  double extremeN10YearsMaxDryBulb() const;
+  boost::optional<double> extremeN10YearsMaxDryBulb() const;
   /** Returns the extreme n=20 years minimum dry bulb temperature in degrees C */
-  double extremeN20YearsMinDryBulb() const;
+  boost::optional<double> extremeN20YearsMinDryBulb() const;
   /** Returns the extreme n=20 years maximum dry bulb temperature in degrees C */
-  double extremeN20YearsMaxDryBulb() const;
+  boost::optional<double> extremeN20YearsMaxDryBulb() const;
   /** Returns the extreme n=50 years minimum dry bulb temperature in degrees C */
-  double extremeN50YearsMinDryBulb() const;
+  boost::optional<double> extremeN50YearsMinDryBulb() const;
   /** Returns the extreme n=50 years maximum dry bulb temperature in degrees C */
-  double extremeN50YearsMaxDryBulb() const;
+  boost::optional<double> extremeN50YearsMaxDryBulb() const;
 
  private:
   // Setters
@@ -778,69 +778,69 @@ class UTILITIES_API EpwDesignCondition
   void setExtremeN50YearsMaxDryBulb(double extremeN50YearsMaxDryBulb);
 
   std::string m_titleOfDesignCondition;
-  int m_heatingColdestMonth;
-  double m_heatingDryBulb99pt6;
+  boost::optional<int> m_heatingColdestMonth;
+  boost::optional<double> m_heatingDryBulb99pt6;
   boost::optional<double> m_heatingDryBulb99;
-  double m_heatingHumidificationDewPoint99pt6;
-  double m_heatingHumidificationHumidityRatio99pt6;
-  double m_heatingHumidificationMeanCoincidentDryBulb99pt6;
-  double m_heatingHumidificationDewPoint99;
-  double m_heatingHumidificationHumidityRatio99;
-  double m_heatingHumidificationMeanCoincidentDryBulb99;
-  double m_heatingColdestMonthWindSpeed0pt4;
-  double m_heatingColdestMonthMeanCoincidentDryBulb0pt4;
-  double m_heatingColdestMonthWindSpeed1;
-  double m_heatingColdestMonthMeanCoincidentDryBulb1;
-  double m_heatingMeanCoincidentWindSpeed99pt6;
-  int m_heatingPrevailingCoincidentWindDirection99pt6;
-  int m_coolingHottestMonth;
-  double m_coolingDryBulbRange;
-  double m_coolingDryBulb0pt4;
-  double m_coolingMeanCoincidentWetBulb0pt4;
-  double m_coolingDryBulb1;
-  double m_coolingMeanCoincidentWetBulb1;
-  double m_coolingDryBulb2;
-  double m_coolingMeanCoincidentWetBulb2;
-  double m_coolingEvaporationWetBulb0pt4;
-  double m_coolingEvaporationMeanCoincidentDryBulb0pt4;
-  double m_coolingEvaporationWetBulb1;
-  double m_coolingEvaporationMeanCoincidentDryBulb1;
-  double m_coolingEvaporationWetBulb2;
-  double m_coolingEvaporationMeanCoincidentDryBulb2;
-  double m_coolingMeanCoincidentWindSpeed0pt4;
-  int m_coolingPrevailingCoincidentWindDirection0pt4;
-  double m_coolingDehumidificationDewPoint0pt4;
-  double m_coolingDehumidificationHumidityRatio0pt4;
-  double m_coolingDehumidificationMeanCoincidentDryBulb0pt4;
-  double m_coolingDehumidificationDewPoint1;
-  double m_coolingDehumidificationHumidityRatio1;
-  double m_coolingDehumidificationMeanCoincidentDryBulb1;
-  double m_coolingDehumidificationDewPoint2;
-  double m_coolingDehumidificationHumidityRatio2;
-  double m_coolingDehumidificationMeanCoincidentDryBulb2;
-  double m_coolingEnthalpy0pt4;
-  double m_coolingEnthalpyMeanCoincidentDryBulb0pt4;
-  double m_coolingEnthalpy1;
-  double m_coolingEnthalpyMeanCoincidentDryBulb1;
-  double m_coolingEnthalpy2;
-  double m_coolingEnthalpyMeanCoincidentDryBulb2;
-  int m_coolingHours8To4AndDryBulb12pt8To20pt6;
-  double m_extremeWindSpeed1;
-  double m_extremeWindSpeed2pt5;
-  double m_extremeWindSpeed5;
-  double m_extremeMaxWetBulb;
-  double m_extremeMeanMinDryBulb;
-  double m_extremeMeanMaxDryBulb;
-  double m_extremeStdDevMinDryBulb;
-  double m_extremeStdDevMaxDryBulb;
-  double m_extremeN5YearsMinDryBulb;
-  double m_extremeN5YearsMaxDryBulb;
-  double m_extremeN10YearsMinDryBulb;
-  double m_extremeN10YearsMaxDryBulb;
-  double m_extremeN20YearsMinDryBulb;
-  double m_extremeN20YearsMaxDryBulb;
-  double m_extremeN50YearsMinDryBulb;
-  double m_extremeN50YearsMaxDryBulb;
+  boost::optional<double> m_heatingHumidificationDewPoint99pt6;
+  boost::optional<double> m_heatingHumidificationHumidityRatio99pt6;
+  boost::optional<double> m_heatingHumidificationMeanCoincidentDryBulb99pt6;
+  boost::optional<double> m_heatingHumidificationDewPoint99;
+  boost::optional<double> m_heatingHumidificationHumidityRatio99;
+  boost::optional<double> m_heatingHumidificationMeanCoincidentDryBulb99;
+  boost::optional<double> m_heatingColdestMonthWindSpeed0pt4;
+  boost::optional<double> m_heatingColdestMonthMeanCoincidentDryBulb0pt4;
+  boost::optional<double> m_heatingColdestMonthWindSpeed1;
+  boost::optional<double> m_heatingColdestMonthMeanCoincidentDryBulb1;
+  boost::optional<double> m_heatingMeanCoincidentWindSpeed99pt6;
+  boost::optional<int> m_heatingPrevailingCoincidentWindDirection99pt6;
+  boost::optional<int> m_coolingHottestMonth;
+  boost::optional<double> m_coolingDryBulbRange;
+  boost::optional<double> m_coolingDryBulb0pt4;
+  boost::optional<double> m_coolingMeanCoincidentWetBulb0pt4;
+  boost::optional<double> m_coolingDryBulb1;
+  boost::optional<double> m_coolingMeanCoincidentWetBulb1;
+  boost::optional<double> m_coolingDryBulb2;
+  boost::optional<double> m_coolingMeanCoincidentWetBulb2;
+  boost::optional<double> m_coolingEvaporationWetBulb0pt4;
+  boost::optional<double> m_coolingEvaporationMeanCoincidentDryBulb0pt4;
+  boost::optional<double> m_coolingEvaporationWetBulb1;
+  boost::optional<double> m_coolingEvaporationMeanCoincidentDryBulb1;
+  boost::optional<double> m_coolingEvaporationWetBulb2;
+  boost::optional<double> m_coolingEvaporationMeanCoincidentDryBulb2;
+  boost::optional<double> m_coolingMeanCoincidentWindSpeed0pt4;
+  boost::optional<int> m_coolingPrevailingCoincidentWindDirection0pt4;
+  boost::optional<double> m_coolingDehumidificationDewPoint0pt4;
+  boost::optional<double> m_coolingDehumidificationHumidityRatio0pt4;
+  boost::optional<double> m_coolingDehumidificationMeanCoincidentDryBulb0pt4;
+  boost::optional<double> m_coolingDehumidificationDewPoint1;
+  boost::optional<double> m_coolingDehumidificationHumidityRatio1;
+  boost::optional<double> m_coolingDehumidificationMeanCoincidentDryBulb1;
+  boost::optional<double> m_coolingDehumidificationDewPoint2;
+  boost::optional<double> m_coolingDehumidificationHumidityRatio2;
+  boost::optional<double> m_coolingDehumidificationMeanCoincidentDryBulb2;
+  boost::optional<double> m_coolingEnthalpy0pt4;
+  boost::optional<double> m_coolingEnthalpyMeanCoincidentDryBulb0pt4;
+  boost::optional<double> m_coolingEnthalpy1;
+  boost::optional<double> m_coolingEnthalpyMeanCoincidentDryBulb1;
+  boost::optional<double> m_coolingEnthalpy2;
+  boost::optional<double> m_coolingEnthalpyMeanCoincidentDryBulb2;
+  boost::optional<int> m_coolingHours8To4AndDryBulb12pt8To20pt6;
+  boost::optional<double> m_extremeWindSpeed1;
+  boost::optional<double> m_extremeWindSpeed2pt5;
+  boost::optional<double> m_extremeWindSpeed5;
+  boost::optional<double> m_extremeMaxWetBulb;
+  boost::optional<double> m_extremeMeanMinDryBulb;
+  boost::optional<double> m_extremeMeanMaxDryBulb;
+  boost::optional<double> m_extremeStdDevMinDryBulb;
+  boost::optional<double> m_extremeStdDevMaxDryBulb;
+  boost::optional<double> m_extremeN5YearsMinDryBulb;
+  boost::optional<double> m_extremeN5YearsMaxDryBulb;
+  boost::optional<double> m_extremeN10YearsMinDryBulb;
+  boost::optional<double> m_extremeN10YearsMaxDryBulb;
+  boost::optional<double> m_extremeN20YearsMinDryBulb;
+  boost::optional<double> m_extremeN20YearsMaxDryBulb;
+  boost::optional<double> m_extremeN50YearsMinDryBulb;
+  boost::optional<double> m_extremeN50YearsMaxDryBulb;
 };
 
 /** EpwFile parses a weather file in EPW format.  Later it may provide
