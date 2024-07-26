@@ -174,7 +174,8 @@ TEST(Filetypes, EpwFile_Design) {
     EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
     EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
     EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
-    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99());
+    ASSERT_TRUE(designs[0].heatingDryBulb99());
+    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99().get());
     EXPECT_EQ(-21.6, designs[0].heatingHumidificationDewPoint99pt6());
     EXPECT_EQ(0.7, designs[0].heatingHumidificationHumidityRatio99pt6());
     EXPECT_EQ(-10.9, designs[0].heatingHumidificationMeanCoincidentDryBulb99pt6());
@@ -288,7 +289,8 @@ TEST(Filetypes, EpwFile_Design_DoubleRead) {
     EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
     EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
     EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
-    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99());
+    ASSERT_TRUE(designs[0].heatingDryBulb99());
+    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99().get());
     EXPECT_EQ(-21.6, designs[0].heatingHumidificationDewPoint99pt6());
     EXPECT_EQ(0.7, designs[0].heatingHumidificationHumidityRatio99pt6());
     EXPECT_EQ(-10.9, designs[0].heatingHumidificationMeanCoincidentDryBulb99pt6());
@@ -387,7 +389,8 @@ TEST(Filetypes, EpwFile_Data_DoubleRead) {
     EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
     EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
     EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
-    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99());
+    ASSERT_TRUE(designs[0].heatingDryBulb99());
+    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99().get());
     EXPECT_EQ(-21.6, designs[0].heatingHumidificationDewPoint99pt6());
     EXPECT_EQ(0.7, designs[0].heatingHumidificationHumidityRatio99pt6());
     EXPECT_EQ(-10.9, designs[0].heatingHumidificationMeanCoincidentDryBulb99pt6());
@@ -497,7 +500,7 @@ TEST(Filetypes, EpwFile_IncompleteDesign) {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3_IncompleteDesign.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ("ECC55BA2", epwFile.checksum());
     EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
     EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
     EXPECT_EQ("CO", epwFile.stateProvinceRegion());
@@ -515,14 +518,15 @@ TEST(Filetypes, EpwFile_IncompleteDesign) {
     // Up to here, everything should be the same as the first test. Now ask for the design conditions
     std::vector<EpwDesignCondition> designs = epwFile.designConditions();
     EXPECT_EQ(1, designs.size());
-    EXPECT_EQ("Climate Design Data 2009 ASHRAE Handbook", designs[0].titleOfDesignCondition());
+    EXPECT_EQ("Climate Design Data 2013 ASHRAE Handbook", designs[0].titleOfDesignCondition());
     EXPECT_EQ(12, designs[0].heatingColdestMonth());
     EXPECT_EQ(-18.8, designs[0].heatingDryBulb99pt6());
     EXPECT_EQ(-18.8, designs[0].getFieldByName("Heating Dry Bulb Temperature 99.6%").get());
     EXPECT_EQ(-18.8, designs[0].getField(EpwDesignField("Heating Dry Bulb Temperature 99.6%")).get());
     EXPECT_EQ("C", designs[0].getUnitsByName("Heating Dry Bulb Temperature 99.6%").get());
     EXPECT_EQ("C", designs[0].getUnits(EpwDesignField("Heating Dry Bulb Temperature 99.6%")));
-    EXPECT_EQ(-15.5, designs[0].heatingDryBulb99());
+    ASSERT_FALSE(designs[0].heatingDryBulb99());
+    //EXPECT_EQ(-15.5, designs[0].heatingDryBulb99().get());
     EXPECT_EQ(-21.6, designs[0].heatingHumidificationDewPoint99pt6());
     EXPECT_EQ(0.7, designs[0].heatingHumidificationHumidityRatio99pt6());
     EXPECT_EQ(-10.9, designs[0].heatingHumidificationMeanCoincidentDryBulb99pt6());

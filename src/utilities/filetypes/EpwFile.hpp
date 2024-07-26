@@ -525,7 +525,7 @@ class UTILITIES_API EpwDesignCondition
   /** Returns the heating dry bulb temperature 99.6% in degrees C*/
   double heatingDryBulb99pt6() const;
   /** Returns the heating dry bulb temperature 99% in degrees C*/
-  double heatingDryBulb99() const;
+  boost::optional<double> heatingDryBulb99() const;
   /** Returns the heating humidification dew point temperature 99.6% in degrees C*/
   double heatingHumidificationDewPoint99pt6() const;
   /** Returns the heating humidification humidity ratio 99.6% in g of moisture per kg of dry air */
@@ -780,7 +780,7 @@ class UTILITIES_API EpwDesignCondition
   std::string m_titleOfDesignCondition;
   int m_heatingColdestMonth;
   double m_heatingDryBulb99pt6;
-  double m_heatingDryBulb99;
+  boost::optional<double> m_heatingDryBulb99;
   double m_heatingHumidificationDewPoint99pt6;
   double m_heatingHumidificationHumidityRatio99pt6;
   double m_heatingHumidificationMeanCoincidentDryBulb99pt6;

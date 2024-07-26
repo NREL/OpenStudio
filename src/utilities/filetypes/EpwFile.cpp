@@ -2668,8 +2668,8 @@ double EpwDesignCondition::heatingDryBulb99pt6() const {
   return m_heatingDryBulb99pt6;
 }
 
-double EpwDesignCondition::heatingDryBulb99() const {
-  return m_heatingDryBulb99;
+boost::optional<double> EpwDesignCondition::heatingDryBulb99() const {
+  return boost::optional<double>(m_heatingDryBulb99);
 }
 
 double EpwDesignCondition::heatingHumidificationDewPoint99pt6() const {
@@ -2941,7 +2941,11 @@ void EpwDesignCondition::setHeatingDryBulb99pt6(double heatingDryBulb99pt6) {
 bool EpwDesignCondition::setHeatingDryBulb99(const std::string& heatingDryBulb99) {
   bool ok;
   double value = stringToDouble(heatingDryBulb99, &ok);
-  setHeatingDryBulb99(value);
+  if (!ok) {
+    m_heatingDryBulb99 = boost::none;
+  } else {
+    setHeatingDryBulb99(value);
+  }
   return ok;
 }
 
