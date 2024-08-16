@@ -24,5 +24,6 @@
 %import <utilities/UtilitiesIdf.i>
 %import <utilities/UtilitiesFileTypes.i>
 %import <utilities/UtilitiesXML.i>
+%import <utilities/UtilitiesAlfalfa.i>
 
 #endif // UTILITIES_UTILITIES_I

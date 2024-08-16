@@ -37,6 +37,12 @@
   // Avoid triggering a SWIG warning: 'print' is a python keyword
   %rename(toString) openstudio::measure::OSArgument::print;
   %rename(toString) openstudio::measure::OSOutput::print;
+  %rename(_get_alfalfa) openstudio::measure::OSRunner::alfalfa;
+  %extend openstudio::measure::OSRunner {
+    %pythoncode %{
+        alfalfa = property(_get_alfalfa)
+    %}
+  };
 #endif
 
 %{

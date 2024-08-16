@@ -8,6 +8,7 @@
 #include "measure/ModelMeasure.hpp"
 #include "measure/OSArgument.hpp"
 #include "measure/OSMeasure.hpp"
+#include "measure/OSRunner.hpp"
 #include "model/Model.hpp"
 #include "scriptengine/ScriptEngine.hpp"
 
@@ -133,4 +134,39 @@ RecursionError: maximum recursion depth exceeded)",
     std::string error = e.what();
     EXPECT_EQ(expected_exception, error);
   }
+}
+
+TEST_F(PythonEngineFixture, AlfalfaMeasure) {
+  const std::string classAndDirName = "AlfalfaMeasure";
+
+  const auto scriptPath = getScriptPath(classAndDirName);
+  auto measureScriptObject = (*thisEngine)->loadMeasure(scriptPath, classAndDirName);
+  auto* measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+
+  ASSERT_EQ(measurePtr->name(), "Alfalfa Measure");
+
+  std::string workflow_json = "\
+  {\
+    \"seed\": \"../seed.osm\",\
+    \"weather_file\": \"../weather.epw\",\
+    \"steps\": [\
+      {\
+        \"arguments\": {},\
+        \"description\": \"The method attempts to build an alfalfa json in the measure\",\
+        \"measure_dir_name\": \"AlfalfaMeasure\",\
+        \"modeler_description\": \"The method attempts to build an alfalfa json in the measure\",\
+        \"name\": \"AlfalfaMeasure\"\
+      }\
+    ]\
+  }";
+
+
+
+  openstudio::model::Model model;
+  openstudio::WorkflowJSON workflow = *openstudio::WorkflowJSON::load(workflow_json);
+  openstudio::measure::OSRunner runner(workflow);
+
+  openstudio::measure::OSArgumentMap arguments;
+  measurePtr->run(model, runner, arguments);
+
 }
