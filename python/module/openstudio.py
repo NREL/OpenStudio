@@ -28,6 +28,7 @@ if __package__ or "." in __name__:
     from . import openstudioosversion as osversion
     from . import openstudioradiance as radiance
     from . import openstudiosdd as sdd
+    from . import openstudioutilitiesalfalfa as alfalfa
     from .openstudioutilities import *
     from .openstudioutilitiesbcl import *
     from .openstudioutilitiescore import *
@@ -52,6 +53,7 @@ else:
     import openstudioisomodel as isomodel
     import openstudiomeasure as measure
     import openstudiomodel as model
+    import openstudioutilitiesalfalfa as alfalfa
 
     # These are already included in the `model` namespace via Model.i
     # import openstudiomodelcore as modelcore
