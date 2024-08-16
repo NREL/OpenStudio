@@ -6,6 +6,10 @@
 #include "../ReverseTranslator.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -123,9 +127,17 @@ namespace energyplus {
       }
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::HumidistatControlZoneName);
-    if (s) {
-      LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() << " references a high humidity control zone, which is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::HumidistatControlZoneName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = _mo->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            modelObject.setHumidistatControlZone(z_.get());
+          }
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Humidistat Control Zone Name'");
+        }
+      }
     }
 
     value = workspaceObject.getDouble(Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);

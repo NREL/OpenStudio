@@ -9,6 +9,7 @@
 #include "../../model/ControllerMechanicalVentilation.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/ThermalZone.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -149,6 +150,11 @@ namespace energyplus {
       } else {
         idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
       }
+    }
+
+    // HumidistatControlZoneName
+    if (auto zone_ = modelObject.humidistatControlZone()) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::HumidistatControlZoneName, zone_->nameString());
     }
 
     // HighHumidityOutdoorAirFlowRatio
