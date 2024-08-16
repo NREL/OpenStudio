@@ -77,7 +77,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   // Economizer Operation Staging
   EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
   EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
-  
+
   // Humidistat Control Zone
   ThermalZone humidistatControlZone(m);
   EXPECT_TRUE(controller.setHumidistatControlZone(humidistatControlZone));
