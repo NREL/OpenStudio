@@ -14,26 +14,26 @@ namespace openstudio {
 namespace alfalfa {
   class AlfalfaPoint
   {
-    public:
-      AlfalfaPoint();
+   public:
+    AlfalfaPoint();
 
-      AlfalfaPoint(std::string display_name);
+    AlfalfaPoint(std::string display_name);
 
-      AlfalfaPoint(std::string display_name, std::string id);
+    AlfalfaPoint(std::string display_name, std::string id);
 
-      void setInput(AlfalfaComponent &component);
+    void setInput(AlfalfaComponent& component);
 
-      void setOutput(AlfalfaComponent &component);
+    void setOutput(AlfalfaComponent& component);
 
-      Json::Value toJSON() const;
+    Json::Value toJSON() const;
 
-      std::string id() const;
+    std::string id() const;
 
-    private:
-      AlfalfaComponent *m_input, *m_output;
-      std::string m_display_name, m_id;
+   private:
+    AlfalfaComponent *m_input, *m_output;
+    std::string m_display_name, m_id;
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

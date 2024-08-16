@@ -3,8 +3,7 @@
 namespace openstudio {
 namespace alfalfa {
   AlfalfaOutputVariable::AlfalfaOutputVariable(std::string variable_name, std::string variable_key)
-    : m_variable_name(variable_name),
-      m_variable_key(variable_key) {}
+    : m_variable_name(variable_name), m_variable_key(variable_key) {}
 
   ComponentCapabilities AlfalfaOutputVariable::capabilities() const {
     return ComponentCapabilities::Output;
@@ -20,5 +19,5 @@ namespace alfalfa {
   std::string AlfalfaOutputVariable::type() const {
     return "OutputVariable";
   }
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio

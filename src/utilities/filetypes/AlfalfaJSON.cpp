@@ -32,7 +32,8 @@ namespace alfalfa {
     return point;
   }
 
-  AlfalfaPoint AlfalfaJSON::addActuator(const std::string display_name, const std::string component_type, const std::string control_type, const std::string actuator_key) {
+  AlfalfaPoint AlfalfaJSON::addActuator(const std::string display_name, const std::string component_type, const std::string control_type,
+                                        const std::string actuator_key) {
     AlfalfaActuator component(component_type, control_type, actuator_key);
     AlfalfaPoint point(display_name);
     point.setOutput(component);
@@ -58,11 +59,11 @@ namespace alfalfa {
     return point;
   }
 
-  void AlfalfaJSON::addPoint(const AlfalfaPoint &point) {
+  void AlfalfaJSON::addPoint(const AlfalfaPoint& point) {
     m_points.push_back(point);
   }
 
-  bool AlfalfaJSON::saveAs(const openstudio::path &p) {
+  bool AlfalfaJSON::saveAs(const openstudio::path& p) {
     m_JSONPath = p;
     return save();
   }
@@ -70,7 +71,7 @@ namespace alfalfa {
   bool AlfalfaJSON::save() const {
     if (makeParentFolder(m_JSONPath)) {
       Json::Value root;
-      for( AlfalfaPoint point : m_points) {
+      for (AlfalfaPoint point : m_points) {
         root[point.id()] = point.toJSON();
       }
       std::ofstream outFile(openstudio::toSystemFilename(m_JSONPath));
@@ -85,7 +86,6 @@ namespace alfalfa {
           return false;
         }
       }
-
     }
     LOG(Error, "Unable to write file to path '" << toString(m_JSONPath) << "', because parent directory "
                                                 << "could not be created.");
@@ -93,6 +93,5 @@ namespace alfalfa {
     return false;
   }
 
-
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio

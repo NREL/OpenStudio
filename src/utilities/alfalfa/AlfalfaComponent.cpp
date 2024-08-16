@@ -1,7 +1,5 @@
 #include "AlfalfaComponent.hpp"
 
 namespace openstudio {
-namespace alfalfa {
-
-}
-}
+namespace alfalfa {}
+}  // namespace openstudio

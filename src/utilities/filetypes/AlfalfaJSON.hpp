@@ -18,43 +18,42 @@ namespace alfalfa {
 
   class AlfalfaJSON
   {
-    public:
-      /** @name Constructors and Destructors */
+   public:
+    /** @name Constructors and Destructors */
 
-      AlfalfaJSON();
+    AlfalfaJSON();
 
-      AlfalfaJSON(const std::string& s);
+    AlfalfaJSON(const std::string& s);
 
-      AlfalfaJSON(const openstudio::path& p);
+    AlfalfaJSON(const openstudio::path& p);
 
-      bool save() const;
+    bool save() const;
 
-      bool saveAs(const openstudio::path& p);
+    bool saveAs(const openstudio::path& p);
 
-      AlfalfaPoint addConstant(const std::string display_name, const float value);
+    AlfalfaPoint addConstant(const std::string display_name, const float value);
 
-      AlfalfaPoint addMeter(const std::string display_name, const std::string meter_name);
+    AlfalfaPoint addMeter(const std::string display_name, const std::string meter_name);
 
-      AlfalfaPoint addActuator(const std::string display_name, const std::string component_type, const std::string control_type, const std::string actuator_key);
+    AlfalfaPoint addActuator(const std::string display_name, const std::string component_type, const std::string control_type,
+                             const std::string actuator_key);
 
-      AlfalfaPoint addOutputVariable(const std::string display_name, const std::string variable_name, const std::string variable_key);
+    AlfalfaPoint addOutputVariable(const std::string display_name, const std::string variable_name, const std::string variable_key);
 
-      AlfalfaPoint addGlobalVariable(const std::string display_name, const std::string variable_name);
+    AlfalfaPoint addGlobalVariable(const std::string display_name, const std::string variable_name);
 
-      void addPoint(const AlfalfaPoint &point);
+    void addPoint(const AlfalfaPoint& point);
 
-    private:
+   private:
+    openstudio::path m_JSONPath;
 
-      openstudio::path m_JSONPath;
+    std::vector<AlfalfaPoint> m_points;
 
-      std::vector<AlfalfaPoint> m_points;
-
-      // configure logging
-      REGISTER_LOGGER("openstudio.AlfalfaJSON");
-
+    // configure logging
+    REGISTER_LOGGER("openstudio.AlfalfaJSON");
   };
 
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

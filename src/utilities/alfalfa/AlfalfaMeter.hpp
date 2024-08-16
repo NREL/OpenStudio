@@ -6,20 +6,21 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaMeter : public AlfalfaComponent {
-    public:
-      AlfalfaMeter(std::string meter_name);
+  class AlfalfaMeter : public AlfalfaComponent
+  {
+   public:
+    AlfalfaMeter(std::string meter_name);
 
-      ComponentCapabilities capabilities() const;
+    ComponentCapabilities capabilities() const;
 
-      Json::Value toJSON() const;
+    Json::Value toJSON() const;
 
-      std::string type() const;
+    std::string type() const;
 
-    private:
-      std::string m_meter_name;
+   private:
+    std::string m_meter_name;
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif
