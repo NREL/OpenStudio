@@ -15,6 +15,7 @@
 #include "../AirflowNetworkCrack_Impl.hpp"
 #include "../AirflowNetworkReferenceCrackConditions.hpp"
 #include "../AirflowNetworkReferenceCrackConditions_Impl.hpp"
+#include "../ThermalZone.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -76,4 +77,10 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   // Economizer Operation Staging
   EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
   EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
+  
+  // Humidistat Control Zone
+  ThermalZone humidistatControlZone(m);
+  EXPECT_TRUE(controller.setHumidistatControlZone(humidistatControlZone));
+  ASSERT_TRUE(controller.humidistatControlZone());
+  EXPECT_EQ(humidistatControlZone, controller.humidistatControlZone().get());
 }

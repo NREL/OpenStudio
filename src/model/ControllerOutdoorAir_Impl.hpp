@@ -68,7 +68,7 @@ namespace model {
       boost::optional<double> getEconomizerMaximumLimitDewpointTemperature() const;
       bool setEconomizerMaximumLimitDewpointTemperature(boost::optional<double> value);
 
-      //QuadraticCurve getElectronicEnthalpyLimitCurve() const;
+      CurveQuadratic getElectronicEnthalpyLimitCurve() const;
       //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
 
       //get needs to return a boost optional double since "" is a valid input
@@ -100,8 +100,6 @@ namespace model {
 
       std::string economizerOperationStaging() const;
       bool setEconomizerOperationStaging(const std::string& v);
-
-      CurveQuadratic getElectronicEnthalpyLimitCurve() const;
 
       ScheduleCompact getMinimumOutdoorAirSchedule() const;
 
