@@ -6,20 +6,21 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaOutputVariable : public AlfalfaComponent {
-    public:
-      AlfalfaOutputVariable(std::string variable_name, std::string variable_key);
+  class AlfalfaOutputVariable : public AlfalfaComponent
+  {
+   public:
+    AlfalfaOutputVariable(std::string variable_name, std::string variable_key);
 
-      ComponentCapabilities capabilities() const;
+    ComponentCapabilities capabilities() const;
 
-      Json::Value toJSON() const;
+    Json::Value toJSON() const;
 
-      std::string type() const;
+    std::string type() const;
 
-    private:
-      std::string m_variable_name, m_variable_key;
+   private:
+    std::string m_variable_name, m_variable_key;
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

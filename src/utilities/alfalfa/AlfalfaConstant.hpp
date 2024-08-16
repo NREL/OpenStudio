@@ -6,20 +6,21 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaConstant : public AlfalfaComponent {
-    public:
-      AlfalfaConstant(float value);
+  class AlfalfaConstant : public AlfalfaComponent
+  {
+   public:
+    AlfalfaConstant(float value);
 
-      ComponentCapabilities capabilities() const;
+    ComponentCapabilities capabilities() const;
 
-      Json::Value toJSON() const;
+    Json::Value toJSON() const;
 
-      std::string type() const;
+    std::string type() const;
 
-    private:
-      float m_value;
+   private:
+    float m_value;
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

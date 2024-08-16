@@ -3,8 +3,7 @@
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaConstant::AlfalfaConstant(float value)
-    : m_value(value) {}
+  AlfalfaConstant::AlfalfaConstant(float value) : m_value(value) {}
 
   ComponentCapabilities AlfalfaConstant::capabilities() const {
     return ComponentCapabilities::Input | ComponentCapabilities::Output;
@@ -19,5 +18,5 @@ namespace alfalfa {
   std::string AlfalfaConstant::type() const {
     return "Constant";
   }
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio

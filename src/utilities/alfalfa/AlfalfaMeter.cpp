@@ -2,8 +2,7 @@
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaMeter::AlfalfaMeter(std::string meter_name)
-    : m_meter_name(meter_name) {}
+  AlfalfaMeter::AlfalfaMeter(std::string meter_name) : m_meter_name(meter_name) {}
 
   ComponentCapabilities AlfalfaMeter::capabilities() const {
     return ComponentCapabilities::Output;
@@ -18,5 +17,5 @@ namespace alfalfa {
   std::string AlfalfaMeter::type() const {
     return "Meter";
   }
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
