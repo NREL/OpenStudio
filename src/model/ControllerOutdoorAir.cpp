@@ -11,8 +11,8 @@
 #include "ControllerMechanicalVentilation_Impl.hpp"
 #include "ScheduleCompact.hpp"
 #include "ScheduleCompact_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "AirflowNetworkOutdoorAirflow.hpp"
 #include "AirflowNetworkOutdoorAirflow_Impl.hpp"
 #include "AirflowNetworkCrack.hpp"
@@ -99,15 +99,29 @@ namespace model {
       return result;
     }
 
-    CurveQuadratic ControllerOutdoorAir_Impl::getElectronicEnthalpyLimitCurve() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
-        OptionalCurveQuadratic curveQuadratic = wo->optionalCast<CurveQuadratic>();
-        return *curveQuadratic;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve electronic enthalpy limit curve")
-        throw;
+
+    boost::optional<Curve> ControllerOutdoorAir_Impl::getElectronicEnthalpyLimitCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
+    }
+    
+    boost::optional<Curve> ControllerOutdoorAir_Impl::electronicEnthalpyLimitCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
+    }
+    
+    bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, curve.get().handle());
+      } else {
+        resetElectronicEnthalpyLimitCurve();
+        result = true;
       }
+      return result;
+    }
+    
+    void ControllerOutdoorAir_Impl::resetElectronicEnthalpyLimitCurve(){
+      bool result = setString(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
+      OS_ASSERT(result);
     }
 
     ScheduleCompact ControllerOutdoorAir_Impl::getMinimumOutdoorAirSchedule() const {
@@ -640,6 +654,22 @@ namespace model {
 
   CurveQuadratic ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
+  }
+
+  boost::optional<Curve> ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
+  }
+  
+  boost::optional<Curve> ControllerOutdoorAir::electronicEnthalpyLimitCurve() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->electronicEnthalpyLimitCurve();
+  }
+  
+  bool ControllerOutdoorAir::setElectronicEnthalpyLimitCurve(const Curve& curve) {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setElectronicEnthalpyLimitCurve(curve);
+  }
+  
+  void ControllerOutdoorAir::resetElectronicEnthalpyLimitCurve() {
+    getImpl<detail::ControllerOutdoorAir_Impl>()->resetElectronicEnthalpyLimitCurve();
   }
 
   ScheduleCompact ControllerOutdoorAir::getMinimumOutdoorAirSchedule() const {

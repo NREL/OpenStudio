@@ -11,7 +11,7 @@
 namespace openstudio {
 namespace model {
 
-  class CurveQuadratic;
+  class Curve;
   class ScheduleCompact;
   class AirLoopHVACOutdoorAirSystem;
   class ControllerMechanicalVentilation;
@@ -68,8 +68,10 @@ namespace model {
       boost::optional<double> getEconomizerMaximumLimitDewpointTemperature() const;
       bool setEconomizerMaximumLimitDewpointTemperature(boost::optional<double> value);
 
-      CurveQuadratic getElectronicEnthalpyLimitCurve() const;
-      //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
+      boost::optional<Curve> getElectronicEnthalpyLimitCurve() const;
+      boost::optional<Curve> electronicEnthalpyLimitCurve() const;
+      bool setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve);
+      void resetElectronicEnthalpyLimitCurve();
 
       //get needs to return a boost optional double since "" is a valid input
       boost::optional<double> getEconomizerMinimumLimitDryBulbTemperature() const;

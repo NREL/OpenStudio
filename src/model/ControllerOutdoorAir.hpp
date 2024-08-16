@@ -19,7 +19,7 @@ namespace model {
 
   }  // namespace detail
 
-  class CurveQuadratic;
+  class Curve;
   class ScheduleCompact;
   class ControllerMechanicalVentilation;
   class AirLoopHVACOutdoorAirSystem;
@@ -91,8 +91,10 @@ namespace model {
     bool setEconomizerMaximumLimitDewpointTemperature(double value);
     void resetEconomizerMaximumLimitDewpointTemperature();
 
-    //QuadraticCurve getElectronicEnthalpyLimitCurve() const;
-    //bool setElectronicEnthalpyLimitCurve(QuadraticCurve c);
+    boost::optional<Curve> getElectronicEnthalpyLimitCurve() const;
+    boost::optional<Curve> electronicEnthalpyLimitCurve() const;
+    bool setElectronicEnthalpyLimitCurve(const Curve& curve);
+    void resetElectronicEnthalpyLimitCurve();
 
     //get needs to return a boost optional double since "" is a valid input
     boost::optional<double> getEconomizerMinimumLimitDryBulbTemperature() const;
@@ -150,15 +152,11 @@ namespace model {
     explicit ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
 
    private:
-    CurveQuadratic getElectronicEnthalpyLimitCurve() const;
-
     ScheduleCompact getMinimumOutdoorAirSchedule() const;
 
     ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
 
     ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
-
-    //Controller:MechanicalVentilation getMechanicalVentilationController() const;
 
     ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
 
