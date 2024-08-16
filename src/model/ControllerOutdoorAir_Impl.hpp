@@ -16,6 +16,7 @@ namespace model {
   class AirLoopHVACOutdoorAirSystem;
   class ControllerMechanicalVentilation;
   class AirflowNetworkOutdoorAirflow;
+  class ThermalZone;
 
   namespace detail {
 
@@ -83,8 +84,10 @@ namespace model {
       boost::optional<bool> getHighHumidityControl() const;
       bool setHighHumidityControl(bool val);
 
-      //Zone getHumidistatControlZone() const;
-      //bool setHumidistatControlZone(Zone z)
+      boost::optional<ThermalZone> getHumidistatControlZone() const;
+      boost::optional<ThermalZone> humidistatControlZone() const;
+      bool setHumidistatControlZone(const boost::optional<ThermalZone>& thermalZone);
+      void resetHumidistatControlZone();
 
       OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
       bool setHighHumidityOutdoorAirFlowRatio(double v);

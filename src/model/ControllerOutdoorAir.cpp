@@ -17,6 +17,8 @@
 #include "AirflowNetworkOutdoorAirflow_Impl.hpp"
 #include "AirflowNetworkCrack.hpp"
 #include "AirflowNetworkCrack_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -335,6 +337,30 @@ namespace model {
       } else {
         return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
       }
+    }
+
+    boost::optional<ThermalZone> ControllerOutdoorAir_Impl::getHumidistatControlZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
+    }
+
+    boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
+    }
+
+    bool ControllerOutdoorAir_Impl::setHumidistatControlZone(const boost::optional<ThermalZone>& thermalZone) {
+      bool result(false);
+      if (thermalZone) {
+        result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.get().handle());
+      } else {
+        resetHumidistatControlZone();
+        result = true;
+      }
+      return result;
+    }
+
+    void ControllerOutdoorAir_Impl::resetHumidistatControlZone() {
+      bool result = setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
+      OS_ASSERT(result);
     }
 
     OptionalDouble ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
@@ -726,6 +752,22 @@ namespace model {
 
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
+  }
+
+  boost::optional<ThermalZone> ControllerOutdoorAir::getHumidistatControlZone() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->getHumidistatControlZone();
+  }
+
+  boost::optional<ThermalZone> ControllerOutdoorAir::humidistatControlZone() const {
+    return getImpl<detail::PipeIndoor_Impl>()->humidistatControlZone();
+  }
+
+  bool ControllerOutdoorAir::setHumidistatControlZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::PipeIndoor_Impl>()->setHumidistatControlZone(thermalZone);
+  }
+
+  void ControllerOutdoorAir::resetHumidistatControlZone() {
+    getImpl<detail::PipeIndoor_Impl>()->resetHumidistatControlZone();
   }
 
   boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {

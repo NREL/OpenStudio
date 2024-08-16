@@ -25,6 +25,7 @@ namespace model {
   class AirLoopHVACOutdoorAirSystem;
   class AirflowNetworkOutdoorAirflow;
   class AirflowNetworkCrack;
+  class ThermalZone;
 
   class MODEL_API ControllerOutdoorAir : public ParentObject
   {
@@ -107,8 +108,10 @@ namespace model {
     boost::optional<bool> getHighHumidityControl() const;
     bool setHighHumidityControl(bool val);
 
-    //Zone getHumidistatControlZone() const;
-    //bool setHumidistatControlZone(Zone z)
+    boost::optional<ThermalZone> getHumidistatControlZone() const;
+    boost::optional<ThermalZone> humidistatControlZone() const;
+    bool setHumidistatControlZone(const ThermalZone& thermalZone);
+    void resetHumidistatControlZone();
 
     boost::optional<double> getHighHumidityOutdoorAirFlowRatio() const;
     bool setHighHumidityOutdoorAirFlowRatio(double v);
