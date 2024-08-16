@@ -10,6 +10,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Curve.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -122,7 +123,11 @@ namespace energyplus {
     }
     ///////////////////////////////////////////////////////////////////////////
     // Field: Electronic Enthalpy Limit Curve Name ////////////////////////////
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
+    if (boost::optional<model::Curve> curve = modelObject.electronicEnthalpyLimitCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, _curve->name().get());
+      }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Economizer Minimum Limit DryBulb Temperature ////////////////////
