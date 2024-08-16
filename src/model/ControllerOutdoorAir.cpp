@@ -99,15 +99,14 @@ namespace model {
       return result;
     }
 
-
     boost::optional<Curve> ControllerOutdoorAir_Impl::getElectronicEnthalpyLimitCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
     }
-    
+
     boost::optional<Curve> ControllerOutdoorAir_Impl::electronicEnthalpyLimitCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
     }
-    
+
     bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve) {
       bool result(false);
       if (curve) {
@@ -118,8 +117,8 @@ namespace model {
       }
       return result;
     }
-    
-    void ControllerOutdoorAir_Impl::resetElectronicEnthalpyLimitCurve(){
+
+    void ControllerOutdoorAir_Impl::resetElectronicEnthalpyLimitCurve() {
       bool result = setString(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
       OS_ASSERT(result);
     }
@@ -659,15 +658,15 @@ namespace model {
   boost::optional<Curve> ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
   }
-  
+
   boost::optional<Curve> ControllerOutdoorAir::electronicEnthalpyLimitCurve() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->electronicEnthalpyLimitCurve();
   }
-  
+
   bool ControllerOutdoorAir::setElectronicEnthalpyLimitCurve(const Curve& curve) {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setElectronicEnthalpyLimitCurve(curve);
   }
-  
+
   void ControllerOutdoorAir::resetElectronicEnthalpyLimitCurve() {
     getImpl<detail::ControllerOutdoorAir_Impl>()->resetElectronicEnthalpyLimitCurve();
   }
