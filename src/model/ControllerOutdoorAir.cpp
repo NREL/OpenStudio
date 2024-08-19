@@ -344,14 +344,6 @@ namespace model {
       return retVal;
     }
 
-    bool ControllerOutdoorAir_Impl::setHighHumidityControl(bool val) {
-      if (val) {
-        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
-      } else {
-        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
-      }
-    }
-
     boost::optional<ThermalZone> ControllerOutdoorAir_Impl::getHumidistatControlZone() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
     }
@@ -364,24 +356,27 @@ namespace model {
       bool result(false);
       if (thermalZone) {
         result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.get().handle());
+        result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
       } else {
         resetHumidistatControlZone();
         result = true;
+        result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
       }
       return result;
     }
 
     void ControllerOutdoorAir_Impl::resetHumidistatControlZone() {
       bool result = setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
       OS_ASSERT(result);
     }
 
     OptionalDouble ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
       return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
     }
+
     bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v) {
       return setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, v);
-      ;
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
@@ -638,7 +633,7 @@ namespace model {
     setString(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, "");
     setString(OS_Controller_OutdoorAirFields::ControllerMechanicalVentilation, "");
     setString(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, "");
-    setHighHumidityControl(false);
+    setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
     setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
     setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, "");
     setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "");
@@ -776,7 +771,8 @@ namespace model {
   }
 
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
+    DEPRECATED_AT_MSG(3, 8, 0, "Use setHumidistatControlZone instead.");
+    return false;
   }
 
   boost::optional<ThermalZone> ControllerOutdoorAir::getHumidistatControlZone() const {

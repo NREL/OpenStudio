@@ -84,7 +84,6 @@ namespace model {
       bool setMinimumLimitType(const std::string& value);
 
       boost::optional<bool> getHighHumidityControl() const;
-      bool setHighHumidityControl(bool val);
 
       boost::optional<ThermalZone> getHumidistatControlZone() const;
       boost::optional<ThermalZone> humidistatControlZone() const;
@@ -102,14 +101,6 @@ namespace model {
 
       std::string economizerOperationStaging() const;
       bool setEconomizerOperationStaging(const std::string& v);
-
-      ScheduleCompact getMinimumOutdoorAirSchedule() const;
-
-      ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
-
-      ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
-
-      ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
 
       boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
@@ -133,18 +124,22 @@ namespace model {
 
       bool setControllerMechanicalVentilation(const ControllerMechanicalVentilation& controllerMechanicalVentilation);
 
+      ScheduleCompact getMinimumOutdoorAirSchedule() const;
       boost::optional<Schedule> minimumOutdoorAirSchedule() const;
       bool setMinimumOutdoorAirSchedule(Schedule& schedule);
       void resetMinimumOutdoorAirSchedule();
 
+      ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
       boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
       bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
       void resetMinimumFractionofOutdoorAirSchedule();
 
+      ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
       boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
       bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
       void resetMaximumFractionofOutdoorAirSchedule();
 
+      ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
       boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
       bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
       void resetTimeofDayEconomizerControlSchedule();
