@@ -11,6 +11,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Curve.hpp"
+#include "../../model/ZoneControlHumidistat.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -159,78 +160,84 @@ namespace energyplus {
 
     // HumidistatControlZoneName
     if (auto zone_ = modelObject.humidistatControlZone()) {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::HumidistatControlZoneName, zone_->nameString());
-    }
-
-    // HighHumidityOutdoorAirFlowRatio
-    d = modelObject.getHighHumidityOutdoorAirFlowRatio();
-    if (d) {
-      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, *d);
-    }
-
-    // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
-    ob = modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
-    if (ob) {
-      if (*ob) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
-      } else {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
+      if (boost::optional<ZoneControlHumidistat> humidistat = zone_->zoneControlHumidistat()) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HumidistatControlZoneName, zone_->nameString());
+        else {
+          LOG(Warn, modelObject.briefDescription() << " has a humidistat control zone " << zone_->nameString()
+                                                   << " without a zone control humidistat; humidistat control zone field will not be translated");
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
+        }
       }
-    }
 
-    // HeatRecoveryBypassControlType
-    s = modelObject.getHeatRecoveryBypassControlType();
-    if (s) {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::HeatRecoveryBypassControlType, *s);
-    }
-
-    // EconomizerOperationStaging
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerOperationStaging, modelObject.economizerOperationStaging());
-
-    // Controller Mechanical Ventilation
-    model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
-
-    boost::optional<IdfObject> controllerMechanicalVentilationIdf = translateAndMapModelObject(controllerMechanicalVentilation);
-    if (controllerMechanicalVentilationIdf) {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::MechanicalVentilationControllerName,
-                          controllerMechanicalVentilationIdf->name().get());
-    }
-
-    // MinimumOutdoorAirSchedule
-
-    if (boost::optional<Schedule> s = modelObject.minimumOutdoorAirSchedule()) {
-      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName, _s->name().get());
+      // HighHumidityOutdoorAirFlowRatio
+      d = modelObject.getHighHumidityOutdoorAirFlowRatio();
+      if (d) {
+        idfObject.setDouble(openstudio::Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, *d);
       }
-    }
 
-    // MinimumFractionofOutdoorAirSchedule
-
-    if (boost::optional<Schedule> s = modelObject.minimumFractionofOutdoorAirSchedule()) {
-      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName, _s->name().get());
+      // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
+      ob = modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
+      if (ob) {
+        if (*ob) {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
+        } else {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
+        }
       }
-    }
 
-    // MaximumFractionofOutdoorAirSchedule
-
-    if (boost::optional<Schedule> s = modelObject.maximumFractionofOutdoorAirSchedule()) {
-      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, _s->name().get());
+      // HeatRecoveryBypassControlType
+      s = modelObject.getHeatRecoveryBypassControlType();
+      if (s) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HeatRecoveryBypassControlType, *s);
       }
-    }
 
-    // TimeofDayEconomizerControlSchedule
+      // EconomizerOperationStaging
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerOperationStaging, modelObject.economizerOperationStaging());
 
-    if (boost::optional<Schedule> s = modelObject.timeofDayEconomizerControlSchedule()) {
-      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, _s->name().get());
+      // Controller Mechanical Ventilation
+      model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
+
+      boost::optional<IdfObject> controllerMechanicalVentilationIdf = translateAndMapModelObject(controllerMechanicalVentilation);
+      if (controllerMechanicalVentilationIdf) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::MechanicalVentilationControllerName,
+                            controllerMechanicalVentilationIdf->name().get());
       }
+
+      // MinimumOutdoorAirSchedule
+
+      if (boost::optional<Schedule> s = modelObject.minimumOutdoorAirSchedule()) {
+        if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName, _s->name().get());
+        }
+      }
+
+      // MinimumFractionofOutdoorAirSchedule
+
+      if (boost::optional<Schedule> s = modelObject.minimumFractionofOutdoorAirSchedule()) {
+        if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName, _s->name().get());
+        }
+      }
+
+      // MaximumFractionofOutdoorAirSchedule
+
+      if (boost::optional<Schedule> s = modelObject.maximumFractionofOutdoorAirSchedule()) {
+        if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, _s->name().get());
+        }
+      }
+
+      // TimeofDayEconomizerControlSchedule
+
+      if (boost::optional<Schedule> s = modelObject.timeofDayEconomizerControlSchedule()) {
+        if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+          idfObject.setString(openstudio::Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, _s->name().get());
+        }
+      }
+
+      return boost::optional<IdfObject>(idfObject);
     }
 
-    return boost::optional<IdfObject>(idfObject);
-  }
-
-}  // namespace energyplus
+  }  // namespace energyplus
 
 }  // namespace openstudio
