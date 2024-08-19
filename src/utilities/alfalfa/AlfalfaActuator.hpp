@@ -9,7 +9,7 @@ namespace alfalfa {
   class AlfalfaActuator : public AlfalfaComponent
   {
    public:
-    AlfalfaActuator(std::string component_type, std::string control_type, std::string actuator_key);
+    AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type);
 
     ComponentCapabilities capabilities() const;
 
@@ -18,7 +18,7 @@ namespace alfalfa {
     std::string type() const;
 
    private:
-    std::string m_component_type, m_control_type, m_actuator_key;
+    std::string m_component_name, m_component_type, m_control_type;
   };
 }  // namespace alfalfa
 }  // namespace openstudio

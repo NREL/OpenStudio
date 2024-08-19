@@ -9,7 +9,7 @@ namespace alfalfa {
   class AlfalfaGlobalVariable : public AlfalfaComponent
   {
    public:
-    AlfalfaGlobalVariable(std::string variable_name);
+    AlfalfaGlobalVariable(const std::string& variable_name);
 
     ComponentCapabilities capabilities() const;
 

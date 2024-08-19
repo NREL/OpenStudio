@@ -2,8 +2,8 @@
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaOutputVariable::AlfalfaOutputVariable(std::string variable_name, std::string variable_key)
-    : m_variable_name(variable_name), m_variable_key(variable_key) {}
+  AlfalfaOutputVariable::AlfalfaOutputVariable(const std::string& variable_key, const std::string& variable_name)
+    : m_variable_key(variable_key), m_variable_name(variable_name) {}
 
   ComponentCapabilities AlfalfaOutputVariable::capabilities() const {
     return ComponentCapabilities::Output;
@@ -11,8 +11,8 @@ namespace alfalfa {
 
   Json::Value AlfalfaOutputVariable::toJSON() const {
     Json::Value component;
-    component["variable_name"] = m_variable_name;
     component["variable_key"] = m_variable_key;
+    component["variable_name"] = m_variable_name;
     return component;
   }
 

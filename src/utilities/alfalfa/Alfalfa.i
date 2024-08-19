@@ -15,6 +15,7 @@
 %}
 
 %template(AlfalfaPointVector) std::vector<openstudio::alfalfa::AlfalfaPoint>;
+%template(OptionalAlfalfaPoint) boost::optional<openstudio::alfalfa::AlfalfaPoint>;
 
 %include <utilities/alfalfa/AlfalfaComponent.hpp>
 %include <utilities/alfalfa/AlfalfaConstant.hpp>
