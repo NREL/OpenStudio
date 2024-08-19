@@ -2,7 +2,7 @@
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaGlobalVariable::AlfalfaGlobalVariable(std::string variable_name) : m_variable_name(variable_name) {}
+  AlfalfaGlobalVariable::AlfalfaGlobalVariable(const std::string& variable_name) : m_variable_name(variable_name) {}
 
   ComponentCapabilities AlfalfaGlobalVariable::capabilities() const {
     return ComponentCapabilities::Output | ComponentCapabilities::Input;

@@ -7,6 +7,8 @@
 #define ALFALFA_POINT_HPP
 
 #include "AlfalfaComponent.hpp"
+#include "../core/Optional.hpp"
+
 #include <string>
 #include <json/json.h>
 
@@ -17,13 +19,21 @@ namespace alfalfa {
    public:
     AlfalfaPoint();
 
-    AlfalfaPoint(std::string display_name);
+    AlfalfaPoint(const std::string& display_name);
 
-    AlfalfaPoint(std::string display_name, std::string id);
+    AlfalfaPoint(const std::string& display_name, const std::string& id);
 
     void setInput(AlfalfaComponent& component);
 
+    boost::optional<AlfalfaComponent*> getInput();
+
     void setOutput(AlfalfaComponent& component);
+
+    boost::optional<AlfalfaComponent*> getOutput();
+
+    void setUnits(const std::string& units);
+
+    boost::optional<std::string> getUnits();
 
     Json::Value toJSON() const;
 
@@ -31,7 +41,7 @@ namespace alfalfa {
 
    private:
     AlfalfaComponent *m_input, *m_output;
-    std::string m_display_name, m_id;
+    std::string m_display_name, m_id, m_units;
   };
 }  // namespace alfalfa
 }  // namespace openstudio

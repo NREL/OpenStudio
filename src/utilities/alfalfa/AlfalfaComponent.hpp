@@ -25,7 +25,7 @@ namespace alfalfa {
     virtual std::string type() const = 0;
   };
 
-  inline ComponentCapabilities operator|(ComponentCapabilities a, ComponentCapabilities b) {
+  inline ComponentCapabilities operator|(const ComponentCapabilities& a, const ComponentCapabilities& b) {
     return static_cast<ComponentCapabilities>(static_cast<int>(a) | static_cast<int>(b));
   }
 }  // namespace alfalfa

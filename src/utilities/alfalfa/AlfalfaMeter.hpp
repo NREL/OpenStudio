@@ -9,7 +9,7 @@ namespace alfalfa {
   class AlfalfaMeter : public AlfalfaComponent
   {
    public:
-    AlfalfaMeter(std::string meter_name);
+    AlfalfaMeter(const std::string& meter_name);
 
     ComponentCapabilities capabilities() const;
 

@@ -4,16 +4,44 @@ namespace openstudio {
 namespace alfalfa {
   AlfalfaPoint::AlfalfaPoint() {}
 
-  AlfalfaPoint::AlfalfaPoint(std::string display_name) : m_display_name(display_name) {}
+  AlfalfaPoint::AlfalfaPoint(const std::string& display_name) : m_display_name(display_name) {}
 
-  AlfalfaPoint::AlfalfaPoint(std::string display_name, std::string id) : m_display_name(display_name), m_id(id) {}
+  AlfalfaPoint::AlfalfaPoint(const std::string& display_name, const std::string& id) : m_display_name(display_name), m_id(id) {}
 
   void AlfalfaPoint::setInput(AlfalfaComponent& component) {
     m_input = &component;
   }
 
+  boost::optional<AlfalfaComponent*> AlfalfaPoint::getInput() {
+    if (m_input) {
+      boost::optional<AlfalfaComponent*> result = m_input;
+      return result;
+    }
+    return boost::none;
+  }
+
   void AlfalfaPoint::setOutput(AlfalfaComponent& component) {
     m_output = &component;
+  }
+
+  boost::optional<AlfalfaComponent*> AlfalfaPoint::getOutput() {
+    if (m_output) {
+      boost::optional<AlfalfaComponent*> result = m_output;
+      return result;
+    }
+    return boost::none;
+  }
+
+  void AlfalfaPoint::setUnits(const std::string& units) {
+    m_units = units;
+  }
+
+  boost::optional<std::string> AlfalfaPoint::getUnits() {
+    if (m_units.length() != 0) {
+      boost::optional<std::string> result = m_units;
+      return result;
+    }
+    return boost::none;
   }
 
   std::string AlfalfaPoint::id() const {

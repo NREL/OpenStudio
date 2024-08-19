@@ -9,7 +9,7 @@ namespace alfalfa {
   class AlfalfaOutputVariable : public AlfalfaComponent
   {
    public:
-    AlfalfaOutputVariable(std::string variable_name, std::string variable_key);
+    AlfalfaOutputVariable(const std::string& variable_key, const std::string& variable_name);
 
     ComponentCapabilities capabilities() const;
 
@@ -18,7 +18,7 @@ namespace alfalfa {
     std::string type() const;
 
    private:
-    std::string m_variable_name, m_variable_key;
+    std::string m_variable_key, m_variable_name;
   };
 }  // namespace alfalfa
 }  // namespace openstudio
