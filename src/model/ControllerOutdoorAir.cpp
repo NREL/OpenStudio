@@ -651,10 +651,6 @@ namespace model {
 
   ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl) : ParentObject(std::move(impl)) {}
 
-  CurveQuadratic ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
-  }
-
   boost::optional<Curve> ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
   }
@@ -788,15 +784,15 @@ namespace model {
   }
 
   boost::optional<ThermalZone> ControllerOutdoorAir::humidistatControlZone() const {
-    return getImpl<detail::PipeIndoor_Impl>()->humidistatControlZone();
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->humidistatControlZone();
   }
 
   bool ControllerOutdoorAir::setHumidistatControlZone(const ThermalZone& thermalZone) {
-    return getImpl<detail::PipeIndoor_Impl>()->setHumidistatControlZone(thermalZone);
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setHumidistatControlZone(thermalZone);
   }
 
   void ControllerOutdoorAir::resetHumidistatControlZone() {
-    getImpl<detail::PipeIndoor_Impl>()->resetHumidistatControlZone();
+    getImpl<detail::ControllerOutdoorAir_Impl>()->resetHumidistatControlZone();
   }
 
   boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
