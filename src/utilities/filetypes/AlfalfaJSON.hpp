@@ -37,36 +37,29 @@ namespace alfalfa {
 
     bool saveAs(const openstudio::path& p);
 
-    AlfalfaPoint addConstant(const std::string& display_name, float value);
+    AlfalfaPoint addConstant(float value, const std::string& display_name);
 
-    AlfalfaPoint addMeter(const std::string& display_name, const std::string& meter_name);
+    AlfalfaPoint addMeter(const std::string& meter_name, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addMeter(const std::string& display_name, const openstudio::model::OutputMeter& output_meter);
+    boost::optional<AlfalfaPoint> addMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
 
-    AlfalfaPoint addActuator(const std::string& display_name, const std::string& component_type, const std::string& control_type,
-                             const std::string& actuator_key);
+    AlfalfaPoint addActuator(const std::string& component_type, const std::string& control_type, const std::string& actuator_key,
+                             const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addActuator(const std::string& display_name, const openstudio::model::EnergyManagementSystemActuator& actuator);
+    boost::optional<AlfalfaPoint> addActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
 
-    AlfalfaPoint addOutputVariable(const std::string& display_name, const std::string& variable_key, const std::string& variable_name);
+    AlfalfaPoint addOutputVariable(const std::string& variable_key, const std::string& variable_name,
+                                   const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addOutputVariable(const std::string& display_name, const openstudio::model::OutputVariable& output_variable);
+    boost::optional<AlfalfaPoint> addOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addOutputVariable(const openstudio::model::OutputVariable& output_variable);
+    AlfalfaPoint addGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addOutputVariable(const std::string& display_name,
-                                                    const openstudio::model::EnergyManagementSystemOutputVariable& output_variable);
-
-    boost::optional<AlfalfaPoint> addOutputVariable(const openstudio::model::EnergyManagementSystemOutputVariable& output_variable);
-
-    AlfalfaPoint addGlobalVariable(const std::string& display_name, const std::string& variable_name);
-
-    boost::optional<AlfalfaPoint> addGlobalVariable(const std::string& display_name,
-                                                    const openstudio::model::EnergyManagementSystemGlobalVariable& global_variable);
-
-    boost::optional<AlfalfaPoint> addGlobalVariable(const openstudio::model::EnergyManagementSystemGlobalVariable& global_variable);
+    boost::optional<AlfalfaPoint> addGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
 
     void addPoint(const AlfalfaPoint& point);
+
+    boost::optional<AlfalfaPoint> addPoint(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
 
    private:
     openstudio::path m_JSONPath;
