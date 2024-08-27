@@ -82,6 +82,10 @@ namespace model {
 
       bool isSourceSideReferenceFlowRateAutosized() const;
 
+      boost::optional<double> heatRecoveryReferenceFlowRate() const;
+
+      bool isHeatRecoveryReferenceFlowRateAutosized() const;
+
       boost::optional<double> referenceCapacity() const;
 
       bool isReferenceCapacityAutosized() const;
@@ -145,6 +149,10 @@ namespace model {
       bool setSourceSideReferenceFlowRate(double sourceSideReferenceFlowRate);
 
       void autosizeSourceSideReferenceFlowRate();
+
+      bool setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate);
+
+      void autosizeHeatRecoveryReferenceFlowRate();
 
       bool setReferenceCapacity(double referenceCapacity);
 
@@ -217,6 +225,8 @@ namespace model {
 
       boost::optional<double> autosizedSourceSideReferenceFlowRate() const;
 
+      boost::optional<double> autosizedHeatRecoveryReferenceFlowRate() const;
+
       boost::optional<double> autosizedReferenceCapacity() const;
 
       /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
@@ -234,6 +244,11 @@ namespace model {
       boost::optional<Node> loadSideWaterInletNode() const;
       // Convenience function to return the outletNode on the Load Side
       boost::optional<Node> loadSideWaterOutletNode() const;
+
+      // Convenience function to return the inletNode on the Heat Recovery
+      boost::optional<Node> heatRecoveryWaterInletNode() const;
+      // Convenience function to return the outletNode on the Heat Recovery
+      boost::optional<Node> heatRecoveryWaterOutletNode() const;
 
       //@}
      protected:

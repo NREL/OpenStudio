@@ -200,6 +200,19 @@ namespace model {
       return result;
     }
 
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryReferenceFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::isHeatRecoveryReferenceFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::referenceCapacity() const {
       return getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, true);
     }
@@ -301,6 +314,15 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool HeatPumpPlantLoopEIRCooling_Impl::setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, heatRecoveryReferenceFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::autosizeHeatRecoveryReferenceFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
     bool HeatPumpPlantLoopEIRCooling_Impl::setReferenceCapacity(double referenceCapacity) {
       return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ReferenceCapacity, referenceCapacity);
     }
@@ -390,6 +412,10 @@ namespace model {
       return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
     }
 
+    boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedHeatRecoveryReferenceFlowRate() const {
+      return getAutosizedValue("Design Size Heat Recovery Volume Flow Rate", "m3/s");
+    }
+
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedReferenceCapacity() const {
       return getAutosizedValue("Design Size Nominal Capacity", "W");
     }
@@ -397,6 +423,7 @@ namespace model {
     void HeatPumpPlantLoopEIRCooling_Impl::autosize() {
       autosizeLoadSideReferenceFlowRate();
       autosizeSourceSideReferenceFlowRate();
+      autosizeHeatRecoveryReferenceFlowRate();
       autosizeReferenceCapacity();
     }
 
@@ -410,6 +437,11 @@ namespace model {
       val = autosizedSourceSideReferenceFlowRate();
       if (val) {
         setSourceSideReferenceFlowRate(val.get());
+      }
+
+      val = autosizedHeatRecoveryReferenceFlowRate();
+      if (val) {
+        setHeatRecoveryReferenceFlowRate(val.get());
       }
 
       val = autosizedReferenceCapacity();
@@ -444,6 +476,7 @@ namespace model {
 
     autosizeLoadSideReferenceFlowRate();
     autosizeSourceSideReferenceFlowRate();
+    autosizeHeatRecoveryReferenceFlowRate();
     autosizeReferenceCapacity();
 
     bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
@@ -485,6 +518,7 @@ namespace model {
 
     autosizeLoadSideReferenceFlowRate();
     autosizeSourceSideReferenceFlowRate();
+    autosizeHeatRecoveryReferenceFlowRate();
     autosizeReferenceCapacity();
 
     // Note: The default HAS to be AirSource (since it's not connected to a plantLoop...)
@@ -580,6 +614,14 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->isSourceSideReferenceFlowRateAutosized();
   }
 
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::heatRecoveryReferenceFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryReferenceFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::isHeatRecoveryReferenceFlowRateAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->isHeatRecoveryReferenceFlowRateAutosized();
+  }
+
   boost::optional<double> HeatPumpPlantLoopEIRCooling::referenceCapacity() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->referenceCapacity();
   }
@@ -660,6 +702,14 @@ namespace model {
     getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizeSourceSideReferenceFlowRate();
   }
 
+  bool HeatPumpPlantLoopEIRCooling::setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setHeatRecoveryReferenceFlowRate(heatRecoveryReferenceFlowRate);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::autosizeHeatRecoveryReferenceFlowRate() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizeHeatRecoveryReferenceFlowRate();
+  }
+
   bool HeatPumpPlantLoopEIRCooling::setReferenceCapacity(double referenceCapacity) {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setReferenceCapacity(referenceCapacity);
   }
@@ -735,6 +785,10 @@ namespace model {
 
   boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedSourceSideReferenceFlowRate() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedSourceSideReferenceFlowRate();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedHeatRecoveryReferenceFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->autosizedHeatRecoveryReferenceFlowRate();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedReferenceCapacity() const {
