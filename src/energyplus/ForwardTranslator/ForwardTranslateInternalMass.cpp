@@ -115,6 +115,7 @@ namespace energyplus {
 
         // Even if we want to bind to a Space Name, we need to write the Zone Name as it's a required field
         // cf https://github.com/NREL/EnergyPlus/issues/9141
+        // As of E+ v24.2, Zone Name is ignored when Space Name is specified
         boost::optional<ThermalZone> thermalZone = space.thermalZone();
         if (thermalZone) {
           idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->nameString());

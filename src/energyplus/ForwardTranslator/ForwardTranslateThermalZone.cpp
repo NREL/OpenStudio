@@ -683,7 +683,7 @@ namespace energyplus {
       };
 
       auto illuminanceMapObject = translateIlluminanceMap(illuminanceMap.get());
-      illuminanceMapObject.setString(Output_IlluminanceMapFields::ZoneName, tzName);
+      illuminanceMapObject.setString(Output_IlluminanceMapFields::ZoneorSpaceName, tzName);
     }
 
     // TODO: this is definitely shared between both paths
