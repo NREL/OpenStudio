@@ -4221,16 +4221,16 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_OutputControlFiles) {
   ASSERT_EQ(1u, outputcontrol_files.size());
   WorkspaceObject outputcontrol_file = outputcontrol_files[0];
 
-  EXPECT_TRUE("No", outputcontrol_file.getString(1).get());  // Output CSV
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(2).get());  // Output MTR
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(3).get());  // Output ESO
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(4).get());  // Output EIO
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(5).get());  // Output Tabular
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(6).get());  // Output SQLite
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(7).get());  // Output JSON
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(8).get());  // Output AUDIT
-  EXPECT_TRUE("Yes", outputcontrol_file.getString(9).get());  // Output Space Sizing
-  EXPECT_TRUE("No", outputcontrol_file.getString(10).get());  // Output Zone Sizing
+  EXPECT_TRUE("No", outputcontrol_file.getString(1).get());    // Output CSV
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(2).get());   // Output MTR
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(3).get());   // Output ESO
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(4).get());   // Output EIO
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(5).get());   // Output Tabular
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(6).get());   // Output SQLite
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(7).get());   // Output JSON
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(8).get());   // Output AUDIT
+  EXPECT_TRUE("Yes", outputcontrol_file.getString(9).get());   // Output Space Sizing
+  EXPECT_TRUE("No", outputcontrol_file.getString(10).get());   // Output Zone Sizing
   EXPECT_TRUE("Yes", outputcontrol_file.getString(11).get());  // Output System Sizing
   EXPECT_TRUE("Yes", outputcontrol_file.getString(12).get());  // Output DXF
   EXPECT_TRUE("Yes", outputcontrol_file.getString(13).get());  // Output BND
