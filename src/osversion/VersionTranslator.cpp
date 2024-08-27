@@ -9208,7 +9208,37 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      ss << object;
+      if ((iddname == "OS:HeatPump:PlantLoop:EIR:Heating") || (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling")) {
+
+        // 3 Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Heat Recovery Inlet Node Name * 7
+        // * Heat Recovery Outlet Node Name * 8
+        // * Heat Recovery Reference Flow Rate * 12
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 9) {
+              // no op
+            } else if (i < 12) {
+              newObject.setString(i - 2, value.get());
+            } else if (i < 13) {
+              // no op
+            } else {
+              newObject.setString(i - 3, value.get());
+            }
+          }
+        }
+        
+        // No-op
+      } else {
+        ss << object;
+      }
     }
 
     return ss.str();
