@@ -9204,15 +9204,15 @@ namespace osversion {
     ss << idf_3_8_0.header() << '\n' << '\n';
     IdfFile targetIdf(idd_3_9_0.iddFile());
     ss << targetIdf.versionObject().get();
-    
+
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
-      
+
       ss << object;
     }
-    
+
     return ss.str();
-    
+
   }  // end update_3_8_0_to_3_9_0
 
 }  // namespace osversion
