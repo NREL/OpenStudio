@@ -9208,6 +9208,33 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
+      if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
+        // 1 Field has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Output Space Sizing * 9
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(9, "Yes");
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+        // No-op
+      } else {
+        ss << object;
+      }
+
       ss << object;
     }
 
