@@ -9234,7 +9234,7 @@ namespace osversion {
             }
           }
         }
-        
+
         // No-op
       } else {
         ss << object;

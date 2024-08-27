@@ -4222,36 +4222,36 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_HeatPumpPlantLoopEIR) {
   WorkspaceObject hp_heating = hp_heatings[0];
 
   EXPECT_EQ("Heat Pump Plant Loop EIR Heating 1", hp_heating.getString(1).get());  // Name
-  EXPECT_TRUE(hp_heating.isEmpty(2));                          // Load Side Inlet Node Name
-  EXPECT_TRUE(hp_heating.isEmpty(3));                          // Load Side Outlet Node Name
-  EXPECT_EQ("AirSource", hp_heating.getString(4).get());         // Condenser Type
-  EXPECT_TRUE(hp_heating.isEmpty(5));                          // Source Side Inlet Node Name
-  EXPECT_TRUE(hp_heating.isEmpty(6));                          // Source Side Outlet Node Name
-  EXPECT_TRUE(hp_heating.isEmpty(7));                          // Heat Recovery Inlet Node Name
-  EXPECT_TRUE(hp_heating.isEmpty(8));                          // Heat Recovery Outlet Node Name
-  EXPECT_TRUE(hp_heating.isEmpty(9));                          // Companion Heat Pump Name
-  EXPECT_EQ("Autosize", hp_heating.getString(10).get());         // Load Side Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_heating.getString(11).get());         // Source Side Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_heating.getString(12).get());         // Heat Recovery Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_heating.getString(13).get());         // Reference Capacity {W}
-  EXPECT_EQ(7.5, hp_heating.getDouble(14).get());         // Reference Coefficient of Performance {W/W}
+  EXPECT_TRUE(hp_heating.isEmpty(2));                                              // Load Side Inlet Node Name
+  EXPECT_TRUE(hp_heating.isEmpty(3));                                              // Load Side Outlet Node Name
+  EXPECT_EQ("AirSource", hp_heating.getString(4).get());                           // Condenser Type
+  EXPECT_TRUE(hp_heating.isEmpty(5));                                              // Source Side Inlet Node Name
+  EXPECT_TRUE(hp_heating.isEmpty(6));                                              // Source Side Outlet Node Name
+  EXPECT_TRUE(hp_heating.isEmpty(7));                                              // Heat Recovery Inlet Node Name
+  EXPECT_TRUE(hp_heating.isEmpty(8));                                              // Heat Recovery Outlet Node Name
+  EXPECT_TRUE(hp_heating.isEmpty(9));                                              // Companion Heat Pump Name
+  EXPECT_EQ("Autosize", hp_heating.getString(10).get());                           // Load Side Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_heating.getString(11).get());                           // Source Side Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_heating.getString(12).get());                           // Heat Recovery Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_heating.getString(13).get());                           // Reference Capacity {W}
+  EXPECT_EQ(7.5, hp_heating.getDouble(14).get());                                  // Reference Coefficient of Performance {W/W}
 
   std::vector<WorkspaceObject> hp_coolings = model->getObjectsByType("OS:HeatPump:PlantLoop:EIR:Cooling");
   ASSERT_EQ(1u, hp_coolings.size());
   WorkspaceObject hp_cooling = hp_coolings[0];
 
   EXPECT_EQ("Heat Pump Plant Loop EIR Cooling 1", hp_cooling.getString(1).get());  // Name
-  EXPECT_TRUE(hp_cooling.isEmpty(2));                          // Load Side Inlet Node Name
-  EXPECT_TRUE(hp_cooling.isEmpty(3));                          // Load Side Outlet Node Name
-  EXPECT_EQ("AirSource", hp_cooling.getString(4).get());         // Condenser Type
-  EXPECT_TRUE(hp_cooling.isEmpty(5));                          // Source Side Inlet Node Name
-  EXPECT_TRUE(hp_cooling.isEmpty(6));                          // Source Side Outlet Node Name
-  EXPECT_TRUE(hp_cooling.isEmpty(7));                          // Heat Recovery Inlet Node Name
-  EXPECT_TRUE(hp_cooling.isEmpty(8));                          // Heat Recovery Outlet Node Name
-  EXPECT_TRUE(hp_cooling.isEmpty(9));                          // Companion Heat Pump Name
-  EXPECT_EQ("Autosize", hp_cooling.getString(10).get());         // Load Side Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_cooling.getString(11).get());         // Source Side Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_cooling.getString(12).get());         // Heat Recovery Reference Flow Rate {m3/s}
-  EXPECT_EQ("Autosize", hp_cooling.getString(13).get());         // Reference Capacity {W}
-  EXPECT_EQ(7.5, hp_cooling.getDouble(14).get());         // Reference Coefficient of Performance {W/W}
+  EXPECT_TRUE(hp_cooling.isEmpty(2));                                              // Load Side Inlet Node Name
+  EXPECT_TRUE(hp_cooling.isEmpty(3));                                              // Load Side Outlet Node Name
+  EXPECT_EQ("AirSource", hp_cooling.getString(4).get());                           // Condenser Type
+  EXPECT_TRUE(hp_cooling.isEmpty(5));                                              // Source Side Inlet Node Name
+  EXPECT_TRUE(hp_cooling.isEmpty(6));                                              // Source Side Outlet Node Name
+  EXPECT_TRUE(hp_cooling.isEmpty(7));                                              // Heat Recovery Inlet Node Name
+  EXPECT_TRUE(hp_cooling.isEmpty(8));                                              // Heat Recovery Outlet Node Name
+  EXPECT_TRUE(hp_cooling.isEmpty(9));                                              // Companion Heat Pump Name
+  EXPECT_EQ("Autosize", hp_cooling.getString(10).get());                           // Load Side Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_cooling.getString(11).get());                           // Source Side Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_cooling.getString(12).get());                           // Heat Recovery Reference Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", hp_cooling.getString(13).get());                           // Reference Capacity {W}
+  EXPECT_EQ(7.5, hp_cooling.getDouble(14).get());                                  // Reference Coefficient of Performance {W/W}
 }
