@@ -9208,7 +9208,7 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
+      if (iddname == "OS:OutputControl:Files") {
         // 1 Field has been added from 3.8.0 to 3.9.0:
         // ----------------------------------------------
         // * Output Space Sizing * 9
