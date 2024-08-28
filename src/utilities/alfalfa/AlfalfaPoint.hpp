@@ -14,6 +14,9 @@
 
 namespace openstudio {
 namespace alfalfa {
+  namespace detail {
+    class AlfalfaPoint_Impl;
+  }
   class AlfalfaPoint
   {
    public:
@@ -25,11 +28,11 @@ namespace alfalfa {
 
     void setInput(AlfalfaComponent& component);
 
-    boost::optional<AlfalfaComponent*> getInput();
+    boost::optional<AlfalfaComponent> getInput();
 
     void setOutput(AlfalfaComponent& component);
 
-    boost::optional<AlfalfaComponent*> getOutput();
+    boost::optional<AlfalfaComponent> getOutput();
 
     void setUnits(const std::string& units);
 
@@ -39,9 +42,10 @@ namespace alfalfa {
 
     std::string id() const;
 
+    bool operator==(const AlfalfaPoint& rhs) const;
+
    private:
-    AlfalfaComponent *m_input, *m_output;
-    std::string m_display_name, m_id, m_units;
+    std::shared_ptr<detail::AlfalfaPoint_Impl> m_impl;
   };
 }  // namespace alfalfa
 }  // namespace openstudio

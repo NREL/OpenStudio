@@ -15,14 +15,21 @@ namespace alfalfa {
   class AlfalfaComponent
   {
    public:
-    virtual ~AlfalfaComponent() = default;
+    AlfalfaComponent(std::string type, ComponentCapabilities capabilities);
 
     /** Returns capabilities of component */
-    virtual ComponentCapabilities capabilities() const = 0;
+    ComponentCapabilities capabilities() const;
 
-    virtual Json::Value toJSON() const = 0;
+    Json::Value toJSON() const;
 
-    virtual std::string type() const = 0;
+    std::string type() const;
+
+   protected:
+    std::string m_type;
+
+    Json::Value m_root;
+
+    ComponentCapabilities m_capabilities;
   };
 
   inline ComponentCapabilities operator|(const ComponentCapabilities& a, const ComponentCapabilities& b) {

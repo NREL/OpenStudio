@@ -21,6 +21,9 @@
 
 namespace openstudio {
 namespace alfalfa {
+  namespace detail {
+    class AlfalfaJSON_Impl;
+  }
 
   class AlfalfaJSON
   {
@@ -37,34 +40,34 @@ namespace alfalfa {
 
     bool saveAs(const openstudio::path& p);
 
-    AlfalfaPoint addConstant(float value, const std::string& display_name);
+    AlfalfaPoint exposeConstant(float value, const std::string& display_name);
 
-    AlfalfaPoint addMeter(const std::string& meter_name, const std::string& display_name = std::string());
+    AlfalfaPoint exposeMeter(const std::string& meter_name, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
 
-    AlfalfaPoint addActuator(const std::string& component_type, const std::string& control_type, const std::string& actuator_key,
-                             const std::string& display_name = std::string());
+    AlfalfaPoint exposeActuator(const std::string& component_type, const std::string& control_type, const std::string& actuator_key,
+                                const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
 
-    AlfalfaPoint addOutputVariable(const std::string& variable_key, const std::string& variable_name,
-                                   const std::string& display_name = std::string());
+    AlfalfaPoint exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
+                                      const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
 
-    AlfalfaPoint addGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
+    AlfalfaPoint exposeGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> addGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
 
-    void addPoint(const AlfalfaPoint& point);
+    void exposePoint(const AlfalfaPoint& point);
 
-    boost::optional<AlfalfaPoint> addPoint(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposePoint(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
+
+    std::vector<AlfalfaPoint> getPoints();
 
    private:
-    openstudio::path m_JSONPath;
-
-    std::vector<AlfalfaPoint> m_points;
+    std::shared_ptr<detail::AlfalfaJSON_Impl> m_impl;
 
     // configure logging
     REGISTER_LOGGER("openstudio.AlfalfaJSON");

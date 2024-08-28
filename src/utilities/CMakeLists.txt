@@ -101,6 +101,7 @@ set(data_src
 
 set(filetypes_src
   filetypes/AlfalfaJSON.hpp
+  filetypes/AlfalfaJSON_Impl.hpp
   filetypes/AlfalfaJSON.cpp
   filetypes/CSVFile.hpp
   filetypes/CSVFile_Impl.hpp
@@ -129,19 +130,11 @@ set(filetypes_src
 
 set(alfalfa_src
   alfalfa/AlfalfaComponent.hpp
+  alfalfa/AlfalfaComponents.hpp
   alfalfa/AlfalfaComponent.cpp
   alfalfa/AlfalfaPoint.hpp
+  alfalfa/AlfalfaPoint_Impl.hpp
   alfalfa/AlfalfaPoint.cpp
-  alfalfa/AlfalfaConstant.hpp
-  alfalfa/AlfalfaConstant.cpp
-  alfalfa/AlfalfaMeter.hpp
-  alfalfa/AlfalfaMeter.cpp
-  alfalfa/AlfalfaActuator.hpp
-  alfalfa/AlfalfaActuator.cpp
-  alfalfa/AlfalfaOutputVariable.hpp
-  alfalfa/AlfalfaOutputVariable.cpp
-  alfalfa/AlfalfaGlobalVariable.hpp
-  alfalfa/AlfalfaGlobalVariable.cpp
 )
 
 set(geometry_src
@@ -354,6 +347,7 @@ set(${target_name}_test_src
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
   filetypes/test/StandardsJSON_GTest.cpp
+  filetypes/test/AlfalfaJSON_GTest.cpp
 
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
