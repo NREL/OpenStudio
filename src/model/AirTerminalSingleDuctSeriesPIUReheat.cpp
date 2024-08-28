@@ -170,6 +170,34 @@ namespace model {
       return value.get();
     }
 
+    std::string AirTerminalSingleDuctSeriesPIUReheat_Impl::fanControlType() const {
+      boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AirTerminalSingleDuctSeriesPIUReheat_Impl::minimumFanTurnDownRatio() const {
+      boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MinimumFanTurnDownRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    boost::optional<std::string> AirTerminalSingleDuctSeriesPIUReheat_Impl::heatingControlType() const {
+      return getString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, true);
+    }
+    
+    double AirTerminalSingleDuctSeriesPIUReheat_Impl::designHeatingDischargeAirTemperature() const {
+      boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::DesignHeatingDischargeAirTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+    
+    double AirTerminalSingleDuctSeriesPIUReheat_Impl::highLimitHeatingDischargeAirTemperature() const {
+      boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::AvailabilityScheduleName, "AirTerminalSingleDuctSeriesPIUReheat",
                                 "Availability", schedule);
@@ -259,6 +287,31 @@ namespace model {
 
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setConvergenceTolerance(double convergenceTolerance) {
       bool result = setDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ConvergenceTolerance, convergenceTolerance);
+      return result;
+    }
+
+    bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanControlType(const std::string& fanControlType) {
+      bool result = setString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, fanControlType);
+      return result;
+    }
+
+    bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio) {
+      bool result = setDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MinimumFanTurnDownRatio, minimumFanTurnDownRatio);
+      return result;
+    }
+    
+    bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setHeatingControlType(const std::string& heatingControlType) {
+      bool result = setString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, heatingControlType);
+      return result;
+    }
+    
+    bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {
+      bool result = setDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::DesignHeatingDischargeAirTemperature, designHeatingDischargeAirTemperature);
+      return result;
+    }
+    
+    bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature) {
+      bool result = setDouble(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, highLimitHeatingDischargeAirTemperature);
       return result;
     }
 
@@ -612,6 +665,16 @@ namespace model {
     return {IddObjectType::OS_AirTerminal_SingleDuct_SeriesPIU_Reheat};
   }
 
+  std::vector<std::string> AirTerminalSingleDuctSeriesPIUReheat::fanControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType);
+  }
+
+  std::vector<std::string> AirTerminalSingleDuctSeriesPIUReheat::heatingControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType);
+  }
+
   boost::optional<Schedule> AirTerminalSingleDuctSeriesPIUReheat::availabilitySchedule() const {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->availabilitySchedule();
   }
@@ -662,6 +725,26 @@ namespace model {
 
   double AirTerminalSingleDuctSeriesPIUReheat::convergenceTolerance() const {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->convergenceTolerance();
+  }
+
+  std::string AirTerminalSingleDuctSeriesPIUReheat::fanControlType() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->fanControlType();
+  }
+
+  double AirTerminalSingleDuctSeriesPIUReheat::minimumFanTurnDownRatio() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->minimumFanTurnDownRatio();
+  }
+  
+  boost::optional<std::string> AirTerminalSingleDuctSeriesPIUReheat::heatingControlType() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->heatingControlType();
+  }
+  
+  double AirTerminalSingleDuctSeriesPIUReheat::designHeatingDischargeAirTemperature() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->designHeatingDischargeAirTemperature();
+  }
+  
+  double AirTerminalSingleDuctSeriesPIUReheat::highLimitHeatingDischargeAirTemperature() const {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->highLimitHeatingDischargeAirTemperature();
   }
 
   bool AirTerminalSingleDuctSeriesPIUReheat::setAvailabilitySchedule(Schedule& schedule) {
@@ -722,6 +805,26 @@ namespace model {
 
   bool AirTerminalSingleDuctSeriesPIUReheat::setConvergenceTolerance(double convergenceTolerance) {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setConvergenceTolerance(convergenceTolerance);
+  }
+
+  bool AirTerminalSingleDuctSeriesPIUReheat::setFanControlType(const std::string& fanControlType) {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setFanControlType(fanControlType);
+  }
+
+  bool AirTerminalSingleDuctSeriesPIUReheat::setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio) {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setMinimumFanTurnDownRatio(minimumFanTurnDownRatio);
+  }
+  
+  bool AirTerminalSingleDuctSeriesPIUReheat::setHeatingControlType(const std::string& heatingControlType) {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setHeatingControlType(heatingControlType);
+  }
+  
+  bool AirTerminalSingleDuctSeriesPIUReheat::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setDesignHeatingDischargeAirTemperature(designHeatingDischargeAirTemperature);
+  }
+  
+  bool AirTerminalSingleDuctSeriesPIUReheat::setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature) {
+    return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setHighLimitHeatingDischargeAirTemperature(highLimitHeatingDischargeAirTemperature);
   }
 
   unsigned AirTerminalSingleDuctSeriesPIUReheat::secondaryAirInletPort() const {
