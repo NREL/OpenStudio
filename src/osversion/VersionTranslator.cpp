@@ -9234,8 +9234,6 @@ namespace osversion {
       } else {
         ss << object;
       }
-
-      ss << object;
     }
 
     return ss.str();
