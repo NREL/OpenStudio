@@ -1,70 +1,76 @@
 #include "AlfalfaPoint.hpp"
+#include "AlfalfaPoint_Impl.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaPoint::AlfalfaPoint() {}
+  namespace detail {
+    AlfalfaPoint_Impl::AlfalfaPoint_Impl() {}
 
-  AlfalfaPoint::AlfalfaPoint(const std::string& display_name) : m_display_name(display_name) {}
+    AlfalfaPoint_Impl::AlfalfaPoint_Impl(const std::string& display_name) : m_display_name(display_name) {}
 
-  AlfalfaPoint::AlfalfaPoint(const std::string& display_name, const std::string& id) : m_display_name(display_name), m_id(id) {}
+    AlfalfaPoint_Impl::AlfalfaPoint_Impl(const std::string& display_name, const std::string& id) : m_display_name(display_name), m_id(id) {}
+
+    Json::Value AlfalfaPoint_Impl::toJSON() const {
+      Json::Value point;
+
+      point["id"] = m_id;
+      point["name"] = m_display_name;
+      if (m_input.is_initialized()) {
+        point["input"]["type"] = m_input.get().type();
+        point["input"]["parameters"] = m_input.get().toJSON();
+      }
+
+      if (m_output.is_initialized()) {
+        point["output"]["type"] = m_output.get().type();
+        point["output"]["parameters"] = m_output.get().toJSON();
+      }
+
+      return point;
+    }
+  }  // namespace detail
+
+  AlfalfaPoint::AlfalfaPoint() : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {}
+
+  AlfalfaPoint::AlfalfaPoint(const std::string& display_name)
+    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl(display_name))) {}
+
+  AlfalfaPoint::AlfalfaPoint(const std::string& display_name, const std::string& id)
+    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl(display_name, id))) {}
 
   void AlfalfaPoint::setInput(AlfalfaComponent& component) {
-    m_input = &component;
+    m_impl->m_input = component;
   }
 
-  boost::optional<AlfalfaComponent*> AlfalfaPoint::getInput() {
-    if (m_input) {
-      boost::optional<AlfalfaComponent*> result = m_input;
-      return result;
-    }
-    return boost::none;
+  boost::optional<AlfalfaComponent> AlfalfaPoint::getInput() {
+    return m_impl->m_input;
   }
 
   void AlfalfaPoint::setOutput(AlfalfaComponent& component) {
-    m_output = &component;
+    m_impl->m_output = component;
   }
 
-  boost::optional<AlfalfaComponent*> AlfalfaPoint::getOutput() {
-    if (m_output) {
-      boost::optional<AlfalfaComponent*> result = m_output;
-      return result;
-    }
-    return boost::none;
+  boost::optional<AlfalfaComponent> AlfalfaPoint::getOutput() {
+    return m_impl->m_output;
   }
 
   void AlfalfaPoint::setUnits(const std::string& units) {
-    m_units = units;
+    m_impl->m_units = units;
   }
 
   boost::optional<std::string> AlfalfaPoint::getUnits() {
-    if (m_units.length() != 0) {
-      boost::optional<std::string> result = m_units;
-      return result;
-    }
-    return boost::none;
+    return m_impl->m_units;
   }
 
   std::string AlfalfaPoint::id() const {
-    return m_id;
+    return m_impl->m_id;
   }
 
   Json::Value AlfalfaPoint::toJSON() const {
-    Json::Value point;
-
-    point["id"] = m_id;
-    point["name"] = m_display_name;
-    if (m_input != NULL) {
-      point["input"]["type"] = m_input->type();
-      point["input"]["parameters"] = m_input->toJSON();
-    }
-
-    if (m_output != NULL) {
-      point["output"]["type"] = m_output->type();
-      point["output"]["parameters"] = m_output->toJSON();
-    }
-
-    return point;
+    return m_impl->toJSON();
   }
 
+  bool AlfalfaPoint::operator==(const AlfalfaPoint& rhs) const {
+    return toJSON() == rhs.toJSON();
+  }
 }  // namespace alfalfa
 }  // namespace openstudio
