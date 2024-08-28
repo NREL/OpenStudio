@@ -28231,7 +28231,7 @@ AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \default 32.1
        \note Only used if Heating Control Type is Modulated
        \note Used to control second stage heating, typically zone heat setpoint plus 20F
-  N10;  \field High Limit Heating Discharge Air Temperature
+  N10; \field High Limit Heating Discharge Air Temperature
        \type real
        \units C
        \default 37.7
