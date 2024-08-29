@@ -81,6 +81,14 @@ namespace model {
       return OS_HeatPump_PlantLoop_EIR_CoolingFields::SourceSideOutletNodeName;
     }
 
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::tertiaryInletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryInletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRCooling_Impl::tertiaryOutletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryOutletNodeName;
+    }
+
     /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
     boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling_Impl::loadSideWaterLoop() const {
       return WaterToWaterComponent_Impl::plantLoop();
@@ -89,6 +97,11 @@ namespace model {
     /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
     boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling_Impl::sourceSideWaterLoop() const {
       return WaterToWaterComponent_Impl::secondaryPlantLoop();
+    }
+
+    /** Convenience Function to return the Heat Recovery Loop (HeatPump on demand side - tertiary) **/
+    boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryLoop() const {
+      return WaterToWaterComponent_Impl::tertiaryPlantLoop();
     }
 
     boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::sourceSideWaterInletNode() const {
@@ -127,8 +140,47 @@ namespace model {
       return result;
     }
 
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryInletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = tertiaryInletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
+    boost::optional<Node> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryOutletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = tertiaryOutletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
     bool HeatPumpPlantLoopEIRCooling_Impl::addToNode(Node& node) {
 
+      boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+      // If trying to add to a node that is on the demand side of a plant loop
+      if (t_plantLoop) {
+        if (t_plantLoop->demandComponent(node.handle())) {
+          // If there is already a condenser water Plant Loop
+          if (boost::optional<PlantLoop> cndLoop = this->sourceSideWaterLoop()) {
+            // And it's not the same as the node's loop
+            if (t_plantLoop.get() != cndLoop.get()) {
+              // And if there is no generator loop (tertiary)
+              if (!this->heatRecoveryLoop().is_initialized()) {
+                // Then try to add it to the tertiary one
+                LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery Loop) loop for " << briefDescription());
+                return this->addToTertiaryNode(node);
+              }
+            }
+          }
+        }
+      }
+
+      // All other cases, call the base class implementation
       // call the base class implementation to connect the component
       bool ok = WaterToWaterComponent_Impl::addToNode(node);
 
@@ -137,6 +189,24 @@ namespace model {
         this->setCondenserType("WaterSource");
       }
       return ok;
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::addToTertiaryNode(Node& node) {
+
+      auto t_plantLoop = node.plantLoop();
+
+      // Only accept adding to a node that is on a demand side of a plant loop
+      // Since tertiary here = heat recovery loop (heating)
+      if (t_plantLoop) {
+        if (t_plantLoop->demandComponent(node.handle())) {
+          // Call base class method which accepts both supply and demand
+          return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+        } else {
+          LOG(Info,
+              "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
+        }
+      }
+      return false;
     }
 
     bool HeatPumpPlantLoopEIRCooling_Impl::removeFromSecondaryPlantLoop() {
@@ -804,6 +874,10 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sourceSideWaterLoop();
   }
 
+  boost::optional<PlantLoop> HeatPumpPlantLoopEIRCooling::heatRecoveryLoop() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryLoop();
+  }
+
   boost::optional<Node> HeatPumpPlantLoopEIRCooling::sourceSideWaterInletNode() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->sourceSideWaterInletNode();
   }
@@ -818,6 +892,14 @@ namespace model {
 
   boost::optional<Node> HeatPumpPlantLoopEIRCooling::loadSideWaterOutletNode() const {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->loadSideWaterOutletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::heatRecoveryInletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryInletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRCooling::heatRecoveryOutletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryOutletNode();
   }
 
   /// @cond

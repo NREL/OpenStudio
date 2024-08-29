@@ -49,10 +49,17 @@ namespace model {
 
       virtual unsigned demandOutletPort() const override;
 
+      virtual unsigned tertiaryInletPort() const override;
+
+      virtual unsigned tertiaryOutletPort() const override;
+
       /* This function will call the base class' method WaterToWaterComponent_Impl::addToNode()
        * If this is connecting to the demand side of a loop, will set the condenserType to 'WaterSource'
        */
       virtual bool addToNode(Node& node) override;
+
+      /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
+      virtual bool addToTertiaryNode(Node& node) override;
 
       /** Override to switch the condenser type to 'AirSource' **/
       virtual bool removeFromSecondaryPlantLoop() override;
@@ -235,6 +242,9 @@ namespace model {
       /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
       boost::optional<PlantLoop> sourceSideWaterLoop() const;
 
+      /** Convenience Function to return the Heat Recovery Loop (HeatPump on demand side - tertiary) **/
+      boost::optional<PlantLoop> heatRecoveryLoop() const;
+
       // Convenience function to return the inletNode on the Source Side
       boost::optional<Node> sourceSideWaterInletNode() const;
       // Convenience function to return the outletNode on the Source Side
@@ -246,9 +256,9 @@ namespace model {
       boost::optional<Node> loadSideWaterOutletNode() const;
 
       // Convenience function to return the inletNode on the Heat Recovery
-      boost::optional<Node> heatRecoveryWaterInletNode() const;
+      boost::optional<Node> heatRecoveryInletNode() const;
       // Convenience function to return the outletNode on the Heat Recovery
-      boost::optional<Node> heatRecoveryWaterOutletNode() const;
+      boost::optional<Node> heatRecoveryOutletNode() const;
 
       //@}
      protected:
