@@ -10,10 +10,10 @@
 
 namespace openstudio {
 namespace alfalfa {
-namespace detail {
-  class UTILITIES_API AlfalfaJSON_Impl
-  {
-    public:
+  namespace detail {
+    class UTILITIES_API AlfalfaJSON_Impl
+    {
+     public:
       AlfalfaJSON_Impl();
 
       AlfalfaJSON_Impl(const std::string& s);
@@ -28,16 +28,16 @@ namespace detail {
 
       std::vector<AlfalfaPoint> getPoints();
 
-    private:
+     private:
       openstudio::path m_JSONPath;
 
       std::vector<AlfalfaPoint> m_points;
 
       // configure logging
       REGISTER_LOGGER("openstudio.AlfalfaJSON");
-  };
-}
-}
-}
+    };
+  }  // namespace detail
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif
