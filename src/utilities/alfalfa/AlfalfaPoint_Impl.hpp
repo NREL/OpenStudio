@@ -7,13 +7,13 @@
 #include "../core/Optional.hpp"
 #include <string>
 
-namespace openstudio{
+namespace openstudio {
 namespace alfalfa {
   class AlfalfaPoint;
-namespace detail {
-  class UTILITIES_API AlfalfaPoint_Impl
-  {
-    public:
+  namespace detail {
+    class UTILITIES_API AlfalfaPoint_Impl
+    {
+     public:
       AlfalfaPoint_Impl();
 
       AlfalfaPoint_Impl(const std::string& display_name);
@@ -22,14 +22,14 @@ namespace detail {
 
       Json::Value toJSON() const;
 
-    protected:
+     protected:
       friend class openstudio::alfalfa::AlfalfaPoint;
       boost::optional<AlfalfaComponent> m_input, m_output;
       std::string m_display_name, m_id;
       boost::optional<std::string> m_units;
-  };
-}
-}
-}
+    };
+  }  // namespace detail
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif
