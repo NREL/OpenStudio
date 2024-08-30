@@ -7,17 +7,18 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaOutputVariable : public AlfalfaComponent {
-    public:
-      AlfalfaOutputVariable(const std::string& variable_key, const std::string& variable_name);
+  class AlfalfaOutputVariable : public AlfalfaComponent
+  {
+   public:
+    AlfalfaOutputVariable(const std::string& variable_key, const std::string& variable_name);
 
-      AlfalfaOutputVariable(const openstudio::IdfObject& output_variable);
+    AlfalfaOutputVariable(const openstudio::IdfObject& output_variable);
 
-    private:
-      // configure logging
-      REGISTER_LOGGER("openstudio.AlfalfaOutputVariable");
+   private:
+    // configure logging
+    REGISTER_LOGGER("openstudio.AlfalfaOutputVariable");
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

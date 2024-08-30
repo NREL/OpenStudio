@@ -2,24 +2,20 @@
 #include "utilities/idd/IddObject.hpp"
 #include "utilities/idd/IddEnums.hpp"
 
-
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace alfalfa {
-AlfalfaActuator::AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type)
-  : AlfalfaComponent("Actuator", Capability::Input | Capability::Output)
-  {
+  AlfalfaActuator::AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type)
+    : AlfalfaComponent("Actuator", Capability::Input | Capability::Output) {
     parameters["component_name"] = component_name;
     parameters["component_type"] = component_type;
     parameters["control_type"] = control_type;
   }
 
-AlfalfaActuator::AlfalfaActuator(const IdfObject& actuator)
-  : AlfalfaComponent("Actuator", Capability::Input | Capability::Output)
-  {
+  AlfalfaActuator::AlfalfaActuator(const IdfObject& actuator) : AlfalfaComponent("Actuator", Capability::Input | Capability::Output) {
     IddObjectType idd_type = actuator.iddObject().type();
 
     boost::optional<std::string> component_name;
@@ -52,6 +48,5 @@ AlfalfaActuator::AlfalfaActuator(const IdfObject& actuator)
       throw;
     }
   }
-}
-}
-
+}  // namespace alfalfa
+}  // namespace openstudio

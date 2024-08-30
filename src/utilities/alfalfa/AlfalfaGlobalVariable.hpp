@@ -7,17 +7,18 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaGlobalVariable : public AlfalfaComponent {
-    public:
-      AlfalfaGlobalVariable(const std::string& variable_name);
+  class AlfalfaGlobalVariable : public AlfalfaComponent
+  {
+   public:
+    AlfalfaGlobalVariable(const std::string& variable_name);
 
-      AlfalfaGlobalVariable(const IdfObject& global_variable);
+    AlfalfaGlobalVariable(const IdfObject& global_variable);
 
-    private:
-      // configure logging
-      REGISTER_LOGGER("openstudio.AlfalfaGlobalVariable");
+   private:
+    // configure logging
+    REGISTER_LOGGER("openstudio.AlfalfaGlobalVariable");
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

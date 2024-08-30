@@ -7,17 +7,18 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaMeter : public AlfalfaComponent {
-    public:
-      AlfalfaMeter(const std::string& meter_name);
+  class AlfalfaMeter : public AlfalfaComponent
+  {
+   public:
+    AlfalfaMeter(const std::string& meter_name);
 
-      AlfalfaMeter(const IdfObject& output_meter);
+    AlfalfaMeter(const IdfObject& output_meter);
 
-    private:
-      // configure logging
-      REGISTER_LOGGER("openstudio.AlfalfaMeter");
+   private:
+    // configure logging
+    REGISTER_LOGGER("openstudio.AlfalfaMeter");
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

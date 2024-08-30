@@ -21,16 +21,16 @@ namespace alfalfa {
 
   class AlfalfaComponent
   {
-    public:
-      AlfalfaComponent(const std::string& type, const Capability capabilities);
+   public:
+    AlfalfaComponent(const std::string& type, const Capability capabilities);
 
-      bool canInput() const;
+    bool canInput() const;
 
-      bool canOutput() const;
+    bool canOutput() const;
 
-      std::string type;
-      Capability capabilities;
-      Json::Value parameters;
+    std::string type;
+    Capability capabilities;
+    Json::Value parameters;
   };
 }  // namespace alfalfa
 }  // namespace openstudio
