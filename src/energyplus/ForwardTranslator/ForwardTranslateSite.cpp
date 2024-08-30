@@ -50,6 +50,19 @@ namespace energyplus {
       site.setDouble(Site_LocationFields::Elevation, *od);
     }
 
+    bool b = modelObject.keepSiteLocationInformation();
+    if (b) {
+      site.setDouble(Site_LocationFields::KeepSiteLocationInformation, *od);
+    }
+
+    if (!modelObject.isKeepSiteLocationInformationDefaulted()) {
+      if (modelObject.keepSiteLocationInformation()) {
+        site.setString(Site_LocationFields::KeepSiteLocationInformation, "Yes");
+      } else {
+        site.setString(Site_LocationFields::KeepSiteLocationInformation, "No");
+      }
+    }
+
     // translate shading groups
     ShadingSurfaceGroupVector shadingSurfaceGroups = modelObject.shadingSurfaceGroups();
     std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
