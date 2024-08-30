@@ -130,8 +130,17 @@ set(filetypes_src
 
 set(alfalfa_src
   alfalfa/AlfalfaComponent.hpp
-  alfalfa/AlfalfaComponents.hpp
   alfalfa/AlfalfaComponent.cpp
+  alfalfa/AlfalfaConstant.hpp
+  alfalfa/AlfalfaConstant.cpp
+  alfalfa/AlfalfaActuator.hpp
+  alfalfa/AlfalfaActuator.cpp
+  alfalfa/AlfalfaGlobalVariable.hpp
+  alfalfa/AlfalfaGlobalVariable.cpp
+  alfalfa/AlfalfaMeter.hpp
+  alfalfa/AlfalfaMeter.cpp
+  alfalfa/AlfalfaOutputVariable.hpp
+  alfalfa/AlfalfaOutputVariable.cpp
   alfalfa/AlfalfaPoint.hpp
   alfalfa/AlfalfaPoint_Impl.hpp
   alfalfa/AlfalfaPoint.cpp

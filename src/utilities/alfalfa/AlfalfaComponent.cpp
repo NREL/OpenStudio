@@ -4,18 +4,17 @@
 namespace openstudio {
 namespace alfalfa {
 
-  AlfalfaComponent::AlfalfaComponent(std::string type, ComponentCapabilities capabilities) : m_type(type), m_capabilities(capabilities) {}
+  AlfalfaComponent::AlfalfaComponent(const std::string& type, const Capability capabilities)
+    : type(type), capabilities(capabilities) {}
 
-  std::string AlfalfaComponent::type() const {
-    return m_type;
+  bool AlfalfaComponent::canInput() const {
+    return capabilities & Capability::Input;
+
   }
 
-  ComponentCapabilities AlfalfaComponent::capabilities() const {
-    return m_capabilities;
+  bool AlfalfaComponent::canOutput() const {
+    return capabilities & Capability::Output;
   }
 
-  Json::Value AlfalfaComponent::toJSON() const {
-    return m_root;
-  }
 }  // namespace alfalfa
 }  // namespace openstudio

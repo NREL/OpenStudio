@@ -26,11 +26,11 @@ namespace alfalfa {
 
     AlfalfaPoint(const std::string& display_name, const std::string& id);
 
-    void setInput(AlfalfaComponent& component);
+    void setInput(const AlfalfaComponent& component);
 
     boost::optional<AlfalfaComponent> getInput();
 
-    void setOutput(AlfalfaComponent& component);
+    void setOutput(const AlfalfaComponent& component);
 
     boost::optional<AlfalfaComponent> getOutput();
 

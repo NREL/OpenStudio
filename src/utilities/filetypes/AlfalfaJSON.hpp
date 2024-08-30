@@ -13,11 +13,8 @@
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"
-#include "../../model/EnergyManagementSystemGlobalVariable.hpp"
-#include "../../model/EnergyManagementSystemOutputVariable.hpp"
-#include "../../model/EnergyManagementSystemActuator.hpp"
-#include "../../model/OutputMeter.hpp"
-#include "../../model/OutputVariable.hpp"
+
+#include "model/ModelObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
@@ -40,33 +37,39 @@ namespace alfalfa {
 
     bool saveAs(const openstudio::path& p);
 
-    AlfalfaPoint exposeConstant(float value, const std::string& display_name);
+    boost::optional<AlfalfaPoint> exposeConstant(float value, const std::string& display_name);
 
-    AlfalfaPoint exposeMeter(const std::string& meter_name, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeMeter(const std::string& meter_name, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
 
-    AlfalfaPoint exposeActuator(const std::string& component_type, const std::string& control_type, const std::string& actuator_key,
+    boost::optional<AlfalfaPoint> exposeActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type,
                                 const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
 
-    AlfalfaPoint exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
+    boost::optional<AlfalfaPoint> exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
                                       const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
 
-    AlfalfaPoint exposeGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
+
 
     void exposePoint(const AlfalfaPoint& point);
 
     boost::optional<AlfalfaPoint> exposePoint(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
 
+    boost::optional<AlfalfaPoint> exposePoint(const AlfalfaComponent& component, const std::string& display_name = std::string());
+
     std::vector<AlfalfaPoint> getPoints();
 
    private:
+
+    boost::optional<std::string> getName(const openstudio::IdfObject& idf_object);
+
     std::shared_ptr<detail::AlfalfaJSON_Impl> m_impl;
 
     // configure logging
