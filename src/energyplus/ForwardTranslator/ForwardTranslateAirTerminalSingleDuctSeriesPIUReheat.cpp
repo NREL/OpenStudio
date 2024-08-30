@@ -214,17 +214,17 @@ namespace energyplus {
     if ((value = modelObject.minimumFanTurnDownRatio())) {
       idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MinimumFanTurnDownRatio, value.get());
     }
-    
+
     // HeatingControlType
     if ((s = modelObject.heatingControlType())) {
       idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, s.get());
     }
-    
+
     // DesignHeatingDischargeAirTemperature
     if ((value = modelObject.designHeatingDischargeAirTemperature())) {
       idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::DesignHeatingDischargeAirTemperature, value.get());
     }
-    
+
     // HighLimitHeatingDischargeAirTemperature
     if ((value = modelObject.highLimitHeatingDischargeAirTemperature())) {
       idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, value.get());

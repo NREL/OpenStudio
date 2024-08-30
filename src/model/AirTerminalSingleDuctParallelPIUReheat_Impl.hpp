@@ -102,11 +102,11 @@ namespace model {
       std::string fanControlType() const;
 
       double minimumFanTurnDownRatio() const;
-      
+
       boost::optional<std::string> heatingControlType() const;
-      
+
       double designHeatingDischargeAirTemperature() const;
-      
+
       double highLimitHeatingDischargeAirTemperature() const;
 
       bool isConvergenceToleranceDefaulted() const;
@@ -171,11 +171,11 @@ namespace model {
       bool setFanControlType(const std::string& fanControlType);
 
       bool setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio);
-      
+
       bool setHeatingControlType(const std::string& heatingControlType);
-      
+
       bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
-      
+
       bool setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature);
 
       // This is a non publlic method to draw recirculation air from a plenum

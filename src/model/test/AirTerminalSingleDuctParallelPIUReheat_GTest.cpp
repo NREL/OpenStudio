@@ -231,30 +231,30 @@ TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_fanControl) {
   FanConstantVolume fan(m, schedule);
   CoilHeatingElectric coil(m, schedule);
   AirTerminalSingleDuctParallelPIUReheat atu(m, schedule, fan, coil);
-  
+
   EXPECT_EQ("ConstantSpeed", atu.fanControlType());
   EXPECT_FALSE(atu.setFanControlType("VariableSpeed"));
   EXPECT_EQ("ConstantSpeed", atu.fanControlType());
-  
+
   FanSystemModel fan2(m);
   EXPECT_TRUE(atu.setFan(fan2));
   EXPECT_EQ("ConstantSpeed", atu.fanControlType());
   EXPECT_TRUE(atu.setFanControlType("VariableSpeed"));
   EXPECT_EQ("VariableSpeed", atu.fanControlType());
-  
+
   EXPECT_TRUE(atu.setFan(fan));
   EXPECT_EQ("ConstantSpeed", atu.fanControlType());
-  
+
   EXPECT_EQ(0.3, atu.minimumFanTurnDownRatio());
   EXPECT_FALSE(atu.heatingControlType());
   EXPECT_EQ(32.1, atu.designHeatingDischargeAirTemperature());
   EXPECT_EQ(37.7, atu.highLimitHeatingDischargeAirTemperature());
-  
+
   EXPECT_TRUE(atu.setMinimumFanTurnDownRatio(0.4));
   EXPECT_TRUE(atu.setHeatingControlType("Modulated"));
   EXPECT_TRUE(atu.setDesignHeatingDischargeAirTemperature(33.0));
   EXPECT_EQ(atu.setHighLimitHeatingDischargeAirTemperature(38.0));
-  
+
   EXPECT_EQ(0.4, atu.minimumFanTurnDownRatio());
   ASSERT_TRUE(atu.heatingControlType());
   EXPECT_EQ("Modulated", atu.heatingControlType().get());
