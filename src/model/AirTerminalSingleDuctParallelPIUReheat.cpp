@@ -302,6 +302,13 @@ namespace model {
     }
 
     bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFanControlType(const std::string& fanControlType) {
+      auto hvacComponent = fan();
+      if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+        if (istringEqual(fanControlType, "VariableSpeed")) {
+          return false
+        }
+      }
+
       bool result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanControlType, fanControlType);
       return result;
     }
@@ -391,7 +398,14 @@ namespace model {
       }
 
       if (isTypeCorrect) {
-        return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName, hvacComponent.handle());
+        bool result = setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName, hvacComponent.handle());
+
+        if (result) {
+          if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+            setFanControlType("ConstantSpeed");
+          }
+        }
+
       } else {
         LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanSystemModel, not '" << hvacComponent.iddObjectType().valueName() << "') for "
                                                                                           << briefDescription());
@@ -779,6 +793,11 @@ namespace model {
     setMinimumHotWaterorSteamFlowRate(0.0);
 
     setConvergenceTolerance(0.001);
+
+    setFanControlType("ConstantSpeed");
+    setMinimumFanTurnDownRatio(0.3);
+    setDesignHeatingDischargeAirTemperature(32.1);
+    setHighLimitHeatingDischargeAirTemperature(37.7);
 
     autosizeMaximumPrimaryAirFlowRate();
 

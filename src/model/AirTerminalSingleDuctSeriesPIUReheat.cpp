@@ -250,6 +250,13 @@ namespace model {
 
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFan(const HVACComponent& fan) {
       bool result = setPointer(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanName, fan.handle());
+
+      if (result) {
+        if (fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+          setFanControlType("ConstantSpeed");
+        }
+      }
+
       return result;
     }
 
@@ -291,6 +298,13 @@ namespace model {
     }
 
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanControlType(const std::string& fanControlType) {
+      auto hvacComponent = fan();
+      if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+        if (istringEqual(fanControlType, "VariableSpeed")) {
+          return false
+        }
+      }
+
       bool result = setString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, fanControlType);
       return result;
     }
@@ -658,7 +672,11 @@ namespace model {
     autosizeMinimumPrimaryAirFlowFraction();
     autosizeMaximumHotWaterorSteamFlowRate();
     setMinimumHotWaterorSteamFlowRate(0.0);
-    setConvergenceTolerance(0.001);
+    setConvergenceTolerance(0.001);    
+    setFanControlType("ConstantSpeed");
+    setMinimumFanTurnDownRatio(0.3);
+    setDesignHeatingDischargeAirTemperature(32.1);
+    setHighLimitHeatingDischargeAirTemperature(37.7);
   }
 
   IddObjectType AirTerminalSingleDuctSeriesPIUReheat::iddObjectType() {
