@@ -16,13 +16,13 @@ namespace alfalfa {
       point["id"] = m_id;
       point["name"] = m_display_name;
       if (m_input.is_initialized()) {
-        point["input"]["type"] = m_input.get().type();
-        point["input"]["parameters"] = m_input.get().toJSON();
+        point["input"]["type"] = m_input.get().type;
+        point["input"]["parameters"] = m_input.get().parameters;
       }
 
       if (m_output.is_initialized()) {
-        point["output"]["type"] = m_output.get().type();
-        point["output"]["parameters"] = m_output.get().toJSON();
+        point["output"]["type"] = m_output.get().type;
+        point["output"]["parameters"] = m_output.get().parameters;
       }
 
       return point;
@@ -37,7 +37,7 @@ namespace alfalfa {
   AlfalfaPoint::AlfalfaPoint(const std::string& display_name, const std::string& id)
     : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl(display_name, id))) {}
 
-  void AlfalfaPoint::setInput(AlfalfaComponent& component) {
+  void AlfalfaPoint::setInput(const AlfalfaComponent& component) {
     m_impl->m_input = component;
   }
 
@@ -45,7 +45,7 @@ namespace alfalfa {
     return m_impl->m_input;
   }
 
-  void AlfalfaPoint::setOutput(AlfalfaComponent& component) {
+  void AlfalfaPoint::setOutput(const AlfalfaComponent& component) {
     m_impl->m_output = component;
   }
 

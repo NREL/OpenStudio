@@ -1,40 +1,37 @@
 #ifndef ALFALFA_COMPONENT_HPP
 #define ALFALFA_COMPONENT_HPP
 
-#include <stdint.h>
 #include <json/json.h>
 
 namespace openstudio {
 namespace alfalfa {
-  enum ComponentCapabilities
+  enum Capability
   {
     Input = 1,
     Output = 2
   };
 
+  inline Capability operator|(const Capability& a, const Capability& b) {
+    return static_cast<Capability>(static_cast<int>(a) | static_cast<int>(b));
+  }
+
+  inline Capability operator&(const Capability& a, const Capability& b) {
+    return static_cast<Capability>(static_cast<int>(a) & static_cast<int>(b));
+  }
+
   class AlfalfaComponent
   {
-   public:
-    AlfalfaComponent(std::string type, ComponentCapabilities capabilities);
+    public:
+      AlfalfaComponent(const std::string& type, const Capability capabilities);
 
-    /** Returns capabilities of component */
-    ComponentCapabilities capabilities() const;
+      bool canInput() const;
 
-    Json::Value toJSON() const;
+      bool canOutput() const;
 
-    std::string type() const;
-
-   protected:
-    std::string m_type;
-
-    Json::Value m_root;
-
-    ComponentCapabilities m_capabilities;
+      std::string type;
+      Capability capabilities;
+      Json::Value parameters;
   };
-
-  inline ComponentCapabilities operator|(const ComponentCapabilities& a, const ComponentCapabilities& b) {
-    return static_cast<ComponentCapabilities>(static_cast<int>(a) | static_cast<int>(b));
-  }
 }  // namespace alfalfa
 }  // namespace openstudio
 
