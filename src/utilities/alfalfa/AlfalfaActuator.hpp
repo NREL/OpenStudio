@@ -7,17 +7,18 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaActuator : public AlfalfaComponent {
-    public:
-      AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type);
+  class AlfalfaActuator : public AlfalfaComponent
+  {
+   public:
+    AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type);
 
-      AlfalfaActuator(const IdfObject& actuator);
+    AlfalfaActuator(const IdfObject& actuator);
 
-    private:
-      // configure logging
-      REGISTER_LOGGER("openstudio.AlfalfaActuator");
+   private:
+    // configure logging
+    REGISTER_LOGGER("openstudio.AlfalfaActuator");
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif

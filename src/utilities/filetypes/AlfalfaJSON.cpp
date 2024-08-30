@@ -103,8 +103,8 @@ namespace alfalfa {
     }
   }
 
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type,
-                                           const std::string& display_name) {
+  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeActuator(const std::string& component_name, const std::string& component_type,
+                                                            const std::string& control_type, const std::string& display_name) {
     AlfalfaActuator component(component_name, component_type, control_type);
     return exposePoint(component, display_name);
   }
@@ -125,10 +125,10 @@ namespace alfalfa {
     } catch (...) {
       return boost::none;
     }
-
   }
 
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeOutputVariable(const std::string& variable_key, const std::string& variable_name, const std::string& display_name) {
+  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
+                                                                  const std::string& display_name) {
     AlfalfaOutputVariable component(variable_key, variable_name);
     return exposePoint(component, display_name);
   }
@@ -192,11 +192,10 @@ namespace alfalfa {
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposePoint(const AlfalfaComponent& component, const std::string& display_name) {
     std::string _display_name = display_name;
-    if (display_name.size() == 0 ) {
-      if(component.type == "Actuator") {
-        _display_name = "Actuator for " + component.parameters["component_name"].asString() +
-        ":" + component.parameters["component_type"].asString() +
-        ":" + component.parameters["control_type"].asString();
+    if (display_name.size() == 0) {
+      if (component.type == "Actuator") {
+        _display_name = "Actuator for " + component.parameters["component_name"].asString() + ":" + component.parameters["component_type"].asString()
+                        + ":" + component.parameters["control_type"].asString();
       } else if (component.type == "Constant") {
         LOG(Error, "Constant points must be provided with a display name");
         return boost::none;
@@ -205,8 +204,8 @@ namespace alfalfa {
       } else if (component.type == "GlobalVariable") {
         _display_name = "Global Variable for " + component.parameters["variable_name"].asString();
       } else if (component.type == "OutputVariable") {
-        _display_name = "Output Variable for " + component.parameters["variable_key"].asString() +
-        ":" + component.parameters["variable_name"].asString();
+        _display_name =
+          "Output Variable for " + component.parameters["variable_key"].asString() + ":" + component.parameters["variable_name"].asString();
       } else {
         LOG(Error, "Invalid component type");
         return boost::none;
@@ -226,9 +225,9 @@ namespace alfalfa {
   }
 
   boost::optional<std::string> AlfalfaJSON::getName(const openstudio::IdfObject& idf_object) {
-    if(dynamic_cast<const openstudio::model::ModelObject*>(&idf_object) != nullptr) {
+    if (dynamic_cast<const openstudio::model::ModelObject*>(&idf_object) != nullptr) {
       boost::optional<std::string> display_name = dynamic_cast<const openstudio::model::ModelObject*>(&idf_object)->displayName();
-      if(display_name.is_initialized()) {
+      if (display_name.is_initialized()) {
         return display_name;
       }
     }

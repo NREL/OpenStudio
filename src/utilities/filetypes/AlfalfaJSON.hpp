@@ -43,20 +43,19 @@ namespace alfalfa {
 
     boost::optional<AlfalfaPoint> exposeMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
 
-    boost::optional<AlfalfaPoint> exposeActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type,
-                                const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeActuator(const std::string& component_name, const std::string& component_type,
+                                                 const std::string& control_type, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
-                                      const std::string& display_name = std::string());
+                                                       const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
 
     boost::optional<AlfalfaPoint> exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
-
 
     void exposePoint(const AlfalfaPoint& point);
 
@@ -67,7 +66,6 @@ namespace alfalfa {
     std::vector<AlfalfaPoint> getPoints();
 
    private:
-
     boost::optional<std::string> getName(const openstudio::IdfObject& idf_object);
 
     std::shared_ptr<detail::AlfalfaJSON_Impl> m_impl;

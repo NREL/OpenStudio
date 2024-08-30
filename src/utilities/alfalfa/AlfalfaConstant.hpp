@@ -6,14 +6,15 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaConstant : public AlfalfaComponent {
-    public:
-      AlfalfaConstant(float value);
+  class AlfalfaConstant : public AlfalfaComponent
+  {
+   public:
+    AlfalfaConstant(float value);
 
-    private:
-      REGISTER_LOGGER("openstudio.AlfalfaConstant");
+   private:
+    REGISTER_LOGGER("openstudio.AlfalfaConstant");
   };
-}
-}
+}  // namespace alfalfa
+}  // namespace openstudio
 
 #endif
