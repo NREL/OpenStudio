@@ -28550,6 +28550,12 @@ OS:Sizing:Zone,
        \minimum 0.0
        \maximum 1.0
        \units dimensionless
+  A4,  \field Sizing Option
+       \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm.
+       \type choice
+       \key Coincident
+       \key NonCoincident
+       \default Coincident
 
 OS:Splitter,
        \extensible:1

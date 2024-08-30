@@ -368,6 +368,11 @@ namespace energyplus {
       }
     }
 
+    s = modelObject.sizingOption();
+    if (s) {
+      idfObject.setString(Sizing_ZoneFields::TypeofZoneSumtoUse, s.get());
+    }
+
     return idfObject;
   }
 

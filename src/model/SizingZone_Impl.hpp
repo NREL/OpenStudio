@@ -162,6 +162,10 @@ namespace model {
 
       bool isDesignMinimumZoneVentilationEfficiencyDefaulted() const;
 
+      std::string sizingOption() const;
+
+      bool isSizingOptionDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -283,6 +287,10 @@ namespace model {
       bool setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency);
 
       void resetDesignMinimumZoneVentilationEfficiency();
+
+      bool setSizingOption(const std::string& sizingOption);
+
+      void resetSizingOption();
 
       //@}
       /** @name Other */

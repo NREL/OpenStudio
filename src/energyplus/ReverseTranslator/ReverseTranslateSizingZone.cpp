@@ -370,6 +370,12 @@ namespace energyplus {
           }
         }
       }
+      
+      // TypeofZoneSumtoUse
+      s = workspaceObject.getString(Sizing_ZoneFields::TypeofZoneSumtoUse);
+      if (s) {
+        sizingZone.setSizingOption(s.get());
+      }
     }
 
     return result;
