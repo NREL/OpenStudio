@@ -4207,3 +4207,21 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
   EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_AirTerminalSingleDuctPIUReheat) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_AirTerminalSingleDuctPIUReheat.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_AirTerminalSingleDuctPIUReheat_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> seriess = model->getObjectsByType("OS:AirTerminal:SingleDuct:SeriesPIU:Reheat");
+  ASSERT_EQ(1u, seriess.size());
+  WorkspaceObject series = seriess[0];
+
+  std::vector<WorkspaceObject> parallels = model->getObjectsByType("OS:AirTerminal:SingleDuct:ParallelPIU:Reheat");
+  ASSERT_EQ(1u, parallels.size());
+  WorkspaceObject parallel = parallels[0];
+}
