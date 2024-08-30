@@ -8970,7 +8970,7 @@ namespace osversion {
 
       if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
 
-        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // 4 Fields have been removed from 3.7.0 to 3.8.0:
         // ----------------------------------------------
         // * Sensible Effectiveness at 75% Heating Air Flow {dimensionless} * 6
         // * Latent Effectiveness at 75% Heating Air Flow {dimensionless} * 7
@@ -9226,11 +9226,11 @@ namespace osversion {
             } else if (i < 9) {
               // no op
             } else if (i < 12) {
-              newObject.setString(i - 2, value.get());
+              newObject.setString(i + 2, value.get());
             } else if (i < 13) {
               // no op
             } else {
-              newObject.setString(i - 3, value.get());
+              newObject.setString(i + 3, value.get());
             }
           }
         }

@@ -14019,7 +14019,8 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \object-list ConnectionNames
        \note Not available with water source condenser type
    A9, \field Heat Recovery Outlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \note Not available with water source condenser type
    A10,\field Companion Heat Pump Name
        \note This field allows the user to specify a companion cooling
