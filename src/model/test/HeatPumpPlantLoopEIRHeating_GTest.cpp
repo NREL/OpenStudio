@@ -292,3 +292,79 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_CondenserType) {
   EXPECT_FALSE(hp.demandOutletModelObject());
   EXPECT_FALSE(hp.sourceSideWaterOutletNode());
 }
+
+TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_PlantLoopConnections_addToNodeOverride) {
+  Model model;
+  HeatPumpPlantLoopEIRHeating hp(model);
+
+  PlantLoop pl1(model);
+  PlantLoop pl2(model);
+  PlantLoop pl3(model);
+
+  auto c_demand_node2 = pl3.demandOutletNode();
+
+  PlantLoop hrLoop(model);
+  auto h_supply_node = hrLoop.supplyOutletNode();
+  auto h_demand_node = hrLoop.demandInletNode();
+
+  // Connect to the load side loop
+  EXPECT_TRUE(pl1.addSupplyBranchForComponent(hp));
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  EXPECT_FALSE(hp.sourceSideWaterLoop());
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Connect to the source side loop
+  EXPECT_TRUE(pl2.addDemandBranchForComponent(hp));
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl2, hp.sourceSideWaterLoop().get());
+
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Have a load side loop and no hr loop: should connect the hr loop if trying to add to demand side
+  EXPECT_TRUE(hrLoop.addDemandBranchForComponent(hp));
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl2, hp.sourceSideWaterLoop().get());
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
+
+  // Have a source side loop and a hr loop: should reconnect the source side loop
+  // Try with addToNode instead
+  EXPECT_TRUE(hp.addToNode(c_demand_node2));
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl3, hp.sourceSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
+
+  // Disconnect the tertiary (hr) loop
+  EXPECT_TRUE(hp.removeFromTertiaryPlantLoop());
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Shouldn't accept tertiary connection to the supply side
+  EXPECT_FALSE(hp.addToTertiaryNode(h_supply_node));
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Try addToNode to the demand side of hr plant loop, should work to connect the hr loop
+  EXPECT_TRUE(hp.addToNode(h_demand_node));
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl3, hp.sourceSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
+}
