@@ -97,6 +97,26 @@ namespace energyplus {
       idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, optvalue.get());
     }
 
+    if (modelObject.heatRecoveryLoop()) {
+      if (modelObject.isHeatRecoveryReferenceFlowRateAutosized()) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, "Autosize");
+      } else if ((value = modelObject.heatRecoveryReferenceFlowRate())) {
+        idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, value.get());
+      }
+
+      if (boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject()) {
+        if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+          idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryInletNodeName, node->name().get());
+        }
+      }
+
+      if (boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject()) {
+        if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+          idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryOutletNodeName, node->name().get());
+        }
+      }
+    }
+
     if (modelObject.isReferenceCapacityAutosized()) {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, "Autosize");
     } else if ((optvalue = modelObject.referenceCapacity())) {
