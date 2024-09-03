@@ -103,8 +103,8 @@ namespace energyplus {
     if (modelObject.heatRecoveryLoop()) {
       if (modelObject.isHeatRecoveryReferenceFlowRateAutosized()) {
         idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, "Autosize");
-      } else if ((value = modelObject.heatRecoveryReferenceFlowRate())) {
-        idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, value.get());
+      } else if ((optvalue = modelObject.heatRecoveryReferenceFlowRate())) {
+        idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryReferenceFlowRate, optvalue.get());
       }
 
       if (boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject()) {

@@ -165,10 +165,10 @@ namespace model {
       // If trying to add to a node that is on the demand side of a plant loop
       if (t_plantLoop) {
         if (t_plantLoop->demandComponent(node.handle())) {
-          // If there is already a condenser water Plant Loop
-          if (boost::optional<PlantLoop> cndLoop = this->sourceSideWaterLoop()) {
+          // If there is already a source side water Plant Loop
+          if (boost::optional<PlantLoop> ssLoop = this->sourceSideWaterLoop()) {
             // And it's not the same as the node's loop
-            if (t_plantLoop.get() != cndLoop.get()) {
+            if (t_plantLoop.get() != ssLoop.get()) {
               // And if there is no generator loop (tertiary)
               if (!this->heatRecoveryLoop().is_initialized()) {
                 // Then try to add it to the tertiary one
@@ -184,7 +184,7 @@ namespace model {
       // call the base class implementation to connect the component
       bool ok = WaterToWaterComponent_Impl::addToNode(node);
 
-      // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
+      // If there's a secondary plant loop, switch the condenser type to "WaterSource"
       if (this->sourceSideWaterLoop()) {
         this->setCondenserType("WaterSource");
       }
