@@ -2347,81 +2347,75 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   else if( istringEqual(coilHeatingTypeElement.text().as_string(),"HotWater") )
   {
     model::Schedule schedule = model.alwaysOnDiscreteSchedule();
-
     model::CoilHeatingWater coil(model,schedule);
-
     coil.setName(coilName);
-
     coil.setAvailableSchedule(availabilitySchedule.get());
-
-    pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
-
-    boost::optional<model::PlantLoop> plant;
-    if (!fluidSegInRefElement) {
-      LOG(Error, "CoilHeatingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
-    } else {
-      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
-
-      if( plant )
-      {
-        plant->addDemandBranchForComponent(coil);
-        // Figure out if this is connected to a ServiceHotWater system
-        // If it is then make sure any supply segment pumps go on the branch,
-        // as opposed to the demand side inlet branch
-        auto supplySegmentElement = supplySegment(fluidSegInRefElement);
-        auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
-        if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
-          auto pumpElement = supplySegmentElement.child("Pump");
-          if (pumpElement) {
-            if( auto modelObject = translatePump(pumpElement, model) ) {
-              auto hvacComponent = modelObject->cast<model::HVACComponent>();
-              auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
-              hvacComponent.addToNode(inletNode);
-            }
-          }
-        }
-      } else {
-        LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
-                << "' but we couldn't find a plantLoop that matches.");
-      }
-    }
 
     if( capTotGrossRtd )
     {
       coil.setPerformanceInputMethod("NominalCapacity");
-
       coil.setRatedCapacity(capTotGrossRtd.get());
-
       coil.setRatedInletWaterTemperature(82.2);
-
       coil.setRatedInletAirTemperature(16.6);
-
       coil.setRatedOutletWaterTemperature(71.1);
-
       coil.setRatedOutletAirTemperature(32.2);
-
-      // Find related/containing systems (aka figure out the context of the coil)
-
-      pugi::xml_node sysElement;
-
-      pugi::xml_node airSysElement = heatingCoilElement.parent().parent();
-
-      pugi::xml_node znSysElement = heatingCoilElement.parent();
-
-      if( openstudio::istringEqual(airSysElement.name(), "AirSys"))
-      {
-        sysElement = airSysElement;
-      }
-      else if (openstudio::istringEqual(airSysElement.name(), "ZnSys"))
-      {
-        sysElement = znSysElement;
-      }
     }
 
     auto fluidFlowRtDsgnSim = lexicalCastToDouble(heatingCoilElement.child("FluidFlowRtDsgnSim"));
     if(fluidFlowRtDsgnSim) {
       fluidFlowRtDsgnSim = unitToUnit(fluidFlowRtDsgnSim.get(),"gal/min","m^3/s").get();
       coil.setMaximumWaterFlowRate(fluidFlowRtDsgnSim.get());
+    }
+
+    // Look for a supporting fluid system and translate additional inputs
+    const auto fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
+
+    if (!fluidSegInRefElement) {
+      LOG(Error, "CoilHeatingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+    } else {
+      auto supplySegmentElement = supplySegment(fluidSegInRefElement);
+      auto fluidSysElement = supplySegmentElement.parent();
+      auto fluidSysTypeElment = fluidSysElement.child("Type");
+
+      // Add to plant
+      auto plant = loopForSupplySegment(fluidSegInRefElement, model);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coil);
+      } else {
+        LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
+                << "' but we couldn't find a plantLoop that matches.");
+      }
+
+      // Figure out if this is connected to a ServiceHotWater system
+      // If it is then make sure any supply segment pumps go on the branch,
+      // as opposed to the demand side inlet branch
+      if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
+        auto pumpElement = supplySegmentElement.child("Pump");
+        if (pumpElement) {
+          if( auto modelObject = translatePump(pumpElement, model) ) {
+            auto hvacComponent = modelObject->cast<model::HVACComponent>();
+            auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
+            hvacComponent.addToNode(inletNode);
+          }
+        }
+      }
+
+      // Translate design fluid temperatures. These may override previous hardcoded values.
+      auto dsgnSupWtrTemp = lexicalCastToDouble(fluidSysElement.child("DsgnSupWtrTemp"));
+      if( dsgnSupWtrTemp ) {
+        dsgnSupWtrTemp = unitToUnit(dsgnSupWtrTemp.get(),"F","C").get();
+        coil.setRatedInletWaterTemperature(dsgnSupWtrTemp.get());
+      }
+
+      auto dsgnSupWtrDelT = lexicalCastToDouble(fluidSysElement.child("DsgnSupWtrDelT"));
+      if( dsgnSupWtrDelT ) {
+        dsgnSupWtrDelT = dsgnSupWtrDelT.get() / 1.8;
+      }
+
+      if( dsgnSupWtrTemp && dsgnSupWtrDelT ) {
+        coil.setRatedOutletWaterTemperature(dsgnSupWtrTemp - dsgnSupWtrDelT)
+      }
     }
 
     result = coil;
