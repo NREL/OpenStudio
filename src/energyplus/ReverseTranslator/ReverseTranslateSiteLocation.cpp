@@ -50,9 +50,9 @@ namespace energyplus {
       site.setElevation(*od);
     }
 
-    s = workspaceObject.getString(openstudio::Site_LocationFields::KeepSiteLocationInformation);
-    if (s) {
-      if (istringEqual("Yes", *s)) {
+    optS = workspaceObject.getString(openstudio::Site_LocationFields::KeepSiteLocationInformation);
+    if (optS) {
+      if (istringEqual("Yes", *optS)) {
         site.setKeepSiteLocationInformation(true);
       } else {
         site.setKeepSiteLocationInformation(false);
