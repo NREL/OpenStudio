@@ -35,6 +35,7 @@
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/OS_AirTerminal_SingleDuct_SeriesPIU_Reheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -301,7 +302,7 @@ namespace model {
       auto hvacComponent = fan();
       if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
         if (istringEqual(fanControlType, "VariableSpeed")) {
-          return false
+          return false;
         }
       }
 

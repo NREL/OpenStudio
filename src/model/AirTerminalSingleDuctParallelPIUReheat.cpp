@@ -168,29 +168,29 @@ namespace model {
       return isEmpty(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ConvergenceTolerance);
     }
 
-    std::string AirTerminalSingleDuctSeriesPIUReheat_Impl::fanControlType() const {
+    std::string AirTerminalSingleDuctParallelPIUReheat_Impl::fanControlType() const {
       boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanControlType, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double AirTerminalSingleDuctSeriesPIUReheat_Impl::minimumFanTurnDownRatio() const {
+    double AirTerminalSingleDuctParallelPIUReheat_Impl::minimumFanTurnDownRatio() const {
       boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumFanTurnDownRatio, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    boost::optional<std::string> AirTerminalSingleDuctSeriesPIUReheat_Impl::heatingControlType() const {
+    boost::optional<std::string> AirTerminalSingleDuctParallelPIUReheat_Impl::heatingControlType() const {
       return getString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HeatingControlType, true);
     }
 
-    double AirTerminalSingleDuctSeriesPIUReheat_Impl::designHeatingDischargeAirTemperature() const {
+    double AirTerminalSingleDuctParallelPIUReheat_Impl::designHeatingDischargeAirTemperature() const {
       boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::DesignHeatingDischargeAirTemperature, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double AirTerminalSingleDuctSeriesPIUReheat_Impl::highLimitHeatingDischargeAirTemperature() const {
+    double AirTerminalSingleDuctParallelPIUReheat_Impl::highLimitHeatingDischargeAirTemperature() const {
       boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, true);
       OS_ASSERT(value);
       return value.get();
@@ -305,7 +305,7 @@ namespace model {
       auto hvacComponent = fan();
       if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
         if (istringEqual(fanControlType, "VariableSpeed")) {
-          return false
+          return false;
         }
       }
 
