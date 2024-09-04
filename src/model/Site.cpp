@@ -234,6 +234,16 @@ namespace model {
       return isEmpty(OS_SiteFields::Terrain);
     }
 
+    bool Site_Impl::keepSiteLocationInformation() const {
+      boost::optional<std::string> value = getString(OS_SiteFields::KeepSiteLocationInformation, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool Site_Impl::isKeepSiteLocationInformationDefaulted() const {
+      return isEmpty(OS_SiteFields::KeepSiteLocationInformation);
+    }
+
     bool Site_Impl::setLatitude(double latitude) {
       bool result = setDouble(OS_SiteFields::Latitude, latitude);
       return result;
@@ -281,6 +291,22 @@ namespace model {
 
     void Site_Impl::resetTerrain() {
       bool result = setString(OS_SiteFields::Terrain, "");
+      OS_ASSERT(result);
+    }
+
+    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+      bool result = false;
+      if (keepSiteLocationInformation) {
+        result = setString(OS_SiteFields::KeepSiteLocationInformation, "Yes");
+      } else {
+        result = setString(OS_SiteFields::KeepSiteLocationInformation, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Site_Impl::resetKeepSiteLocationInformation() {
+      bool result = setString(OS_SiteFields::KeepSiteLocationInformation, "");
       OS_ASSERT(result);
     }
 
@@ -422,6 +448,14 @@ namespace model {
     return getImpl<detail::Site_Impl>()->isTerrainDefaulted();
   }
 
+  bool Site::keepSiteLocationInformation() const {
+    return getImpl<detail::Site_Impl>()->keepSiteLocationInformation();
+  }
+
+  bool Site::isKeepSiteLocationInformationDefaulted() const {
+    return getImpl<detail::Site_Impl>()->isKeepSiteLocationInformationDefaulted();
+  }
+
   bool Site::setLatitude(double latitude) {
     return getImpl<detail::Site_Impl>()->setLatitude(latitude);
   }
@@ -460,6 +494,14 @@ namespace model {
 
   void Site::resetTerrain() {
     getImpl<detail::Site_Impl>()->resetTerrain();
+  }
+
+  bool Site::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+    return getImpl<detail::Site_Impl>()->setKeepSiteLocationInformation(keepSiteLocationInformation);
+  }
+
+  void Site::resetKeepSiteLocationInformation() {
+    getImpl<detail::Site_Impl>()->resetKeepSiteLocationInformation();
   }
 
   boost::optional<WeatherFile> Site::weatherFile() const {

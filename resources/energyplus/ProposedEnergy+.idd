@@ -22610,7 +22610,7 @@ Sizing:Zone,
       \type object-list
       \object-list ScheduleNames
   A15;\field Type of Space Sum to Use
-      \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm. 
+      \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm.
       \type choice
       \key Coincident
       \key NonCoincident
