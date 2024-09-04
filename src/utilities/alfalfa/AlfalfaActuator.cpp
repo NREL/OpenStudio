@@ -31,22 +31,22 @@ namespace alfalfa {
       component_type = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType);
       control_type = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType);
     } else {
-      LOG(Error, "Unable to create Actuator from Object of type " + idd_type.valueDescription());
-      throw;
+      throw std::runtime_error("Unable to create Actuator from Object of type " + idd_type.valueDescription());
     }
 
     if (!component_name.is_initialized()) {
-      LOG(Error, "Unable to create Actuator from EMS Actuator without a Component Name");
-      throw;
+      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Name");
     }
     if (!component_type.is_initialized()) {
-      LOG(Error, "Unable to create Actuator from EMS Actuator without a Component Type");
-      throw;
+      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Type");
     }
     if (!control_type.is_initialized()) {
-      LOG(Error, "Unable to create Actuator from EMS Actuator without a Control Type");
-      throw;
+      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Control Type");
     }
+
+    parameters["component_name"] = component_name.get();
+    parameters["component_type"] = component_type.get();
+    parameters["control_type"] = control_type.get();
   }
 }  // namespace alfalfa
 }  // namespace openstudio

@@ -24,12 +24,31 @@ namespace alfalfa {
    public:
     AlfalfaComponent(const std::string& type, const Capability capabilities);
 
+    /**
+     * Get if the component can be used as an Input to the model
+     */
     bool canInput() const;
 
+    /**
+     * Get if the component can be used as an Output from the model
+     */
     bool canOutput() const;
 
+    bool operator==(const AlfalfaComponent& rhs) const;
+
+    /**
+     * A string which reflects the type of the component
+     */
     std::string type;
+
+    /**
+     * The raw input/output capabilities of the component
+     */
     Capability capabilities;
+
+    /**
+     * JSON encoded parameters of the component
+     */
     Json::Value parameters;
   };
 }  // namespace alfalfa

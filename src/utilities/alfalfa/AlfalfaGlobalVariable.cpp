@@ -24,13 +24,11 @@ namespace alfalfa {
     } else if (idd_type == IddObjectType::EnergyManagementSystem_GlobalVariable) {
       variable_name = global_variable.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName);
     } else {
-      LOG(Error, "Unable to create Global Variable from Object of type " + idd_type.valueDescription());
-      throw;
+      throw std::runtime_error("Unable to create Global Variable from Object of type " + idd_type.valueDescription());
     }
 
     if (!variable_name.is_initialized()) {
-      LOG(Error, "Unable to create Global Variable from EMS Output Variable without a Name");
-      throw;
+      throw std::runtime_error("Unable to create Global Variable from EMS Output Variable without a Name");
     }
 
     parameters["variable_name"] = variable_name.get();

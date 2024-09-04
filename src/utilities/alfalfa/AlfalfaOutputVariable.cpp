@@ -37,17 +37,17 @@ namespace alfalfa {
       variable_key = "EMS";
       variable_name = output_variable.getString(EnergyManagementSystem_OutputVariableFields::EMSVariableName);
     } else {
-      LOG(Error, "Unable to create Output Variable from Object of type " + idd_type.valueDescription());
-      throw;
+      throw std::runtime_error("Unable to create Output Variable from Object of type " + idd_type.valueDescription());
     }
 
     if (!variable_key.is_initialized()) {
-      LOG(Error, "Unable to create Output Variable from Output Variable without a Key");
-      throw;
+      throw std::runtime_error("Unable to create Output Variable from Output Variable without a Key");
     }
     if (!variable_name.is_initialized()) {
-      LOG(Error, "Unable to create Output Variable from Output Variable without a Variable Name");
-      throw;
+      throw std::runtime_error("Unable to create Output Variable from Output Variable without a Variable Name");
+    }
+    if (variable_key.get() == "*") {
+      throw std::runtime_error("Unable to create Output Variable from Output Variable with wildcard '*' key");
     }
 
     parameters["variable_key"] = variable_key.get();

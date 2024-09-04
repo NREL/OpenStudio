@@ -27,11 +27,11 @@ class AlfalfaMeasure(openstudio.measure.ModelMeasure):
         """
 
         alfalfa = runner.alfalfa
-        alfalfa.addConstant("safe value", 10)
-        alfalfa.addMeter("Facility Electricity", "Facility:Electricity")
-        alfalfa.addActuator("example actuator", "somehting", "another thing", "key")
-        alfalfa.addOutputVariable("output variable", "Whole Building", "Facility Total Purchased Electricity Energy")
-        alfalfa.addGlobalVariable("global variable", "global_1")
+        alfalfa.addConstant(10, "safe value")
+        alfalfa.addMeter("Facility:Electricity", "Facility Electricity")
+        alfalfa.addActuator("somehting", "another thing", "key", "example actuator")
+        alfalfa.addOutputVariable("Whole Building", "Facility Total Purchased Electricity Energy", "output variable")
+        alfalfa.addGlobalVariable("global_1", "global variable")
         super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
         return True

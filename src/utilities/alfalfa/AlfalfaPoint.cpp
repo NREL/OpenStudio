@@ -1,55 +1,43 @@
 #include "AlfalfaPoint.hpp"
 #include "AlfalfaPoint_Impl.hpp"
 
+#include <boost/regex.hpp>
+
 namespace openstudio {
 namespace alfalfa {
   namespace detail {
     AlfalfaPoint_Impl::AlfalfaPoint_Impl() {}
-
-    AlfalfaPoint_Impl::AlfalfaPoint_Impl(const std::string& display_name) : m_display_name(display_name) {}
-
-    AlfalfaPoint_Impl::AlfalfaPoint_Impl(const std::string& display_name, const std::string& id) : m_display_name(display_name), m_id(id) {}
-
-    Json::Value AlfalfaPoint_Impl::toJSON() const {
-      Json::Value point;
-
-      point["id"] = m_id;
-      point["name"] = m_display_name;
-      if (m_input.is_initialized()) {
-        point["input"]["type"] = m_input.get().type;
-        point["input"]["parameters"] = m_input.get().parameters;
-      }
-
-      if (m_output.is_initialized()) {
-        point["output"]["type"] = m_output.get().type;
-        point["output"]["parameters"] = m_output.get().parameters;
-      }
-
-      return point;
-    }
   }  // namespace detail
 
   AlfalfaPoint::AlfalfaPoint() : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {}
 
   AlfalfaPoint::AlfalfaPoint(const std::string& display_name)
-    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl(display_name))) {}
+    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {
+      setDisplayName(display_name);
+    }
 
-  AlfalfaPoint::AlfalfaPoint(const std::string& display_name, const std::string& id)
-    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl(display_name, id))) {}
 
   void AlfalfaPoint::setInput(const AlfalfaComponent& component) {
-    m_impl->m_input = component;
+    if(component.canInput()) {
+      m_impl->m_input = component;
+    } else {
+      throw std::runtime_error("Component of type: " + component.type + " cannot be used as an input.");
+    }
   }
 
-  boost::optional<AlfalfaComponent> AlfalfaPoint::getInput() {
+  boost::optional<AlfalfaComponent> AlfalfaPoint::input() const {
     return m_impl->m_input;
   }
 
   void AlfalfaPoint::setOutput(const AlfalfaComponent& component) {
-    m_impl->m_output = component;
+    if(component.canOutput()) {
+      m_impl->m_output = component;
+    } else {
+      throw std::runtime_error("Component of type: " + component.type + " cannot be used as an output.");
+    }
   }
 
-  boost::optional<AlfalfaComponent> AlfalfaPoint::getOutput() {
+  boost::optional<AlfalfaComponent> AlfalfaPoint::output() const {
     return m_impl->m_output;
   }
 
@@ -57,16 +45,87 @@ namespace alfalfa {
     m_impl->m_units = units;
   }
 
-  boost::optional<std::string> AlfalfaPoint::getUnits() {
+  boost::optional<std::string> AlfalfaPoint::units() const {
     return m_impl->m_units;
   }
 
-  std::string AlfalfaPoint::id() const {
-    return m_impl->m_id;
+  boost::optional<std::string> AlfalfaPoint::id() const {
+    boost::optional<std::string> result = m_impl->m_id;
+    if (!result.is_initialized()) {
+      std::string id = toIdString(displayName());
+      if (isValidId(id)) {
+        result = id;
+      } else {
+        LOG(Warn, "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.");
+      }
+    }
+    return result;
+  }
+
+  void AlfalfaPoint::setId(const std::string& id) {
+    if(isValidId(id)){
+      m_impl->m_id = id;
+    } else {
+      throw std::runtime_error(ID_VALID_CHARS_MSG);
+    }
+  }
+
+  std::string AlfalfaPoint::displayName() const{
+    return m_impl->m_display_name;
+  }
+
+  void AlfalfaPoint::setDisplayName(const std::string& display_name) {
+    m_impl->m_display_name = display_name;
+    if(!m_impl->m_id.is_initialized()) {
+      std::string id = toIdString(display_name);
+      if(!isValidId(id)) {
+        LOG(Warn, "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.");
+      }
+    }
+  }
+
+  bool AlfalfaPoint::optional() const {
+    return m_impl->m_optional;
+  }
+
+  void AlfalfaPoint::setOptional(bool optional) {
+    m_impl->m_optional = optional;
   }
 
   Json::Value AlfalfaPoint::toJSON() const {
-    return m_impl->toJSON();
+    Json::Value point;
+
+    if (id().is_initialized()) {
+      point["id"] = id().get();
+    } else {
+      throw std::runtime_error("Point requires a valid ID for export. " + ID_VALID_CHARS_MSG);
+    }
+    point["name"] = displayName();
+    if (input().is_initialized()) {
+      point["input"]["type"] = input().get().type;
+      point["input"]["parameters"] = input().get().parameters;
+    }
+
+    if (output().is_initialized()) {
+      point["output"]["type"] = output().get().type;
+      point["output"]["parameters"] = output().get().parameters;
+    }
+
+    if (units().is_initialized()) {
+      point["units"] = units().get();
+    }
+
+    point["optional"] = optional();
+
+    return point;
+  }
+
+  bool AlfalfaPoint::isValidId(const std::string& id) const{
+    return boost::regex_match(id, boost::regex("^[A-Za-z0-9_\\-\\[\\]:()]*$"));
+  }
+
+  std::string AlfalfaPoint::toIdString(const std::string& str) const{
+    return boost::regex_replace(str, boost::regex(" "), "_");
   }
 
   bool AlfalfaPoint::operator==(const AlfalfaPoint& rhs) const {

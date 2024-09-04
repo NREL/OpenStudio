@@ -14,5 +14,9 @@ namespace alfalfa {
     return capabilities & Capability::Output;
   }
 
+  bool AlfalfaComponent::operator==(const AlfalfaComponent& rhs) const{
+    return type == rhs.type && capabilities == rhs.capabilities && parameters == rhs.parameters;
+  }
+
 }  // namespace alfalfa
 }  // namespace openstudio
