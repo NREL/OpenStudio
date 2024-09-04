@@ -207,7 +207,7 @@ namespace energyplus {
 
     // FanControlType
     if ((s = modelObject.fanControlType())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, s.get());
+      idfObject.setString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, s.get());
     }
 
     // MinimumFanTurnDownRatio
@@ -217,7 +217,7 @@ namespace energyplus {
 
     // HeatingControlType
     if ((s = modelObject.heatingControlType())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, s.get());
+      idfObject.setString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, s.get());
     }
 
     // DesignHeatingDischargeAirTemperature

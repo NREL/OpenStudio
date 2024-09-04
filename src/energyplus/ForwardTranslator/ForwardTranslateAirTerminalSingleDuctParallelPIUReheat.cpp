@@ -217,27 +217,27 @@ namespace energyplus {
 
     // FanControlType
     if ((s = modelObject.fanControlType())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanControlType, s.get());
+      idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanControlType, s.get());
     }
 
     // MinimumFanTurnDownRatio
     if ((value = modelObject.minimumFanTurnDownRatio())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MinimumFanTurnDownRatio, value.get());
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumFanTurnDownRatio, value.get());
     }
 
     // HeatingControlType
     if ((s = modelObject.heatingControlType())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, s.get());
+      idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HeatingControlType, s.get());
     }
 
     // DesignHeatingDischargeAirTemperature
     if ((value = modelObject.designHeatingDischargeAirTemperature())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::DesignHeatingDischargeAirTemperature, value.get());
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::DesignHeatingDischargeAirTemperature, value.get());
     }
 
     // HighLimitHeatingDischargeAirTemperature
     if ((value = modelObject.highLimitHeatingDischargeAirTemperature())) {
-      idfObject.setDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, value.get());
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, value.get());
     }
 
     return _airDistributionUnit;
