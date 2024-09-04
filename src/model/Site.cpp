@@ -448,6 +448,14 @@ namespace model {
     return getImpl<detail::Site_Impl>()->isTerrainDefaulted();
   }
 
+  bool Site::keepSiteLocationInformation() const {
+    return getImpl<detail::Site_Impl>()->keepSiteLocationInformation();
+  }
+
+  bool Site::isKeepSiteLocationInformationDefaulted() const {
+    return getImpl<detail::Site_Impl>()->isKeepSiteLocationInformationDefaulted();
+  }
+
   bool Site::setLatitude(double latitude) {
     return getImpl<detail::Site_Impl>()->setLatitude(latitude);
   }
@@ -486,6 +494,14 @@ namespace model {
 
   void Site::resetTerrain() {
     getImpl<detail::Site_Impl>()->resetTerrain();
+  }
+
+  bool Site::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+    return getImpl<detail::Site_Impl>()->setKeepSiteLocationInformation(keepSiteLocationInformation);
+  }
+
+  void Site::resetKeepSiteLocationInformation() {
+    getImpl<detail::Site_Impl>()->resetKeepSiteLocationInformation();
   }
 
   boost::optional<WeatherFile> Site::weatherFile() const {
