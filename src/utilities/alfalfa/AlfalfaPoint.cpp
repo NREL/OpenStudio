@@ -11,14 +11,12 @@ namespace alfalfa {
 
   AlfalfaPoint::AlfalfaPoint() : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {}
 
-  AlfalfaPoint::AlfalfaPoint(const std::string& display_name)
-    : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {
-      setDisplayName(display_name);
-    }
-
+  AlfalfaPoint::AlfalfaPoint(const std::string& display_name) : m_impl(std::shared_ptr<detail::AlfalfaPoint_Impl>(new detail::AlfalfaPoint_Impl())) {
+    setDisplayName(display_name);
+  }
 
   void AlfalfaPoint::setInput(const AlfalfaComponent& component) {
-    if(component.canInput()) {
+    if (component.canInput()) {
       m_impl->m_input = component;
     } else {
       throw std::runtime_error("Component of type: " + component.type + " cannot be used as an input.");
@@ -30,7 +28,7 @@ namespace alfalfa {
   }
 
   void AlfalfaPoint::setOutput(const AlfalfaComponent& component) {
-    if(component.canOutput()) {
+    if (component.canOutput()) {
       m_impl->m_output = component;
     } else {
       throw std::runtime_error("Component of type: " + component.type + " cannot be used as an output.");
@@ -63,22 +61,22 @@ namespace alfalfa {
   }
 
   void AlfalfaPoint::setId(const std::string& id) {
-    if(isValidId(id)){
+    if (isValidId(id)) {
       m_impl->m_id = id;
     } else {
       throw std::runtime_error(ID_VALID_CHARS_MSG);
     }
   }
 
-  std::string AlfalfaPoint::displayName() const{
+  std::string AlfalfaPoint::displayName() const {
     return m_impl->m_display_name;
   }
 
   void AlfalfaPoint::setDisplayName(const std::string& display_name) {
     m_impl->m_display_name = display_name;
-    if(!m_impl->m_id.is_initialized()) {
+    if (!m_impl->m_id.is_initialized()) {
       std::string id = toIdString(display_name);
-      if(!isValidId(id)) {
+      if (!isValidId(id)) {
         LOG(Warn, "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.");
       }
     }
@@ -120,11 +118,11 @@ namespace alfalfa {
     return point;
   }
 
-  bool AlfalfaPoint::isValidId(const std::string& id) const{
+  bool AlfalfaPoint::isValidId(const std::string& id) const {
     return boost::regex_match(id, boost::regex("^[A-Za-z0-9_\\-\\[\\]:()]*$"));
   }
 
-  std::string AlfalfaPoint::toIdString(const std::string& str) const{
+  std::string AlfalfaPoint::toIdString(const std::string& str) const {
     return boost::regex_replace(str, boost::regex(" "), "_");
   }
 

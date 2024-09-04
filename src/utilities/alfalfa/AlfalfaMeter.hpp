@@ -9,17 +9,17 @@ namespace openstudio {
 namespace alfalfa {
   class AlfalfaMeter : public AlfalfaComponent
   {
-    public:
-      /**
+   public:
+    /**
        * Create an AlfalfaMeter Component from a meter_name which reflects the Output:Meter EneregyPlus IDD
        */
-      AlfalfaMeter(const std::string& meter_name);
+    AlfalfaMeter(const std::string& meter_name);
 
-      /**
+    /**
        * Create an AlfalfaMeter Component from an IdfObject.
        * Valid idf_object types are OutputMeter and IdfObject(IddObjectType::Output_Meter).
        */
-      AlfalfaMeter(const IdfObject& output_meter);
+    AlfalfaMeter(const IdfObject& output_meter);
   };
 }  // namespace alfalfa
 }  // namespace openstudio

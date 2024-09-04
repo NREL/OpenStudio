@@ -9,17 +9,17 @@ namespace openstudio {
 namespace alfalfa {
   class AlfalfaActuator : public AlfalfaComponent
   {
-    public:
-      /**
+   public:
+    /**
        * Create an AlfalfaActuator Component from a component_name, component_type, and control_type which reflect the EneregyManagementSystem:Actuator EnergyPlus IDD
        */
-      AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type);
+    AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type);
 
-      /**
+    /**
        * Create an AlfalfaActuator Component form an IdfObject.
        * Valid idf_object types are EnergyManagementSystemActuator and IdfObject(IddObjectType::EnergyManagementSystem_Actuator)
        */
-      AlfalfaActuator(const IdfObject& actuator);
+    AlfalfaActuator(const IdfObject& actuator);
   };
 }  // namespace alfalfa
 }  // namespace openstudio
