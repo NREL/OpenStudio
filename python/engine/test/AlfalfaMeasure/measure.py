@@ -26,12 +26,12 @@ class AlfalfaMeasure(openstudio.measure.ModelMeasure):
         define what happens when the measure is run
         """
 
-        alfalfa = runner.alfalfa
-        alfalfa.addConstant(10, "safe value")
-        alfalfa.addMeter("Facility:Electricity", "Facility Electricity")
-        alfalfa.addActuator("somehting", "another thing", "key", "example actuator")
-        alfalfa.addOutputVariable("Whole Building", "Facility Total Purchased Electricity Energy", "output variable")
-        alfalfa.addGlobalVariable("global_1", "global variable")
+        alfalfa = runner.alfalfa()
+        alfalfa.exposeConstant(10, "safe value")
+        alfalfa.exposeMeter("Facility:Electricity", "Facility Electricity")
+        alfalfa.exposeActuator("somehting", "another thing", "key", "example actuator")
+        alfalfa.exposeOutputVariable("Whole Building", "Facility Total Purchased Electricity Energy", "output variable")
+        alfalfa.exposeGlobalVariable("global_1", "global variable")
         super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
         return True

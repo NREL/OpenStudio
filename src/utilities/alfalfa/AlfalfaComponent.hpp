@@ -3,6 +3,8 @@
 
 #include <json/json.h>
 
+#include "../UtilitiesAPI.hpp"
+
 namespace openstudio {
 namespace alfalfa {
   enum Capability
@@ -19,7 +21,7 @@ namespace alfalfa {
     return static_cast<Capability>(static_cast<int>(a) & static_cast<int>(b));
   }
 
-  class AlfalfaComponent
+  class UTILITIES_API AlfalfaComponent
   {
    public:
     AlfalfaComponent(const std::string& type, const Capability capabilities);

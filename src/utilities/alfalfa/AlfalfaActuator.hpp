@@ -4,10 +4,11 @@
 #include "AlfalfaComponent.hpp"
 #include "utilities/idf/IdfObject.hpp"
 #include "utilities/core/Logger.hpp"
+#include "../UtilitiesAPI.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaActuator : public AlfalfaComponent
+  class UTILITIES_API AlfalfaActuator : public AlfalfaComponent
   {
    public:
     /**

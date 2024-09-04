@@ -4,9 +4,11 @@
 #include "AlfalfaComponent.hpp"
 #include "utilities/core/Logger.hpp"
 
+#include "../UtilitiesAPI.hpp"
+
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaConstant : public AlfalfaComponent
+  class UTILITIES_API AlfalfaConstant : public AlfalfaComponent
   {
    public:
     /**

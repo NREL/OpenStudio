@@ -5,9 +5,11 @@
 #include "utilities/idf/IdfObject.hpp"
 #include "utilities/core/Logger.hpp"
 
+#include "../UtilitiesAPI.hpp"
+
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaGlobalVariable : public AlfalfaComponent
+  class UTILITIES_API AlfalfaGlobalVariable : public AlfalfaComponent
   {
    public:
     /**

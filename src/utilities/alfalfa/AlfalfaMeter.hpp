@@ -5,9 +5,11 @@
 #include "utilities/idf/IdfObject.hpp"
 #include "utilities/core/Logger.hpp"
 
+#include "../UtilitiesAPI.hpp"
+
 namespace openstudio {
 namespace alfalfa {
-  class AlfalfaMeter : public AlfalfaComponent
+  class UTILITIES_API AlfalfaMeter : public AlfalfaComponent
   {
    public:
     /**
