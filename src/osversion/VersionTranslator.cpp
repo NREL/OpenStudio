@@ -9223,17 +9223,20 @@ namespace osversion {
           if ((value = object.getString(i))) {
             if (i < 7) {
               newObject.setString(i, value.get());
-            } else if (i < 9) {
-              // no op
-            } else if (i < 12) {
+            } else if (i < 10) {
               newObject.setString(i + 2, value.get());
-            } else if (i < 13) {
-              // no op
             } else {
               newObject.setString(i + 3, value.get());
             }
           }
         }
+
+        newObject.setString(7, "");
+        newObject.setString(8, "");
+        newObject.setString(12, "Autosize");
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
