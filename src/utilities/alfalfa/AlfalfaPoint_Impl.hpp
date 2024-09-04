@@ -16,17 +16,12 @@ namespace alfalfa {
      public:
       AlfalfaPoint_Impl();
 
-      AlfalfaPoint_Impl(const std::string& display_name);
-
-      AlfalfaPoint_Impl(const std::string& display_name, const std::string& id);
-
-      Json::Value toJSON() const;
-
      protected:
       friend class openstudio::alfalfa::AlfalfaPoint;
       boost::optional<AlfalfaComponent> m_input, m_output;
-      std::string m_display_name, m_id;
-      boost::optional<std::string> m_units;
+      std::string m_display_name;
+      boost::optional<std::string> m_units, m_id;
+      bool m_optional = true;
     };
   }  // namespace detail
 }  // namespace alfalfa

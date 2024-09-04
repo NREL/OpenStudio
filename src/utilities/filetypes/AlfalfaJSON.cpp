@@ -48,7 +48,8 @@ namespace alfalfa {
       if (makeParentFolder(m_JSONPath)) {
         Json::Value root;
         for (AlfalfaPoint point : m_points) {
-          root[point.id()] = point.toJSON();
+          // No guard here as the toJSON call will throw an exception if the id does not exist.
+          root[point.id().get()] = point.toJSON();
         }
         std::ofstream outFile(openstudio::toSystemFilename(m_JSONPath));
 
@@ -158,9 +159,18 @@ namespace alfalfa {
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name) {
+    std::string _display_name = display_name;
+    boost::optional<std::string> name = getName(global_variable);
     try {
       AlfalfaGlobalVariable component(global_variable);
-      return exposePoint(component, display_name);
+
+      if (display_name.size() == 0) {
+        if (name.is_initialized()) {
+          _display_name = name.get();
+        }
+      }
+
+      return exposePoint(component, _display_name);
     } catch (...) {
       return boost::none;
     }
@@ -231,17 +241,8 @@ namespace alfalfa {
         return display_name;
       }
     }
-    IddObjectType idd_type = idf_object.iddObject().type();
-    if (idd_type == IddObjectType::OS_EnergyManagementSystem_Actuator) {
-      return idf_object.getString(OS_EnergyManagementSystem_ActuatorFields::Name);
-    } else if (idd_type == IddObjectType::EnergyManagementSystem_Actuator) {
-      return idf_object.getString(EnergyManagementSystem_ActuatorFields::Name);
-    } else if (idd_type == IddObjectType::OS_Output_Variable) {
-      return idf_object.getString(OS_Output_VariableFields::Name);
-    } else if (idd_type == IddObjectType::OS_EnergyManagementSystem_OutputVariable) {
-      return idf_object.getString(OS_EnergyManagementSystem_OutputVariableFields::Name);
-    } else if (idd_type == IddObjectType::EnergyManagementSystem_OutputVariable) {
-      return idf_object.getString(EnergyManagementSystem_OutputVariableFields::Name);
+    if (idf_object.name().is_initialized() && idf_object.name().get().size() > 0) {
+      return idf_object.name();
     }
     return boost::none;
   }

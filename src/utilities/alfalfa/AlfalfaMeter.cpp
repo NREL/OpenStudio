@@ -21,13 +21,11 @@ namespace alfalfa {
     } else if (idd_type == IddObjectType::OS_Output_Meter) {
       meter_name = output_meter.getString(OS_Output_MeterFields::Name);
     } else {
-      LOG(Error, "Unable to create Meter from Object of type " + idd_type.valueDescription());
-      throw;
+      throw std::runtime_error("Unable to create Meter from Object of type " + idd_type.valueDescription());
     }
 
     if (!meter_name.is_initialized()) {
-      LOG(Error, "Unable to create Meter from Output Meter without a Name");
-      throw;
+      throw std::runtime_error("Unable to create Meter from Output Meter without a Name");
     }
 
     parameters["meter_name"] = meter_name.get();

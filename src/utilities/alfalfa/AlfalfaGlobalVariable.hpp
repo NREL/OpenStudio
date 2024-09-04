@@ -9,14 +9,17 @@ namespace openstudio {
 namespace alfalfa {
   class AlfalfaGlobalVariable : public AlfalfaComponent
   {
-   public:
-    AlfalfaGlobalVariable(const std::string& variable_name);
+    public:
+      /**
+       * Create an AlfalfaGlobalVariable Component from a variable name which reflect the EneregyManagementSystem:GlobalVariable EnergyPlus IDD
+       */
+      AlfalfaGlobalVariable(const std::string& variable_name);
 
-    AlfalfaGlobalVariable(const IdfObject& global_variable);
-
-   private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.AlfalfaGlobalVariable");
+      /**
+       * Create an AlfalfaGlobalVariable Component from an IdfObject.
+       * Valid idf_object types are EnergyManagementSystemGlobalVariable and IdfObject(IddObjectType::EnergyManagementSystem_GlobalVariable)
+       */
+      AlfalfaGlobalVariable(const IdfObject& global_variable);
   };
 }  // namespace alfalfa
 }  // namespace openstudio
