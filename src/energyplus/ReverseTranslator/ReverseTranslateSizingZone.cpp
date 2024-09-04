@@ -371,8 +371,8 @@ namespace energyplus {
         }
       }
 
-      // TypeofZoneSumtoUse
-      s = workspaceObject.getString(Sizing_ZoneFields::TypeofZoneSumtoUse);
+      // TypeofSpaceSumtoUse
+      s = workspaceObject.getString(Sizing_ZoneFields::TypeofSpaceSumtoUse);
       if (s) {
         sizingZone.setSizingOption(s.get());
       }

@@ -370,7 +370,7 @@ namespace energyplus {
 
     s = modelObject.sizingOption();
     if (s) {
-      idfObject.setString(Sizing_ZoneFields::TypeofZoneSumtoUse, s.get());
+      idfObject.setString(Sizing_ZoneFields::TypeofSpaceSumtoUse, s.get());
     }
 
     return idfObject;
