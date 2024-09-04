@@ -10,6 +10,8 @@
 #include "utilities/core/Optional.hpp"
 #include "utilities/core/Logger.hpp"
 
+#include "../UtilitiesAPI.hpp"
+
 #include <string>
 #include <json/json.h>
 
@@ -18,7 +20,7 @@ namespace alfalfa {
   namespace detail {
     class AlfalfaPoint_Impl;
   }
-  class AlfalfaPoint
+  class UTILITIES_API AlfalfaPoint
   {
    public:
     AlfalfaPoint();

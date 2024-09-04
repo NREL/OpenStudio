@@ -9,6 +9,7 @@
 #include <vector>
 #include <json/json.h>
 
+#include "../UtilitiesAPI.hpp"
 #include "../alfalfa/AlfalfaPoint.hpp"
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
@@ -22,7 +23,7 @@ namespace alfalfa {
     class AlfalfaJSON_Impl;
   }
 
-  class AlfalfaJSON
+  class UTILITIES_API AlfalfaJSON
   {
    public:
     /** @name Constructors and Destructors */
