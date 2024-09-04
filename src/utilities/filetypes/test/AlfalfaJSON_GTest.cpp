@@ -30,7 +30,6 @@
 #include <utilities/idd/Output_Meter_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
-
 #include <json/json.h>
 
 using namespace openstudio;
@@ -183,12 +182,11 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   point.id();
   ASSERT_EQ(0, ss.logMessages().size());
 
-
   //Test logging in constructor
   AlfalfaPoint invalid_point("Point$$$");
   ASSERT_EQ(1, ss.logMessages().size());
   LogMessage invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_STREQ(invalid_id_msg.logMessage().c_str(),DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_STREQ(invalid_id_msg.logMessage().c_str(), DISPLAY_NAME_VALID_CHARS_MSG);
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
   EXPECT_STREQ(invalid_id_msg.logChannel().c_str(), LOG_CHANNEL);
   ss.resetStringStream();
@@ -206,27 +204,31 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   ASSERT_EQ(ss.logMessages().size(), 0);
 
   // Test exception handling in setId()
-  EXPECT_THROW({
-    try {
-      invalid_point.setId("Point_123_$$$");
-    } catch (const std::runtime_error& error) {
-      EXPECT_STREQ(error.what(),ID_VALID_CHARS_MSG);
-      throw;
-    }
-    }, std::runtime_error);
+  EXPECT_THROW(
+    {
+      try {
+        invalid_point.setId("Point_123_$$$");
+      } catch (const std::runtime_error& error) {
+        EXPECT_STREQ(error.what(), ID_VALID_CHARS_MSG);
+        throw;
+      }
+    },
+    std::runtime_error);
   ASSERT_EQ(ss.logMessages().size(), 0);
 
   // Test exception handling in toJSON()
-  EXPECT_THROW({
-    try {
-      Json::Value root = invalid_point.toJSON();
-    } catch (const std::runtime_error& error) {
-      char message[200];
-      sprintf(message, "Point requires a valid ID for export. %s", ID_VALID_CHARS_MSG);
-      EXPECT_STREQ(error.what(), message);
-      throw;
-    }
-  }, std::runtime_error);
+  EXPECT_THROW(
+    {
+      try {
+        Json::Value root = invalid_point.toJSON();
+      } catch (const std::runtime_error& error) {
+        char message[200];
+        sprintf(message, "Point requires a valid ID for export. %s", ID_VALID_CHARS_MSG);
+        EXPECT_STREQ(error.what(), message);
+        throw;
+      }
+    },
+    std::runtime_error);
   ASSERT_EQ(ss.logMessages().size(), 1);
   invalid_id_msg = ss.logMessages().at(0);
   EXPECT_STREQ(invalid_id_msg.logMessage().c_str(), DISPLAY_NAME_VALID_CHARS_MSG);
@@ -284,28 +286,31 @@ TEST(AlfalfaJSON, point_component_exceptions) {
   ASSERT_FALSE(point.input().is_initialized());
   ASSERT_FALSE(point.output().is_initialized());
 
-  EXPECT_THROW({
-    try {
-      point.setInput(constant);
-    } catch (std::runtime_error error) {
-      char expected_error[200];
-      sprintf(expected_error, "Component of type: %s cannot be used as an input.", constant.type.c_str());
-      ASSERT_STREQ(error.what(), expected_error);
-      throw;
-    }
-  }, std::runtime_error);
+  EXPECT_THROW(
+    {
+      try {
+        point.setInput(constant);
+      } catch (std::runtime_error error) {
+        char expected_error[200];
+        sprintf(expected_error, "Component of type: %s cannot be used as an input.", constant.type.c_str());
+        ASSERT_STREQ(error.what(), expected_error);
+        throw;
+      }
+    },
+    std::runtime_error);
 
-
-  EXPECT_THROW({
-    try {
-      point.setOutput(input_only);
-    } catch (std::runtime_error error) {
-      char expected_error[200];
-      sprintf(expected_error, "Component of type: %s cannot be used as an output.", input_only.type.c_str());
-      ASSERT_STREQ(error.what(), expected_error);
-      throw;
-    }
-  }, std::runtime_error);
+  EXPECT_THROW(
+    {
+      try {
+        point.setOutput(input_only);
+      } catch (std::runtime_error error) {
+        char expected_error[200];
+        sprintf(expected_error, "Component of type: %s cannot be used as an output.", input_only.type.c_str());
+        ASSERT_STREQ(error.what(), expected_error);
+        throw;
+      }
+    },
+    std::runtime_error);
 
   // Confirm that point components are still empty
   ASSERT_FALSE(point.input().is_initialized());
