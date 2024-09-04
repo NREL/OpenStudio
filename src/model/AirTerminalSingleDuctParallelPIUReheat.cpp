@@ -408,6 +408,8 @@ namespace model {
           }
         }
 
+        return result;
+
       } else {
         LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanSystemModel, not '" << hvacComponent.iddObjectType().valueName() << "') for "
                                                                                           << briefDescription());
