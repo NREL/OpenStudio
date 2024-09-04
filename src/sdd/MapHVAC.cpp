@@ -2414,7 +2414,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       if( dsgnSupWtrTemp && dsgnSupWtrDelT ) {
-        coil.setRatedOutletWaterTemperature(dsgnSupWtrTemp - dsgnSupWtrDelT)
+        coil.setRatedOutletWaterTemperature(dsgnSupWtrTemp.get() - dsgnSupWtrDelT.get());
       }
     }
 
@@ -3180,6 +3180,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRc
 
   auto latentCoolingTable = makeTable(_clgLatEff75, _clgLatEff100, model, name + "_LatentCoolingEff");
   hx.setLatentEffectivenessofCoolingAirFlowCurve(latentCoolingTable);
+
+  // Set 100% values
+  hx.setSensibleEffectivenessat100HeatingAirFlow(_htgSensEff100);
+  hx.setLatentEffectivenessat100HeatingAirFlow(_htgLatEff100);
+  hx.setSensibleEffectivenessat100CoolingAirFlow(_clgSensEff100);
+  hx.setLatentEffectivenessat100CoolingAirFlow(_clgLatEff100);
 
   // AuxPwr
   auto auxPwrElement = element.child("AuxPwr");
