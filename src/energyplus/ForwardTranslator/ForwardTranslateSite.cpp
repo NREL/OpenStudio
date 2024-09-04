@@ -50,11 +50,6 @@ namespace energyplus {
       site.setDouble(Site_LocationFields::Elevation, *od);
     }
 
-    bool b = modelObject.keepSiteLocationInformation();
-    if (b) {
-      site.setDouble(Site_LocationFields::KeepSiteLocationInformation, *od);
-    }
-
     if (!modelObject.isKeepSiteLocationInformationDefaulted()) {
       if (modelObject.keepSiteLocationInformation()) {
         site.setString(Site_LocationFields::KeepSiteLocationInformation, "Yes");

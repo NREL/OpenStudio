@@ -294,7 +294,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool PeopleDefinition_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
       bool result = false;
       if (keepSiteLocationInformation) {
         result = setString(OS_SiteFields::KeepSiteLocationInformation, "Yes");
