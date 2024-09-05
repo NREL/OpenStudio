@@ -3980,10 +3980,10 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
     const auto& hp = hps.front();
 
     // Previous last field
-    ASSERT_TRUE(hp.getTarget(15));
-    EXPECT_EQ("CoolEIRfPLR", hp.getTarget(15)->nameString());
+    ASSERT_TRUE(hp.getTarget(18));
+    EXPECT_EQ("CoolEIRfPLR", hp.getTarget(18)->nameString());
 
-    int insertionIndex = 16;
+    int insertionIndex = 19;
     EXPECT_EQ("Load", hp.getString(insertionIndex++).get());          // ControlType
     EXPECT_EQ("ConstantFlow", hp.getString(insertionIndex++).get());  // FlowMode
     EXPECT_EQ(0.0, hp.getDouble(insertionIndex++).get());             // MinimumPartLoadRatio
@@ -3999,10 +3999,10 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_HeatPumpPlantLoopEIR) {
     const auto& hp = hps.front();
 
     // Previous last field
-    ASSERT_TRUE(hp.getTarget(15));
-    EXPECT_EQ("HeatEIRfPLR", hp.getTarget(15)->nameString());
+    ASSERT_TRUE(hp.getTarget(18));
+    EXPECT_EQ("HeatEIRfPLR", hp.getTarget(18)->nameString());
 
-    int insertionIndex = 16;
+    int insertionIndex = 19;
     EXPECT_EQ(1.0, hp.getDouble(insertionIndex++).get());                // HeatingToCoolingCapacitySizingRatio
     EXPECT_EQ("CoolingCapacity", hp.getString(insertionIndex++).get());  // HeatPumpSizingMethod
     EXPECT_EQ("Load", hp.getString(insertionIndex++).get());             // ControlType
