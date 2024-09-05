@@ -253,7 +253,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctParallelPIUReheat_fanControl) {
   EXPECT_TRUE(atu.setMinimumFanTurnDownRatio(0.4));
   EXPECT_TRUE(atu.setHeatingControlType("Modulated"));
   EXPECT_TRUE(atu.setDesignHeatingDischargeAirTemperature(33.0));
-  EXPECT_EQ(atu.setHighLimitHeatingDischargeAirTemperature(38.0));
+  EXPECT_TRUE(atu.setHighLimitHeatingDischargeAirTemperature(38.0));
 
   EXPECT_EQ(0.4, atu.minimumFanTurnDownRatio());
   ASSERT_TRUE(atu.heatingControlType());
