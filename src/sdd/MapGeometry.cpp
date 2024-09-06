@@ -487,6 +487,7 @@ namespace sdd {
         model::ScheduleRuleset schedule(model);
         schedule.setName(spaceName + " Target SHW Temp");
         auto scheduleDay = schedule.defaultDaySchedule();
+        scheduleDay.setName(schedule.nameString() + " Default Day");
         scheduleDay.addValue(Time(1.0), value);
         definition.setTargetTemperatureSchedule(schedule);
       }
