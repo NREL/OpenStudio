@@ -52,7 +52,7 @@ namespace measure {
     /** Returns a clone of the workflow currently being run. New in OS 2.0. */
     WorkflowJSON workflow() const;
 
-    /** Returns a clone of the alfalfa json contrainer */
+    /** Returns the alfalfa json contrainer */
     alfalfa::AlfalfaJSON alfalfa() const;
 
     /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
