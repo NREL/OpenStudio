@@ -6816,13 +6816,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
 
   // ParasiticLd
 
+  boiler.setOffCycleParasiticFuelLoad(0.0);
   pugi::xml_node parasiticLdElement = boilerElement.child("ParasiticLdSim");
-
   boost::optional<double> _parasiticLd = lexicalCastToDouble(parasiticLdElement);
-
-  if( _parasiticLd )
-  {
-    boiler.setOffCycleParasiticFuelLoad(unitToUnit(_parasiticLd.get(),"Btu/h","W").get());
+  if( _parasiticLd ) {
+    boiler.setOnCycleParasiticFuelLoad(unitToUnit(_parasiticLd.get(),"Btu/h","W").get());
   }
 
   if( ! autosize() )
