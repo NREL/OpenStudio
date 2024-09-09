@@ -9208,13 +9208,17 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if ((iddname == "OS:HeatPump:PlantLoop:EIR:Heating") || (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling")) {
+      if (iddname == "OS:HeatPump:PlantLoop:EIR:Heating") {
 
-        // 3 Fields have been added from 3.8.0 to 3.9.0:
+        // 3 Fields have been inserted from 3.8.0 to 3.9.0:
         // ----------------------------------------------
         // * Heat Recovery Inlet Node Name * 7
         // * Heat Recovery Outlet Node Name * 8
         // * Heat Recovery Reference Flow Rate * 12
+
+        // 1 required Field has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Minimum Heat Recovery Outlet Temperature * 36
 
         auto iddObject = idd_3_9_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
@@ -9234,6 +9238,44 @@ namespace osversion {
         newObject.setString(7, "");
         newObject.setString(8, "");
         newObject.setString(12, "Autosize");
+        newObject.setString(36, 4.5);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling") {
+
+        // 3 Fields have been inserted from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Heat Recovery Inlet Node Name * 7
+        // * Heat Recovery Outlet Node Name * 8
+        // * Heat Recovery Reference Flow Rate * 12
+
+        // 2 required Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Maximum Heat Recovery Outlet Temperature * 26
+        // * Minimum Thermosiphon Minimum Temperature Difference * 30
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 10) {
+              newObject.setString(i + 2, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        newObject.setString(7, "");
+        newObject.setString(8, "");
+        newObject.setString(12, "Autosize");
+        newObject.setString(26, 60.0);
+        newObject.setString(30, 0.0);
 
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
