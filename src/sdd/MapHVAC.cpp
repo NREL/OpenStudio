@@ -449,11 +449,9 @@ model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Mo
   if( ! m_defaultDeckTempSchedule )
   {
     model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
     scheduleRuleset.setName("Deck Temp");
-
     model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
+    scheduleDay.setName(scheduleRuleset.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),12.8);
 
     m_defaultDeckTempSchedule = scheduleRuleset;
@@ -467,11 +465,9 @@ model::Schedule ReverseTranslator::hotWaterPlantSetpointSchedule(openstudio::mod
   if( ! m_hotWaterPlantSetpointSchedule )
   {
     model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
     scheduleRuleset.setName("Hot Water Plant Setpoint");
-
     model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
+    scheduleDay.setName(scheduleRuleset.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),67.0);
 
     m_hotWaterPlantSetpointSchedule = scheduleRuleset;
@@ -485,11 +481,9 @@ model::Schedule ReverseTranslator::chilledWaterPlantSetpointSchedule(openstudio:
   if( ! m_chilledWaterPlantSetpointSchedule )
   {
     model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
     scheduleRuleset.setName("Chilled Water Plant Setpoint");
-
     model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
+    scheduleDay.setName(scheduleRuleset.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),6.7);
 
     m_chilledWaterPlantSetpointSchedule = scheduleRuleset;
@@ -503,11 +497,9 @@ model::Schedule ReverseTranslator::serviceHotWaterSetpointSchedule(openstudio::m
   if( ! m_serviceHotWaterSetpointSchedule )
   {
     model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
     scheduleRuleset.setName("SHW Plant Setpoint");
-
     model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
+    scheduleDay.setName(scheduleRuleset.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),50.0);
 
     m_serviceHotWaterSetpointSchedule = scheduleRuleset;
@@ -1533,6 +1525,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           model::ScheduleRuleset maxOARatSchedule(model);
           maxOARatSchedule.setName(oaController.name().get() + " Max OA Schedule");
           model::ScheduleDay scheduleDay = maxOARatSchedule.defaultDaySchedule();
+          scheduleDay.setName(maxOARatSchedule.nameString() + " Day Schedule");
           scheduleDay.addValue(Time(1.0),_maxOARat.get());
           oaController.setMaximumFractionofOutdoorAirSchedule(maxOARatSchedule);
         }
@@ -1755,6 +1748,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             model::ScheduleRuleset schedule(model);
             schedule.setName(hx.nameString() + " Setpoint");
             model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+            scheduleDay.setName(schedule.nameString() + " Day Schedule");
             scheduleDay.addValue(Time(1.0),value);
 
             model::SetpointManagerScheduled spm(model,schedule);
@@ -1842,6 +1836,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
               model::ScheduleRuleset schedule(model);
               schedule.setName(comp.name().get() + " Preheat Schedule");
               auto scheduleDay = schedule.defaultDaySchedule();
+              scheduleDay.setName(schedule.nameString() + " Day Schedule");
               scheduleDay.addValue(Time(1.0),value);
               model::SetpointManagerScheduled spm(model,schedule);
               spm.setName(comp.name().get() + " Preheat SPM");
@@ -1944,13 +1939,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     if( _clgFixedSupTemp )
     {
       model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+      scheduleDay.setName(schedule.nameString() + " Day Schedule");
       double value = unitToUnit(_clgFixedSupTemp.get(),"F","C").get();
       scheduleDay.addValue(Time(1.0),value);
     }
     else
     {
       model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
+      scheduleDay.setName(schedule.nameString() + " Day Schedule");
       scheduleDay.addValue(Time(1.0),12.8);
     }
 
@@ -2058,11 +2054,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     if( ! schedule )
     {
       model::ScheduleRuleset schedule(model);
-
       schedule.setName(airLoopHVAC.name().get() + " Supply Air Temp Schedule");
-
       model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
+      scheduleDay.setName(schedule.nameString() + " Day Schedule");
       scheduleDay.addValue(Time(1.0),12.8);
     }
 
@@ -2166,11 +2160,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
     model::ScheduleRuleset coolingSchedule(model);
     coolingSchedule.setName(airLoopHVAC.name().get() + " Cooling SP Schedule");
-    coolingSchedule.defaultDaySchedule().addValue(Time(1.0), clgFixedSupTemp);
+    auto coolingDaySchedule = coolingSchedule.defaultDaySchedule();
+    coolingDaySchedule.setName(coolingSchedule.nameString() + " Day Schedule");
+    coolingDaySchedule.addValue(Time(1.0), clgFixedSupTemp);
 
     model::ScheduleRuleset heatingSchedule(model);
     heatingSchedule.setName(airLoopHVAC.name().get() + " Heating SP Schedule");
-    heatingSchedule.defaultDaySchedule().addValue(Time(1.0), htgFixedSupTemp);
+    auto heatingDaySchedule = heatingSchedule.defaultDaySchedule();
+    heatingDaySchedule.setName(heatingSchedule.nameString() + " Day Schedule");
+    heatingDaySchedule.addValue(Time(1.0), htgFixedSupTemp);
 
     createDualSetpoints(coolingSchedule,heatingSchedule);
   }
@@ -2192,7 +2190,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       model::ScheduleRuleset schedule(model);
       schedule.setName(airLoopHVAC.name().get() + " Cooling SP Schedule");
-      schedule.defaultDaySchedule().addValue(Time(1.0), clgFixedSupTemp);
+      auto daySchedule = schedule.defaultDaySchedule();
+      daySchedule.setName(schedule.nameString() + " Day Schedule");
+      daySchedule.addValue(Time(1.0), clgFixedSupTemp);
       coolingSchedule = schedule;
     }
 
@@ -2206,7 +2206,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
 
       model::ScheduleRuleset schedule(model);
       schedule.setName(airLoopHVAC.name().get() + " Heating SP Schedule");
-      schedule.defaultDaySchedule().addValue(Time(1.0), htgFixedSupTemp);
+      auto daySchedule = schedule.defaultDaySchedule();
+      daySchedule.setName(schedule.nameString() + " Day Schedule");
+      daySchedule.addValue(Time(1.0), htgFixedSupTemp);
       heatingSchedule = schedule;
     }
 
@@ -4270,6 +4272,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
       scheduleRuleset.setName(thermalZone.name().get() + " Default Heating Schedule");
       model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
+      scheduleDay.setName(scheduleRuleset.nameString() + " Day Schedule");
       scheduleDay.addValue(Time(1.0),-100.0);
       optionalThermostat->setHeatingSchedule(scheduleRuleset);
       htgTstatSch = scheduleRuleset;
@@ -5743,7 +5746,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // charging scheme, which is a component setpoint scheme so we add SPMs
     tesSchedule = model::ScheduleRuleset(model);
     tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
-    tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+    auto tesDaySchedule = tesSchedule->defaultDaySchedule();
+    tesDaySchedule.setName(tesSchedule->nameString() + " Day Schedule");
+    tesDaySchedule.addValue(Time(1.0),thermalStorageTankSetptTemp);
 
     thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
 
@@ -6249,11 +6254,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
 
     model::ScheduleRuleset schedule(model);
-
     schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
     model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
+    scheduleDay.setName(schedule.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),fixedSupTemp);
 
     model::SetpointManagerScheduled spm(model,schedule);
@@ -6271,11 +6274,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       LOG(Error,plantLoop.name().get() << " Control type is scheduled, but a valid schedule could not be found.");
 
       model::ScheduleRuleset schedule(model);
-
       schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
       model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
+      scheduleDay.setName(schedule.nameString() + " Day Schedule");
       scheduleDay.addValue(Time(1.0),21.1);
     }
 
@@ -6400,11 +6401,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       double value = unitToUnit(_dsgnSupWtrTemp.get(),"F","C").get();
 
       model::ScheduleRuleset schedule(model);
-
       schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
-
       model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
-
+      scheduleDay.setName(schedule.nameString() + " Day Schedule");
       scheduleDay.addValue(Time(1.0),value);
 
       model::SetpointManagerScheduled spm(model,schedule);
@@ -6443,11 +6442,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     model::ScheduleRuleset schedule(model);
     schedule.setName(plantLoop.name().get() + " Supply Temp Schedule");
     model::ScheduleDay scheduleDay = schedule.defaultDaySchedule();
+    scheduleDay.setName(schedule.nameString() + " Day Schedule");
     scheduleDay.addValue(Time(1.0),fixedSupTemp);
 
     model::ScheduleRuleset heatingSchedule(model);
     heatingSchedule.setName(plantLoop.name().get() + " Heating Supply Temp Schedule");
     model::ScheduleDay heatingScheduleDay = heatingSchedule.defaultDaySchedule();
+    heatingScheduleDay.setName(heatingSchedule.nameString() + " Day Schedule");
     heatingScheduleDay.addValue(Time(1.0),htgFixedSupTemp);
 
     const auto addDualSPM = [&](const std::string & name, model::Node & node) {
@@ -6820,7 +6821,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   pugi::xml_node parasiticLdElement = boilerElement.child("ParasiticLdSim");
   boost::optional<double> _parasiticLd = lexicalCastToDouble(parasiticLdElement);
   if( _parasiticLd ) {
-    boiler.setOnCycleParasiticFuelLoad(unitToUnit(_parasiticLd.get(),"Btu/h","W").get());
+    boiler.setOnCycleParasiticElectricLoad(unitToUnit(_parasiticLd.get(),"Btu/h","W").get());
   }
 
   if( ! autosize() )
@@ -8049,6 +8050,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   model::ScheduleRuleset ambientTempSchedule(model);
   ambientTempSchedule.setName(name + " Ambient Temperature");
   model::ScheduleDay scheduleDay = ambientTempSchedule.defaultDaySchedule();
+  scheduleDay.setName(ambientTempSchedule.nameString() + " Day Schedule");
   scheduleDay.addValue(Time(1.0),20.0);
 
 
@@ -8535,6 +8537,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
         model::ScheduleRuleset schedule(model);
         schedule.setName(waterHeaterMixed.name().get() + " Setpoint Temp");
         auto scheduleDay = schedule.defaultDaySchedule();
+        scheduleDay.setName(schedule.nameString() + " Day Schedule");
         scheduleDay.addValue(Time(1.0),value);
         waterHeaterMixed.setSetpointTemperatureSchedule(schedule);
       }
@@ -9768,6 +9771,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
       model::CoilHeatingLowTempRadiantVarFlow heatingCoil(model, heatingControlTemperatureSchedule);
       heatingCoil.setName(name + std::string(" Heating Coil"));
+      heatingControlTemperatureSchedule.setName(heatingCoil.nameString() + " Temperature Control");
       zoneHVAC.setHeatingCoil(heatingCoil);
 
       // HeatingDesignCapacityMethod
@@ -9806,6 +9810,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
       model::CoilCoolingLowTempRadiantVarFlow coolingCoil(model, coolingControlTemperatureSchedule);
       coolingCoil.setName(name + std::string(" Cooling Coil"));
+      coolingControlTemperatureSchedule.setName(coolingCoil.nameString() + " Temperature Control");
       zoneHVAC.setCoolingCoil(coolingCoil);
 
       // coolingDesignCapacityMethod
@@ -9856,6 +9861,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRadi
 
     model::ZoneHVACLowTemperatureRadiantElectric zoneHVAC(model, availSch, heatingControlTemperatureSchedule);
     zoneHVAC.setName(name);
+    heatingControlTemperatureSchedule.setName(zoneHVAC.nameString() + " Heating Temp Control");
 
     // RadiantSurfaceType
     zoneHVAC.setRadiantSurfaceType(surfaceType);

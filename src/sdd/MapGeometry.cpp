@@ -570,6 +570,7 @@ namespace sdd {
           // activity schedule
           openstudio::model::ScheduleRuleset activitySchedule(model, totalHeatRateSI);
           activitySchedule.setName(name + " People Activity Level");
+          activitySchedule.defaultDaySchedule().setName(activitySchedule.nameString() + " Default Day");
 
           //boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getConcreteModelObjectByName<model::ScheduleTypeLimits>("Activity Level");
           //if (!scheduleTypeLimits){
