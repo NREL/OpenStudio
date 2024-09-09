@@ -28635,14 +28635,14 @@ OS:Sizing:Zone,
        \default 0.0
        \minimum 0.0
        \units dimensionless
-  N26; \field Design Minimum Zone Ventilation Efficiency
+  N26, \field Design Minimum Zone Ventilation Efficiency
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
        \minimum 0.0
        \maximum 1.0
        \units dimensionless
-  A4,  \field Sizing Option
+  A13; \field Sizing Option
        \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm.
        \type choice
        \key Coincident

@@ -29240,7 +29240,7 @@ SpaceHVAC:ZoneReturnMixer,
        \required-field
        \type object-list
        \object-list SpaceNames
-   A5, \field Space 1 Return Air Node Name
+   A5; \field Space 1 Return Air Node Name
        \note Matches a SpaceHVAC:EquipmentConnections Return Air Node Name
        \required-field
        \type node
