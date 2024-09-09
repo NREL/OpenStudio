@@ -7,6 +7,7 @@
 #include "../alfalfa/AlfalfaPoint.hpp"
 
 #include <vector>
+#include <json/json.h>
 
 namespace openstudio {
 namespace alfalfa {
@@ -23,6 +24,8 @@ namespace alfalfa {
       bool save() const;
 
       bool saveAs(const openstudio::path& p);
+
+      Json::Value toJSON() const;
 
       void exposePoint(const AlfalfaPoint& point);
 

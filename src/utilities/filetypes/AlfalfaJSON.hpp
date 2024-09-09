@@ -38,6 +38,8 @@ namespace alfalfa {
 
     bool saveAs(const openstudio::path& p);
 
+    Json::Value toJSON() const;
+
     /**
      * Expose a point with a constant output value.
      * display_name is required
