@@ -13989,7 +13989,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
 
 OS:HeatPump:PlantLoop:EIR:Heating,
        \memo An EIR formulated water to water heat pump model, heating operation
-       \min-fields 32
+       \min-fields 37
    A1, \field Handle
        \type handle
        \required-field
@@ -14200,7 +14200,7 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \note WB = wet-bulb temperature (C) of air entering the indoor coil
        \note Timed Empirical Defrost Heat Load Penalty in watts = hot load * curve output
        \note only applicable if TimedEmpirical defrost control is specified
-   A24;\field Timed Empirical Defrost Heat Input Energy Fraction Curve Name
+   A24,\field Timed Empirical Defrost Heat Input Energy Fraction Curve Name
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
@@ -14210,10 +14210,33 @@ OS:HeatPump:PlantLoop:EIR:Heating,
        \note WB = wet-bulb temperature (C) of air entering the indoor coil
        \note Timed Empirical Defrost Heat Input Energy in watts = rated hot load * curve output
        \note only applicable if TimedEmpirical defrost control is specified
+   N13,\field Minimum Heat Recovery Outlet Temperature
+       \type real
+       \units C
+       \required-field
+       \note Enter the minimum heat recovery leaving water temperature limit
+       \note The chilled water temperature is not allowed to drop below this value
+       \note Not available with water source condenser type
+   A25,\field Heat Recovery Capacity Modifier Function of Temperature Curve Name
+       \note Heating capacity modifier as a function of HW supply temp and entering condenser fluid temp
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*HWS + c*HWS**2 + d*ECT + e*ECT**2 + f*HWS*ECT
+       \note HWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+   A26;\field Heat Recovery Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*HWS + c*HWS**2 + d*ECT + e*ECT**2 + f*HWS*ECT
+       \note HWS = supply (leaving) hot water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+       \note If this field is blank, the AWHP curve without heat recovery will be used 
 
 OS:HeatPump:PlantLoop:EIR:Cooling,
        \memo An EIR formulated water to water heat pump model, cooling operation.
-       \min-fields 24
+       \min-fields 31
    A1, \field Handle
        \type handle
        \required-field
@@ -14362,11 +14385,48 @@ OS:HeatPump:PlantLoop:EIR:Cooling,
        \object-list UnivariateFunctions
        \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
        \note OAT = Outdoor Dry-Bulb Temperature
-   N11;\field Maximum Supply Water Temperature Curve Name
+   N11,\field Maximum Supply Water Temperature Curve Name
        \type object-list
        \object-list UnivariateFunctions
        \note quadratic curve = a + b*OAT is typical, other univariate curves may be used
        \note OAT = Outdoor Dry-Bulb Temperature
+   N12,\field Maximum Heat Recovery Outlet Temperature
+       \type real
+       \units C
+       \required-field
+       \note Enter the maximum heat recovery leaving water temperature limit
+       \note The hot water temperature is not allowed to exceed this value
+       \note Not available with water source condenser type
+   A16,\field Heat Recovery Capacity Modifier Function of Temperature Curve Name
+       \note Cooling capacity modifier as a function of CW supply temp and condenser entering fluid temp
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+       \note If this field is blank, the AWHP curve without heat recovery will be used
+   A17,\field Heat Recovery Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+       \note Electric Input Ratio (EIR) modifier as a function of temperature
+       \note EIR = 1/COP
+       \type object-list
+       \object-list BivariateFunctions
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
+       \note If this field is blank, the AWHP curve without heat recovery will be used 
+   A18,\field Thermosiphon Capacity Fraction Curve Name
+       \type object-list
+       \object-list UnivariateFunctions
+       \note quadratic curve = a + b * (Tevap, out - Tcond, in) is typical, other univariate curves may be used
+       \note Tevap, out = evaporator outlet temperature
+       \note Tcond, in = condenser inlet temperature
+       \note If this field is blank the thermosiphon model is disabled.
+   N13;\field Thermosiphon Minimum Temperature Difference
+       \type real
+       \minimum 0.0
+       \required-field
+       \note Thermosiphon model is disabled below this minimum limit and
+       \note when the load is greater than calculated using the prevoius field.
 
 OS:HeatPump:AirToWater:FuelFired:Heating,
        \memo The object defines a fuel-fired absorption heat pump based on equation-fit models.
