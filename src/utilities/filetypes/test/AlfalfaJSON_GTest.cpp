@@ -31,6 +31,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <json/json.h>
+#include <fmt/format.h>
 
 using namespace openstudio;
 using namespace openstudio::alfalfa;
@@ -42,43 +43,43 @@ TEST(AlfalfaJSON, basic_export) {
 
   // Check that point has output of type "Constant"
   ASSERT_TRUE(constant.output().is_initialized());
-  ASSERT_EQ(constant.output().get().type, "Constant");
+  EXPECT_EQ(constant.output().get().type, "Constant");
   // Check that point does not have an input
-  ASSERT_FALSE(constant.input().is_initialized());
+  EXPECT_FALSE(constant.input().is_initialized());
 
   AlfalfaPoint meter = alfalfa.exposeMeter("Electricity:Facility").get();
 
   // Check that point has output of type "Meter"
   ASSERT_TRUE(meter.output().is_initialized());
-  ASSERT_EQ(meter.output().get().type, "Meter");
+  EXPECT_EQ(meter.output().get().type, "Meter");
   // Check that point does not have an input
-  ASSERT_FALSE(meter.input().is_initialized());
+  EXPECT_FALSE(meter.input().is_initialized());
 
   AlfalfaPoint actuator = alfalfa.exposeActuator("thing1", "thing2", "thing3").get();
 
   // Check that point has output of type "Actuator"
   ASSERT_TRUE(actuator.output().is_initialized());
-  ASSERT_EQ(actuator.output().get().type, "Actuator");
+  EXPECT_EQ(actuator.output().get().type, "Actuator");
   // Check that point has input of type "Actuator"
   ASSERT_TRUE(actuator.input().is_initialized());
-  ASSERT_EQ(actuator.input().get().type, "Actuator");
+  EXPECT_EQ(actuator.input().get().type, "Actuator");
 
   AlfalfaPoint output_variable = alfalfa.exposeOutputVariable("key", "name").get();
 
   // Check that point has output of type "OutputVariable"
   ASSERT_TRUE(output_variable.output().is_initialized());
-  ASSERT_EQ(output_variable.output().get().type, "OutputVariable");
+  EXPECT_EQ(output_variable.output().get().type, "OutputVariable");
   // Check that point does not have an input
-  ASSERT_FALSE(output_variable.input().is_initialized());
+  EXPECT_FALSE(output_variable.input().is_initialized());
 
   AlfalfaPoint global_variable = alfalfa.exposeGlobalVariable("name").get();
 
   // Check that point has output of type "GlobalVariable"
   ASSERT_TRUE(global_variable.output().is_initialized());
-  ASSERT_EQ(global_variable.output().get().type, "GlobalVariable");
+  EXPECT_EQ(global_variable.output().get().type, "GlobalVariable");
   // Check that point has input of type "GlobalVariable"
   ASSERT_TRUE(global_variable.input().is_initialized());
-  ASSERT_EQ(global_variable.input().get().type, "GlobalVariable");
+  EXPECT_EQ(global_variable.input().get().type, "GlobalVariable");
 
   std::vector<AlfalfaPoint> points = alfalfa.getPoints();
 
@@ -86,13 +87,13 @@ TEST(AlfalfaJSON, basic_export) {
 
   constant.setUnits("mW");
 
-  ASSERT_EQ("mW", points.at(0).units().get());
+  EXPECT_EQ("mW", points.at(0).units().get());
 
-  ASSERT_EQ(constant, points.at(0));
-  ASSERT_EQ(meter, points.at(1));
-  ASSERT_EQ(actuator, points.at(2));
-  ASSERT_EQ(output_variable, points.at(3));
-  ASSERT_EQ(global_variable, points.at(4));
+  EXPECT_EQ(constant, points.at(0));
+  EXPECT_EQ(meter, points.at(1));
+  EXPECT_EQ(actuator, points.at(2));
+  EXPECT_EQ(output_variable, points.at(3));
+  EXPECT_EQ(global_variable, points.at(4));
 }
 
 TEST(AlfalfaJSON, json_serialization) {
@@ -113,7 +114,7 @@ TEST(AlfalfaJSON, json_serialization) {
   constant_json["output"]["type"] = "Constant";
   constant_json["output"]["parameters"]["value"] = value;
 
-  ASSERT_EQ(constant.toJSON(), constant_json);
+  EXPECT_EQ(constant.toJSON(), constant_json);
 
   // Test generation of JSON for actuator components
   std::string act_component_name = "example_component";
@@ -130,7 +131,7 @@ TEST(AlfalfaJSON, json_serialization) {
 
   actuator_json["input"] = actuator_json["output"];
 
-  ASSERT_EQ(actuator.toJSON(), actuator_json);
+  EXPECT_EQ(actuator.toJSON(), actuator_json);
 
   // Test generation of JSON for global variable components
   std::string global_variable_name = "example_global_variable_name";
@@ -143,7 +144,7 @@ TEST(AlfalfaJSON, json_serialization) {
 
   global_variable_json["input"] = global_variable_json["output"];
 
-  ASSERT_EQ(global_variable.toJSON(), global_variable_json);
+  EXPECT_EQ(global_variable.toJSON(), global_variable_json);
 
   // Test generation of JSON for meter components
   std::string meter_name = "example_meter_name";
@@ -154,7 +155,7 @@ TEST(AlfalfaJSON, json_serialization) {
   meter_json["output"]["type"] = "Meter";
   meter_json["output"]["parameters"]["meter_name"] = meter_name;
 
-  ASSERT_EQ(meter.toJSON(), meter_json);
+  EXPECT_EQ(meter.toJSON(), meter_json);
 
   // Test generation of JSON for output variable components
   std::string output_variable_key = "example_output_variable_key";
@@ -167,13 +168,13 @@ TEST(AlfalfaJSON, json_serialization) {
   output_variable_json["output"]["parameters"]["variable_key"] = output_variable_key;
   output_variable_json["output"]["parameters"]["variable_name"] = output_variable_name;
 
-  ASSERT_EQ(output_variable.toJSON(), output_variable_json);
+  EXPECT_EQ(output_variable.toJSON(), output_variable_json);
 }
 
 TEST(AlfalfaJSON, point_exceptions_logging) {
-  const char* ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
-  const char* DISPLAY_NAME_VALID_CHARS_MSG = "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.";
-  const char* LOG_CHANNEL = "openstudio.AlfalfaPoint";
+  std::string ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
+  std::string DISPLAY_NAME_VALID_CHARS_MSG = "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.";
+  std::string LOG_CHANNEL = "openstudio.AlfalfaPoint";
   StringStreamLogSink ss;
   ss.setLogLevel(Warn);
 
@@ -186,9 +187,9 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   AlfalfaPoint invalid_point("Point$$$");
   ASSERT_EQ(1, ss.logMessages().size());
   LogMessage invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_STREQ(invalid_id_msg.logMessage().c_str(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
-  EXPECT_STREQ(invalid_id_msg.logChannel().c_str(), LOG_CHANNEL);
+  EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
   ASSERT_EQ(ss.logMessages().size(), 0);
 
@@ -197,9 +198,9 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   EXPECT_FALSE(invalid_point_id.is_initialized());
   ASSERT_EQ(ss.logMessages().size(), 1);
   invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_STREQ(invalid_id_msg.logMessage().c_str(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
-  EXPECT_STREQ(invalid_id_msg.logChannel().c_str(), LOG_CHANNEL);
+  EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
   ASSERT_EQ(ss.logMessages().size(), 0);
 
@@ -209,7 +210,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
       try {
         invalid_point.setId("Point_123_$$$");
       } catch (const std::runtime_error& error) {
-        EXPECT_STREQ(error.what(), ID_VALID_CHARS_MSG);
+        EXPECT_EQ(error.what(), ID_VALID_CHARS_MSG);
         throw;
       }
     },
@@ -222,18 +223,16 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
       try {
         Json::Value root = invalid_point.toJSON();
       } catch (const std::runtime_error& error) {
-        char message[200];
-        sprintf(message, "Point requires a valid ID for export. %s", ID_VALID_CHARS_MSG);
-        EXPECT_STREQ(error.what(), message);
+        EXPECT_EQ(error.what(), "Point requires a valid ID for export. " + ID_VALID_CHARS_MSG);
         throw;
       }
     },
     std::runtime_error);
   ASSERT_EQ(ss.logMessages().size(), 1);
   invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_STREQ(invalid_id_msg.logMessage().c_str(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
-  EXPECT_STREQ(invalid_id_msg.logChannel().c_str(), LOG_CHANNEL);
+  EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
   ASSERT_EQ(ss.logMessages().size(), 0);
 
@@ -244,14 +243,14 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   // Test that getting the ID does not warn if valid.
   boost::optional<std::string> valid_id = valid_point.id();
   ASSERT_TRUE(valid_id.is_initialized());
-  ASSERT_STREQ(valid_id.get().c_str(), "A_Good_Point");
+  ASSERT_EQ(valid_id.get(), "A_Good_Point");
   ASSERT_EQ(ss.logMessages().size(), 0);
 
   // Test that changing display name changes the ID if an ID has not been set.
   valid_point.setDisplayName("Another Good Point");
   ASSERT_EQ(ss.logMessages().size(), 0);
   ASSERT_TRUE(valid_point.id().is_initialized());
-  ASSERT_STREQ(valid_point.id().get().c_str(), "Another_Good_Point");
+  ASSERT_EQ(valid_point.id().get(), "Another_Good_Point");
   ASSERT_EQ(ss.logMessages().size(), 0);
 
   Json::Value valid_json = valid_point.toJSON();
@@ -262,7 +261,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   valid_point.setId(new_id);
   ASSERT_EQ(ss.logMessages().size(), 0);
   ASSERT_TRUE(valid_point.id().is_initialized());
-  ASSERT_STREQ(valid_point.id().get().c_str(), new_id.c_str());
+  ASSERT_EQ(valid_point.id().get(), new_id);
 
   valid_json = valid_point.toJSON();
   ASSERT_EQ(ss.logMessages().size(), 0);
@@ -270,7 +269,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   // Test that once an ID is set, setting a new display name won't throw a warning.
   valid_point.setDisplayName("Valid Name, but Invalid Id $$$");
   ASSERT_EQ(ss.logMessages().size(), 0);
-  ASSERT_STREQ(valid_point.id().get().c_str(), new_id.c_str());
+  ASSERT_EQ(valid_point.id().get(), new_id);
 
   valid_json = valid_point.toJSON();
   ASSERT_EQ(ss.logMessages().size(), 0);
@@ -283,17 +282,15 @@ TEST(AlfalfaJSON, point_component_exceptions) {
   // No Components can not be used as outputs so I create a fictional component to test that guard
   AlfalfaComponent input_only("InputOnly", Capability::Input);
 
-  ASSERT_FALSE(point.input().is_initialized());
-  ASSERT_FALSE(point.output().is_initialized());
+  EXPECT_FALSE(point.input().is_initialized());
+  EXPECT_FALSE(point.output().is_initialized());
 
   EXPECT_THROW(
     {
       try {
         point.setInput(constant);
-      } catch (std::runtime_error error) {
-        char expected_error[200];
-        sprintf(expected_error, "Component of type: %s cannot be used as an input.", constant.type.c_str());
-        ASSERT_STREQ(error.what(), expected_error);
+      } catch (std::runtime_error& error) {
+        ASSERT_EQ(error.what(), fmt::format("Component of type: {} cannot be used as an input.", constant.type));
         throw;
       }
     },
@@ -303,18 +300,16 @@ TEST(AlfalfaJSON, point_component_exceptions) {
     {
       try {
         point.setOutput(input_only);
-      } catch (std::runtime_error error) {
-        char expected_error[200];
-        sprintf(expected_error, "Component of type: %s cannot be used as an output.", input_only.type.c_str());
-        ASSERT_STREQ(error.what(), expected_error);
+      } catch (std::runtime_error& error) {
+        ASSERT_EQ(error.what(), fmt::format("Component of type: {} cannot be used as an output.", input_only.type));
         throw;
       }
     },
     std::runtime_error);
 
   // Confirm that point components are still empty
-  ASSERT_FALSE(point.input().is_initialized());
-  ASSERT_FALSE(point.output().is_initialized());
+  EXPECT_FALSE(point.input().is_initialized());
+  EXPECT_FALSE(point.output().is_initialized());
 
   // Populate correct IO
   point.setOutput(constant);
