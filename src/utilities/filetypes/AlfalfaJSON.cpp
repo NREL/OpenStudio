@@ -46,11 +46,7 @@ namespace alfalfa {
 
     bool AlfalfaJSON_Impl::save() const {
       if (makeParentFolder(m_JSONPath)) {
-        Json::Value root;
-        for (AlfalfaPoint point : m_points) {
-          // No guard here as the toJSON call will throw an exception if the id does not exist.
-          root[point.id().get()] = point.toJSON();
-        }
+        Json::Value root = toJSON();
         std::ofstream outFile(openstudio::toSystemFilename(m_JSONPath));
 
         if (outFile) {
@@ -68,6 +64,15 @@ namespace alfalfa {
                                                   << "could not be created.");
 
       return false;
+    }
+
+    Json::Value AlfalfaJSON_Impl::toJSON() const {
+      Json::Value root;
+      for (AlfalfaPoint point : m_points) {
+        // No guard here as the toJSON call will throw an exception if the id does not exist.
+        root[point.id().get()] = point.toJSON();
+      }
+      return root;
     }
   }  // namespace detail
 
@@ -253,6 +258,10 @@ namespace alfalfa {
 
   bool AlfalfaJSON::save() const {
     return m_impl->save();
+  }
+
+  Json::Value AlfalfaJSON::toJSON() const {
+    return m_impl->toJSON();
   }
 
   std::vector<AlfalfaPoint> AlfalfaJSON::getPoints() {

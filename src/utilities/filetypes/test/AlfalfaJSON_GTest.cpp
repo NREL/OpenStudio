@@ -169,6 +169,19 @@ TEST(AlfalfaJSON, json_serialization) {
   output_variable_json["output"]["parameters"]["variable_name"] = output_variable_name;
 
   EXPECT_EQ(output_variable.toJSON(), output_variable_json);
+
+  // Test that the file written is the same as the one inside the AlfalfaJSON object
+  path out_file = tempDir() / "alfalfa.json";
+  alfalfa.saveAs(out_file);
+
+  Json::Value root;
+  std::ifstream ifs(openstudio::toSystemFilename(out_file));
+
+  Json::CharReaderBuilder r_builder;
+  std::string formatted_errors;
+  bool parsing_success = Json::parseFromStream(r_builder, ifs, &root, &formatted_errors);
+  EXPECT_TRUE(parsing_success);
+  EXPECT_EQ(alfalfa.toJSON(), root);
 }
 
 TEST(AlfalfaJSON, point_exceptions_logging) {
