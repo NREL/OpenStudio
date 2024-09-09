@@ -163,9 +163,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
     boost::optional<WorkspaceObject> woCurve5(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName));
     EXPECT_TRUE(woCurve5);
     EXPECT_EQ(9.0, idf_cc.getDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumHeatRecoveryOutletTemperature, false).get());
-    boost::optional<WorkspaceObject> woCurve6(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName));
+    boost::optional<WorkspaceObject> woCurve6(
+      idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName));
     EXPECT_TRUE(woCurve6);
-    boost::optional<WorkspaceObject> woCurve7(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName));
+    boost::optional<WorkspaceObject> woCurve7(
+      idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName));
     EXPECT_TRUE(woCurve7);
     boost::optional<WorkspaceObject> woCurve8(idf_cc.getTarget(HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonCapacityFractionCurveName));
     EXPECT_TRUE(woCurve8);
