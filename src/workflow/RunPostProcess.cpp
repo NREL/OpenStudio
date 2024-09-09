@@ -17,7 +17,6 @@ void OSWorkflow::runPostProcess() {
     LOG(Info, "Gathering reports");
     openstudio::workflow::util::gatherReports(workflowJSON.absoluteRunDir(), workflowJSON.absoluteRootDir());
     LOG(Info, "Finished gathering reports");
-
   }
   // If no points have been exported, skip file creation
   if (runner.alfalfa().getPoints().size() > 0) {
