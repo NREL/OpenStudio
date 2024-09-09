@@ -1,0 +1,22 @@
+{
+	"weather_file": "srrl_2013_amy.epw",
+	"seed_file": "seb.osm",
+	"steps": [
+		{
+			"measure_dir_name": "AlfalfaModelPython",
+			"arguments": {}
+		},
+    {
+			"measure_dir_name": "AlfalfaModelRuby",
+			"arguments": {}
+		},
+    {
+			"measure_dir_name": "AlfalfaEPlusPython",
+			"arguments": {}
+		},
+    {
+			"measure_dir_name": "AlfalfaEPlusRuby",
+			"arguments": {}
+		},
+	]
+}
