@@ -181,6 +181,31 @@ namespace energyplus {
       }
     }
 
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::MaximumHeatRecoveryOutletTemperature,
+                        modelObject.maximumHeatRecoveryOutletTemperature());
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryCapacityModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                            _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.thermosiphonCapacityFractionCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonCapacityFractionCurveName, _curve->name().get());
+      }
+    }
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonMinimumTemperatureDifference,
+                        modelObject.thermosiphonMinimumTemperatureDifference());
+
     return idfObject;
   }
 

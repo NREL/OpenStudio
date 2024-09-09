@@ -219,6 +219,22 @@ namespace energyplus {
       }
     }
 
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumHeatRecoveryOutletTemperature,
+                        modelObject.minimumHeatRecoveryOutletTemperature());
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryCapacityModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                            _curve->name().get());
+      }
+    }
+
     return idfObject;
   }
 
