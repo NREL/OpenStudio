@@ -362,6 +362,32 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumSupplyWaterTemperatureCurveName);
     }
 
+    double HeatPumpPlantLoopEIRCooling_Impl::maximumHeatRecoveryOutletTemperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumHeatRecoveryOutletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryCapacityModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpPlantLoopEIRCooling_Impl::thermosiphonCapacityFractionCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonCapacityFractionCurveName);
+    }
+
+    double HeatPumpPlantLoopEIRCooling_Impl::thermosiphonMinimumTemperatureDifference() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonMinimumTemperatureDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     bool HeatPumpPlantLoopEIRCooling_Impl::setCompanionHeatingHeatPump(const HeatPumpPlantLoopEIRHeating& companionHP) {
       return this->setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::CompanionHeatPumpName, companionHP.handle());
     }
@@ -474,6 +500,50 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool HeatPumpPlantLoopEIRCooling_Impl::setMaximumHeatRecoveryOutletTemperature(double maximumHeatRecoveryOutletTemperature) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::MaximumHeatRecoveryOutletTemperature, maximumHeatRecoveryOutletTemperature);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+      const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName,
+                               heatRecoveryCapacityModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                               heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() {
+      bool result =
+        setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
+      bool result =
+        setPointer(OS_HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonCapacityFractionCurveName, thermosiphonCapacityFractionCurve.handle());
+      return result;
+    }
+
+    void HeatPumpPlantLoopEIRCooling_Impl::resetThermosiphonCapacityFractionCurve() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonCapacityFractionCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRCooling_Impl::setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_CoolingFields::ThermosiphonMinimumTemperatureDifference, thermosiphonMinimumTemperatureDifference);
+    }
+
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedLoadSideReferenceFlowRate() const {
       return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
     }
@@ -580,6 +650,8 @@ namespace model {
     setMinimumPartLoadRatio(0.0);
     setMinimumSourceInletTemperature(-100.0);
     setMaximumSourceInletTemperature(100.0);
+    setMaximumHeatRecoveryOutletTemperature(60.0);
+    setThermosiphonMinimumTemperatureDifference(0.0);
   }
 
   HeatPumpPlantLoopEIRCooling::HeatPumpPlantLoopEIRCooling(const Model& model)
@@ -646,6 +718,8 @@ namespace model {
     setMinimumPartLoadRatio(0.0);
     setMinimumSourceInletTemperature(-100.0);
     setMaximumSourceInletTemperature(100.0);
+    setMaximumHeatRecoveryOutletTemperature(60.0);
+    setThermosiphonMinimumTemperatureDifference(0.0);
   }
 
   IddObjectType HeatPumpPlantLoopEIRCooling::iddObjectType() {
@@ -748,6 +822,26 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumSupplyWaterTemperatureCurve();
   }
 
+  double HeatPumpPlantLoopEIRCooling::maximumHeatRecoveryOutletTemperature() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->maximumHeatRecoveryOutletTemperature();
+  }
+
+  boost::optional<Curve> HeatPumpPlantLoopEIRCooling::heatRecoveryCapacityModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryCapacityModifierFunctionofTemperatureCurve();
+  }
+
+  boost::optional<Curve> HeatPumpPlantLoopEIRCooling::heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
+  boost::optional<Curve> HeatPumpPlantLoopEIRCooling::thermosiphonCapacityFractionCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->thermosiphonCapacityFractionCurve();
+  }
+
+  double HeatPumpPlantLoopEIRCooling::thermosiphonMinimumTemperatureDifference() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->thermosiphonMinimumTemperatureDifference();
+  }
+
   bool HeatPumpPlantLoopEIRCooling::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setCondenserType(condenserType);
   }
@@ -847,6 +941,42 @@ namespace model {
 
   void HeatPumpPlantLoopEIRCooling::resetMaximumSupplyWaterTemperatureCurve() {
     getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetMaximumSupplyWaterTemperatureCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setMaximumHeatRecoveryOutletTemperature(double maximumHeatRecoveryOutletTemperature) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setMaximumHeatRecoveryOutletTemperature(maximumHeatRecoveryOutletTemperature);
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+    const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+      heatRecoveryCapacityModifierFunctionofTemperatureCurve);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+    const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setThermosiphonCapacityFractionCurve(thermosiphonCapacityFractionCurve);
+  }
+
+  void HeatPumpPlantLoopEIRCooling::resetThermosiphonCapacityFractionCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->resetThermosiphonCapacityFractionCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRCooling::setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference) {
+    return getImpl<detail::HeatPumpPlantLoopEIRCooling_Impl>()->setThermosiphonMinimumTemperatureDifference(thermosiphonMinimumTemperatureDifference);
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRCooling::autosizedLoadSideReferenceFlowRate() const {

@@ -141,6 +141,12 @@ namespace model {
 
       boost::optional<Curve> timedEmpiricalDefrostHeatInputEnergyFractionCurve() const;
 
+      double minimumHeatRecoveryOutletTemperature() const;
+
+      boost::optional<Curve> heatRecoveryCapacityModifierFunctionofTemperatureCurve() const;
+
+      boost::optional<Curve> heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -223,6 +229,17 @@ namespace model {
       bool setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(const Curve& timedEmpiricalDefrostHeatInputEnergyFractionCurve);
 
       void resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
+
+      bool setMinimumHeatRecoveryOutletTemperature(double minimumHeatRecoveryOutletTemperature);
+
+      bool setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+
+      bool setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+        const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
 
       //@}
       /** @name Other */

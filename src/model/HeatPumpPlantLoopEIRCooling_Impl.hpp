@@ -121,6 +121,16 @@ namespace model {
 
       boost::optional<Curve> maximumSupplyWaterTemperatureCurve() const;
 
+      double maximumHeatRecoveryOutletTemperature() const;
+
+      boost::optional<Curve> heatRecoveryCapacityModifierFunctionofTemperatureCurve() const;
+
+      boost::optional<Curve> heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+
+      boost::optional<Curve> thermosiphonCapacityFractionCurve() const;
+
+      double thermosiphonMinimumTemperatureDifference() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -173,6 +183,23 @@ namespace model {
       bool setMaximumSupplyWaterTemperatureCurve(const Curve& maximumSupplyWaterTemperatureCurve);
 
       void resetMaximumSupplyWaterTemperatureCurve();
+
+      bool setMaximumHeatRecoveryOutletTemperature(double maximumHeatRecoveryOutletTemperature);
+
+      bool setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+
+      bool setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+        const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+
+      bool setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve);
+
+      void resetThermosiphonCapacityFractionCurve();
+
+      bool setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference);
 
       //@}
       /** @name Other */
