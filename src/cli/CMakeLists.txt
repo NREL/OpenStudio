@@ -257,7 +257,7 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> run -m -w compact_alfalfa.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
   )
-  set_tests_properties(OpenStudioCLI.Run_ALFALFA PROPERTIES RESOURCE_LOCK "compact_osw")
+  set_tests_properties(OpenStudioCLI.Run_Alfalfa PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
     COMMAND $<TARGET_FILE:openstudio> run --show-stdout -w python_plugin_jinja_erb.osw
