@@ -356,11 +356,20 @@ TEST(AlfalfaJSON, expose_meter) {
   std::string meter_name = "Electricity:Facility";
 
   OutputMeter os_meter(model);
+  IdfObject idf_meter(IddObjectType::Output_Meter);
+
+  // Test error handling for malformed meter objects
+  EXPECT_THROW({ new AlfalfaMeter(os_meter); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(os_meter).is_initialized());
+
+  EXPECT_THROW({ new AlfalfaMeter(idf_meter); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(idf_meter).is_initialized());
+
+  // Populate meters with values
   os_meter.setFuelType(FuelType::Electricity);
   os_meter.setInstallLocationType(InstallLocationType::Facility);
   os_meter.setDisplayName(display_name);
 
-  IdfObject idf_meter(IddObjectType::Output_Meter);
   idf_meter.setString(Output_MeterFields::KeyName, meter_name);
 
   // All Components should be the same
@@ -392,18 +401,35 @@ TEST(AlfalfaJSON, expose_output_variable) {
   std::string variable_name = "my_var";
   std::string variable_key = "EMS";
   std::string display_name = "My Output Variable";
+
   OutputVariable os_output_variable(variable_name, model);
+  EnergyManagementSystemOutputVariable os_ems_output_variable(model, "");
+  IdfObject idf_output_variable = IdfObject(IddObjectType::Output_Variable);
+  IdfObject idf_ems_output_variable = IdfObject(IddObjectType::EnergyManagementSystem_OutputVariable);
+
+  // Test error handling for malformed output variable objects
+  EXPECT_THROW({ new AlfalfaOutputVariable(os_output_variable); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(os_output_variable).is_initialized());
+
+  EXPECT_THROW({ new AlfalfaOutputVariable(os_ems_output_variable); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(os_ems_output_variable).is_initialized());
+
+  EXPECT_THROW({ new AlfalfaOutputVariable(idf_output_variable); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(idf_output_variable).is_initialized());
+
+  EXPECT_THROW({ new AlfalfaOutputVariable(idf_ems_output_variable); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(idf_ems_output_variable).is_initialized());
+
+  os_ems_output_variable = EnergyManagementSystemOutputVariable(model, variable_name);
+
   os_output_variable.setKeyValue(variable_key);
   os_output_variable.setDisplayName(display_name);
 
-  EnergyManagementSystemOutputVariable os_ems_output_variable(model, variable_name);
   os_ems_output_variable.setDisplayName(display_name);
 
-  IdfObject idf_output_variable = IdfObject(IddObjectType::Output_Variable);
   idf_output_variable.setString(Output_VariableFields::KeyValue, variable_key);
   idf_output_variable.setString(Output_VariableFields::VariableName, variable_name);
 
-  IdfObject idf_ems_output_variable = IdfObject(IddObjectType::EnergyManagementSystem_OutputVariable);
   idf_ems_output_variable.setString(EnergyManagementSystem_OutputVariableFields::EMSVariableName, variable_name);
   idf_ems_output_variable.setString(EnergyManagementSystem_OutputVariableFields::Name, display_name);
 
@@ -446,9 +472,15 @@ TEST(AlfalfaJSON, expose_global_variable) {
   std::string display_name = "Variable Name";
 
   EnergyManagementSystemGlobalVariable os_global_variable(model, variable_name);
+  IdfObject idf_global_variable(IddObjectType::EnergyManagementSystem_GlobalVariable);
+
+  // Test error handling for malformed global variable objects
+
+  EXPECT_THROW({ new AlfalfaGlobalVariable(idf_global_variable); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(idf_global_variable).is_initialized());
+
   os_global_variable.setDisplayName(display_name);
 
-  IdfObject idf_global_variable(IddObjectType::EnergyManagementSystem_GlobalVariable);
   idf_global_variable.setString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, variable_name);
 
   // All Components created should be equal
@@ -482,12 +514,20 @@ TEST(AlfalfaJSON, expose_actuator) {
   std::string display_name = "My Actuator";
 
   ThermalZone actuated_zone(model);
-  actuated_zone.setName(component_name);
+  EnergyManagementSystemActuator os_actuator(actuated_zone, "", "");
+  IdfObject idf_actuator(IddObjectType::EnergyManagementSystem_Actuator);
 
-  EnergyManagementSystemActuator os_actuator(actuated_zone, component_type, control_type);
+  // Test error handling for malformed actuator objects
+  EXPECT_THROW({ new AlfalfaActuator(os_actuator); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(os_actuator).is_initialized());
+
+  EXPECT_THROW({ new AlfalfaActuator(idf_actuator); }, std::runtime_error);
+  EXPECT_FALSE(alfalfa.exposeFromObject(idf_actuator).is_initialized());
+
+  actuated_zone.setName(component_name);
+  os_actuator = EnergyManagementSystemActuator(actuated_zone, component_type, control_type);
   os_actuator.setDisplayName(display_name);
 
-  IdfObject idf_actuator(IddObjectType::EnergyManagementSystem_Actuator);
   idf_actuator.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, component_name);
   idf_actuator.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType, component_type);
   idf_actuator.setString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, control_type);

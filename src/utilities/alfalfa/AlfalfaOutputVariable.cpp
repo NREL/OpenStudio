@@ -40,10 +40,10 @@ namespace alfalfa {
       throw std::runtime_error("Unable to create Output Variable from Object of type " + idd_type.valueDescription());
     }
 
-    if (!variable_key.is_initialized()) {
+    if (!variable_key.is_initialized() || variable_key.get().size() == 0) {
       throw std::runtime_error("Unable to create Output Variable from Output Variable without a Key");
     }
-    if (!variable_name.is_initialized()) {
+    if (!variable_name.is_initialized() || variable_name.get().size() == 0) {
       throw std::runtime_error("Unable to create Output Variable from Output Variable without a Variable Name");
     }
     if (variable_key.get() == "*") {

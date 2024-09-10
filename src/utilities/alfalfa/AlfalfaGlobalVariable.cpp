@@ -27,7 +27,7 @@ namespace alfalfa {
       throw std::runtime_error("Unable to create Global Variable from Object of type " + idd_type.valueDescription());
     }
 
-    if (!variable_name.is_initialized()) {
+    if (!variable_name.is_initialized() || variable_name.get().size() == 0) {
       throw std::runtime_error("Unable to create Global Variable from EMS Output Variable without a Name");
     }
 
