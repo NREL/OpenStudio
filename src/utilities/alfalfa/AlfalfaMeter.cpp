@@ -24,7 +24,7 @@ namespace alfalfa {
       throw std::runtime_error("Unable to create Meter from Object of type " + idd_type.valueDescription());
     }
 
-    if (!meter_name.is_initialized()) {
+    if (!meter_name.is_initialized() || meter_name.get().size() == 0) {
       throw std::runtime_error("Unable to create Meter from Output Meter without a Name");
     }
 

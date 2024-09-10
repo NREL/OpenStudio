@@ -34,13 +34,13 @@ namespace alfalfa {
       throw std::runtime_error("Unable to create Actuator from Object of type " + idd_type.valueDescription());
     }
 
-    if (!component_name.is_initialized()) {
+    if (!component_name.is_initialized() || component_name.get().size() == 0) {
       throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Name");
     }
-    if (!component_type.is_initialized()) {
+    if (!component_type.is_initialized() || component_type.get().size() == 0) {
       throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Type");
     }
-    if (!control_type.is_initialized()) {
+    if (!control_type.is_initialized() || control_type.get().size() == 0) {
       throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Control Type");
     }
 

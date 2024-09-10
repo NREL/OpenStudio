@@ -109,7 +109,6 @@ namespace alfalfa {
     return exposeFromComponent(component, display_name);
   }
 
-
   void AlfalfaJSON::exposePoint(const AlfalfaPoint& point) {
     m_impl->exposePoint(point);
   }
@@ -125,32 +124,32 @@ namespace alfalfa {
       }
     }
 
-    AlfalfaComponent *component;
+    AlfalfaComponent* component;
     try {
-      switch(idd_type.value()) {
+      switch (idd_type.value()) {
         case IddObjectType::OS_Output_Meter:
         case IddObjectType::Output_Meter:
           component = new AlfalfaMeter(idf_object);
-        break;
+          break;
         case IddObjectType::OS_EnergyManagementSystem_Actuator:
         case IddObjectType::EnergyManagementSystem_Actuator:
           component = new AlfalfaActuator(idf_object);
-        break;
+          break;
         case IddObjectType::OS_Output_Variable:
         case IddObjectType::Output_Variable:
         case IddObjectType::EnergyManagementSystem_OutputVariable:
         case IddObjectType::OS_EnergyManagementSystem_OutputVariable:
           component = new AlfalfaOutputVariable(idf_object);
-        break;
+          break;
         case IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
         case IddObjectType::EnergyManagementSystem_GlobalVariable:
           component = new AlfalfaGlobalVariable(idf_object);
-        break;
+          break;
         default:
           LOG(Error, "Unable to create Alfalfa Point from Object of type " + idd_type.valueDescription());
           return boost::none;
       }
-    } catch (std::runtime_error &error) {
+    } catch (std::runtime_error& error) {
       LOG(Error, error.what());
       return boost::none;
     }
