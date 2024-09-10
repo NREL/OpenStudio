@@ -9238,7 +9238,7 @@ namespace osversion {
         newObject.setString(7, "");
         newObject.setString(8, "");
         newObject.setString(12, "Autosize");
-        newObject.setString(36, 4.5);
+        newObject.setDouble(36, 4.5);
 
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
@@ -9274,8 +9274,8 @@ namespace osversion {
         newObject.setString(7, "");
         newObject.setString(8, "");
         newObject.setString(12, "Autosize");
-        newObject.setString(26, 60.0);
-        newObject.setString(30, 0.0);
+        newObject.setDouble(26, 60.0);
+        newObject.setDouble(30, 0.0);
 
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));

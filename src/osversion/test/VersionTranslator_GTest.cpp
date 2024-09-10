@@ -4236,6 +4236,8 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_HeatPumpPlantLoopEIR) {
   EXPECT_EQ("Autosize", hp_heating.getString(13).get());                           // Reference Capacity {W}
   EXPECT_EQ(7.5, hp_heating.getDouble(14).get());                                  // Reference Coefficient of Performance {W/W}
   EXPECT_EQ(4.5, hp_heating.getDouble(36).get());                                  // Minimum Heat Recovery Outlet Temperature
+  EXPECT_TRUE(hp_heating.isEmpty(37));  // Heat Recovery Capacity Modifier Function of Temperature Curve Name
+  EXPECT_TRUE(hp_heating.isEmpty(38));  // Heat Recovery Electric Input to Output Ratio Modifier Function of Temperature Curve Name
 
   std::vector<WorkspaceObject> hp_coolings = model->getObjectsByType("OS:HeatPump:PlantLoop:EIR:Cooling");
   ASSERT_EQ(1u, hp_coolings.size());
@@ -4256,5 +4258,8 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_HeatPumpPlantLoopEIR) {
   EXPECT_EQ("Autosize", hp_cooling.getString(13).get());                           // Reference Capacity {W}
   EXPECT_EQ(7.5, hp_cooling.getDouble(14).get());                                  // Reference Coefficient of Performance {W/W}
   EXPECT_EQ(60.0, hp_cooling.getDouble(26).get());                                 // Maximum Heat Recovery Outlet Temperature
-  EXPECT_EQ(0.0, hp_cooling.getDouble(30).get());                                  // Thermosiphon Minimum Temperature Difference
+  EXPECT_TRUE(hp_cooling.isEmpty(27));             // Heat Recovery Capacity Modifier Function of Temperature Curve Name
+  EXPECT_TRUE(hp_cooling.isEmpty(28));             // Heat Recovery Electric Input to Output Ratio Modifier Function of Temperature Curve Name
+  EXPECT_TRUE(hp_cooling.isEmpty(29));             // Thermosiphon Capacity Fraction Curve Name
+  EXPECT_EQ(0.0, hp_cooling.getDouble(30).get());  // Thermosiphon Minimum Temperature Difference
 }

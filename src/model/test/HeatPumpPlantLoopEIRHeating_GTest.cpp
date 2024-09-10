@@ -146,7 +146,6 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve1.handle(), hp.capacityModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve2.handle(), hp.electricInputtoOutputRatioModifierFunctionofTemperatureCurve().handle());
   EXPECT_EQ(curve3.handle(), hp.electricInputtoOutputRatioModifierFunctionofPartLoadRatioCurve().handle());
-
   EXPECT_EQ(1, hp.heatingToCoolingCapacitySizingRatio());
   EXPECT_EQ("HeatingCapacity", hp.heatPumpSizingMethod());
   EXPECT_EQ("Setpoint", hp.controlType());
@@ -171,7 +170,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   EXPECT_EQ(curve9.handle(), hp.timedEmpiricalDefrostHeatLoadPenaltyCurve().get().handle());
   ASSERT_TRUE(hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve());
   EXPECT_EQ(curve10.handle(), hp.timedEmpiricalDefrostHeatInputEnergyFractionCurve().get().handle());
-  EXPECT_EQ(6, hp.minimumHeatRecoveryOutletTemperature());
+  EXPECT_EQ(7, hp.minimumHeatRecoveryOutletTemperature());
   ASSERT_TRUE(hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve());
   EXPECT_EQ(curve11.handle(), hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve().get().handle());
   ASSERT_TRUE(hp.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve());
