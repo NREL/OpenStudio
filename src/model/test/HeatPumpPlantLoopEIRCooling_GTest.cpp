@@ -101,9 +101,9 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   CurveQuadratic curve5(m);
   EXPECT_TRUE(hp.setMaximumSupplyWaterTemperatureCurve(curve5));
   EXPECT_TRUE(hp.setMaximumHeatRecoveryOutletTemperature(4));
-  CurveQuadratic curve6(m);
+  CurveBiquadratic curve6(m);
   EXPECT_TRUE(hp.setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(curve6));
-  CurveQuadratic curve7(m);
+  CurveBiquadratic curve7(m);
   EXPECT_TRUE(hp.setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve7));
   CurveQuadratic curve8(m);
   EXPECT_TRUE(hp.setThermosiphonCapacityFractionCurve(curve8));

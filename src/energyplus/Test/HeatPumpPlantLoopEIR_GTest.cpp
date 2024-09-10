@@ -59,9 +59,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   CurveQuadratic curve5(m);
   EXPECT_TRUE(plhp_clg.setMaximumSupplyWaterTemperatureCurve(curve5));
   EXPECT_TRUE(plhp_clg.setMaximumHeatRecoveryOutletTemperature(9.0));
-  CurveQuadratic curve6(m);
+  CurveBiquadratic curve6(m);
   EXPECT_TRUE(plhp_clg.setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(curve6));
-  CurveQuadratic curve7(m);
+  CurveBiquadratic curve7(m);
   EXPECT_TRUE(plhp_clg.setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve7));
   CurveQuadratic curve8(m);
   EXPECT_TRUE(plhp_clg.setThermosiphonCapacityFractionCurve(curve8));
@@ -104,9 +104,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpPlantLoopEIR_AirSource) {
   CurveQuadratic curve18(m);
   EXPECT_TRUE(plhp_htg.setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(curve18));
   EXPECT_TRUE(plhp_htg.setMinimumHeatRecoveryOutletTemperature(12.0));
-  CurveQuadratic curve19(m);
+  CurveBiquadratic curve19(m);
   EXPECT_TRUE(plhp_htg.setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(curve19));
-  CurveQuadratic curve20(m);
+  CurveBiquadratic curve20(m);
   EXPECT_TRUE(plhp_htg.setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve20));
 
   EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));

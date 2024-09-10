@@ -124,9 +124,9 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRHeating_GettersSetters) {
   CurveQuadratic curve10(m);
   EXPECT_TRUE(hp.setTimedEmpiricalDefrostHeatInputEnergyFractionCurve(curve10));
   EXPECT_TRUE(hp.setMinimumHeatRecoveryOutletTemperature(7));
-  CurveQuadratic curve11(m);
+  CurveBiquadratic curve11(m);
   EXPECT_TRUE(hp.setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(curve11));
-  CurveQuadratic curve12(m);
+  CurveBiquadratic curve12(m);
   EXPECT_TRUE(hp.setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve12));
 
   EXPECT_EQ("AirSource", hp.condenserType());
