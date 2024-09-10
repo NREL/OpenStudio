@@ -108,9 +108,11 @@ TEST(AlfalfaJSON, json_serialization) {
 
   // Test generation of JSON for constant components
   float value = 10.0;
-  AlfalfaPoint constant = alfalfa.exposeConstant(value, "example_name").get();
+  AlfalfaPoint constant = alfalfa.exposeConstant(value, point_name + "_constant").get();
 
   Json::Value constant_json = root_json;
+  constant_json["name"] = point_name + "_constant";
+  constant_json["id"] = constant_json["name"];
   constant_json["output"]["type"] = "Constant";
   constant_json["output"]["parameters"]["value"] = value;
 
@@ -121,9 +123,11 @@ TEST(AlfalfaJSON, json_serialization) {
   std::string act_component_type = "example_component_type";
   std::string act_control_type = "example_control_type";
 
-  AlfalfaPoint actuator = alfalfa.exposeActuator(act_component_name, act_component_type, act_control_type, point_name).get();
+  AlfalfaPoint actuator = alfalfa.exposeActuator(act_component_name, act_component_type, act_control_type, point_name + "_actuator").get();
 
   Json::Value actuator_json = root_json;
+  actuator_json["name"] = point_name + "_actuator";
+  actuator_json["id"] = actuator_json["name"];
   actuator_json["output"]["type"] = "Actuator";
   actuator_json["output"]["parameters"]["component_name"] = act_component_name;
   actuator_json["output"]["parameters"]["component_type"] = act_component_type;
@@ -136,9 +140,11 @@ TEST(AlfalfaJSON, json_serialization) {
   // Test generation of JSON for global variable components
   std::string global_variable_name = "example_global_variable_name";
 
-  AlfalfaPoint global_variable = alfalfa.exposeGlobalVariable(global_variable_name, point_name).get();
+  AlfalfaPoint global_variable = alfalfa.exposeGlobalVariable(global_variable_name, point_name + "_global_variable").get();
 
   Json::Value global_variable_json = root_json;
+  global_variable_json["name"] = point_name + "_global_variable";
+  global_variable_json["id"] = global_variable_json["name"];
   global_variable_json["output"]["type"] = "GlobalVariable";
   global_variable_json["output"]["parameters"]["variable_name"] = global_variable_name;
 
@@ -149,9 +155,11 @@ TEST(AlfalfaJSON, json_serialization) {
   // Test generation of JSON for meter components
   std::string meter_name = "example_meter_name";
 
-  AlfalfaPoint meter = alfalfa.exposeMeter(meter_name, point_name).get();
+  AlfalfaPoint meter = alfalfa.exposeMeter(meter_name, point_name + "_meter").get();
 
   Json::Value meter_json = root_json;
+  meter_json["name"] = point_name + "_meter";
+  meter_json["id"] = meter_json["name"];
   meter_json["output"]["type"] = "Meter";
   meter_json["output"]["parameters"]["meter_name"] = meter_name;
 
@@ -161,9 +169,11 @@ TEST(AlfalfaJSON, json_serialization) {
   std::string output_variable_key = "example_output_variable_key";
   std::string output_variable_name = "example_output_variable_name";
 
-  AlfalfaPoint output_variable = alfalfa.exposeOutputVariable(output_variable_key, output_variable_name, point_name).get();
+  AlfalfaPoint output_variable = alfalfa.exposeOutputVariable(output_variable_key, output_variable_name, point_name + "_output_variable").get();
 
   Json::Value output_variable_json = root_json;
+  output_variable_json["name"] = point_name + "_output_variable";
+  output_variable_json["id"] = output_variable_json["name"];
   output_variable_json["output"]["type"] = "OutputVariable";
   output_variable_json["output"]["parameters"]["variable_key"] = output_variable_key;
   output_variable_json["output"]["parameters"]["variable_name"] = output_variable_name;
@@ -182,6 +192,9 @@ TEST(AlfalfaJSON, json_serialization) {
   bool parsing_success = Json::parseFromStream(r_builder, ifs, &root, &formatted_errors);
   EXPECT_TRUE(parsing_success);
   EXPECT_EQ(alfalfa.toJSON(), root);
+  for (AlfalfaPoint point : alfalfa.getPoints()) {
+    EXPECT_EQ(root[point.id().get()], point.toJSON());
+  }
 }
 
 TEST(AlfalfaJSON, point_exceptions_logging) {
