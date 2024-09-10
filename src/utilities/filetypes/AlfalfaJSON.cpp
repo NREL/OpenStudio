@@ -84,128 +84,80 @@ namespace alfalfa {
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeConstant(float value, const std::string& display_name) {
     AlfalfaConstant component(value);
-    return exposePoint(component, display_name);
+    return exposeFromComponent(component, display_name);
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeMeter(const std::string& meter_name, const std::string& display_name) {
     AlfalfaMeter component(meter_name);
-    return exposePoint(component, display_name);
-  }
-
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeMeter(const openstudio::IdfObject& output_meter, const std::string& display_name) {
-    std::string _display_name = display_name;
-    boost::optional<std::string> name = getName(output_meter);
-
-    try {
-      AlfalfaMeter component(output_meter);
-      if (display_name.size() == 0) {
-        if (name.is_initialized()) {
-          _display_name = name.get();
-        }
-      }
-      return exposePoint(component, _display_name);
-    } catch (...) {
-      return boost::none;
-    }
+    return exposeFromComponent(component, display_name);
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeActuator(const std::string& component_name, const std::string& component_type,
                                                             const std::string& control_type, const std::string& display_name) {
     AlfalfaActuator component(component_name, component_type, control_type);
-    return exposePoint(component, display_name);
-  }
-
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeActuator(const openstudio::IdfObject& actuator, const std::string& display_name) {
-    std::string _display_name = display_name;
-    boost::optional<std::string> name = getName(actuator);
-
-    try {
-      AlfalfaActuator component(actuator);
-
-      if (display_name.size() == 0) {
-        if (name.is_initialized()) {
-          _display_name = name.get();
-        }
-      }
-      return exposePoint(component, _display_name);
-    } catch (...) {
-      return boost::none;
-    }
+    return exposeFromComponent(component, display_name);
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeOutputVariable(const std::string& variable_key, const std::string& variable_name,
                                                                   const std::string& display_name) {
     AlfalfaOutputVariable component(variable_key, variable_name);
-    return exposePoint(component, display_name);
-  }
-
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name) {
-    std::string _display_name = display_name;
-    boost::optional<std::string> name = getName(output_variable);
-
-    try {
-      AlfalfaOutputVariable component(output_variable);
-
-      if (display_name.size() == 0) {
-        if (name.is_initialized()) {
-          _display_name = name.get();
-        }
-      }
-
-      return exposePoint(component, _display_name);
-    } catch (...) {
-      return boost::none;
-    }
+    return exposeFromComponent(component, display_name);
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeGlobalVariable(const std::string& variable_name, const std::string& display_name) {
     AlfalfaGlobalVariable component(variable_name);
-    return exposePoint(component, display_name);
+    return exposeFromComponent(component, display_name);
   }
 
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name) {
-    std::string _display_name = display_name;
-    boost::optional<std::string> name = getName(global_variable);
-    try {
-      AlfalfaGlobalVariable component(global_variable);
-
-      if (display_name.size() == 0) {
-        if (name.is_initialized()) {
-          _display_name = name.get();
-        }
-      }
-
-      return exposePoint(component, _display_name);
-    } catch (...) {
-      return boost::none;
-    }
-  }
 
   void AlfalfaJSON::exposePoint(const AlfalfaPoint& point) {
     m_impl->exposePoint(point);
   }
 
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposePoint(const openstudio::IdfObject& idf_object, const std::string& display_name) {
+  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeFromObject(const openstudio::IdfObject& idf_object, const std::string& display_name) {
     IddObjectType idd_type = idf_object.iddObject().type();
-    if (idd_type == IddObjectType::OS_Output_Meter || idd_type == IddObjectType::Output_Meter) {
-      return exposeMeter(idf_object, display_name);
-    } else if (idd_type == IddObjectType::OS_EnergyManagementSystem_Actuator || idd_type == IddObjectType::EnergyManagementSystem_Actuator) {
-      return exposeActuator(idf_object, display_name);
-    } else if (idd_type == IddObjectType::OS_Output_Variable || idd_type == IddObjectType::Output_Variable
-               || idd_type == IddObjectType::EnergyManagementSystem_OutputVariable
-               || idd_type == IddObjectType::OS_EnergyManagementSystem_OutputVariable) {
-      return exposeOutputVariable(idf_object, display_name);
-    } else if (idd_type == IddObjectType::OS_EnergyManagementSystem_GlobalVariable
-               || idd_type == IddObjectType::EnergyManagementSystem_GlobalVariable) {
-      return exposeGlobalVariable(idf_object, display_name);
-    } else {
-      LOG(Error, "Unable to create Alfalfa Point from Object of type " + idd_type.valueDescription());
+    std::string _display_name = display_name;
+
+    if (display_name.size() == 0) {
+      boost::optional<std::string> name = getName(idf_object);
+      if (name.is_initialized()) {
+        _display_name = name.get();
+      }
+    }
+
+    AlfalfaComponent *component;
+    try {
+      switch(idd_type.value()) {
+        case IddObjectType::OS_Output_Meter:
+        case IddObjectType::Output_Meter:
+          component = new AlfalfaMeter(idf_object);
+        break;
+        case IddObjectType::OS_EnergyManagementSystem_Actuator:
+        case IddObjectType::EnergyManagementSystem_Actuator:
+          component = new AlfalfaActuator(idf_object);
+        break;
+        case IddObjectType::OS_Output_Variable:
+        case IddObjectType::Output_Variable:
+        case IddObjectType::EnergyManagementSystem_OutputVariable:
+        case IddObjectType::OS_EnergyManagementSystem_OutputVariable:
+          component = new AlfalfaOutputVariable(idf_object);
+        break;
+        case IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
+        case IddObjectType::EnergyManagementSystem_GlobalVariable:
+          component = new AlfalfaGlobalVariable(idf_object);
+        break;
+        default:
+          LOG(Error, "Unable to create Alfalfa Point from Object of type " + idd_type.valueDescription());
+          return boost::none;
+      }
+    } catch (std::runtime_error &error) {
+      LOG(Error, error.what());
       return boost::none;
     }
-    return boost::none;
+    return exposeFromComponent(*component, _display_name);
   }
 
-  boost::optional<AlfalfaPoint> AlfalfaJSON::exposePoint(const AlfalfaComponent& component, const std::string& display_name) {
+  boost::optional<AlfalfaPoint> AlfalfaJSON::exposeFromComponent(const AlfalfaComponent& component, const std::string& display_name) {
     std::string _display_name = display_name;
     if (display_name.size() == 0) {
       if (component.type == "Actuator") {

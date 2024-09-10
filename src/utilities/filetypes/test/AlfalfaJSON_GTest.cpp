@@ -374,8 +374,8 @@ TEST(AlfalfaJSON, expose_meter) {
   // All points should be the same
 
   AlfalfaPoint str_point = alfalfa.exposeMeter(meter_name, display_name).get();
-  AlfalfaPoint os_point = alfalfa.exposePoint(os_meter).get();
-  AlfalfaPoint idf_point = alfalfa.exposePoint(idf_meter, display_name).get();
+  AlfalfaPoint os_point = alfalfa.exposeFromObject(os_meter).get();
+  AlfalfaPoint idf_point = alfalfa.exposeFromObject(idf_meter, display_name).get();
 
   EXPECT_EQ(os_point, str_point);
   EXPECT_EQ(os_point, idf_point);
@@ -423,10 +423,10 @@ TEST(AlfalfaJSON, expose_output_variable) {
   os_output_variable.setDisplayName(display_name);
 
   AlfalfaPoint str_point = alfalfa.exposeOutputVariable(variable_key, variable_name, display_name).get();
-  AlfalfaPoint os_point = alfalfa.exposePoint(os_output_variable).get();
-  AlfalfaPoint os_ems_point = alfalfa.exposePoint(os_ems_output_variable).get();
-  AlfalfaPoint idf_point = alfalfa.exposePoint(idf_output_variable, display_name).get();
-  AlfalfaPoint idf_ems_point = alfalfa.exposePoint(idf_ems_output_variable).get();
+  AlfalfaPoint os_point = alfalfa.exposeFromObject(os_output_variable).get();
+  AlfalfaPoint os_ems_point = alfalfa.exposeFromObject(os_ems_output_variable).get();
+  AlfalfaPoint idf_point = alfalfa.exposeFromObject(idf_output_variable, display_name).get();
+  AlfalfaPoint idf_ems_point = alfalfa.exposeFromObject(idf_ems_output_variable).get();
 
   EXPECT_EQ(str_point, os_point);
   EXPECT_EQ(str_point, os_ems_point);
@@ -461,8 +461,8 @@ TEST(AlfalfaJSON, expose_global_variable) {
 
   // All points created should be equal
   AlfalfaPoint str_point = alfalfa.exposeGlobalVariable(variable_name, display_name).get();
-  AlfalfaPoint os_point = alfalfa.exposePoint(os_global_variable).get();
-  AlfalfaPoint idf_point = alfalfa.exposePoint(idf_global_variable, display_name).get();
+  AlfalfaPoint os_point = alfalfa.exposeFromObject(os_global_variable).get();
+  AlfalfaPoint idf_point = alfalfa.exposeFromObject(idf_global_variable, display_name).get();
 
   EXPECT_EQ(str_point, os_point);
   EXPECT_EQ(str_point.toJSON(), idf_point.toJSON());
@@ -502,8 +502,8 @@ TEST(AlfalfaJSON, expose_actuator) {
 
   // All point should be the same
   AlfalfaPoint str_point = alfalfa.exposeActuator(component_name, component_type, control_type, display_name).get();
-  AlfalfaPoint os_point = alfalfa.exposePoint(os_actuator).get();
-  AlfalfaPoint idf_point = alfalfa.exposePoint(idf_actuator, display_name).get();
+  AlfalfaPoint os_point = alfalfa.exposeFromObject(os_actuator).get();
+  AlfalfaPoint idf_point = alfalfa.exposeFromObject(idf_actuator, display_name).get();
 
   EXPECT_EQ(str_point, os_point);
   EXPECT_EQ(str_point, idf_point);
