@@ -43,28 +43,28 @@ class AlfalfaEPlusRuby < OpenStudio::Measure::EnergyPlusMeasure
     alfalfa.exposeMeter("Electricity:Facility", "Electricity Meter String:EPlus:Ruby")
 
     meter_object = OpenStudio::IdfObject.load("Output:Meter, Electricity:Facility;").get()
-    alfalfa.exposeMeter(meter_object, "Electricity Meter IDF:Eplus:Ruby")
+    alfalfa.exposeFromObject(meter_object, "Electricity Meter IDF:Eplus:Ruby")
 
     # Test Output Variables
     alfalfa.exposeOutputVariable("EMS", "my_var", "Output Variable String:EPlus:Ruby")
 
     ems_output_variable_object = OpenStudio::IdfObject.load("EnergyManagementSystem:OutputVariable,My Var,my_var,,ZoneTimestep,,;").get()
-    alfalfa.exposeOutputVariable(ems_output_variable_object, "EMS Output Variable IDF:EPlus:Ruby")
+    alfalfa.exposeFromObject(ems_output_variable_object, "EMS Output Variable IDF:EPlus:Ruby")
 
     output_variable_object = OpenStudio::IdfObject.load("Output:Variable,EMS,my_var,timstep;").get()
-    alfalfa.exposeOutputVariable(output_variable_object, "Output Variable IDF:EPlus:Ruby")
+    alfalfa.exposeFromObject(output_variable_object, "Output Variable IDF:EPlus:Ruby")
 
     # Test Global Variables
     alfalfa.exposeGlobalVariable("my_var", "Global Variable String:EPlus:Ruby")
 
     global_variable_object = OpenStudio::IdfObject.load("EnergyManagementSystem:GlobalVariable,my_var;").get()
-    alfalfa.exposeGlobalVariable(global_variable_object, "Global Variable IDF:EPlus:Ruby")
+    alfalfa.exposeFromObject(global_variable_object, "Global Variable IDF:EPlus:Ruby")
 
     # Test Actuators
     alfalfa.exposeActuator("component_name", "componen_type", "control_type", "Actuator String:EPlus:Ruby")
 
     actuator_object = OpenStudio::IdfObject.load("EnergyManagementSystem:Actuator,MyActuator,component_name,component_type,control_type;").get()
-    alfalfa.exposeActuator(actuator_object, "Actuator IDF:EPlus:Ruby")
+    alfalfa.exposeFromObject(actuator_object, "Actuator IDF:EPlus:Ruby")
 
     return true
   end

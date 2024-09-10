@@ -67,28 +67,28 @@ class AlfalfaEPlusPython(openstudio.measure.EnergyPlusMeasure):
         alfalfa.exposeMeter("Electricity:Facility", "Electricity Meter String:EPlus:Python")
 
         meter_object = openstudio.IdfObject.load("Output:Meter, Electricity:Facility;").get()
-        alfalfa.exposeMeter(meter_object, "Electricity Meter IDF:Eplus:Python")
+        alfalfa.exposeFromObject(meter_object, "Electricity Meter IDF:Eplus:Python")
 
         # Test Output Variables
         alfalfa.exposeOutputVariable("EMS", "my_var", "Output Variable String:EPlus:Python")
 
         ems_output_variable_object = openstudio.IdfObject.load("EnergyManagementSystem:OutputVariable,My Var,my_var,,ZoneTimestep,,;").get()
-        alfalfa.exposeOutputVariable(ems_output_variable_object, "EMS Output Variable IDF:EPlus:Python")
+        alfalfa.exposeFromObject(ems_output_variable_object, "EMS Output Variable IDF:EPlus:Python")
 
         output_variable_object = openstudio.IdfObject.load("Output:Variable,EMS,my_var,timstep;").get()
-        alfalfa.exposeOutputVariable(output_variable_object, "Output Variable IDF:EPlus:Python")
+        alfalfa.exposeFromObject(output_variable_object, "Output Variable IDF:EPlus:Python")
 
         # Test Global Variables
         alfalfa.exposeGlobalVariable("my_var", "Global Variable String:EPlus:Python")
 
         global_variable_object = openstudio.IdfObject.load("EnergyManagementSystem:GlobalVariable,my_var;").get()
-        alfalfa.exposeGlobalVariable(global_variable_object, "Global Variable IDF:EPlus:Python")
+        alfalfa.exposeFromObject(global_variable_object, "Global Variable IDF:EPlus:Python")
 
         # Test Actuators
         alfalfa.exposeActuator("component_name", "componen_type", "control_type", "Actuator String:EPlus:Python")
 
         actuator_object = openstudio.IdfObject.load("EnergyManagementSystem:Actuator,MyActuator,component_name,component_type,control_type;").get()
-        alfalfa.exposeActuator(actuator_object, "Actuator IDF:EPlus:Python")
+        alfalfa.exposeFromObject(actuator_object, "Actuator IDF:EPlus:Python")
 
         return True
 

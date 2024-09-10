@@ -53,25 +53,11 @@ namespace alfalfa {
     boost::optional<AlfalfaPoint> exposeMeter(const std::string& meter_name, const std::string& display_name = std::string());
 
     /**
-     * Expose a point with a meter as an output.
-     * display_name is optional and by default will be infered from the displayName for model objects or meter name for idf objects.
-     * Valid idf_object types are OutputMeter and IdfObject(IddObjectType::Output_Meter)
-     */
-    boost::optional<AlfalfaPoint> exposeMeter(const openstudio::IdfObject& output_meter, const std::string& display_name = std::string());
-
-    /**
      * Expose a point with an actuator as input and ouput value.
      * display_name is optional and by default will reflect the parameters of the actuator.
      */
     boost::optional<AlfalfaPoint> exposeActuator(const std::string& component_name, const std::string& component_type,
                                                  const std::string& control_type, const std::string& display_name = std::string());
-
-    /**
-     * Expose a point with an actuator as input and ouput value.
-     * display_name is optional and by default will be infered from the displayName for model objects or parameters for idf objects.
-     * Valid idf_object types are EnergyManagementSystemActuator and IdfObject(IddObjectType::EnergyManagementSystem_Actuator)
-     */
-    boost::optional<AlfalfaPoint> exposeActuator(const openstudio::IdfObject& actuator, const std::string& display_name = std::string());
 
     /**
      * Expose point with Output Variable as output value.
@@ -81,24 +67,10 @@ namespace alfalfa {
                                                        const std::string& display_name = std::string());
 
     /**
-     * Expose point with Output Variable as output value.
-     * display_name is optional and by default will be infered from the displayName for model objects or parameters for idf objects.
-     * Valid idf_object types are OutputVariable, EnergyManagementSystemOutputVariable, IdfObject(IddObjectType::Output_Variable) and IdfObject(IddObjectType::EnergyManagementSystem_OutputVariable)
-     */
-    boost::optional<AlfalfaPoint> exposeOutputVariable(const openstudio::IdfObject& output_variable, const std::string& display_name = std::string());
-
-    /**
      * Expose point with Global Variable as output and input value.
      * display_name is optional and by default will reflect the parameters of the global variable.
      */
     boost::optional<AlfalfaPoint> exposeGlobalVariable(const std::string& variable_name, const std::string& display_name = std::string());
-
-    /**
-     * Expose point with Global Variable as output and input value.
-     * display_name is optional and by default will be infered from the displayName for model objects or parameters for idf objects.
-     * Valid idf_object types are EnergyManagementSystemGlobalVariable and IdfObject(IddObjectType::EnergyManagementSystem_GlobalVariable)
-     */
-    boost::optional<AlfalfaPoint> exposeGlobalVariable(const openstudio::IdfObject& global_variable, const std::string& display_name = std::string());
 
     /**
      * Expose a point in the Alfalfa API
@@ -113,14 +85,14 @@ namespace alfalfa {
      * OutputMeter and IdfObject(IddObjectType::Output_Meter) for meters,
      * and EnergyManagementSystemGlobalVariable and IdfObject(IddObjectType::EnergyManagementSystem_GlobalVariable) for global variables.
      */
-    boost::optional<AlfalfaPoint> exposePoint(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeFromObject(const openstudio::IdfObject& idf_object, const std::string& display_name = std::string());
 
     /**
      * Expose a point in the alfalfa API from an AlfalfaComponent.
      * display_name is optional and by default will be infered from the contents of the component.
      * Input and Ouput of the point will reflect the capabilities of the component.
      */
-    boost::optional<AlfalfaPoint> exposePoint(const AlfalfaComponent& component, const std::string& display_name = std::string());
+    boost::optional<AlfalfaPoint> exposeFromComponent(const AlfalfaComponent& component, const std::string& display_name = std::string());
 
     /**
      * Get a vector of all points currently exported to the Alfalfa API

@@ -45,23 +45,23 @@ class AlfalfaModelRuby < OpenStudio::Measure::ModelMeasure
     meter_object = OpenStudio::Model::OutputMeter.new(model)
     meter_object.setFuelType(OpenStudio::FuelType.new("Electricity"))
     meter_object.setInstallLocationType(OpenStudio::InstallLocationType.new("Facility"))
-    alfalfa.exposeMeter(meter_object, "Electricity Meter OSM:Model:Ruby")
+    alfalfa.exposeFromObject(meter_object, "Electricity Meter OSM:Model:Ruby")
 
     # Test Output Variables
     alfalfa.exposeOutputVariable("EMS", "my_var_1", "Output Variable String:Model:Ruby")
 
     ems_output_variable_object = OpenStudio::Model::EnergyManagementSystemOutputVariable.new(model, "my_var_1")
-    alfalfa.exposeOutputVariable(ems_output_variable_object, "EMS Output Variable OSM:Model:Ruby")
+    alfalfa.exposeFromObject(ems_output_variable_object, "EMS Output Variable OSM:Model:Ruby")
 
     output_variable_object = OpenStudio::Model::OutputVariable.new("my_var_1", model)
     output_variable_object.setKeyValue("EMS")
-    alfalfa.exposeOutputVariable(output_variable_object, "Output Variable OSM:Model:Ruby")
+    alfalfa.exposeFromObject(output_variable_object, "Output Variable OSM:Model:Ruby")
 
     # Test Global Variables
     alfalfa.exposeGlobalVariable("my_var_1", "Global Variable String:Model:Ruby")
 
     global_variable_object = OpenStudio::Model::EnergyManagementSystemGlobalVariable.new(model, "my_var_1")
-    alfalfa.exposeGlobalVariable(global_variable_object, "Global Variable OSM:Model:Ruby")
+    alfalfa.exposeFromObject(global_variable_object, "Global Variable OSM:Model:Ruby")
 
     # Test Actuators
     alfalfa.exposeActuator("component_name", "componen_type", "control_type", "Actuator String:Model:Ruby")
@@ -69,7 +69,7 @@ class AlfalfaModelRuby < OpenStudio::Measure::ModelMeasure
     actuated_zone = OpenStudio::Model::ThermalZone.new(model)
     actuated_zone.setName("component_name")
     actuator_object = OpenStudio::Model::EnergyManagementSystemActuator.new(actuated_zone, "component_type", "control_type")
-    alfalfa.exposeActuator(actuator_object, "Actuator OSM:Model:Ruby")
+    alfalfa.exposeFromObject(actuator_object, "Actuator OSM:Model:Ruby")
 
     return true
   end

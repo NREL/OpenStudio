@@ -71,23 +71,23 @@ class AlfalfaModelPython(openstudio.measure.ModelMeasure):
         meter_object = openstudio.model.OutputMeter(model)
         meter_object.setFuelType(openstudio.FuelType("Electricity"))
         meter_object.setInstallLocationType(openstudio.InstallLocationType("Facility"))
-        alfalfa.exposeMeter(meter_object, "Electricity Meter OSM:Model:Python")
+        alfalfa.exposeFromObject(meter_object, "Electricity Meter OSM:Model:Python")
 
         # Test Output Variables
         alfalfa.exposeOutputVariable("EMS", "my_var", "Output Variable String:Model:Python")
 
         ems_output_variable_object = openstudio.model.EnergyManagementSystemOutputVariable(model, "my_var")
-        alfalfa.exposeOutputVariable(ems_output_variable_object, "EMS Output Variable OSM:Model:Python")
+        alfalfa.exposeFromObject(ems_output_variable_object, "EMS Output Variable OSM:Model:Python")
 
         output_variable_object = openstudio.model.OutputVariable("my_var", model)
         output_variable_object.setKeyValue("EMS")
-        alfalfa.exposeOutputVariable(output_variable_object, "Output Variable OSM:Model:Python")
+        alfalfa.exposeFromObject(output_variable_object, "Output Variable OSM:Model:Python")
 
         # Test Global Variables
         alfalfa.exposeGlobalVariable("my_var", "Global Variable String:Model:Python")
 
         global_variable_object = openstudio.model.EnergyManagementSystemGlobalVariable(model, "my_var")
-        alfalfa.exposeGlobalVariable(global_variable_object, "Global Variable OSM:Model:Python")
+        alfalfa.exposeFromObject(global_variable_object, "Global Variable OSM:Model:Python")
 
         # Test Actuators
         alfalfa.exposeActuator("component_name", "componen_type", "control_type", "Actuator String:Model:Python")
@@ -95,7 +95,7 @@ class AlfalfaModelPython(openstudio.measure.ModelMeasure):
         actuated_zone = openstudio.model.ThermalZone(model)
         actuated_zone.setName("component_name")
         actuator_object = openstudio.model.EnergyManagementSystemActuator(actuated_zone, "component_type", "control_type")
-        alfalfa.exposeActuator(actuator_object, "Actuator OSM:Model:Python")
+        alfalfa.exposeFromObject(actuator_object, "Actuator OSM:Model:Python")
 
         return True
 
