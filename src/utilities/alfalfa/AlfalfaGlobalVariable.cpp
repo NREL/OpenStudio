@@ -7,10 +7,15 @@
 #include <utilities/idd/OS_EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <fmt/format.h>
+
 namespace openstudio {
 namespace alfalfa {
   AlfalfaGlobalVariable::AlfalfaGlobalVariable(const std::string& variable_name)
     : AlfalfaComponent("GlobalVariable", Capability::Output | Capability::Input) {
+    if (variable_name.size() == 0) {
+      throw std::runtime_error("Error creating AlfalfaGlobalVariable: variable_name must be non-empty");
+    }
     parameters["variable_name"] = variable_name;
   }
 
@@ -24,11 +29,11 @@ namespace alfalfa {
     } else if (idd_type == IddObjectType::EnergyManagementSystem_GlobalVariable) {
       variable_name = global_variable.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName);
     } else {
-      throw std::runtime_error("Unable to create Global Variable from Object of type " + idd_type.valueDescription());
+      throw std::runtime_error(fmt::format("Error creating AlfalfaGlobalVariable: {} is not a supported object type", idd_type.valueDescription()));
     }
 
     if (!variable_name.is_initialized() || variable_name.get().size() == 0) {
-      throw std::runtime_error("Unable to create Global Variable from EMS Output Variable without a Name");
+      throw std::runtime_error("Error creating AlfalfaGlobalVariable: Object is missing a variable name");
     }
 
     parameters["variable_name"] = variable_name.get();

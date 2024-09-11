@@ -6,10 +6,19 @@
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <fmt/format.h>
+
 namespace openstudio {
 namespace alfalfa {
   AlfalfaActuator::AlfalfaActuator(const std::string& component_name, const std::string& component_type, const std::string& control_type)
     : AlfalfaComponent("Actuator", Capability::Input | Capability::Output) {
+    if (component_name.size() == 0) {
+      throw std::runtime_error("Error creating AlfalfaActuator: component_name must be non-empty");
+    } else if (component_type.size() == 0) {
+      throw std::runtime_error("Error creating AlfalfaActuator: component_type must be non-empty");
+    } else if (control_type.size() == 0) {
+      throw std::runtime_error("Error creating AlfalfaActuator: control_type must be non-empty");
+    }
     parameters["component_name"] = component_name;
     parameters["component_type"] = component_type;
     parameters["control_type"] = control_type;
@@ -31,17 +40,17 @@ namespace alfalfa {
       component_type = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentType);
       control_type = actuator.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType);
     } else {
-      throw std::runtime_error("Unable to create Actuator from Object of type " + idd_type.valueDescription());
+      throw std::runtime_error(fmt::format("Error creating AlfalfaActuator: {} is not a supported object type", idd_type.valueDescription()));
     }
 
     if (!component_name.is_initialized() || component_name.get().size() == 0) {
-      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Name");
+      throw std::runtime_error("Error creating AlfalfaActuator: Object is missing a component name");
     }
     if (!component_type.is_initialized() || component_type.get().size() == 0) {
-      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Component Type");
+      throw std::runtime_error("Error creating AlfalfaActuator: Object is missing a component type");
     }
     if (!control_type.is_initialized() || control_type.get().size() == 0) {
-      throw std::runtime_error("Unable to create Actuator from EMS Actuator without a Control Type");
+      throw std::runtime_error("Error creating AlfalfaActuator: Object is missing a control type");
     }
 
     parameters["component_name"] = component_name.get();

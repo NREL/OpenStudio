@@ -2,6 +2,7 @@
 #include "AlfalfaPoint_Impl.hpp"
 
 #include <boost/regex.hpp>
+#include <fmt/format.h>
 
 namespace openstudio {
 namespace alfalfa {
@@ -19,7 +20,7 @@ namespace alfalfa {
     if (component.canInput()) {
       m_impl->m_input = component;
     } else {
-      throw std::runtime_error("Component of type: " + component.type + " cannot be used as an input.");
+      throw std::runtime_error(fmt::format("Component of type: {} cannot be used as an input.", component.type));
     }
   }
 
@@ -31,7 +32,7 @@ namespace alfalfa {
     if (component.canOutput()) {
       m_impl->m_output = component;
     } else {
-      throw std::runtime_error("Component of type: " + component.type + " cannot be used as an output.");
+      throw std::runtime_error(fmt::format("Component of type: {} cannot be used as an output.", component.type));
     }
   }
 
@@ -54,7 +55,7 @@ namespace alfalfa {
       if (isValidId(id)) {
         result = id;
       } else {
-        LOG(Warn, "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.");
+        LOG(Warn, fmt::format("Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.", displayName()));
       }
     }
     return result;
@@ -73,11 +74,14 @@ namespace alfalfa {
   }
 
   void AlfalfaPoint::setDisplayName(const std::string& display_name) {
+    if (display_name.size() == 0) {
+      throw std::runtime_error("Display name must have non-zero length");
+    }
     m_impl->m_display_name = display_name;
     if (!m_impl->m_id.is_initialized()) {
       std::string id = toIdString(display_name);
       if (!isValidId(id)) {
-        LOG(Warn, "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.");
+        LOG(Warn, fmt::format("Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.", display_name));
       }
     }
   }
@@ -119,7 +123,7 @@ namespace alfalfa {
   }
 
   bool AlfalfaPoint::isValidId(const std::string& id) const {
-    return boost::regex_match(id, boost::regex("^[A-Za-z0-9_\\-\\[\\]:()]*$"));
+    return boost::regex_match(id, boost::regex("^[A-Za-z0-9_\\-\\[\\]:()]*$")) && id.size() > 0;
   }
 
   std::string AlfalfaPoint::toIdString(const std::string& str) const {

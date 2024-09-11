@@ -199,7 +199,7 @@ TEST(AlfalfaJSON, json_serialization) {
 
 TEST(AlfalfaJSON, point_exceptions_logging) {
   std::string ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
-  std::string DISPLAY_NAME_VALID_CHARS_MSG = "Display name does not produce a valid point ID. Manually set a valid ID or export will fail.";
+  std::string DISPLAY_NAME_VALID_CHARS_MSG = "Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.";
   std::string LOG_CHANNEL = "openstudio.AlfalfaPoint";
   StringStreamLogSink ss;
   ss.setLogLevel(Warn);
@@ -213,7 +213,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   AlfalfaPoint invalid_point("Point$$$");
   ASSERT_EQ(1, ss.logMessages().size());
   LogMessage invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), fmt::format(DISPLAY_NAME_VALID_CHARS_MSG, "Point$$$"));
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
   EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
@@ -224,7 +224,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   EXPECT_FALSE(invalid_point_id.is_initialized());
   ASSERT_EQ(ss.logMessages().size(), 1);
   invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), fmt::format(DISPLAY_NAME_VALID_CHARS_MSG, "Point$$$"));
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
   EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
@@ -256,7 +256,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
     std::runtime_error);
   ASSERT_EQ(ss.logMessages().size(), 1);
   invalid_id_msg = ss.logMessages().at(0);
-  EXPECT_EQ(invalid_id_msg.logMessage(), DISPLAY_NAME_VALID_CHARS_MSG);
+  EXPECT_EQ(invalid_id_msg.logMessage(), fmt::format(DISPLAY_NAME_VALID_CHARS_MSG, "Point$$$"));
   EXPECT_EQ(invalid_id_msg.logLevel(), Warn);
   EXPECT_EQ(invalid_id_msg.logChannel(), LOG_CHANNEL);
   ss.resetStringStream();
