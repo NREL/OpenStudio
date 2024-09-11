@@ -247,7 +247,8 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat_fanControl) {
   EXPECT_EQ("ConstantSpeed", atu.fanControlType());
 
   EXPECT_EQ(0.3, atu.minimumFanTurnDownRatio());
-  EXPECT_FALSE(atu.heatingControlType());
+  ASSERT_TRUE(atu.heatingControlType());
+  EXPECT_EQ("", atu.heatingControlType().get());
   EXPECT_EQ(32.1, atu.designHeatingDischargeAirTemperature());
   EXPECT_EQ(37.7, atu.highLimitHeatingDischargeAirTemperature());
 
@@ -261,4 +262,8 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat_fanControl) {
   EXPECT_EQ("Modulated", atu.heatingControlType().get());
   EXPECT_EQ(33.0, atu.designHeatingDischargeAirTemperature());
   EXPECT_EQ(38.0, atu.highLimitHeatingDischargeAirTemperature());
+
+  atu.resetHeatingControlType();
+  ASSERT_TRUE(atu.heatingControlType());
+  EXPECT_EQ("", atu.heatingControlType().get());
 }
