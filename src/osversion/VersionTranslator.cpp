@@ -9234,6 +9234,9 @@ namespace osversion {
         newObject.setDouble(19, 32.1);
         newObject.setDouble(20, 37.7);
 
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
       } else if (iddname == "OS:AirTerminal:SingleDuct:ParallelPIU:Reheat") {
 
         // 5 Fields have been added from 3.8.0 to 3.9.0:
@@ -9259,6 +9262,9 @@ namespace osversion {
         newObject.setDouble(18, 0.3);
         newObject.setDouble(20, 32.1);
         newObject.setDouble(21, 37.7);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
 
         // No-op
       } else {
