@@ -139,6 +139,8 @@ namespace model {
 
       bool setHeatingControlType(const std::string& heatingControlType);
 
+      void resetHeatingControlType();
+
       bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
 
       bool setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature);

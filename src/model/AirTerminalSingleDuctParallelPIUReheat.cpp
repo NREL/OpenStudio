@@ -323,6 +323,11 @@ namespace model {
       return result;
     }
 
+    void AirTerminalSingleDuctParallelPIUReheat_Impl::resetHeatingControlType() {
+      bool result = setString(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HeatingControlType, "");
+      OS_ASSERT(result);
+    }
+
     bool AirTerminalSingleDuctParallelPIUReheat_Impl::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {
       bool result =
         setDouble(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::DesignHeatingDischargeAirTemperature, designHeatingDischargeAirTemperature);
@@ -972,6 +977,10 @@ namespace model {
 
   bool AirTerminalSingleDuctParallelPIUReheat::setHeatingControlType(const std::string& heatingControlType) {
     return getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->setHeatingControlType(heatingControlType);
+  }
+
+  void AirTerminalSingleDuctParallelPIUReheat::resetHeatingControlType() {
+    getImpl<detail::AirTerminalSingleDuctParallelPIUReheat_Impl>()->resetHeatingControlType();
   }
 
   bool AirTerminalSingleDuctParallelPIUReheat::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {
