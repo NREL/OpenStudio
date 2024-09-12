@@ -254,8 +254,9 @@ if(BUILD_TESTING)
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Clean_Run
-    COMMAND ${CMAKE_COMMAND} -E rm -rf "Examples/compact_osw/run"
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw")
+    COMMAND ${CMAKE_COMMAND} -E rm -rf "run"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
+  )
   set_tests_properties(OpenStudioCLI.Clean_Run PROPERTIES RESOURCE_LOCK "compact_osw")
   set_tests_properties(OpenStudioCLI.Clean_Run PROPERTIES FIXTURES_SETUP "clean_workflow")
 
@@ -268,8 +269,9 @@ if(BUILD_TESTING)
   set_tests_properties(OpenStudioCLI.Run_Alfalfa PROPERTIES FIXTURES_REQUIRED "clean_workflow")
 
   add_test(NAME OpenStudioCLI.Check_Alfalfa
-    COMMAND ${CMAKE_COMMAND} -E cat "Examples/compact_osw/run/alfalfa.json"
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources")
+    COMMAND ${CMAKE_COMMAND} -E cat "run/alfalfa.json"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
+  )
   set_tests_properties(OpenStudioCLI.Check_Alfalfa PROPERTIES RESOURCE_LOCK "compact_osw")
   set_tests_properties(OpenStudioCLI.Check_Alfalfa PROPERTIES FIXTURES_REQUIRED "alfalfa_workflow")
 
