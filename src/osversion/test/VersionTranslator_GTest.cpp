@@ -4207,3 +4207,30 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
   EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ZoneHVACTerminalUnitVRF) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_ZoneHVACTerminalUnitVRF.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_ZoneHVACTerminalUnitVRF_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> fanVVs = model->getObjectsByType("OS:Fan:VariableVolume");
+  ASSERT_EQ(0u, fanVVs.size());
+
+  std::vector<WorkspaceObject> vrfs = model->getObjectsByType("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+  ASSERT_EQ(1u, vrfs.size());
+  WorkspaceObject vrf = vrfs[0];
+
+  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1", vrf.getString(1).get());  // Name
+  // TODO
+
+  std::vector<WorkspaceObject> fanSMs = model->getObjectsByType("OS:Fan:SystemModel");
+  ASSERT_EQ(1u, fanSMs.size());
+  WorkspaceObject fanSM = fanSMs[0];
+
+  EXPECT_EQ("Fan System Model 1", fanSM.getString(1).get());  // Name
+  // TODO
+}

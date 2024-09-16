@@ -9208,7 +9208,87 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      ss << object;
+      if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+
+        if ((value = object.getString(14))) {  // Supply Air Fan
+          std::vector<IdfObject> fanVVs = idf_3_8_0.getObjectsByType(idf_3_8_0.iddFile().getObject("OS:Fan:VariableVolume").get());
+          for (auto& fanVV : fanVVS) {
+            if (value.get() == fanVV.getString(0).get()) {
+
+              auto iddObject = idd_3_9_0.getObject("OS:Fan:SystemModel");
+              IdfObject newObject(iddObject.get());
+
+            }
+          }
+        }
+
+
+
+        // TODO: change FanVariableVolume to FanSystemModel, e.g.:
+
+/*   Fan:VariableVolume,
+    TU1 VRF Supply Fan,      !- Name
+    VRFAvailSched,           !- Availability Schedule Name
+    0.7,                     !- Fan Total Efficiency
+    600,                     !- Pressure Rise {Pa}
+    autosize,                !- Maximum Flow Rate {m3/s}
+    Fraction,                !- Fan Power Minimum Flow Rate Input Method
+    0,                       !- Fan Power Minimum Flow Fraction
+    0,                       !- Fan Power Minimum Air Flow Rate {m3/s}
+    0.9,                     !- Motor Efficiency
+    1,                       !- Motor In Airstream Fraction
+    0.059,                   !- Fan Power Coefficient 1
+    0,                       !- Fan Power Coefficient 2
+    0,                       !- Fan Power Coefficient 3
+    0.928,                   !- Fan Power Coefficient 4
+    0,                       !- Fan Power Coefficient 5
+    TU1 VRF DX HCoil Outlet Node,  !- Air Inlet Node Name
+    TU1 Outlet Node,         !- Air Outlet Node Name
+    General;                 !- End-Use Subcategory */
+
+/*   Fan:SystemModel,
+    TU1 VRF Supply Fan,      !- Name
+    VRFAvailSched,           !- Availability Schedule Name
+    TU1 VRF DX HCoil Outlet Node,  !- Air Inlet Node Name
+    TU1 Outlet Node,         !- Air Outlet Node Name
+    autosize,                !- Design Maximum Air Flow Rate {m3/s}
+    Continuous,              !- Speed Control Method
+    0,                       !- Electric Power Minimum Flow Rate Fraction
+    600,                     !- Design Pressure Rise {Pa}
+    0.9,                     !- Motor Efficiency
+    1,                       !- Motor In Air Stream Fraction
+    autosize,                !- Design Electric Power Consumption {W}
+    TotalEfficiencyAndPressure,  !- Design Power Sizing Method
+    ,                        !- Electric Power Per Unit Flow Rate {W/(m3/s)}
+    ,                        !- Electric Power Per Unit Flow Rate Per Unit Pressure {W/((m3/s)-Pa)}
+    0.7,                     !- Fan Total Efficiency
+    TU1 VRF Supply Fan_curve,!- Electric Power Function of Flow Fraction Curve Name
+    ,                        !- Night Ventilation Mode Pressure Rise {Pa}
+    ,                        !- Night Ventilation Mode Flow Fraction
+    ,                        !- Motor Loss Zone Name
+    ,                        !- Motor Loss Radiative Fraction
+    General;                 !- End-Use Subcategory
+
+  Curve:Quartic,
+    TU1 VRF Supply Fan_curve,!- Name
+    0.059,                   !- Coefficient1 Constant
+    0,                       !- Coefficient2 x
+    0,                       !- Coefficient3 x**2
+    0.928,                   !- Coefficient4 x**3
+    0,                       !- Coefficient5 x**4
+     0.0000000,              !- Minimum Value of x
+    1.0,                     !- Maximum Value of x
+    0.0,                     !- Minimum Curve Output
+    5.0,                     !- Maximum Curve Output
+    Dimensionless,           !- Input Unit Type for X
+    Dimensionless;           !- Output Unit Type */
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else {
+        ss << object;
+      }
     }
 
     return ss.str();
