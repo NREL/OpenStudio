@@ -4217,20 +4217,55 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ZoneHVACTerminalUnitVRF) {
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_ZoneHVACTerminalUnitVRF_updated.osm");
   model->save(outPath, true);
 
-  std::vector<WorkspaceObject> fanVVs = model->getObjectsByType("OS:Fan:VariableVolume");
-  ASSERT_EQ(0u, fanVVs.size());
+  std::vector<WorkspaceObject> fanSMs = model->getObjectsByType("OS:Fan:SystemModel");
+  ASSERT_EQ(1u, fanSMs.size());
 
   std::vector<WorkspaceObject> vrfs = model->getObjectsByType("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
   ASSERT_EQ(1u, vrfs.size());
   WorkspaceObject vrf = vrfs[0];
 
-  EXPECT_EQ("Zone HVAC Terminal Unit Variable Refrigerant Flow 1", vrf.getString(1).get());  // Name
-  // TODO
+  // Check the Fan, converted from Fan:VariableVolume to Fan:SystemModel
+  ASSERT_TRUE(vrf.getTarget(14));
+  WorkspaceObject fan = vrf.getTarget(14).get();
 
-  std::vector<WorkspaceObject> fanSMs = model->getObjectsByType("OS:Fan:SystemModel");
-  ASSERT_EQ(1u, fanSMs.size());
-  WorkspaceObject fanSM = fanSMs[0];
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
+  EXPECT_EQ("Fan Variable Volume 1", fan.getString(OS_Fan_SystemModelFields::Name).get());
+  EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
+  EXPECT_EQ("Autosize" fan.getString(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+  EXPECT_EQ("Continuous", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
+  EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
+  EXPECT_EQ(1017.592, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
+  EXPECT_EQ(0.93, fan.getDouble(OS_Fan_SystemModelFields::MotorEfficiency).get());
+  EXPECT_EQ(1.0, fan.getDouble(OS_Fan_SystemModelFields::MotorInAirStreamFraction).get());
+  EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignElectricPowerConsumption).get());
+  EXPECT_EQ("TotalEfficiencyAndPressure", fan.getString(OS_Fan_SystemModelFields::DesignPowerSizingMethod).get());
+  EXPECT_EQ(840.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate).get());
+  EXPECT_EQ(1.66667, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure).get());
+  EXPECT_EQ(0.6045, fan.getDouble(OS_Fan_SystemModelFields::FanTotalEfficiency).get());
+  ASSERT_TRUE(fan.getTarget(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName));
+  EXPECT_EQ("Fan Variable Volume 1 Curve", fan.getTarget(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName)->nameString());
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModePressureRise));
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
+  EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
+  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::EndUseSubcategory));
 
-  EXPECT_EQ("Fan System Model 1", fanSM.getString(1).get());  // Name
-  // TODO
+  std::vector<WorkspaceObject> curveQuartics = model->getObjectsByType("OS:Curve:Quartic");
+  ASSERT_EQ(1u, curveQuartics.size());
+  WorkspaceObject curveQuartic = curveQuartics[0];
+
+  EXPECT_EQ("Fan Variable Volume 1 Curve", curveQuartic.getString(1).get());
+  EXPECT_EQ(0.040759894, curveQuartic.getDouble(2).get());
+  EXPECT_EQ(0.08804497, curveQuartic.getDouble(3).get());
+  EXPECT_EQ(-0.07292612, curveQuartic.getDouble(4).get());
+  EXPECT_EQ(0.943739823, curveQuartic.getDouble(5).get());
+  EXPECT_EQ(0.0, curveQuartic.getDouble(6).get());
+  EXPECT_EQ(0.0, curveQuartic.getDouble(7).get());
+  EXPECT_EQ(1.0, curveQuartic.getDouble(8).get());
+  EXPECT_EQ(0.0, curveQuartic.getDouble(9).get());
+  EXPECT_EQ(5.0, curveQuartic.getDouble(10).get());
+  EXPECT_EQ("Dimensionless", curveQuartic.getString(11).get());
+  EXPECT_EQ("Dimensionless", curveQuartic.getString(12).get());
 }

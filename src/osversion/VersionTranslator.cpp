@@ -9205,84 +9205,185 @@ namespace osversion {
     IdfFile targetIdf(idd_3_9_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    // ZoneHVAC:TerminalUnit:VariableRefrigerantFlow prescan
+    // In E+ v24.2.0, we must change Fan:VariableVolume to Fan:SystemModel for Supply Air Fan Object Type / Name.
+    std::vector<std::string> vrfFanVVHandleStrs;
+    {
+      std::vector<IdfObject> fanVVs = idf_3_8_0.getObjectsByType(idf_3_8_0.iddFile().getObject("OS:Fan:VariableVolume").get());
+      std::vector<std::string> fanVVHandleStrs;
+      fanVVHandleStrs.reserve(fanVVs.size());
+      vrfFanVVHandleStrs.reserve(fanVVs.size());
+      std::transform(fanVVs.cbegin(), fanVVs.cend(), std::back_inserter(fanVVHandleStrs),
+                     [](const auto& idfObject) { return idfObject.getString(0).get(); });
+      for (const auto& vrf : idf_3_8_0.getObjectsByType(idf_3_8_0.iddFile().getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow").get())) {
+        if (auto fanHandleStr_ = vrf.getString(14, false, true)) {
+          if (std::find(fanVVHandleStrs.cbegin(), fanVVHandleStrs.cend(), fanHandleStr_.get()) != fanVVHandleStrs.cend()) {
+            vrfFanVVHandleStrs.push_back(fanHandleStr_.get());
+          }
+        }
+      }
+    }
+
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      if (iddname == "OS:Fan:VariableVolume") {
+        std::string fanHandleStr = object.getString(0).get();
+        if (std::find(vrfFanVVHandleStrs.cbegin(), vrfFanVVHandleStrs.cend(), fanHandleStr) == vrfFanVVHandleStrs.cend()) {
+          ss << object;
+        } else {
+          IdfObject newObject(idd_3_9_0.getObject("OS:Fan:SystemModel").get());
 
-        if ((value = object.getString(14))) {  // Supply Air Fan
-          std::vector<IdfObject> fanVVs = idf_3_8_0.getObjectsByType(idf_3_8_0.iddFile().getObject("OS:Fan:VariableVolume").get());
-          for (auto& fanVV : fanVVS) {
-            if (value.get() == fanVV.getString(0).get()) {
-
-              auto iddObject = idd_3_9_0.getObject("OS:Fan:SystemModel");
-              IdfObject newObject(iddObject.get());
-            }
+          // Handle
+          if ((value = object.getString(0))) {
+            newObject.setString(0, value.get());
           }
+
+          // Name
+          if ((value = object.getString(1))) {
+            newObject.setString(1, value.get());
+          }
+
+          // Availability Schedule Name
+          if ((value = object.getString(2))) {
+            newObject.setString(2, value.get());
+          }
+
+          // Fan Total Efficiency
+          if ((value = object.getString(3, true))) {
+            newObject.setString(15, value.get());
+          }
+
+          // Pressure Rise
+          if ((value = object.getString(4, true))) {
+            newObject.setString(8, value.get());
+          }
+
+          // Maximum Flow Rate
+          if ((value = object.getString(5, true))) {
+            newObject.setString(5, value.get());
+          }
+
+          // Motor Efficiency
+          if ((value = object.getString(9, true))) {
+            newObject.setString(9, value.get());
+          }
+
+          // Motor In Airstream Fraction
+          if ((value = object.getString(10, true))) {
+            newObject.setString(10, value.get());
+          }
+
+          // Nodes should be blank since it's inside a containing ZoneHVAC
+          // Air Inlet Node Name
+          if ((value = object.getString(16))) {
+            newObject.setString(3, value.get());
+          }
+
+          // Air Outlet Node Name
+          if ((value = object.getString(17))) {
+            newObject.setString(4, value.get());
+          }
+
+          // End-Use Subcategory
+          if ((value = object.getString(18, true))) {
+            newObject.setString(21, value.get());
+          }
+
+          // Speed Control Method
+          newObject.setString(6, "Continuous");
+
+          // Electric Power Minimum Flow Rate Fraction
+          newObject.setDouble(7, 0.0);
+
+          // Design Electric Power Consumption
+          newObject.setString(11, "Autosize");
+
+          // Design Power Sizing Method
+          newObject.setString(12, "TotalEfficiencyAndPressure");
+
+          // Electric Power Per Unit Flow Rate (not used given Power Sizing Method, but required-field & set in Ctor)
+          newObject.setDouble(13, 840.0);
+
+          // Electric Power Per Unit Flow Rate Per Unit Pressure (not used given Power Sizing Method, but required-field & set in Ctor)
+          newObject.setDouble(14, 1.66667);
+
+          // OS:Curve:Quartic
+          // Create the new Curve:Quartic object and populate with Fan Power Coefficient i
+          IdfObject curveQuartic(idd_3_9_0.getObject("OS:Curve:Quartic").get());
+
+          // Handle
+          curveQuartic.setString(0, toString(createUUID()));
+
+          // Name
+          curveQuartic.setString(1, newObject.getString(1).get() + " Curve");
+
+          // Coefficient1 Constant
+          if ((value = object.getString(11, true))) {
+            curveQuartic.setString(2, value.get());
+          }
+
+          // Coefficient2 x
+          if ((value = object.getString(12, true))) {
+            curveQuartic.setString(3, value.get());
+          }
+
+          // Coefficient3 x**2
+          if ((value = object.getString(13, true))) {
+            curveQuartic.setString(4, value.get());
+          }
+
+          // Coefficient4 x**3
+          if ((value = object.getString(14, true))) {
+            curveQuartic.setString(5, value.get());
+          }
+
+          // Coefficient5 x**4
+          if ((value = object.getString(15, true))) {
+            curveQuartic.setString(6, value.get());
+          }
+
+          // Minimum Value of x
+          curveQuartic.setDouble(7, 0.0);
+
+          // Maximum Value of x
+          curveQuartic.setDouble(8, 1.0);
+
+          // Minimum Curve Output
+          curveQuartic.setDouble(9, 0.0);
+
+          // Maximum Curve Output
+          curveQuartic.setDouble(10, 5.0);
+
+          // Input Unit Type for X
+          curveQuartic.setString(11, "Dimensionless");
+
+          // Output Unit Type
+          curveQuartic.setString(12, "Dimensionless");
+
+          ss << curveQuartic;
+          m_new.push_back(curveQuartic);
+
+          // Electric Power Function of Flow Fraction Curve Name
+          newObject.setString(16, curveQuartic.getString(0).get());
+
+          // Night Ventilation Mode Pressure Rise
+          newObject.setString(17, "");
+
+          // Night Ventilation Mode Flow Fraction
+          newObject.setString(18, "");
+
+          // Motor Loss Zone Name
+          newObject.setString(19, "");
+
+          // Motor Loss Radiative Fraction
+          newObject.setDouble(20, 0.0);
+
+          m_refactored.emplace_back(std::move(object), std::move(newObject));
+          ss << newObject;
         }
 
-        // TODO: change FanVariableVolume to FanSystemModel, e.g.:
-
-        /*   Fan:VariableVolume,
-    TU1 VRF Supply Fan,      !- Name
-    VRFAvailSched,           !- Availability Schedule Name
-    0.7,                     !- Fan Total Efficiency
-    600,                     !- Pressure Rise {Pa}
-    autosize,                !- Maximum Flow Rate {m3/s}
-    Fraction,                !- Fan Power Minimum Flow Rate Input Method
-    0,                       !- Fan Power Minimum Flow Fraction
-    0,                       !- Fan Power Minimum Air Flow Rate {m3/s}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Airstream Fraction
-    0.059,                   !- Fan Power Coefficient 1
-    0,                       !- Fan Power Coefficient 2
-    0,                       !- Fan Power Coefficient 3
-    0.928,                   !- Fan Power Coefficient 4
-    0,                       !- Fan Power Coefficient 5
-    TU1 VRF DX HCoil Outlet Node,  !- Air Inlet Node Name
-    TU1 Outlet Node,         !- Air Outlet Node Name
-    General;                 !- End-Use Subcategory */
-
-        /*   Fan:SystemModel,
-    TU1 VRF Supply Fan,      !- Name
-    VRFAvailSched,           !- Availability Schedule Name
-    TU1 VRF DX HCoil Outlet Node,  !- Air Inlet Node Name
-    TU1 Outlet Node,         !- Air Outlet Node Name
-    autosize,                !- Design Maximum Air Flow Rate {m3/s}
-    Continuous,              !- Speed Control Method
-    0,                       !- Electric Power Minimum Flow Rate Fraction
-    600,                     !- Design Pressure Rise {Pa}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Air Stream Fraction
-    autosize,                !- Design Electric Power Consumption {W}
-    TotalEfficiencyAndPressure,  !- Design Power Sizing Method
-    ,                        !- Electric Power Per Unit Flow Rate {W/(m3/s)}
-    ,                        !- Electric Power Per Unit Flow Rate Per Unit Pressure {W/((m3/s)-Pa)}
-    0.7,                     !- Fan Total Efficiency
-    TU1 VRF Supply Fan_curve,!- Electric Power Function of Flow Fraction Curve Name
-    ,                        !- Night Ventilation Mode Pressure Rise {Pa}
-    ,                        !- Night Ventilation Mode Flow Fraction
-    ,                        !- Motor Loss Zone Name
-    ,                        !- Motor Loss Radiative Fraction
-    General;                 !- End-Use Subcategory
-
-  Curve:Quartic,
-    TU1 VRF Supply Fan_curve,!- Name
-    0.059,                   !- Coefficient1 Constant
-    0,                       !- Coefficient2 x
-    0,                       !- Coefficient3 x**2
-    0.928,                   !- Coefficient4 x**3
-    0,                       !- Coefficient5 x**4
-     0.0000000,              !- Minimum Value of x
-    1.0,                     !- Maximum Value of x
-    0.0,                     !- Minimum Curve Output
-    5.0,                     !- Maximum Curve Output
-    Dimensionless,           !- Input Unit Type for X
-    Dimensionless;           !- Output Unit Type */
-
-        ss << newObject;
-        m_refactored.emplace_back(std::move(object), std::move(newObject));
-
+        // No-op
       } else {
         ss << object;
       }
