@@ -4250,7 +4250,7 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ZoneHVACTerminalUnitVRF) {
   EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
   EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
   EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
-  EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::EndUseSubcategory));
+  EXPECT_TRUE("General", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
 
   std::vector<WorkspaceObject> curveQuartics = model->getObjectsByType("OS:Curve:Quartic");
   ASSERT_EQ(1u, curveQuartics.size());

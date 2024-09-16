@@ -46,6 +46,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
+#include "../utilities/core/DeprecatedHelpers.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -423,7 +425,54 @@ namespace model {
       }
 
       if ((fanType == IddObjectType::OS_Fan_VariableVolume)) {
-        // FIXME: change to Fan_SystemModel
+        auto fanVV = component.optionalCast<FanVariableVolume>();
+
+        FanSystemModel fan(component.model());
+        fan.setName(component.nameString());
+        fan.setAvailabilitySchedule(fanVV->availabilitySchedule());
+        fan.setFanTotalEfficiency(fanVV->fanTotalEfficiency());
+        fan.setDesignPressureRise(fanVV->pressureRise());
+        if (fanVV->isMaximumFlowRateAutosized()) {
+          fan.autosizeDesignMaximumAirFlowRate();
+        } else if (boost::optional<double> value = fanVV->maximumFlowRate()) {
+          fan.setDesignMaximumAirFlowRate(value.get());
+        }
+        fan.setMotorEfficiency(fanVV->motorEfficiency());
+        fan.setMotorInAirStreamFraction(fanVV->motorInAirstreamFraction());
+        fan.setSpeedControlMethod("Continuous");
+        fan.setElectricPowerMinimumFlowRateFraction(0.0);
+        fan.autosizeDesignElectricPowerConsumption();
+        fan.setDesignPowerSizingMethod("TotalEfficiencyAndPressure");
+        fan.setEndUseSubcategory(fanVV->endUseSubcategory());
+
+        CurveQuartic curve(component.model());
+        curve.setName(component.nameString() + " Curve");
+        if (boost::optional<double> value = fanVV->fanPowerCoefficient1()) {
+          curve.setCoefficient1Constant(value.get());
+        }
+        if (boost::optional<double> value = fanVV->fanPowerCoefficient2()) {
+          curve.setCoefficient2x(value.get());
+        }
+        if (boost::optional<double> value = fanVV->fanPowerCoefficient3()) {
+          curve.setCoefficient3xPOW2(value.get());
+        }
+        if (boost::optional<double> value = fanVV->fanPowerCoefficient4()) {
+          curve.setCoefficient4xPOW3(value.get());
+        }
+        if (boost::optional<double> value = fanVV->fanPowerCoefficient5()) {
+          curve.setCoefficient5xPOW4(value.get());
+        }
+        curve.setMinimumValueofx(0.0);
+        curve.setMaximumValueofx(1.0);
+        curve.setMinimumCurveOutput(0.0);
+        curve.setMaximumCurveOutput(5.0);
+        curve.setInputUnitTypeforX("Dimensionless");
+        curve.setOutputUnitType("Dimensionless");
+        fan.setElectricPowerFunctionofFlowFractionCurve(curve);
+
+        auto component = fan.cast<HVACComponent>();
+
+        DEPRECATED_AT_MSG(3, 9, 0, "Use FanSystemModel instead.");
       }
 
       return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, component.handle());
