@@ -421,6 +421,11 @@ namespace model {
           return false;
         }
       }
+      
+      if ((fanType == IddObjectType::OS_Fan_VariableVolume)) {
+        // FIXME: change to Fan_SystemModel
+      }      
+      
       return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, component.handle());
     }
 
