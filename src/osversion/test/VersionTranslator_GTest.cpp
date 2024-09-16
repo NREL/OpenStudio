@@ -4207,3 +4207,37 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
   EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ChillerElectric) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_ChillerElectric.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_ChillerElectric_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> chiller_electric_eirs = model->getObjectsByType("OS:Chiller:Electric:EIR");
+  ASSERT_EQ(1u, chiller_electric_eirs.size());
+  WorkspaceObject chiller_electric_eir = chiller_electric_eirs[0];
+
+  EXPECT_EQ("Chiller Electric EIR 1", chiller_electric_eir.getString(1).get());  // Name
+  EXPECT_EQ("ConstantFlow", chiller_electric_eir.getString(35).get());                                                        // Condenser Flow Control
+  EXPECT_TRUE(chiller_electric_eir.isEmpty(36));                                      // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
+  EXPECT_TRUE(chiller_electric_eir.isEmpty(37));                                      // Temperature Difference Across Condenser Schedule Name
+  EXPECT_TRUE(chiller_electric_eir.isEmpty(38));                                      // Condenser Minimum Flow Fraction
+  EXPECT_TRUE(chiller_electric_eir.isEmpty(39));                                                        // Thermosiphon Capacity Fraction Curve Name
+  EXPECT_EQ(0.0, chiller_electric_eir.getDouble(40).get());                                                        // Thermosiphon Minimum Temperature Difference
+
+  std::vector<WorkspaceObject> chiller_electric_reformulatedeirs = model->getObjectsByType("OS:Chiller:Electric:ReformulatedEIR");
+  ASSERT_EQ(1u, chiller_electric_reformulatedeirs.size());
+  WorkspaceObject chiller_electric_reformulatedeir = chiller_electric_reformulatedeirs[0];
+
+  EXPECT_EQ("Chiller Electric Reformulated EIR 1", chiller_electric_reformulatedeir.getString(1).get());  // Name
+  EXPECT_EQ("ConstantFlow", chiller_electric_reformulatedeir.getString(31).get());                                                        // Condenser Flow Control
+  EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(32));                                      // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
+  EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(33));                                      // Temperature Difference Across Condenser Schedule Name
+  EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(34));                                      // Condenser Minimum Flow Fraction
+  EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(35));                                                        // Thermosiphon Capacity Fraction Curve Name
+  EXPECT_EQ(0.0, chiller_electric_reformulatedeir.getDouble(36).get());                                                        // Thermosiphon Minimum Temperature Difference
+}
