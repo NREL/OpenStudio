@@ -277,7 +277,7 @@ namespace energyplus {
     }
 
     // Condenser Flow Control
-    idfObject.setString(Chiller_Electric_EIRFields::CondenserFlowControl, modelObject.condenserFlowControl().get());
+    idfObject.setString(Chiller_Electric_EIRFields::CondenserFlowControl, modelObject.condenserFlowControl());
 
     // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
     if (boost::optional<Curve> condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_ =
