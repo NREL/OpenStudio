@@ -804,7 +804,7 @@ namespace model {
     }
 
     boost::optional<Schedule> ChillerElectricEIR_Impl::temperatureDifferenceAcrossCondenserSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserSchedule);
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserScheduleName);
     }
 
     boost::optional<double> ChillerElectricEIR_Impl::condenserMinimumFlowFraction() const {

@@ -902,7 +902,7 @@ namespace model {
   }
 
   std::vector<std::string> ChillerElectricReformulatedEIR::validCondenserFlowControlValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Chiller_Electric_EIRFields::CondenserFlowControl);
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Chiller_Electric_ReformulatedEIRFields::CondenserFlowControl);
   }
 
   boost::optional<double> ChillerElectricReformulatedEIR::referenceCapacity() const {
