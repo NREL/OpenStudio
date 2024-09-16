@@ -9217,16 +9217,13 @@ namespace osversion {
 
               auto iddObject = idd_3_9_0.getObject("OS:Fan:SystemModel");
               IdfObject newObject(iddObject.get());
-
             }
           }
         }
 
-
-
         // TODO: change FanVariableVolume to FanSystemModel, e.g.:
 
-/*   Fan:VariableVolume,
+        /*   Fan:VariableVolume,
     TU1 VRF Supply Fan,      !- Name
     VRFAvailSched,           !- Availability Schedule Name
     0.7,                     !- Fan Total Efficiency
@@ -9246,7 +9243,7 @@ namespace osversion {
     TU1 Outlet Node,         !- Air Outlet Node Name
     General;                 !- End-Use Subcategory */
 
-/*   Fan:SystemModel,
+        /*   Fan:SystemModel,
     TU1 VRF Supply Fan,      !- Name
     VRFAvailSched,           !- Availability Schedule Name
     TU1 VRF DX HCoil Outlet Node,  !- Air Inlet Node Name
