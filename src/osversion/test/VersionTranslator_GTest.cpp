@@ -4233,7 +4233,7 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ZoneHVACTerminalUnitVRF) {
   EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
   EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
   EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
-  EXPECT_EQ("Autosize" fan.getString(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+  EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
   EXPECT_EQ("Continuous", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
   EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
   EXPECT_EQ(1017.592, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
