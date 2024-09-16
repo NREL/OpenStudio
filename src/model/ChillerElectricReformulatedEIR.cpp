@@ -703,12 +703,12 @@ namespace model {
 
     boost::optional<Curve> ChillerElectricReformulatedEIR_Impl::condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve);
+        OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurveName);
     }
 
     boost::optional<Schedule> ChillerElectricReformulatedEIR_Impl::temperatureDifferenceAcrossCondenserSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserSchedule);
+        OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserScheduleName);
     }
 
     boost::optional<double> ChillerElectricReformulatedEIR_Impl::condenserMinimumFlowFraction() const {
@@ -716,7 +716,7 @@ namespace model {
     }
 
     boost::optional<Curve> ChillerElectricReformulatedEIR_Impl::thermosiphonCapacityFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurveName);
     }
 
     double ChillerElectricReformulatedEIR_Impl::thermosiphonMinimumTemperatureDifference() const {
@@ -731,25 +731,25 @@ namespace model {
 
     bool ChillerElectricReformulatedEIR_Impl::setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(
       const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve) {
-      bool result = setPointer(OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve,
+      bool result = setPointer(OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurveName,
                                condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve.handle());
       return result;
     }
 
     void ChillerElectricReformulatedEIR_Impl::resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() {
-      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve, "");
+      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurveName, "");
       OS_ASSERT(result);
     }
 
     bool
       ChillerElectricReformulatedEIR_Impl::setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule) {
-      bool result = setPointer(OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserSchedule,
+      bool result = setPointer(OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserScheduleName,
                                temperatureDifferenceAcrossCondenserSchedule.handle());
       return result;
     }
 
     void ChillerElectricReformulatedEIR_Impl::resetTemperatureDifferenceAcrossCondenserSchedule() {
-      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserSchedule, "");
+      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserScheduleName, "");
       OS_ASSERT(result);
     }
 
@@ -765,12 +765,12 @@ namespace model {
 
     bool ChillerElectricReformulatedEIR_Impl::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
       bool result =
-        setPointer(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurve, thermosiphonCapacityFractionCurve.handle());
+        setPointer(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurveName, thermosiphonCapacityFractionCurve.handle());
       return result;
     }
 
     void ChillerElectricReformulatedEIR_Impl::resetThermosiphonCapacityFractionCurve() {
-      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurve, "");
+      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurveName, "");
       OS_ASSERT(result);
     }
 
