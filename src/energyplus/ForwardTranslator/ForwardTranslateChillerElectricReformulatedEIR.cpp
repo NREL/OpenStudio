@@ -223,7 +223,8 @@ namespace energyplus {
     idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CondenserFlowControl, modelObject.condenserFlowControl().get());
 
     // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
-    if (boost::optional<Curve> condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_ = modelObject.condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve()) {
+    if (boost::optional<Curve> condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_ =
+          modelObject.condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_.get())) {
         idfObject.setString(Chiller_Electric_ReformulatedEIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve, wo_->nameString());
       }
@@ -233,21 +234,22 @@ namespace energyplus {
     if (auto _schedule = modelObject.temperatureDifferenceAcrossCondenserSchedule()) {
       idfObject.setString(Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserSchedule, _schedule->name().get());
     }
-    
+
     // Condenser Minimum Flow Fraction
     if ((value = modelObject.condenserMinimumFlowFraction())) {
       idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::CondenserMinimumFlowFraction, value.get());
     }
-    
+
     // Thermosiphon Capacity Fraction Curve Name
     if (boost::optional<Curve> thermosiphonCapacityFractionCurve_ = modelObject.thermosiphonCapacityFractionCurve()) {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(thermosiphonCapacityFractionCurve_.get())) {
         idfObject.setString(Chiller_Electric_ReformulatedEIRFields::ThermosiphonCapacityFractionCurve, wo_->nameString());
       }
     }
-    
+
     // Thermosiphon Minimum Temperature Difference
-    idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ThermosiphonMinimumTemperatureDifference, modelObject.thermosiphonMinimumTemperatureDifference());
+    idfObject.setDouble(Chiller_Electric_ReformulatedEIRFields::ThermosiphonMinimumTemperatureDifference,
+                        modelObject.thermosiphonMinimumTemperatureDifference());
 
     return boost::optional<IdfObject>(idfObject);
   }

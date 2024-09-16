@@ -797,26 +797,24 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     boost::optional<Curve> ChillerElectricEIR_Impl::condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(
         OS_Chiller_Electric_EIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve);
     }
-    
+
     boost::optional<Schedule> ChillerElectricEIR_Impl::temperatureDifferenceAcrossCondenserSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserSchedule);
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserSchedule);
     }
-    
+
     boost::optional<double> ChillerElectricEIR_Impl::condenserMinimumFlowFraction() const {
       return getDouble(OS_Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, true);
     }
-    
+
     boost::optional<Curve> ChillerElectricEIR_Impl::thermosiphonCapacityFractionCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(
-        OS_Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurve);
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurve);
     }
-    
+
     double ChillerElectricEIR_Impl::thermosiphonMinimumTemperatureDifference() const {
       boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::ThermosiphonMinimumTemperatureDifference, true);
       OS_ASSERT(value);
@@ -826,50 +824,50 @@ namespace model {
     bool ChillerElectricEIR_Impl::setCondenserFlowControl(const std::string& condenserFlowControl) {
       return setString(OS_Chiller_Electric_EIRFields::CondenserFlowControl, condenserFlowControl);
     }
-    
-    bool ChillerElectricEIR_Impl::setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve) {
+
+    bool ChillerElectricEIR_Impl::setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(
+      const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve) {
       bool result = setPointer(OS_Chiller_Electric_EIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve,
                                condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve.handle());
       return result;
     }
-    
+
     void ChillerElectricEIR_Impl::resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() {
       bool result = setString(OS_Chiller_Electric_EIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve, "");
       OS_ASSERT(result);
     }
-    
+
     bool ChillerElectricEIR_Impl::setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule) {
       bool result = setPointer(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserSchedule,
                                temperatureDifferenceAcrossCondenserSchedule.handle());
       return result;
     }
-    
+
     void ChillerElectricEIR_Impl::resetTemperatureDifferenceAcrossCondenserSchedule() {
       bool result = setString(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserSchedule, "");
       OS_ASSERT(result);
     }
-    
+
     bool ChillerElectricEIR_Impl::setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction) {
       bool result = setDouble(OS_Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, condenserMinimumFlowFraction);
       return result;
     }
-    
+
     void ChillerElectricEIR_Impl::resetCondenserMinimumFlowFraction() {
       bool result = setString(OS_Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, "");
       OS_ASSERT(result);
     }
-    
+
     bool ChillerElectricEIR_Impl::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
-      bool result = setPointer(OS_Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurve,
-                               thermosiphonCapacityFractionCurve.handle());
+      bool result = setPointer(OS_Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurve, thermosiphonCapacityFractionCurve.handle());
       return result;
     }
-    
+
     void ChillerElectricEIR_Impl::resetThermosiphonCapacityFractionCurve() {
       bool result = setString(OS_Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurve, "");
       OS_ASSERT(result);
     }
-    
+
     bool ChillerElectricEIR_Impl::setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference) {
       bool result = setDouble(OS_Chiller_Electric_EIRFields::ThermosiphonMinimumTemperatureDifference, thermosiphonMinimumTemperatureDifference);
       return result;
@@ -1409,72 +1407,74 @@ namespace model {
   bool ChillerElectricEIR::setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryLeavingTemperatureSetpointNode(node);
   }
-  
+
   void ChillerElectricEIR::resetHeatRecoveryLeavingTemperatureSetpointNode() {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryLeavingTemperatureSetpointNode();
   }
 
-  std::string ChillerElectricEIR:condenserFlowControl() const {
+  std::string ChillerElectricEIR : condenserFlowControl() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->condenserFlowControl();
   }
-  
-  boost::optional<Curve> ChillerElectricEIR:condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() const {
+
+  boost::optional<Curve> ChillerElectricEIR : condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve();
   }
-  
-  boost::optional<Schedule> ChillerElectricEIR:temperatureDifferenceAcrossCondenserSchedule() const {
+
+  boost::optional<Schedule> ChillerElectricEIR : temperatureDifferenceAcrossCondenserSchedule() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->temperatureDifferenceAcrossCondenserSchedule();
   }
-  
-  boost::optional<double> ChillerElectricEIR:condenserMinimumFlowFraction() const {
+
+  boost::optional<double> ChillerElectricEIR : condenserMinimumFlowFraction() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->condenserMinimumFlowFraction();
   }
-  
-  boost::optional<Curve> ChillerElectricEIR:thermosiphonCapacityFractionCurve() const {
+
+  boost::optional<Curve> ChillerElectricEIR : thermosiphonCapacityFractionCurve() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->thermosiphonCapacityFractionCurve();
   }
-  
-  double ChillerElectricEIR:thermosiphonMinimumTemperatureDifference() const {
+
+  double ChillerElectricEIR : thermosiphonMinimumTemperatureDifference() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->thermosiphonMinimumTemperatureDifference();
   }
 
-  bool ChillerElectricEIR:setCondenserFlowControl(const std::string& condenserFlowControl) {
+  bool ChillerElectricEIR : setCondenserFlowControl(const std::string& condenserFlowControl) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserFlowControl(condenserFlowControl);
   }
-  
-  bool ChillerElectricEIR:setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve) {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve);
+
+  bool ChillerElectricEIR
+    : setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve) {
+    return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(
+      condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve);
   }
-  
-  void ChillerElectricEIR:resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() {
+
+  void ChillerElectricEIR : resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve();
   }
-  
-  bool ChillerElectricEIR:setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule) {
+
+  bool ChillerElectricEIR : setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setTemperatureDifferenceAcrossCondenserSchedule(temperatureDifferenceAcrossCondenserSchedule);
   }
-  
-  void ChillerElectricEIR:resetTemperatureDifferenceAcrossCondenserSchedule() {
+
+  void ChillerElectricEIR : resetTemperatureDifferenceAcrossCondenserSchedule() {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetTemperatureDifferenceAcrossCondenserSchedule();
   }
-  
-  bool ChillerElectricEIR:setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction) {
+
+  bool ChillerElectricEIR : setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserMinimumFlowFraction(condenserMinimumFlowFraction);
   }
-  
-  void ChillerElectricEIR:resetCondenserMinimumFlowFraction() {
+
+  void ChillerElectricEIR : resetCondenserMinimumFlowFraction() {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserMinimumFlowFraction();
   }
-  
-  bool ChillerElectricEIR:setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
+
+  bool ChillerElectricEIR : setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setThermosiphonCapacityFractionCurve(thermosiphonCapacityFractionCurve);
   }
-  
-  void ChillerElectricEIR:resetThermosiphonCapacityFractionCurve() {
+
+  void ChillerElectricEIR : resetThermosiphonCapacityFractionCurve() {
     getImpl<detail::ChillerElectricEIR_Impl>()->resetThermosiphonCapacityFractionCurve();
   }
-  
-  bool ChillerElectricEIR:setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference) {
+
+  bool ChillerElectricEIR : setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setThermosiphonMinimumTemperatureDifference(thermosiphonMinimumTemperatureDifference);
   }
 
