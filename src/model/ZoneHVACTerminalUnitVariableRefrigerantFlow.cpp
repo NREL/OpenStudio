@@ -433,7 +433,7 @@ namespace model {
         auto fanVV = component.optionalCast<FanVariableVolume>();
 
         FanSystemModel fan(component.model());
-        fan.setName(component.nameString());
+        fan.setName(fan.nameString() + " " + component.nameString());
         Schedule availabilitySchedule = fanVV->availabilitySchedule();
         fan.setAvailabilitySchedule(availabilitySchedule);
         fan.setFanTotalEfficiency(fanVV->fanTotalEfficiency());
@@ -476,9 +476,11 @@ namespace model {
         curve.setOutputUnitType("Dimensionless");
         fan.setElectricPowerFunctionofFlowFractionCurve(curve);
 
-        auto component = fan.cast<HVACComponent>();
+        DEPRECATED_AT_MSG(
+          3, 9, 0,
+          "Setting a FanVariableVolume is deprecated. The fan has been converted to FanSystemModel, but in the future use FanSystemModel instead.");
 
-        DEPRECATED_AT_MSG(3, 9, 0, "Use FanSystemModel instead.");
+        return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, fan.handle());
       }
 
       return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, component.handle());
