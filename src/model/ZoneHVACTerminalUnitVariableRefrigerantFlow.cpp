@@ -434,7 +434,8 @@ namespace model {
 
         FanSystemModel fan(component.model());
         fan.setName(component.nameString());
-        fan.setAvailabilitySchedule(fanVV->availabilitySchedule());
+        Schedule availabilitySchedule = fanVV->availabilitySchedule();
+        fan.setAvailabilitySchedule(availabilitySchedule);
         fan.setFanTotalEfficiency(fanVV->fanTotalEfficiency());
         fan.setDesignPressureRise(fanVV->pressureRise());
         if (fanVV->isMaximumFlowRateAutosized()) {
