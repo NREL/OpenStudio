@@ -1,7 +1,7 @@
 #include "AlfalfaOutputVariable.hpp"
 
-#include "utilities/idd/IddObject.hpp"
-#include "utilities/idd/IddEnums.hpp"
+#include "../idd/IddObject.hpp"
+#include "../idd/IddEnums.hpp"
 
 #include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
@@ -15,9 +15,9 @@ namespace openstudio {
 namespace alfalfa {
   AlfalfaOutputVariable::AlfalfaOutputVariable(const std::string& variable_key, const std::string& variable_name)
     : AlfalfaComponent("OutputVariable", Capability::Output) {
-    if (variable_key.size() == 0) {
+    if (variable_key.empty()) {
       throw std::runtime_error("Error creating AlfalfaOutputVariable: variable_key must be non-empty");
-    } else if (variable_name.size() == 0) {
+    } else if (variable_name.empty()) {
       throw std::runtime_error("Error creating AlfalfaOutputVariable: variable_name must be non-empty");
     } else if (variable_key == "*") {
       throw std::runtime_error("Error creating AlfalfaOutputVariable: Key must not be wildcard '*'");
@@ -50,10 +50,10 @@ namespace alfalfa {
       throw std::runtime_error(fmt::format("Error creating AlfalfaOutputVariable: {} is not a supported object type", idd_type.valueDescription()));
     }
 
-    if (!variable_key.is_initialized() || variable_key.get().size() == 0) {
+    if (!variable_key.is_initialized() || variable_key.get().empty()) {
       throw std::runtime_error("Error creating AlfalfaOutputVariable: Object is missing a variable key");
     }
-    if (!variable_name.is_initialized() || variable_name.get().size() == 0) {
+    if (!variable_name.is_initialized() || variable_name.get().empty()) {
       throw std::runtime_error("Error creating AlfalfaOutputVariable: Object is missing a variable name");
     }
     if (variable_key.get() == "*") {

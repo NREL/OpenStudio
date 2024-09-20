@@ -2,7 +2,6 @@
 #define ALFALFA_COMPONENT_CONSTANT_HPP
 
 #include "AlfalfaComponent.hpp"
-#include "utilities/core/Logger.hpp"
 
 #include "../UtilitiesAPI.hpp"
 

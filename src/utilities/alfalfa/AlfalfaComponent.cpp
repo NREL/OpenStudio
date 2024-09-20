@@ -1,10 +1,9 @@
 #include "AlfalfaComponent.hpp"
-#include <iostream>
 
 namespace openstudio {
 namespace alfalfa {
 
-  AlfalfaComponent::AlfalfaComponent(const std::string& type, const Capability capabilities) : type(type), capabilities(capabilities) {}
+  AlfalfaComponent::AlfalfaComponent(const std::string& type, Capability capabilities) : type(type), capabilities(capabilities) {}
 
   bool AlfalfaComponent::canInput() const {
     return capabilities & Capability::Input;
@@ -15,7 +14,7 @@ namespace alfalfa {
   }
 
   bool AlfalfaComponent::operator==(const AlfalfaComponent& rhs) const {
-    return type == rhs.type && capabilities == rhs.capabilities && parameters == rhs.parameters;
+    return (type == rhs.type) && (capabilities == rhs.capabilities) && (parameters == rhs.parameters);
   }
 
 }  // namespace alfalfa

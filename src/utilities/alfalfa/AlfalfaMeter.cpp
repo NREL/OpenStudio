@@ -1,7 +1,7 @@
 #include "AlfalfaMeter.hpp"
 
-#include "utilities/idd/IddObject.hpp"
-#include "utilities/idd/IddEnums.hpp"
+#include "../idd/IddObject.hpp"
+#include "../idd/IddEnums.hpp"
 
 #include <utilities/idd/OS_Output_Meter_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_FieldEnums.hxx>
@@ -12,7 +12,7 @@
 namespace openstudio {
 namespace alfalfa {
   AlfalfaMeter::AlfalfaMeter(const std::string& meter_name) : AlfalfaComponent("Meter", Capability::Output) {
-    if (meter_name.size() == 0) {
+    if (meter_name.empty()) {
       throw std::runtime_error("Error creating AlfalfaMeter: meter_name must be non-empty");
     }
     parameters["meter_name"] = meter_name;
@@ -29,7 +29,7 @@ namespace alfalfa {
       throw std::runtime_error(fmt::format("Error creating AlfalfaMeter: {} is not a supported object type", idd_type.valueDescription()));
     }
 
-    if (!meter_name.is_initialized() || meter_name.get().size() == 0) {
+    if (!meter_name.is_initialized() || meter_name.get().empty()) {
       throw std::runtime_error("Error creating AlfalfaMeter: Object is missing a meter name");
     }
 
