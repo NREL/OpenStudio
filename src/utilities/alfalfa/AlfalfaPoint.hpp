@@ -7,8 +7,8 @@
 #define ALFALFA_POINT_HPP
 
 #include "AlfalfaComponent.hpp"
-#include "utilities/core/Optional.hpp"
-#include "utilities/core/Logger.hpp"
+#include "../core/Optional.hpp"
+#include "../core/Logger.hpp"
 
 #include "../UtilitiesAPI.hpp"
 
@@ -96,11 +96,9 @@ namespace alfalfa {
    private:
     std::shared_ptr<detail::AlfalfaPoint_Impl> m_impl;
 
-    std::string toIdString(const std::string& str) const;
+    static std::string toIdString(const std::string& str);
 
-    bool isValidId(const std::string& id) const;
-
-    inline static const std::string ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
+    static bool isValidId(const std::string& id);
 
     // configure logging
     REGISTER_LOGGER("openstudio.AlfalfaPoint")
