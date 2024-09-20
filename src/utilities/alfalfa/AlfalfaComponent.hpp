@@ -24,7 +24,7 @@ namespace alfalfa {
   class UTILITIES_API AlfalfaComponent
   {
    public:
-    AlfalfaComponent(const std::string& type, const Capability capabilities);
+    AlfalfaComponent(const std::string& type, Capability capabilities);
 
     /**
      * Get if the component can be used as an Input to the model

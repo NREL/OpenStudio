@@ -2,8 +2,7 @@
 #define ALFALFA_COMPONENT_ACTUATOR_HPP
 
 #include "AlfalfaComponent.hpp"
-#include "utilities/idf/IdfObject.hpp"
-#include "utilities/core/Logger.hpp"
+#include "../idf/IdfObject.hpp"
 #include "../UtilitiesAPI.hpp"
 
 namespace openstudio {
