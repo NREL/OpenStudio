@@ -145,28 +145,28 @@ TEST_F(PythonEngineFixture, AlfalfaMeasure) {
 
   ASSERT_EQ(measurePtr->name(), "Alfalfa Measure");
 
-  std::string workflow_json = "\
-  {\
-    \"seed\": \"../seed.osm\",\
-    \"weather_file\": \"../weather.epw\",\
-    \"steps\": [\
-      {\
-        \"arguments\": {},\
-        \"description\": \"The method attempts to build an alfalfa json in the measure\",\
-        \"measure_dir_name\": \"AlfalfaMeasure\",\
-        \"modeler_description\": \"The method attempts to build an alfalfa json in the measure\",\
-        \"name\": \"AlfalfaMeasure\"\
-      }\
-    ]\
-  }";
-
-
+  std::string workflow_json = R"json(
+{
+  "seed": "../seed.osm",
+  "weather_file": "../weather.epw",
+  "steps": [
+    {
+      "arguments": {},
+      "description": "The method attempts to build an alfalfa json in the measure",
+      "measure_dir_name": "AlfalfaMeasure",
+      "modeler_description": "The method attempts to build an alfalfa json in the measure",
+      "name": "AlfalfaMeasure"
+    }
+  ]
+}
+  )json";
 
   openstudio::model::Model model;
   openstudio::WorkflowJSON workflow = *openstudio::WorkflowJSON::load(workflow_json);
   openstudio::measure::OSRunner runner(workflow);
+  EXPECT_TRUE(runner.alfalfa().getPoints().empty());
 
   openstudio::measure::OSArgumentMap arguments;
   measurePtr->run(model, runner, arguments);
-
+  EXPECT_EQ(5, runner.alfalfa().getPoints().size());
 }
