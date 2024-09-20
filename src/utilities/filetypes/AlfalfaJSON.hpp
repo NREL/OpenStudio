@@ -14,8 +14,7 @@
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"
-
-#include "model/ModelObject.hpp"
+#include "../idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
@@ -100,7 +99,7 @@ namespace alfalfa {
     std::vector<AlfalfaPoint> getPoints();
 
    private:
-    boost::optional<std::string> getName(const openstudio::IdfObject& idf_object);
+    static boost::optional<std::string> getName(const openstudio::IdfObject& idf_object);
 
     std::shared_ptr<detail::AlfalfaJSON_Impl> m_impl;
 

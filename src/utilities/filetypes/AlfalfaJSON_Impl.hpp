@@ -3,8 +3,8 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "../core/Path.hpp"
 #include "../alfalfa/AlfalfaPoint.hpp"
+#include "../core/Path.hpp"
 
 #include <vector>
 #include <json/json.h>
