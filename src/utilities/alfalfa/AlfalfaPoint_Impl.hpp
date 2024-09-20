@@ -17,10 +17,13 @@ namespace alfalfa {
       AlfalfaPoint_Impl();
 
      protected:
+      // TODO: is this pImpl is needed? If so, add getters and setters and make all members private.
       friend class openstudio::alfalfa::AlfalfaPoint;
-      boost::optional<AlfalfaComponent> m_input, m_output;
+      boost::optional<AlfalfaComponent> m_input;
+      boost::optional<AlfalfaComponent> m_output;
       std::string m_display_name;
-      boost::optional<std::string> m_units, m_id;
+      boost::optional<std::string> m_units;
+      boost::optional<std::string> m_id;
       bool m_optional = true;
     };
   }  // namespace detail
