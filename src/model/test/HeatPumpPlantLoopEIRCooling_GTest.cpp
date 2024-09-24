@@ -66,6 +66,11 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_HeatPumpPlantLoopEIRCooling) {
   EXPECT_EQ(100.0, hp.maximumSourceInletTemperature());
   EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
   EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
+  EXPECT_EQ(60.0, hp.maximumHeatRecoveryOutletTemperature());
+  EXPECT_FALSE(hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.thermosiphonCapacityFractionCurve());
+  EXPECT_EQ(0.0, hp.thermosiphonMinimumTemperatureDifference());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
@@ -95,6 +100,14 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_TRUE(hp.setMinimumSupplyWaterTemperatureCurve(curve4));
   CurveQuadratic curve5(m);
   EXPECT_TRUE(hp.setMaximumSupplyWaterTemperatureCurve(curve5));
+  EXPECT_TRUE(hp.setMaximumHeatRecoveryOutletTemperature(4));
+  CurveBiquadratic curve6(m);
+  EXPECT_TRUE(hp.setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(curve6));
+  CurveBiquadratic curve7(m);
+  EXPECT_TRUE(hp.setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(curve7));
+  CurveQuadratic curve8(m);
+  EXPECT_TRUE(hp.setThermosiphonCapacityFractionCurve(curve8));
+  EXPECT_TRUE(hp.setThermosiphonMinimumTemperatureDifference(5));
 
   EXPECT_EQ("AirSource", hp.condenserType());
   ASSERT_TRUE(hp.companionHeatingHeatPump());
@@ -122,6 +135,14 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_EQ(curve4.handle(), hp.minimumSupplyWaterTemperatureCurve().get().handle());
   ASSERT_TRUE(hp.maximumSupplyWaterTemperatureCurve());
   EXPECT_EQ(curve5.handle(), hp.maximumSupplyWaterTemperatureCurve().get().handle());
+  EXPECT_EQ(4, hp.maximumHeatRecoveryOutletTemperature());
+  ASSERT_TRUE(hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_EQ(curve6.handle(), hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_EQ(curve7.handle(), hp.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve().get().handle());
+  ASSERT_TRUE(hp.thermosiphonCapacityFractionCurve());
+  EXPECT_EQ(curve8.handle(), hp.thermosiphonCapacityFractionCurve().get().handle());
+  EXPECT_EQ(5, hp.thermosiphonMinimumTemperatureDifference());
 
   hp.autosizeLoadSideReferenceFlowRate();
   EXPECT_TRUE(hp.isLoadSideReferenceFlowRateAutosized());
@@ -140,8 +161,14 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
 
   hp.resetMinimumSupplyWaterTemperatureCurve();
   hp.resetMaximumSupplyWaterTemperatureCurve();
+  hp.resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+  hp.resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  hp.resetThermosiphonCapacityFractionCurve();
   EXPECT_FALSE(hp.minimumSupplyWaterTemperatureCurve());
   EXPECT_FALSE(hp.maximumSupplyWaterTemperatureCurve());
+  EXPECT_FALSE(hp.heatRecoveryCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(hp.thermosiphonCapacityFractionCurve());
 }
 
 TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_remove) {
@@ -240,4 +267,80 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_CondenserType) {
   EXPECT_FALSE(hp.sourceSideWaterInletNode());
   EXPECT_FALSE(hp.demandOutletModelObject());
   EXPECT_FALSE(hp.sourceSideWaterOutletNode());
+}
+
+TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_PlantLoopConnections_addToNodeOverride) {
+  Model model;
+  HeatPumpPlantLoopEIRCooling hp(model);
+
+  PlantLoop pl1(model);
+  PlantLoop pl2(model);
+  PlantLoop pl3(model);
+
+  auto c_demand_node2 = pl3.demandOutletNode();
+
+  PlantLoop hrLoop(model);
+  auto h_supply_node = hrLoop.supplyOutletNode();
+  auto h_demand_node = hrLoop.demandInletNode();
+
+  // Connect to the load side loop
+  EXPECT_TRUE(pl1.addSupplyBranchForComponent(hp));
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  EXPECT_FALSE(hp.sourceSideWaterLoop());
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Connect to the source side loop
+  EXPECT_TRUE(pl2.addDemandBranchForComponent(hp));
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl2, hp.sourceSideWaterLoop().get());
+
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Have a load side loop and no hr loop: should connect the hr loop if trying to add to demand side
+  EXPECT_TRUE(hrLoop.addDemandBranchForComponent(hp));
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl2, hp.sourceSideWaterLoop().get());
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
+
+  // Have a source side loop and a hr loop: should reconnect the source side loop
+  // Try with addToNode instead
+  EXPECT_TRUE(hp.addToNode(c_demand_node2));
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl3, hp.sourceSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
+
+  // Disconnect the tertiary (hr) loop
+  EXPECT_TRUE(hp.removeFromTertiaryPlantLoop());
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Shouldn't accept tertiary connection to the supply side
+  EXPECT_FALSE(hp.addToTertiaryNode(h_supply_node));
+  EXPECT_FALSE(hp.heatRecoveryLoop());
+
+  // Try addToNode to the demand side of hr plant loop, should work to connect the hr loop
+  EXPECT_TRUE(hp.addToNode(h_demand_node));
+
+  ASSERT_TRUE(hp.loadSideWaterLoop());
+  EXPECT_EQ(pl1, hp.loadSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.sourceSideWaterLoop());
+  EXPECT_EQ(pl3, hp.sourceSideWaterLoop().get());
+
+  ASSERT_TRUE(hp.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, hp.heatRecoveryLoop().get());
 }

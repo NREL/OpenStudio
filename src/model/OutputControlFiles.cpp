@@ -74,6 +74,10 @@ namespace model {
       return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputAUDIT);
     }
 
+    bool OutputControlFiles_Impl::outputSpaceSizing() const {
+      return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputSpaceSizing);
+    }
+
     bool OutputControlFiles_Impl::outputZoneSizing() const {
       return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputZoneSizing);
     }
@@ -192,6 +196,10 @@ namespace model {
 
     bool OutputControlFiles_Impl::setOutputAUDIT(bool outputAUDIT) {
       return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputAUDIT, outputAUDIT);
+    }
+
+    bool OutputControlFiles_Impl::setOutputSpaceSizing(bool outputSpaceSizing) {
+      return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputSpaceSizing, outputSpaceSizing);
     }
 
     bool OutputControlFiles_Impl::setOutputZoneSizing(bool outputZoneSizing) {
@@ -320,6 +328,10 @@ namespace model {
     return getImpl<detail::OutputControlFiles_Impl>()->outputAUDIT();
   }
 
+  bool OutputControlFiles::outputSpaceSizing() const {
+    return getImpl<detail::OutputControlFiles_Impl>()->outputSpaceSizing();
+  }
+
   bool OutputControlFiles::outputZoneSizing() const {
     return getImpl<detail::OutputControlFiles_Impl>()->outputZoneSizing();
   }
@@ -440,6 +452,10 @@ namespace model {
     return getImpl<detail::OutputControlFiles_Impl>()->setOutputAUDIT(outputAUDIT);
   }
 
+  bool OutputControlFiles::setOutputSpaceSizing(bool outputSpaceSizing) {
+    return getImpl<detail::OutputControlFiles_Impl>()->setOutputSpaceSizing(outputSpaceSizing);
+  }
+
   bool OutputControlFiles::setOutputZoneSizing(bool outputZoneSizing) {
     return getImpl<detail::OutputControlFiles_Impl>()->setOutputZoneSizing(outputZoneSizing);
   }
@@ -541,6 +557,7 @@ namespace model {
     setOutputSQLite(true);
     setOutputJSON(true);
     setOutputAUDIT(true);
+    setOutputSpaceSizing(true);
     setOutputZoneSizing(true);
     setOutputSystemSizing(true);
     setOutputDXF(true);
