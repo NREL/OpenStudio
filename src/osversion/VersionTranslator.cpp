@@ -8970,7 +8970,7 @@ namespace osversion {
 
       if (iddname == "OS:HeatExchanger:AirToAir:SensibleAndLatent") {
 
-        // 4 Fields have been added from 3.7.0 to 3.8.0:
+        // 4 Fields have been removed from 3.7.0 to 3.8.0:
         // ----------------------------------------------
         // * Sensible Effectiveness at 75% Heating Air Flow {dimensionless} * 6
         // * Latent Effectiveness at 75% Heating Air Flow {dimensionless} * 7
@@ -9208,7 +9208,159 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:Chiller:Electric:EIR") {
+      if (iddname == "OS:OutputControl:Files") {
+        // 1 Field has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Output Space Sizing * 9
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(9, "Yes");
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Heating") {
+
+        // 3 Fields have been inserted from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Heat Recovery Inlet Node Name * 7
+        // * Heat Recovery Outlet Node Name * 8
+        // * Heat Recovery Reference Flow Rate * 12
+
+        // 1 required Field has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Minimum Heat Recovery Outlet Temperature * 36
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 10) {
+              newObject.setString(i + 2, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        newObject.setString(7, "");
+        newObject.setString(8, "");
+        newObject.setString(12, "Autosize");
+        newObject.setDouble(36, 4.5);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:HeatPump:PlantLoop:EIR:Cooling") {
+
+        // 3 Fields have been inserted from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Heat Recovery Inlet Node Name * 7
+        // * Heat Recovery Outlet Node Name * 8
+        // * Heat Recovery Reference Flow Rate * 12
+
+        // 2 required Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Maximum Heat Recovery Outlet Temperature * 26
+        // * Minimum Thermosiphon Minimum Temperature Difference * 30
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else if (i < 10) {
+              newObject.setString(i + 2, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        newObject.setString(7, "");
+        newObject.setString(8, "");
+        newObject.setString(12, "Autosize");
+        newObject.setDouble(26, 60.0);
+        newObject.setDouble(30, 0.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:AirTerminal:SingleDuct:SeriesPIU:Reheat") {
+
+        // 5 Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Fan Control Type * 16
+        // * Minimum Fan Turn Down Ratio * 17
+        // * Heating Control Type * 18
+        // * Design Heating Discharge Air Temperature * 19
+        // * High Limit Heating Discharge Air Temperature * 20
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 16) {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        newObject.setString(16, "ConstantSpeed");
+        newObject.setDouble(17, 0.3);
+        newObject.setDouble(19, 32.1);
+        newObject.setDouble(20, 37.7);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:AirTerminal:SingleDuct:ParallelPIU:Reheat") {
+
+        // 5 Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Fan Control Type * 17
+        // * Minimum Fan Turn Down Ratio * 18
+        // * Heating Control Type * 19
+        // * Design Heating Discharge Air Temperature * 20
+        // * High Limit Heating Discharge Air Temperature * 21
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 17) {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        newObject.setString(17, "ConstantSpeed");
+        newObject.setDouble(18, 0.3);
+        newObject.setDouble(20, 32.1);
+        newObject.setDouble(21, 37.7);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:Chiller:Electric:EIR") {
 
         // 2 required Fields has been added from 3.8.0 to 3.9.0:
         // ----------------------------------------------
