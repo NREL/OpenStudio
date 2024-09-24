@@ -9360,6 +9360,50 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
+      } else if (iddname == "OS:Chiller:Electric:EIR") {
+
+        // 2 required Fields has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Condenser Flow Control * 35
+        // * Thermosiphon Minimum Temperature Difference * 40
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(35, "ConstantFlow");
+        newObject.setDouble(40, 0.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:Chiller:Electric:ReformulatedEIR") {
+
+        // 2 required Fields has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Condenser Flow Control * 31
+        // * Thermosiphon Minimum Temperature Difference * 36
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(31, "ConstantFlow");
+        newObject.setDouble(36, 0.0);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;

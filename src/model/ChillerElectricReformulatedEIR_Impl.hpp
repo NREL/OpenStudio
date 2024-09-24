@@ -158,6 +158,18 @@ namespace model {
 
       std::string endUseSubcategory() const;
 
+      std::string condenserFlowControl() const;
+
+      boost::optional<Curve> condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve() const;
+
+      boost::optional<Schedule> temperatureDifferenceAcrossCondenserSchedule() const;
+
+      boost::optional<double> condenserMinimumFlowFraction() const;
+
+      boost::optional<Curve> thermosiphonCapacityFractionCurve() const;
+
+      double thermosiphonMinimumTemperatureDifference() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -249,6 +261,23 @@ namespace model {
       void resetHeatRecoveryLeavingTemperatureSetpointNode();
 
       bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      bool setCondenserFlowControl(const std::string& condenserFlowControl);
+
+      bool
+        setCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve(const Curve& condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve);
+      void resetCondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve();
+
+      bool setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule);
+      void resetTemperatureDifferenceAcrossCondenserSchedule();
+
+      bool setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction);
+      void resetCondenserMinimumFlowFraction();
+
+      bool setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve);
+      void resetThermosiphonCapacityFractionCurve();
+
+      bool setThermosiphonMinimumTemperatureDifference(double thermosiphonMinimumTemperatureDifference);
 
       //@}
       /** @name Other */
