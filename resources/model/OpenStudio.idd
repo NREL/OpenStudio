@@ -959,7 +959,7 @@ OS:Site,
        \minimum -300
        \maximum< 8900
        \default 0.0
-  A3; \field Terrain
+  A3,  \field Terrain
        \note Country=FlatOpenCountry | Suburbs=CountryTownsSuburbs | City=CityCenter | Ocean=body of water (5km) | Urban=Urban-Industrial-Forest
        \type choice
        \default Suburbs
@@ -968,6 +968,11 @@ OS:Site,
        \key City
        \key Ocean
        \key Urban
+  A4;  \field Keep Site Location Information
+       \type choice
+       \key Yes
+       \key No
+       \default No
 
 OS:Site:GroundTemperature:BuildingSurface,
        \memo These temperatures are specifically for those surfaces that have the outside environment
@@ -28538,13 +28543,19 @@ OS:Sizing:Zone,
        \default 0.0
        \minimum 0.0
        \units dimensionless
-  N26; \field Design Minimum Zone Ventilation Efficiency
+  N26, \field Design Minimum Zone Ventilation Efficiency
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
        \minimum 0.0
        \maximum 1.0
        \units dimensionless
+  A13; \field Sizing Option
+       \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm.
+       \type choice
+       \key Coincident
+       \key NonCoincident
+       \default Coincident
 
 OS:Splitter,
        \extensible:1

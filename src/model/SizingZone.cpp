@@ -712,6 +712,7 @@ namespace model {
       bool result = setString(OS_Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign, "autosize");
       OS_ASSERT(result);
     }
+
     boost::optional<double> SizingZone_Impl::autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const {
       boost::optional<double> result;
 
@@ -858,6 +859,26 @@ namespace model {
       return result;
     }
 
+    std::string SizingZone_Impl::sizingOption() const {
+      boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::SizingOption, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isSizingOptionDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::SizingOption);
+    }
+
+    bool SizingZone_Impl::setSizingOption(const std::string& sizingOption) {
+      bool result = setString(OS_Sizing_ZoneFields::SizingOption, sizingOption);
+      return result;
+    }
+
+    void SizingZone_Impl::resetSizingOption() {
+      bool result = setString(OS_Sizing_ZoneFields::SizingOption, "");
+      OS_ASSERT(result);
+    }
+
     void SizingZone_Impl::autosize() {
       autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
       autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
@@ -961,6 +982,7 @@ namespace model {
   std::vector<std::string> SizingZone::zoneLoadSizingMethodValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Sizing_ZoneFields::ZoneLoadSizingMethod);
   }
+
   std::vector<std::string> SizingZone::zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
@@ -968,6 +990,10 @@ namespace model {
   std::vector<std::string> SizingZone::zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+  }
+
+  std::vector<std::string> SizingZone::validSizingOptionValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Sizing_ZoneFields::SizingOption);
   }
 
   ThermalZone SizingZone::thermalZone() const {
@@ -1446,6 +1472,22 @@ namespace model {
 
   boost::optional<double> SizingZone::autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const {
     return getImpl<detail::SizingZone_Impl>()->autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+  }
+
+  std::string SizingZone::sizingOption() const {
+    return getImpl<detail::SizingZone_Impl>()->sizingOption();
+  }
+
+  bool SizingZone::isSizingOptionDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isSizingOptionDefaulted();
+  }
+
+  bool SizingZone::setSizingOption(const std::string& sizingOption) {
+    return getImpl<detail::SizingZone_Impl>()->setSizingOption(sizingOption);
+  }
+
+  void SizingZone::resetSizingOption() {
+    getImpl<detail::SizingZone_Impl>()->resetSizingOption();
   }
 
   void SizingZone::autosize() {

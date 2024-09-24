@@ -22610,7 +22610,7 @@ Sizing:Zone,
       \type object-list
       \object-list ScheduleNames
   A15;\field Type of Space Sum to Use
-      \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm. 
+      \note NonCoincident is available only if Do Space Heat Balance for Sizing=Yes in ZoneAirHeatBalanceAlgorithm.
       \type choice
       \key Coincident
       \key NonCoincident
@@ -29240,7 +29240,7 @@ SpaceHVAC:ZoneReturnMixer,
        \required-field
        \type object-list
        \object-list SpaceNames
-   A5, \field Space 1 Return Air Node Name
+   A5; \field Space 1 Return Air Node Name
        \note Matches a SpaceHVAC:EquipmentConnections Return Air Node Name
        \required-field
        \type node
@@ -43467,6 +43467,7 @@ Chiller:Electric:EIR,
        \note Name" input.
        \note Use "ConstantFlow" when modeling a constant flow condenser plant loop, choose one of the other inputs
        \note when modeling a variable flow condenser plant loop.
+       \type choice
        \key ConstantFlow
        \key ModulatedChillerPLR
        \key ModulatedLoopPLR
@@ -43494,7 +43495,7 @@ Chiller:Electric:EIR,
        \note "ModulatedDeltaTemperature".
   A20, \field Thermosiphon Capacity Fraction Curve Name
        \type object-list
-       \object-list UniVariateFunctions
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b * (Tevap, out - Tcond, in) is typical, other univariate curves may be used
        \note Tevap, out = evaporator outlet temperature
        \note Tcond, in = condenser inlet temperature
@@ -43715,6 +43716,7 @@ Chiller:Electric:ReformulatedEIR,
        \note Name" input.
        \note Use "ConstantFlow" when modeling a constant flow condenser plant loop, choose one of the other inputs
        \note when modeling a variable flow condenser plant loop.
+       \type choice
        \key ConstantFlow
        \key ModulatedChillerPLR
        \key ModulatedLoopPLR
@@ -43742,7 +43744,7 @@ Chiller:Electric:ReformulatedEIR,
        \note "ModulatedDeltaTemperature".
   A19, \field Thermosiphon Capacity Fraction Curve Name
        \type object-list
-       \object-list UniVariateFunctions
+       \object-list UnivariateFunctions
        \note quadratic curve = a + b * (Tevap, out - Tcond, in) is typical, other univariate curves may be used
        \note Tevap, out = evaporator outlet temperature
        \note Tcond, in = condenser inlet temperature
@@ -45260,7 +45262,7 @@ HeatPump:PlantLoop:EIR:Cooling,
         \note If this field is blank, the AWHP curve without heat recovery will be used 
    A19, \field Thermosiphon Capacity Fraction Curve Name
         \type object-list
-        \object-list UniVariateFunctions
+        \object-list UnivariateFunctions
         \note quadratic curve = a + b * (Tevap, out - Tcond, in) is typical, other univariate curves may be used
         \note Tevap, out = evaporator outlet temperature
         \note Tcond, in = condenser inlet temperature
@@ -45507,7 +45509,7 @@ HeatPump:PlantLoop:EIR:Heating,
         \note Electric Input Ratio (EIR) modifier as a function of temperature
         \note EIR = 1/COP
         \type object-list
-        \object-list BiVariateFunctions
+        \object-list BivariateFunctions
         \note curve = a + b*HWS + c*HWS**2 + d*ECT + e*ECT**2 + f*HWS*ECT
         \note HWS = supply (leaving) hot water temperature(C)
         \note ECT = entering condenser fluid temperature(C)
