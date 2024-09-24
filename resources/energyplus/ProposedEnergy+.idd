@@ -25986,7 +25986,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \note Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
   A8 ,  \field Supply Air Fan Object Name
         \type object-list
-        \object-list FansCVandOnOffandVAV
+        \object-list FansCVandOnOff
         \object-list FansSystemModel
   A9 ,  \field Outside Air Mixer Object Type
         \type choice

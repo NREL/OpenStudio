@@ -30481,11 +30481,11 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \note and terminal unit has no fan.
   A8 ,  \field Supply Air Fan
         \type object-list
-        \object-list FansCVandOnOffandVAV
+        \object-list FansCVandOnOff
         \object-list FansSystemModel
         \note Supply Air Fan Object Type must be Fan:SystemModel, Fan:OnOff, or Fan:ConstantVolume
         \note if AirConditioner:VariableRefrigerantFlow is used to model VRF outdoor unit
-        \note Supply Air Fan Object Type must be Fan:SystemModel or Fan:VariableVolume if
+        \note Supply Air Fan Object Type must be Fan:SystemModel if
         \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl or
         \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
         \note is used to model VRF outdoor unit
