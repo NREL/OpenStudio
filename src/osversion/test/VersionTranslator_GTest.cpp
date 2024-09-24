@@ -4208,6 +4208,52 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
 
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_OutputControlFiles) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_OutputControlFiles.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_OutputControlFiles_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> outputcontrol_files = model->getObjectsByType("OS:OutputControl:Files");
+  ASSERT_EQ(1u, outputcontrol_files.size());
+  WorkspaceObject outputcontrol_file = outputcontrol_files[0];
+
+  EXPECT_EQ("No", outputcontrol_file.getString(1).get());    // Output CSV
+  EXPECT_EQ("Yes", outputcontrol_file.getString(2).get());   // Output MTR
+  EXPECT_EQ("Yes", outputcontrol_file.getString(3).get());   // Output ESO
+  EXPECT_EQ("Yes", outputcontrol_file.getString(4).get());   // Output EIO
+  EXPECT_EQ("Yes", outputcontrol_file.getString(5).get());   // Output Tabular
+  EXPECT_EQ("Yes", outputcontrol_file.getString(6).get());   // Output SQLite
+  EXPECT_EQ("Yes", outputcontrol_file.getString(7).get());   // Output JSON
+  EXPECT_EQ("Yes", outputcontrol_file.getString(8).get());   // Output AUDIT
+  EXPECT_EQ("Yes", outputcontrol_file.getString(9).get());   // Output Space Sizing
+  EXPECT_EQ("No", outputcontrol_file.getString(10).get());   // Output Zone Sizing
+  EXPECT_EQ("Yes", outputcontrol_file.getString(11).get());  // Output System Sizing
+  EXPECT_EQ("Yes", outputcontrol_file.getString(12).get());  // Output DXF
+  EXPECT_EQ("Yes", outputcontrol_file.getString(13).get());  // Output BND
+  EXPECT_EQ("Yes", outputcontrol_file.getString(14).get());  // Output RDD
+  EXPECT_EQ("Yes", outputcontrol_file.getString(15).get());  // Output MDD
+  EXPECT_EQ("Yes", outputcontrol_file.getString(16).get());  // Output MTD
+  EXPECT_EQ("Yes", outputcontrol_file.getString(17).get());  // Output SHD
+  EXPECT_EQ("Yes", outputcontrol_file.getString(18).get());  // Output DFS
+  EXPECT_EQ("Yes", outputcontrol_file.getString(19).get());  // Output GLHE
+  EXPECT_EQ("Yes", outputcontrol_file.getString(20).get());  // Output DelightIn
+  EXPECT_EQ("Yes", outputcontrol_file.getString(21).get());  // Output DelightELdmp
+  EXPECT_EQ("Yes", outputcontrol_file.getString(22).get());  // Output DelightDFdmp
+  EXPECT_EQ("Yes", outputcontrol_file.getString(23).get());  // Output EDD
+  EXPECT_EQ("Yes", outputcontrol_file.getString(24).get());  // Output DBG
+  EXPECT_EQ("Yes", outputcontrol_file.getString(25).get());  // Output PerfLog
+  EXPECT_EQ("Yes", outputcontrol_file.getString(26).get());  // Output SLN
+  EXPECT_EQ("Yes", outputcontrol_file.getString(27).get());  // Output SCI
+  EXPECT_EQ("Yes", outputcontrol_file.getString(28).get());  // Output WRL
+  EXPECT_EQ("Yes", outputcontrol_file.getString(29).get());  // Output Screen
+  EXPECT_EQ("Yes", outputcontrol_file.getString(30).get());  // Output ExtShd
+  EXPECT_EQ("Yes", outputcontrol_file.getString(31).get());  // Output Tarcog
+}
+
 TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_HeatPumpPlantLoopEIR) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_HeatPumpPlantLoopEIR.osm");
   osversion::VersionTranslator vt;

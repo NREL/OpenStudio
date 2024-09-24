@@ -64,6 +64,12 @@ TEST_F(ModelFixture, OutputControlFiles_GettersSetters) {
   EXPECT_TRUE(outputControlFiles.setOutputAUDIT(true));
   EXPECT_TRUE(outputControlFiles.outputAUDIT());
 
+  EXPECT_TRUE(outputControlFiles.outputSpaceSizing());
+  EXPECT_TRUE(outputControlFiles.setOutputSpaceSizing(false));
+  EXPECT_FALSE(outputControlFiles.outputSpaceSizing());
+  EXPECT_TRUE(outputControlFiles.setOutputSpaceSizing(true));
+  EXPECT_TRUE(outputControlFiles.outputSpaceSizing());
+
   EXPECT_TRUE(outputControlFiles.outputZoneSizing());
   EXPECT_TRUE(outputControlFiles.setOutputZoneSizing(false));
   EXPECT_FALSE(outputControlFiles.outputZoneSizing());
