@@ -4309,3 +4309,64 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_HeatPumpPlantLoopEIR) {
   EXPECT_TRUE(hp_cooling.isEmpty(29));             // Thermosiphon Capacity Fraction Curve Name
   EXPECT_EQ(0.0, hp_cooling.getDouble(30).get());  // Thermosiphon Minimum Temperature Difference
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_AirTerminalSingleDuctPIUReheat) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_AirTerminalSingleDuctPIUReheat.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_AirTerminalSingleDuctPIUReheat_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> seriess = model->getObjectsByType("OS:AirTerminal:SingleDuct:SeriesPIU:Reheat");
+  ASSERT_EQ(1u, seriess.size());
+  WorkspaceObject series = seriess[0];
+
+  EXPECT_EQ("Air Terminal Single Duct Series PIU Reheat 1", series.getString(1).get());  // Name
+  EXPECT_TRUE(series.isEmpty(2));                                                        // Availability Schedule Name
+  EXPECT_EQ("autosize", series.getString(3).get());                                      // Maximum Air Flow Rate {m3/s}
+  EXPECT_EQ("autosize", series.getString(4).get());                                      // Maximum Primary Air Flow Rate {m3/s}
+  EXPECT_EQ("autosize", series.getString(5).get());                                      // Minimum Primary Air Flow Fraction
+  EXPECT_TRUE(series.isEmpty(6));                                                        // Supply Air Inlet Node
+  EXPECT_TRUE(series.isEmpty(7));                                                        // Secondary Air Inlet Node
+  EXPECT_TRUE(series.isEmpty(8));                                                        // Outlet Node
+  EXPECT_TRUE(series.isEmpty(9));                                                        // Reheat Coil Air Inlet Node
+  EXPECT_TRUE(series.isEmpty(10));                                                       // Zone Mixer Name
+  EXPECT_TRUE(series.getTarget(11));                                                     // Fan Name
+  EXPECT_TRUE(series.getTarget(12));                                                     // Reheat Coil Name
+  EXPECT_EQ("autosize", series.getString(13).get());                                     // Maximum Hot Water or Steam Flow Rate {m3/s}
+  EXPECT_EQ(0, series.getDouble(14).get());                                              // Minimum Hot Water or Steam Flow Rate {m3/s}
+  EXPECT_EQ(0.001, series.getDouble(15).get());                                          // Convergence Tolerance
+  EXPECT_EQ("ConstantSpeed", series.getString(16).get());                                // Fan Control Type
+  EXPECT_EQ(0.3, series.getDouble(17).get());                                            // Minimum Fan Turn Down Ratio
+  EXPECT_TRUE(series.isEmpty(18));                                                       // Heating Control Type
+  EXPECT_EQ(32.1, series.getDouble(19).get());                                           // Design Heating Discharge Air Temperature
+  EXPECT_EQ(37.7, series.getDouble(20).get());                                           // High Limit Heating Discharge Air Temperature
+
+  std::vector<WorkspaceObject> parallels = model->getObjectsByType("OS:AirTerminal:SingleDuct:ParallelPIU:Reheat");
+  ASSERT_EQ(1u, parallels.size());
+  WorkspaceObject parallel = parallels[0];
+
+  EXPECT_EQ("Air Terminal Single Duct Parallel PIU Reheat 1", parallel.getString(1).get());  // Name
+  EXPECT_TRUE(parallel.getTarget(2));                                                        // Availability Schedule Name
+  EXPECT_EQ("Autosize", parallel.getString(3).get());                                        // Maximum Primary Air Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", parallel.getString(4).get());                                        // Maximum Secondary Air Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", parallel.getString(5).get());                                        // Minimum Primary Air Flow Fraction
+  EXPECT_EQ("Autosize", parallel.getString(6).get());                                        // Fan On Flow Fraction
+  EXPECT_TRUE(parallel.isEmpty(7));                                                          // Supply Air Inlet Node Name
+  EXPECT_TRUE(parallel.isEmpty(8));                                                          // Secondary Air Inlet Node Name
+  EXPECT_TRUE(parallel.isEmpty(9));                                                          // Outlet Node Name
+  EXPECT_TRUE(parallel.isEmpty(10));                                                         // Reheat Coil Air Inlet Node Name
+  EXPECT_TRUE(parallel.isEmpty(11));                                                         // Zone Mixer Name
+  EXPECT_TRUE(parallel.getTarget(12));                                                       // Fan Name
+  EXPECT_TRUE(parallel.getTarget(13));                                                       // Reheat Coil Name
+  EXPECT_EQ("Autosize", parallel.getString(14).get());                                       // Maximum Hot Water or Steam Flow Rate {m3/s}
+  EXPECT_EQ(0, parallel.getDouble(15).get());                                                // Minimum Hot Water or Steam Flow Rate {m3/s}
+  EXPECT_EQ(0.001, parallel.getDouble(16).get());                                            // Convergence Tolerance
+  EXPECT_EQ("ConstantSpeed", parallel.getString(17).get());                                  // Fan Control Type
+  EXPECT_EQ(0.3, parallel.getDouble(18).get());                                              // Minimum Fan Turn Down Ratio
+  EXPECT_TRUE(parallel.isEmpty(19));                                                         // Heating Control Type
+  EXPECT_EQ(32.1, parallel.getDouble(20).get());                                             // Design Heating Discharge Air Temperature
+  EXPECT_EQ(37.7, parallel.getDouble(21).get());                                             // High Limit Heating Discharge Air Temperature
+}

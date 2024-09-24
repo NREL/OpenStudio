@@ -215,6 +215,31 @@ namespace energyplus {
       idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::ConvergenceTolerance, value.get());
     }
 
+    // FanControlType
+    if ((s = modelObject.fanControlType())) {
+      idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanControlType, s.get());
+    }
+
+    // MinimumFanTurnDownRatio
+    if ((value = modelObject.minimumFanTurnDownRatio())) {
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::MinimumFanTurnDownRatio, value.get());
+    }
+
+    // HeatingControlType
+    if ((s = modelObject.heatingControlType())) {
+      idfObject.setString(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HeatingControlType, s.get());
+    }
+
+    // DesignHeatingDischargeAirTemperature
+    if ((value = modelObject.designHeatingDischargeAirTemperature())) {
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::DesignHeatingDischargeAirTemperature, value.get());
+    }
+
+    // HighLimitHeatingDischargeAirTemperature
+    if ((value = modelObject.highLimitHeatingDischargeAirTemperature())) {
+      idfObject.setDouble(AirTerminal_SingleDuct_ParallelPIU_ReheatFields::HighLimitHeatingDischargeAirTemperature, value.get());
+    }
+
     return _airDistributionUnit;
   }
 

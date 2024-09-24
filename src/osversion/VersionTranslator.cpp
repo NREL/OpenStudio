@@ -9302,6 +9302,64 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
+      } else if (iddname == "OS:AirTerminal:SingleDuct:SeriesPIU:Reheat") {
+
+        // 5 Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Fan Control Type * 16
+        // * Minimum Fan Turn Down Ratio * 17
+        // * Heating Control Type * 18
+        // * Design Heating Discharge Air Temperature * 19
+        // * High Limit Heating Discharge Air Temperature * 20
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 16) {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        newObject.setString(16, "ConstantSpeed");
+        newObject.setDouble(17, 0.3);
+        newObject.setDouble(19, 32.1);
+        newObject.setDouble(20, 37.7);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:AirTerminal:SingleDuct:ParallelPIU:Reheat") {
+
+        // 5 Fields have been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Fan Control Type * 17
+        // * Minimum Fan Turn Down Ratio * 18
+        // * Heating Control Type * 19
+        // * Design Heating Discharge Air Temperature * 20
+        // * High Limit Heating Discharge Air Temperature * 21
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 17) {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        newObject.setString(17, "ConstantSpeed");
+        newObject.setDouble(18, 0.3);
+        newObject.setDouble(20, 32.1);
+        newObject.setDouble(21, 37.7);
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;

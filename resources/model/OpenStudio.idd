@@ -12477,10 +12477,39 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \minimum 0.0
        \ip-units gal/min
        \required-field
-  N6;  \field Convergence Tolerance
+  N6,  \field Convergence Tolerance
        \type real
        \minimum> 0.0
        \required-field
+  A11, \field Fan Control Type
+       \note If VariableSpeed, then the fan object type must be Fan:SystemModel
+       \type choice
+       \key VariableSpeed
+       \key ConstantSpeed
+       \required-field
+  N7,  \field Minimum Fan Turn Down Ratio
+       \type real
+       \units dimensionless
+       \note flow through terminal at minimum fan speed is this ratio multiplied by Maximum Air Flow Rate
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  A12, \field Heating Control Type
+       \type choice
+       \key Staged
+       \key Modulated
+  N8,  \field Design Heating Discharge Air Temperature
+       \type real
+       \units C
+       \required-field
+       \note Only used if Heating Control Type is Modulated
+       \note Used to control second stage heating, typically zone heat setpoint plus 20F
+  N9;  \field High Limit Heating Discharge Air Temperature
+       \type real
+       \units C
+       \required-field
+       \note Only used if Heating Control Type is Modulated
+       \note Used to determine end of third stage heating
 
 OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \min-fields 1
@@ -12534,7 +12563,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type object-list
        \object-list FansCV
        \object-list FansSystemModel
-  A11, \field Reheat Coil Name
+  A10, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
   N5, \field Maximum Hot Water or Steam Flow Rate
@@ -12550,10 +12579,39 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \ip-units gal/min
        \minimum 0
        \default 0.0
-  N7; \field Convergence Tolerance
+  N7, \field Convergence Tolerance
        \type real
        \minimum> 0
        \default 0.001
+  A11, \field Fan Control Type
+       \note If VariableSpeed, then the fan object type must be Fan:SystemModel
+       \type choice
+       \key VariableSpeed
+       \key ConstantSpeed
+       \required-field
+  N8,  \field Minimum Fan Turn Down Ratio
+       \type real
+       \units dimensionless
+       \note flow through terminal at minimum fan speed is this ratio multiplied by Maximum Air Flow Rate
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  A12, \field Heating Control Type
+       \type choice
+       \key Staged
+       \key Modulated
+  N9,  \field Design Heating Discharge Air Temperature
+       \type real
+       \units C
+       \required-field
+       \note Only used if Heating Control Type is Modulated
+       \note Used to control second stage heating, typically zone heat setpoint plus 20F
+  N10; \field High Limit Heating Discharge Air Temperature
+       \type real
+       \units C
+       \required-field
+       \note Only used if Heating Control Type is Modulated
+       \note Used to determine end of third stage heating
 
 OS:AirTerminal:SingleDuct:ConstantVolume:FourPipeInduction,
        \memo Central air system terminal unit, single duct, variable volume, induction unit with
