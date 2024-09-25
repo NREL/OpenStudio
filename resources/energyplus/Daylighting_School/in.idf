@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,24.1;
+  Version,24.2;
 
   Timestep,6;
 
@@ -2483,7 +2483,7 @@
 
   Output:IlluminanceMap,
     Classroom Illuminance Map,  !- Name
-    Classroom,               !- Zone Name
+    Classroom,               !- Zone or Space Name
     0.762,                   !- Z height {m}
     0.9144,                  !- X Minimum Coordinate {m}
     8.2296,                  !- X Maximum Coordinate {m}
