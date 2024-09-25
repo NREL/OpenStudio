@@ -1,7 +1,7 @@
 Run files with corresponding version of EnergyPlus and copy of `USA_CO_Golden-NREL.724666_TMY3.epw` for that version:
 
 ```
-/c/EnergyPlusV24-1-0/energyplus.exe -w /c/EnergyPlusV24-1-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw -r 1ZoneEvapCooler-V24-1-0.idf
+/c/EnergyPlusV24-2-0/energyplus.exe -w /c/EnergyPlusV24-2-0/WeatherData/USA_CO_Golden-NREL.724666_TMY3.epw -r 1ZoneEvapCooler-V24-2-0.idf
 ```
 
 *Note*: the weather file does change across versions of EnergyPlus. (Actually, it hasn't changed since 8.2.0)
