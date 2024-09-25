@@ -326,7 +326,7 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // 22.2.0 forces you to use a schedule with a value of 1, so that produces a lot of deviations
   //                 = {252660024.14000002, 28129.12, 428.19, 360.93, 781.28, 3322324.62, 249308000.0};
   // To reduce the deviation, I switched the PTAC/PTHP to a Fan:OnOff with a Always Off Discrete Schedule, but it still behaves slightly differently
-  SqlResults ep_2420 = {191879399.92, 27905.27, 407.55, 361.09, 776.63, 3322855.48, 188521000.0};
+  SqlResults ep_2420 = {191879399.92, 27905.27, 407.55, 361.09, 776.63, 3328949.38, 188521000.0};
   // To update, cd build/resources, then in Ruby
   /** ```ruby
    sqlFile2 = OpenStudio::SqlFile.new('energyplus/Office_With_Many_HVAC_Types/eplusout.sql')
