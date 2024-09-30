@@ -661,10 +661,8 @@ if(UNIX)
       else()
         set(ENERGYPLUS_EXPECTED_HASH 6fd5be2cb29461645efb487c860e9413)
       endif()
-    elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH 47dd8f60252fab92b6f0859dd66806c1)
-    else() # 18.04
-      message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
+    else() # e.g., 18.04, 20.04
+      message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu < 22.04")
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-${ARCH}")
   endif()
