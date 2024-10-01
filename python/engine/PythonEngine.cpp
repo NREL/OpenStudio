@@ -78,7 +78,7 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   Py_FrozenFlag = 1;
 
   // Path to the E+ shipped standard library
-  auto pathToPythonPackages = getEnergyPlusDirectory() / "python_standard_lib";
+  auto pathToPythonPackages = getEnergyPlusDirectory() / "python_lib";
 
   // The PYTHONPATH / PYTHONHOME should be set before initializing Python
   // If this Py_SetPath is called before Py_Initialize, then Py_GetPath won't attempt to compute a default search path
