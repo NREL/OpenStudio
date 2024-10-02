@@ -235,9 +235,7 @@ namespace model {
     }
 
     bool Site_Impl::keepSiteLocationInformation() const {
-      boost::optional<std::string> value = getString(OS_SiteFields::KeepSiteLocationInformation, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_SiteFields::KeepSiteLocationInformation);
     }
 
     bool Site_Impl::isKeepSiteLocationInformationDefaulted() const {
@@ -294,15 +292,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
-      bool result = false;
-      if (keepSiteLocationInformation) {
-        result = setString(OS_SiteFields::KeepSiteLocationInformation, "Yes");
-      } else {
-        result = setString(OS_SiteFields::KeepSiteLocationInformation, "No");
-      }
-      OS_ASSERT(result);
-      return result;
+    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {      
+      return setBooleanFieldValue(OS_SiteFields::KeepSiteLocationInformation, keepSiteLocationInformation);
     }
 
     void Site_Impl::resetKeepSiteLocationInformation() {
