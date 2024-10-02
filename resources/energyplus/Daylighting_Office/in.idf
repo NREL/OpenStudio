@@ -140,7 +140,7 @@
 ! schedule types, always on schedule, misc
 ! ***GENERAL SIMULATION PARAMETERS***
 
-  Version,24.1;
+  Version,24.2;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
@@ -5155,7 +5155,7 @@
 
   Output:IlluminanceMap,
     561303,                  !- Name
-    Perimeter_ZN_1,          !- Zone Name
+    Perimeter_ZN_1,          !- Zone or Space Name
     0.762000,                !- Z height {m}
     5.087288,                !- X Minimum Coordinate {m}
     22.407288,               !- X Maximum Coordinate {m}
@@ -5166,7 +5166,7 @@
 
   Output:IlluminanceMap,
     77F9B2,                  !- Name
-    Perimeter_ZN_3,          !- Zone Name
+    Perimeter_ZN_3,          !- Zone or Space Name
     0.762000,                !- Z height {m}
     5.294518,                !- X Minimum Coordinate {m}
     22.214518,               !- X Maximum Coordinate {m}
@@ -5177,7 +5177,7 @@
 
   Output:IlluminanceMap,
     987B1B,                  !- Name
-    Perimeter_ZN_2,          !- Zone Name
+    Perimeter_ZN_2,          !- Zone or Space Name
     0.762000,                !- Z height {m}
     23.289008,               !- X Minimum Coordinate {m}
     27.289008,               !- X Maximum Coordinate {m}
@@ -5188,7 +5188,7 @@
 
   Output:IlluminanceMap,
     3C7C62,                  !- Name
-    Perimeter_ZN_4,          !- Zone Name
+    Perimeter_ZN_4,          !- Zone or Space Name
     0.762000,                !- Z height {m}
     0.459146,                !- X Minimum Coordinate {m}
     4.619146,                !- X Maximum Coordinate {m}

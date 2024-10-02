@@ -9218,7 +9218,7 @@ namespace osversion {
       for (const auto& vrf : idf_3_8_0.getObjectsByType(idf_3_8_0.iddFile().getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow").get())) {
         if (auto fanHandleStr_ = vrf.getString(14, false, true)) {
           if (std::find(fanVVHandleStrs.cbegin(), fanVVHandleStrs.cend(), fanHandleStr_.get()) != fanVVHandleStrs.cend()) {
-            vrfFanVVHandleStrs.push_back(fanHandleStr_.get());
+            vrfFanVVHandleStrs.emplace_back(std::move(*fanHandleStr_));
           }
         }
       }

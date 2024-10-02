@@ -13,8 +13,9 @@ namespace openstudio {
 
 namespace model {
 
-  class Schedule;
   class AirflowNetworkFan;
+  class FanSystemModel;
+  class Schedule;
 
   namespace detail {
 
@@ -175,8 +176,14 @@ namespace model {
 
       void resetEndUseSubcategory();
 
+      //@}
+      /** @name Other */
+      //@{
+
       AirflowNetworkFan getAirflowNetworkFan();
       boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+
+      FanSystemModel convertToFanSystemModel() const;
 
       //@}
      protected:
