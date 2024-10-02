@@ -292,7 +292,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {      
+    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
       return setBooleanFieldValue(OS_SiteFields::KeepSiteLocationInformation, keepSiteLocationInformation);
     }
 
