@@ -9381,9 +9381,10 @@ namespace osversion {
 
       } else if (iddname == "OS:Chiller:Electric:EIR") {
 
-        // 2 required Fields has been added from 3.8.0 to 3.9.0:
+        // 3 required Fields has been added from 3.8.0 to 3.9.0:
         // ----------------------------------------------
         // * Condenser Flow Control * 35
+        // * Condenser Minimum Flow Fraction * 38
         // * Thermosiphon Minimum Temperature Difference * 40
 
         auto iddObject = idd_3_9_0.getObject(iddname);
@@ -9396,6 +9397,7 @@ namespace osversion {
         }
 
         newObject.setString(35, "ConstantFlow");
+        newObject.setDouble(38, 0.2);
         newObject.setDouble(40, 0.0);
 
         ss << newObject;
@@ -9403,9 +9405,10 @@ namespace osversion {
 
       } else if (iddname == "OS:Chiller:Electric:ReformulatedEIR") {
 
-        // 2 required Fields has been added from 3.8.0 to 3.9.0:
+        // 3 required Fields has been added from 3.8.0 to 3.9.0:
         // ----------------------------------------------
         // * Condenser Flow Control * 31
+        // * Condenser Minimum Flow Fraction * 34
         // * Thermosiphon Minimum Temperature Difference * 36
 
         auto iddObject = idd_3_9_0.getObject(iddname);
@@ -9418,6 +9421,7 @@ namespace osversion {
         }
 
         newObject.setString(31, "ConstantFlow");
+        newObject.setDouble(34, 0.2);
         newObject.setDouble(36, 0.0);
 
         ss << newObject;

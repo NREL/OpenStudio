@@ -4388,7 +4388,7 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ChillerElectric) {
   EXPECT_EQ("ConstantFlow", chiller_electric_eir.getString(35).get());           // Condenser Flow Control
   EXPECT_TRUE(chiller_electric_eir.isEmpty(36));             // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
   EXPECT_TRUE(chiller_electric_eir.isEmpty(37));             // Temperature Difference Across Condenser Schedule Name
-  EXPECT_TRUE(chiller_electric_eir.isEmpty(38));             // Condenser Minimum Flow Fraction
+  EXPECT_EQ(0.2, chiller_electric_eir.getDouble(38).get());             // Condenser Minimum Flow Fraction
   EXPECT_TRUE(chiller_electric_eir.isEmpty(39));             // Thermosiphon Capacity Fraction Curve Name
   EXPECT_EQ(0.0, chiller_electric_eir.getDouble(40).get());  // Thermosiphon Minimum Temperature Difference
 
@@ -4400,7 +4400,7 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ChillerElectric) {
   EXPECT_EQ("ConstantFlow", chiller_electric_reformulatedeir.getString(31).get());                        // Condenser Flow Control
   EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(32));  // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
   EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(33));  // Temperature Difference Across Condenser Schedule Name
-  EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(34));  // Condenser Minimum Flow Fraction
+  EXPECT_EQ(0.2, chiller_electric_reformulatedeir.getDouble(34).get());  // Condenser Minimum Flow Fraction
   EXPECT_TRUE(chiller_electric_reformulatedeir.isEmpty(35));  // Thermosiphon Capacity Fraction Curve Name
   EXPECT_EQ(0.0, chiller_electric_reformulatedeir.getDouble(36).get());  // Thermosiphon Minimum Temperature Difference
 }
