@@ -419,7 +419,7 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_MatchingCoilTyp
     boost::optional<FanSystemModel> _fanSM = fan.optionalCast<FanSystemModel>();
     ASSERT_TRUE(_fanSM);
     FanSystemModel fanSM = _fanSM.get();
-    EXPECT_EQ("Fan System Model 4 " + fanVV.nameString(), fanSM.nameString());
+    EXPECT_EQ(fanVV.nameString() + " FanSystemModel", fanSM.nameString());
     EXPECT_EQ(fanVV.availabilitySchedule(), fanSM.availabilitySchedule());
     EXPECT_FALSE(fanVV.maximumFlowRate());
     EXPECT_FALSE(fanSM.designMaximumAirFlowRate());
