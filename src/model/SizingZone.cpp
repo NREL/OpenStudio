@@ -955,6 +955,9 @@ namespace model {
     setZoneCoolingDesignSupplyAirHumidityRatioDifference(0.005);
     setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod("HumidityRatioDifference");
     setZoneHumidificationDesignSupplyAirHumidityRatioDifference(0.005);
+
+    // New E+ 24.2.0 fields, IDD defaults
+    setSizingOption("Coincident");
   }
 
   IddObjectType SizingZone::iddObjectType() {

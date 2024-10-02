@@ -15084,6 +15084,7 @@ OS:Chiller:Electric:EIR,
        \note when the "Condenser Flow Control" input is set to "ModulatedChillerPLR", "ModulatedLoopPLR" or
        \note "ModulatedDeltaTemperature".
        \type real
+       \required-field
   A21, \field Thermosiphon Capacity Fraction Curve Name
        \type object-list
        \object-list UnivariateFunctions
@@ -15344,6 +15345,7 @@ OS:Chiller:Electric:ReformulatedEIR,
        \note when the "Condenser Flow Control" input is set to "ModulatedChillerPLR", "ModulatedLoopPLR" or
        \note "ModulatedDeltaTemperature".
        \type real
+       \required-field
   A20, \field Thermosiphon Capacity Fraction Curve Name
        \type object-list
        \object-list UnivariateFunctions
@@ -28809,7 +28811,7 @@ OS:Sizing:Zone,
        \type choice
        \key Coincident
        \key NonCoincident
-       \default Coincident
+       \required-field
 
 OS:Splitter,
        \extensible:1

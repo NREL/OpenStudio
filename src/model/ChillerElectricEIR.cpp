@@ -926,6 +926,7 @@ namespace model {
 
     setEndUseSubcategory("General");
     setCondenserFlowControl("ConstantFlow");
+    setCondenserMinimumFlowFraction(0.2);
     setThermosiphonMinimumTemperatureDifference(0.0);
   }
 
@@ -984,6 +985,7 @@ namespace model {
 
     setEndUseSubcategory("General");
     setCondenserFlowControl("ConstantFlow");
+    setCondenserMinimumFlowFraction(0.2);
     setThermosiphonMinimumTemperatureDifference(0.0);
   }
 

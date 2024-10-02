@@ -197,14 +197,14 @@ namespace model {
       auto t_plantLoop = node.plantLoop();
 
       // Only accept adding to a node that is on a demand side of a plant loop
-      // Since tertiary here = heat recovery loop (heating)
+      // Since tertiary here = heat recovery loop (cooling)
       if (t_plantLoop) {
         if (t_plantLoop->demandComponent(node.handle())) {
           // Call base class method which accepts both supply and demand
           return WaterToWaterComponent_Impl::addToTertiaryNode(node);
         } else {
           LOG(Info,
-              "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
+              "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Cooling Loop), for " << briefDescription());
         }
       }
       return false;
@@ -663,7 +663,7 @@ namespace model {
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedHeatRecoveryReferenceFlowRate() const {
-      return getAutosizedValue("Design Size Heat Recovery Volume Flow Rate", "m3/s");
+      return getAutosizedValue("Design Size Heat Recovery Side Volume Flow Rate", "m3/s");
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedReferenceCapacity() const {

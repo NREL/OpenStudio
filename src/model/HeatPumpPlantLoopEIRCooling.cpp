@@ -553,7 +553,7 @@ namespace model {
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedHeatRecoveryReferenceFlowRate() const {
-      return getAutosizedValue("Design Size Heat Recovery Volume Flow Rate", "m3/s");
+      return getAutosizedValue("Design Size Heat Recovery Side Volume Flow Rate", "m3/s");
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRCooling_Impl::autosizedReferenceCapacity() const {
