@@ -4466,3 +4466,19 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ZoneHVACTerminalUnitVRF) {
   EXPECT_EQ("Dimensionless", curveQuartic.getString(11).get());
   EXPECT_EQ("Dimensionless", curveQuartic.getString(12).get());
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_SizingZone) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_SizingZone.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_SizingZone_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> sizing_zones = model->getObjectsByType("OS:Sizing:Zone");
+  ASSERT_EQ(1u, sizing_zones.size());
+  WorkspaceObject sizing_zone = sizing_zones[0];
+
+  EXPECT_EQ("Coincident", sizing_zone.getString(39).get()); // Sizing Option
+}

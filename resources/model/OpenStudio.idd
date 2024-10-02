@@ -28809,7 +28809,7 @@ OS:Sizing:Zone,
        \type choice
        \key Coincident
        \key NonCoincident
-       \default Coincident
+       \required-field
 
 OS:Splitter,
        \extensible:1

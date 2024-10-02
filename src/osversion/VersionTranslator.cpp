@@ -9579,6 +9579,26 @@ namespace osversion {
           ss << newObject;
         }
 
+      } else if (iddname == "OS:Sizing:Zone") {
+
+        // 1 required Field has been added from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * Sizing Option * 39
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        newObject.setString(39, "Coincident");
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;
