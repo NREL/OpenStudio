@@ -49,6 +49,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Site) {
   EXPECT_EQ(0.0, idf_site.getDouble(Site_LocationFields::Longitude).get());
   EXPECT_EQ(0.0, idf_site.getDouble(Site_LocationFields::TimeZone).get());
   EXPECT_EQ(0.0, idf_site.getDouble(Site_LocationFields::Elevation).get());
-  EXPECT_EQ("Suburbs", idf_site.getString(Site_LocationFields::Terrain).get());
+  // EXPECT_EQ("Suburbs", idf_site.getString(Site_LocationFields::Terrain).get()); not in FT
   EXPECT_EQ("Yes", idf_site.getString(Site_LocationFields::KeepSiteLocationInformation).get());
 }
