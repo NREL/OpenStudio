@@ -46,26 +46,35 @@ namespace model {
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ChillerElectricReformulatedEIR_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Chiller Part Load Ratio",
-                                                   "Chiller Cycling Ratio",
-                                                   "Chiller Electricity Rate",
-                                                   "Chiller Electricity Energy",
-                                                   "Chiller Evaporator Cooling Rate",
-                                                   "Chiller Evaporator Cooling Energy",
-                                                   "Chiller False Load Heat Transfer Rate",
-                                                   "Chiller False Load Heat Transfer Energy"
-                                                   "Chiller Evaporator Inlet Temperature",
-                                                   "Chiller Evaporator Outlet Temperature",
-                                                   "Chiller Evaporator Mass Flow Rate",
-                                                   "Chiller Condenser Heat Transfer Rate",
-                                                   "Chiller Condenser Heat Transfer Energy",
-                                                   "Chiller COP",
-                                                   "Chiller Capacity Temperature Modifier Multiplier",
-                                                   "Chiller EIR Temperature Modifier Multiplier",
-                                                   "Chiller EIR Part Load Modifier Multiplier",
-                                                   "Chiller Condenser Inlet Temperature",
-                                                   "Chiller Condenser Outlet Temperature",
-                                                   "Chiller Condenser Mass Flow Rate"};
+      static const std::vector<std::string> result{
+        "Chiller Part Load Ratio",
+        "Chiller Cycling Ratio",
+        "Chiller Electricity Rate",
+        "Chiller Electricity Energy",
+        "Chiller Evaporator Cooling Rate",
+        "Chiller Evaporator Cooling Energy",
+        "Chiller False Load Heat Transfer Rate",
+        "Chiller False Load Heat Transfer Energy",
+        "Chiller Evaporator Inlet Temperature",
+        "Chiller Evaporator Outlet Temperature",
+        "Chiller Evaporator Mass Flow Rate",
+        "Chiller Condenser Heat Transfer Rate",
+        "Chiller Condenser Heat Transfer Energy",
+        "Chiller COP",
+        "Chiller Capacity Temperature Modifier Multiplier",
+        "Chiller EIR Temperature Modifier Multiplier",
+        "Chiller EIR Part Load Modifier Multiplier",
+        "Chiller Condenser Inlet Temperature",
+        "Chiller Condenser Outlet Temperature",
+        "Chiller Condenser Mass Flow Rate",
+        "Chiller Effective Heat Rejection Temperature",
+        "Chiller Heat Recovery Inlet Temperature",
+        "Chiller Heat Recovery Mass Flow Rate",
+        "Chiller Heat Recovery Outlet Temperature",
+        "Chiller Total Recovered Heat Energy",
+        "Chiller Total Recovered Heat Rate",
+        "Thermosiphon Status",
+      };
       return result;
     }
 

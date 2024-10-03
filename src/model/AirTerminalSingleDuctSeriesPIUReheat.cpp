@@ -64,10 +64,23 @@ namespace model {
     const std::vector<std::string>& AirTerminalSingleDuctSeriesPIUReheat_Impl::outputVariableNames() const {
       static const std::vector<std::string> result{
         // These apply to all AirTerminals
-        "Zone Air Terminal Sensible Heating Energy", "Zone Air Terminal Sensible Heating Rate", "Zone Air Terminal Sensible Cooling Energy",
-        "Zone Air Terminal Sensible Cooling Rate"
+        "Zone Air Terminal Sensible Heating Energy",
+        "Zone Air Terminal Sensible Heating Rate",
+        "Zone Air Terminal Sensible Cooling Energy",
+        "Zone Air Terminal Sensible Cooling Rate",
 
-        // No specific output for this one
+        // Specific output for this one
+        "Zone Air Terminal Current Operation Control Stage",
+        "Zone Air Terminal Heating Energy",
+        "Zone Air Terminal Heating Rate",
+        "Zone Air Terminal Outdoor Air Volume Flow Rate",
+        "Zone Air Terminal Outlet Discharge Air Temperature",
+        "Zone Air Terminal Primary Air Mass Flow Rate",
+        "Zone Air Terminal Primary Damper Position",
+        "Zone Air Terminal Secondary Air Mass Flow Rate",
+        "Zone Air Terminal Sensible Cooling Energy",
+        "Zone Air Terminal Sensible Cooling Rate",
+        "Zone Air Terminal Total Air Mass Flow Rate",
       };
       return result;
     }
