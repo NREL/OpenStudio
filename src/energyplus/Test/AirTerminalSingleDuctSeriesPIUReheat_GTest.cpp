@@ -32,7 +32,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctSeriesPIUReheat
   FanConstantVolume fan(m);
   CoilHeatingElectric coil(m);
   AirTerminalSingleDuctSeriesPIUReheat atu(m, fan, coil);
-  
+
   EXPECT_TRUE(atu.setAvailabilitySchedule(sch));
   EXPECT_TRUE(atu.setMaximumAirFlowRate(1));
   EXPECT_TRUE(atu.setMaximumPrimaryAirFlowRate(2));
@@ -45,7 +45,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctSeriesPIUReheat
   EXPECT_TRUE(atu.setHeatingControlType("Modulated"));
   EXPECT_TRUE(atu.setDesignHeatingDischargeAirTemperature(6));
   EXPECT_TRUE(atu.setHighLimitHeatingDischargeAirTemperature(7));
-  
+
   ThermalZone z(m);
   Space s(m);
   s.setThermalZone(z);
