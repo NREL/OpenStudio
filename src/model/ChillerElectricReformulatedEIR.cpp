@@ -559,6 +559,48 @@ namespace model {
       return WaterToWaterComponent_Impl::tertiaryPlantLoop();
     }
 
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::chilledWaterInletNode() const {
+      if (auto mo_ = supplyInletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::chilledWaterOutletNode() const {
+      if (auto mo_ = supplyOutletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::condenserInletNode() const {
+      if (auto mo_ = demandInletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::condenserOutletNode() const {
+      if (auto mo_ = demandOutletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::heatRecoveryInletNode() const {
+      if (auto mo_ = tertiaryInletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<Node> ChillerElectricReformulatedEIR_Impl::heatRecoveryOutletNode() const {
+      if (auto mo_ = tertiaryOutletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
     bool ChillerElectricReformulatedEIR_Impl::addToNode(Node& node) {
 
       boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
@@ -1232,19 +1274,6 @@ namespace model {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setEndUseSubcategory(endUseSubcategory);
   }
 
-  // Convenience functions
-  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::chilledWaterLoop() const {
-    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->chilledWaterLoop();
-  }
-
-  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::condenserWaterLoop() const {
-    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserWaterLoop();
-  }
-
-  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::heatRecoveryLoop() const {
-    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->heatRecoveryLoop();
-  }
-
   double ChillerElectricReformulatedEIR::condenserHeatRecoveryRelativeCapacityFraction() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserHeatRecoveryRelativeCapacityFraction();
   }
@@ -1346,6 +1375,43 @@ namespace model {
     : WaterToWaterComponent(std::move(impl)) {}
 
   /// @endcond
+
+  // Convenience functions
+  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::chilledWaterLoop() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->chilledWaterLoop();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::chilledWaterInletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->chilledWaterInletNode();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::chilledWaterOutletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->chilledWaterOutletNode();
+  }
+
+  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::condenserWaterLoop() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserWaterLoop();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::condenserInletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserInletNode();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::condenserOutletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserOutletNode();
+  }
+
+  boost::optional<PlantLoop> ChillerElectricReformulatedEIR::heatRecoveryLoop() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->heatRecoveryLoop();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::heatRecoveryInletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->heatRecoveryInletNode();
+  }
+
+  boost::optional<Node> ChillerElectricReformulatedEIR::heatRecoveryOutletNode() const {
+    return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->heatRecoveryOutletNode();
+  }
 
   boost::optional<double> ChillerElectricReformulatedEIR::autosizedReferenceCapacity() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->autosizedReferenceCapacity();
