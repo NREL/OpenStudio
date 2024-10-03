@@ -15,6 +15,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Node.hpp"
 #include "../../model/FanSystemModel.hpp"
 
 #include <utilities/idd/IddObject.hpp>
