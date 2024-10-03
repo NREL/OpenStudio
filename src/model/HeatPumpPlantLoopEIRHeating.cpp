@@ -47,18 +47,32 @@ namespace model {
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatPumpPlantLoopEIRHeating_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Heat Pump Electricity Energy",
-                                                   "Heat Pump Load Side Heat Transfer Energy",
-                                                   "Heat Pump Source Side Heat Transfer Energy",
-                                                   "Heat Pump Electricity Rate",
-                                                   "Heat Pump Load Side Heat Transfer Rate",
-                                                   "Heat Pump Source Side Heat Transfer Rate",
-                                                   "Heat Pump Load Side Outlet Temperature",
-                                                   "Heat Pump Load Side Inlet Temperature",
-                                                   "Heat Pump Source Side Outlet Temperature",
-                                                   "Heat Pump Source Side Inlet Temperature",
-                                                   "Heat Pump Load Side Mass Flow Rate",
-                                                   "Heat Pump Source Side Mass Flow Rate"};
+      static const std::vector<std::string> result{
+        "Heat Pump Part Load Ratio",
+        "Heat Pump Cycling Ratio",
+        "Heat Pump Load Side Heat Transfer Rate",
+        "Heat Pump Load Side Heat Transfer Energy",
+        "Heat Pump Source Side Heat Transfer Rate",
+        "Heat Pump Source Side Heat Transfer Energy",
+        "Heat Pump Load Side Inlet Temperature",
+        "Heat Pump Load Side Outlet Temperature",
+        "Heat Pump Source Side Inlet Temperature",
+        "Heat Pump Source Side Outlet Temperature",
+        "Heat Pump Electricity Rate",
+        "Heat Pump Load Side Mass Flow Rate",
+        "Heat Pump Source Side Mass Flow Rate",
+        "Heat Pump Heat Recovery Heat Transfer Rate",
+        "Heat Pump Heat Recovery Heat Transfer Energy",
+        "Heat Pump Heat Recovery Inlet Temperature",
+        "Heat Pump Heat Recovery Outlet Temperature",
+        "Heat Pump Heat Recovery Mass Flow Rate",
+        "Heat Pump Heat Recovery Operation Status",
+        "Heat Pump Electricity Energy",
+        "Heat Pump Load Due To Defrost",
+        "Heat Pump Fractioal Defrost Time",
+        "Heat Pump Defrost Electricity Rate",
+        "Heat Pump Defrost Electricity Energy",
+      };
       return result;
     }
 

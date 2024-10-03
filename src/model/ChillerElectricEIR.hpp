@@ -155,7 +155,7 @@ namespace model {
 
     boost::optional<Schedule> temperatureDifferenceAcrossCondenserSchedule() const;
 
-    boost::optional<double> condenserMinimumFlowFraction() const;
+    double condenserMinimumFlowFraction() const;
 
     boost::optional<Curve> thermosiphonCapacityFractionCurve() const;
 
@@ -278,7 +278,6 @@ namespace model {
     void resetTemperatureDifferenceAcrossCondenserSchedule();
 
     bool setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction);
-    void resetCondenserMinimumFlowFraction();
 
     bool setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve);
     void resetThermosiphonCapacityFractionCurve();
@@ -299,12 +298,19 @@ namespace model {
 
     /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
     boost::optional<PlantLoop> chilledWaterLoop() const;
+    // Same as supplyInletModelObject, but cast to a Node
+    boost::optional<Node> chilledWaterInletNode() const;
+    boost::optional<Node> chilledWaterOutletNode() const;
 
     /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
     boost::optional<PlantLoop> condenserWaterLoop() const;
+    boost::optional<Node> condenserInletNode() const;
+    boost::optional<Node> condenserOutletNode() const;
 
     /** Convenience Function to return the Heat Recovery Loop (chiller on demand side - tertiary) **/
     boost::optional<PlantLoop> heatRecoveryLoop() const;
+    boost::optional<Node> heatRecoveryInletNode() const;
+    boost::optional<Node> heatRecoveryOutletNode() const;
 
     //@}
    protected:

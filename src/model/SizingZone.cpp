@@ -865,18 +865,9 @@ namespace model {
       return value.get();
     }
 
-    bool SizingZone_Impl::isSizingOptionDefaulted() const {
-      return isEmpty(OS_Sizing_ZoneFields::SizingOption);
-    }
-
     bool SizingZone_Impl::setSizingOption(const std::string& sizingOption) {
       bool result = setString(OS_Sizing_ZoneFields::SizingOption, sizingOption);
       return result;
-    }
-
-    void SizingZone_Impl::resetSizingOption() {
-      bool result = setString(OS_Sizing_ZoneFields::SizingOption, "");
-      OS_ASSERT(result);
     }
 
     void SizingZone_Impl::autosize() {
@@ -1481,16 +1472,8 @@ namespace model {
     return getImpl<detail::SizingZone_Impl>()->sizingOption();
   }
 
-  bool SizingZone::isSizingOptionDefaulted() const {
-    return getImpl<detail::SizingZone_Impl>()->isSizingOptionDefaulted();
-  }
-
   bool SizingZone::setSizingOption(const std::string& sizingOption) {
     return getImpl<detail::SizingZone_Impl>()->setSizingOption(sizingOption);
-  }
-
-  void SizingZone::resetSizingOption() {
-    getImpl<detail::SizingZone_Impl>()->resetSizingOption();
   }
 
   void SizingZone::autosize() {

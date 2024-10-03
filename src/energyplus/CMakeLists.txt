@@ -687,6 +687,8 @@ set(${target_name}_test_src
   Test/BoilerHotWater_GTest.cpp
   Test/Building_GTest.cpp
   Test/ChillerElectricASHRAE205_GTest.cpp
+  Test/ChillerElectricEIR_GTest.cpp
+  Test/ChillerElectricReformulatedEIR_GTest.cpp
   Test/CentralHeatPumpSystem_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
