@@ -689,7 +689,7 @@ if(UNIX)
     endif()
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
+    file(REMOVE "${PROJECT_BINARY_DIR}/python/engine/pip_install_done.stamp")
   endif()
 
 elseif(WIN32)
@@ -715,7 +715,7 @@ elseif(WIN32)
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
+    file(REMOVE "${PROJECT_BINARY_DIR}/python/engine/pip_install_done.stamp")
   endif()
 
 endif()
