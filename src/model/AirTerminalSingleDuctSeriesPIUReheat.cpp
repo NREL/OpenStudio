@@ -196,8 +196,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<std::string> AirTerminalSingleDuctSeriesPIUReheat_Impl::heatingControlType() const {
-      return getString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, true);
+    std::string AirTerminalSingleDuctSeriesPIUReheat_Impl::heatingControlType() const {
+      boost::optional<std::string> value = getString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     double AirTerminalSingleDuctSeriesPIUReheat_Impl::designHeatingDischargeAirTemperature() const {
@@ -331,11 +333,6 @@ namespace model {
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setHeatingControlType(const std::string& heatingControlType) {
       bool result = setString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, heatingControlType);
       return result;
-    }
-
-    void AirTerminalSingleDuctSeriesPIUReheat_Impl::resetHeatingControlType() {
-      bool result = setString(OS_AirTerminal_SingleDuct_SeriesPIU_ReheatFields::HeatingControlType, "");
-      OS_ASSERT(result);
     }
 
     bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {
@@ -696,6 +693,7 @@ namespace model {
     setConvergenceTolerance(0.001);
     setFanControlType("ConstantSpeed");
     setMinimumFanTurnDownRatio(0.3);
+    setHeatingControlType("Staged");
     setDesignHeatingDischargeAirTemperature(32.1);
     setHighLimitHeatingDischargeAirTemperature(37.7);
   }
@@ -773,7 +771,7 @@ namespace model {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->minimumFanTurnDownRatio();
   }
 
-  boost::optional<std::string> AirTerminalSingleDuctSeriesPIUReheat::heatingControlType() const {
+  std::string AirTerminalSingleDuctSeriesPIUReheat::heatingControlType() const {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->heatingControlType();
   }
 
@@ -855,10 +853,6 @@ namespace model {
 
   bool AirTerminalSingleDuctSeriesPIUReheat::setHeatingControlType(const std::string& heatingControlType) {
     return getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->setHeatingControlType(heatingControlType);
-  }
-
-  void AirTerminalSingleDuctSeriesPIUReheat::resetHeatingControlType() {
-    getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>()->resetHeatingControlType();
   }
 
   bool AirTerminalSingleDuctSeriesPIUReheat::setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature) {

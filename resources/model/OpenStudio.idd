@@ -12498,6 +12498,7 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \type choice
        \key Staged
        \key Modulated
+       \required-field
   N8,  \field Design Heating Discharge Air Temperature
        \type real
        \units C
@@ -12600,6 +12601,7 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type choice
        \key Staged
        \key Modulated
+       \required-field
   N9,  \field Design Heating Discharge Air Temperature
        \type real
        \units C

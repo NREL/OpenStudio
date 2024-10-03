@@ -665,6 +665,8 @@ set(${target_name}_test_src
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   Test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
+  Test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
+  Test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
