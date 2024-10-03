@@ -826,7 +826,8 @@ namespace model {
     // autosizeReferenceCondenserWaterFlowRate();
     autosizeDesignHeatRecoveryWaterFlowRate();
 
-    setSizingFactor(1.0);
+    // setSizingFactor(1.0);
+
     setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
     resetHeatRecoveryLeavingTemperatureSetpointNode();
     resetHeatRecoveryInletHighTemperatureLimitSchedule();
@@ -890,7 +891,8 @@ namespace model {
     // autosizeReferenceCondenserWaterFlowRate();
     autosizeDesignHeatRecoveryWaterFlowRate();
 
-    setSizingFactor(1.0);
+    // setSizingFactor(1.0);
+
     setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
     resetHeatRecoveryLeavingTemperatureSetpointNode();
     resetHeatRecoveryInletHighTemperatureLimitSchedule();
@@ -911,6 +913,11 @@ namespace model {
 
   std::vector<std::string> ChillerElectricReformulatedEIR::validCondenserFlowControlValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Chiller_Electric_ReformulatedEIRFields::CondenserFlowControl);
+  }
+
+  std::vector<std::string> ChillerElectricReformulatedEIR::validElectricInputToCoolingOutputRatioFunctionOfPLRTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Chiller_Electric_ReformulatedEIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveType);
   }
 
   boost::optional<double> ChillerElectricReformulatedEIR::referenceCapacity() const {

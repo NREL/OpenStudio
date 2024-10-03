@@ -923,18 +923,17 @@ namespace model {
     OS_ASSERT(setCoolingCapacityFunctionOfTemperature(CCFofT));
     OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfTemperature(EItoCORFofT));
     OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfPLR(EItoCORFofPLR));
-    OS_ASSERT(setReferenceCOP(5.5f));
+    OS_ASSERT(setReferenceCOP(5.5));
 
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
     // autosizeReferenceCondenserFluidFlowRate();
     autosizeDesignHeatRecoveryWaterFlowRate();
 
-    setSizingFactor(1.0);
+    // setSizingFactor(1.0);
+    // setBasinHeaterCapacity(0.0);
 
-    setBasinHeaterCapacity(0.0);
-
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(10.0);  // Note: the IDD has a default of 2.0...
 
     resetBasinHeaterSchedule();
 
@@ -986,16 +985,17 @@ namespace model {
     setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
     setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr);
 
-    OS_ASSERT(setReferenceCOP(5.5f));
+    OS_ASSERT(setReferenceCOP(5.5));
 
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
     // autosizeReferenceCondenserFluidFlowRate();
     autosizeDesignHeatRecoveryWaterFlowRate();
 
-    setSizingFactor(1.0);
-    setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(10.0);
+    // setSizingFactor(1.0);
+    // setBasinHeaterCapacity(0.0);
+
+    setBasinHeaterSetpointTemperature(10.0);  // Note: the IDD has a default of 2.0...
     resetBasinHeaterSchedule();
     setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
     resetHeatRecoveryLeavingTemperatureSetpointNode();

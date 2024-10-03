@@ -54,6 +54,8 @@ namespace model {
 
     static std::vector<std::string> validCondenserFlowControlValues();
 
+    static std::vector<std::string> validElectricInputToCoolingOutputRatioFunctionOfPLRTypeValues();
+
     /** @name Getters */
     //@{
 
