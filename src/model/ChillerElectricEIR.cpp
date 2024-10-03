@@ -91,9 +91,11 @@ namespace model {
       UnsignedVector::const_iterator b(fieldIndices.begin());
       UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ChillerElectricEIR", "Basin Heater Operating"));
+        result.emplace_back("ChillerElectricEIR", "Basin Heater Operating");
       } else if (std::find(b, e, OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit"));
+        result.emplace_back("ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit");
+      } else if (std::find(b, e, OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserScheduleName) != e) {
+        result.emplace_back("ChillerElectricEIR", "Temperature Difference Across Condenser");
       }
       return result;
     }
@@ -607,11 +609,17 @@ namespace model {
 
     std::vector<ModelObject> ChillerElectricEIR_Impl::children() const {
       std::vector<ModelObject> result;
+      result.reserve(5);
 
       result.push_back(coolingCapacityFunctionOfTemperature());
       result.push_back(electricInputToCoolingOutputRatioFunctionOfTemperature());
       result.push_back(electricInputToCoolingOutputRatioFunctionOfPLR());
-
+      if (auto curve_ = condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve()) {
+        result.emplace_back(std::move(*curve_));
+      }
+      if (auto curve_ = thermosiphonCapacityFractionCurve()) {
+        result.emplace_back(std::move(*curve_));
+      }
       return result;
     }
 
@@ -788,7 +796,6 @@ namespace model {
         OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName);
     }
 
-    // TODO: ScheduleTypeLimits
     bool ChillerElectricEIR_Impl::setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& schedule) {
       bool result = setSchedule(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, "ChillerElectricEIR",
                                 "Heat Recovery Inlet High Temperature Limit", schedule);
@@ -861,8 +868,8 @@ namespace model {
     }
 
     bool ChillerElectricEIR_Impl::setTemperatureDifferenceAcrossCondenserSchedule(Schedule& temperatureDifferenceAcrossCondenserSchedule) {
-      bool result = setPointer(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserScheduleName,
-                               temperatureDifferenceAcrossCondenserSchedule.handle());
+      bool result = setSchedule(OS_Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserScheduleName, "ChillerElectricEIR",
+                                "Temperature Difference Across Condenser", temperatureDifferenceAcrossCondenserSchedule);
       return result;
     }
 
