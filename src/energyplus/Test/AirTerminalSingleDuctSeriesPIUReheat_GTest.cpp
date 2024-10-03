@@ -15,7 +15,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/AirLoopHVAC.hpp"
-#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanSystemModel.hpp"
 
 #include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/AirTerminal_SingleDuct_SeriesPIU_Reheat_FieldEnums.hxx>
@@ -29,7 +29,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctSeriesPIUReheat
   Model m;
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume fan(m);
+  FanSystemModel fan(m);
   CoilHeatingElectric coil(m);
   AirTerminalSingleDuctSeriesPIUReheat atu(m, fan, coil);
 
@@ -64,11 +64,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctSeriesPIUReheat
   EXPECT_EQ(1, idf_atu.getDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MaximumAirFlowRate, false).get());
   EXPECT_EQ(2, idf_atu.getDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MaximumPrimaryAirFlowRate, false).get());
   EXPECT_EQ(0.1, idf_atu.getDouble(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::MinimumPrimaryAirFlowFraction, false).get());
-  EXPECT_EQ("", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SupplyAirInletNodeName, false).get());
-  EXPECT_EQ("", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SecondaryAirInletNodeName, false).get());
-  EXPECT_EQ("", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::OutletNodeName, false).get());
-  EXPECT_EQ("", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilAirInletNodeName, false).get());
-  EXPECT_EQ("", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ZoneMixerName, false).get());
+  EXPECT_EQ(atu.inletModelObject()->nameString(),
+            idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SupplyAirInletNodeName, false).get());
+  EXPECT_EQ(atu.secondaryAirInletNode()->nameString(),
+            idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::SecondaryAirInletNodeName, false).get());
+  EXPECT_EQ(atu.outletModelObject()->nameString(), idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::OutletNodeName, false).get());
+  EXPECT_EQ(atu.nameString() + " Fan Outlet",
+            idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilAirInletNodeName, false).get());
+  EXPECT_EQ(atu.nameString() + " Mixer", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ZoneMixerName, false).get());
   EXPECT_EQ(fan.nameString(), idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanName, false).get());
   EXPECT_EQ("Coil:Heating:Electric", idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilObjectType, false).get());
   EXPECT_EQ(coil.nameString(), idf_atu.getString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::ReheatCoilName, false).get());
