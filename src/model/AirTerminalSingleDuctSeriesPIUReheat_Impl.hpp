@@ -81,7 +81,7 @@ namespace model {
 
       double minimumFanTurnDownRatio() const;
 
-      boost::optional<std::string> heatingControlType() const;
+      std::string heatingControlType() const;
 
       double designHeatingDischargeAirTemperature() const;
 
@@ -138,8 +138,6 @@ namespace model {
       bool setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio);
 
       bool setHeatingControlType(const std::string& heatingControlType);
-
-      void resetHeatingControlType();
 
       bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
 
