@@ -293,9 +293,7 @@ namespace energyplus {
     }
 
     // Condenser Minimum Flow Fraction
-    if ((value = modelObject.condenserMinimumFlowFraction())) {
-      idfObject.setDouble(Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, value.get());
-    }
+    idfObject.setDouble(Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, modelObject.condenserMinimumFlowFraction());
 
     // Thermosiphon Capacity Fraction Curve Name
     if (boost::optional<Curve> thermosiphonCapacityFractionCurve_ = modelObject.thermosiphonCapacityFractionCurve()) {

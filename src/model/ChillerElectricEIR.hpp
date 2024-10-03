@@ -155,7 +155,7 @@ namespace model {
 
     boost::optional<Schedule> temperatureDifferenceAcrossCondenserSchedule() const;
 
-    boost::optional<double> condenserMinimumFlowFraction() const;
+    double condenserMinimumFlowFraction() const;
 
     boost::optional<Curve> thermosiphonCapacityFractionCurve() const;
 
@@ -278,7 +278,6 @@ namespace model {
     void resetTemperatureDifferenceAcrossCondenserSchedule();
 
     bool setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction);
-    void resetCondenserMinimumFlowFraction();
 
     bool setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve);
     void resetThermosiphonCapacityFractionCurve();

@@ -720,8 +720,10 @@ namespace model {
         OS_Chiller_Electric_ReformulatedEIRFields::TemperatureDifferenceAcrossCondenserScheduleName);
     }
 
-    boost::optional<double> ChillerElectricReformulatedEIR_Impl::condenserMinimumFlowFraction() const {
-      return getDouble(OS_Chiller_Electric_ReformulatedEIRFields::CondenserMinimumFlowFraction, true);
+    double ChillerElectricReformulatedEIR_Impl::condenserMinimumFlowFraction() const {
+      boost::optional<double> value = getDouble(OS_Chiller_Electric_ReformulatedEIRFields::CondenserMinimumFlowFraction, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<Curve> ChillerElectricReformulatedEIR_Impl::thermosiphonCapacityFractionCurve() const {
@@ -765,11 +767,6 @@ namespace model {
     bool ChillerElectricReformulatedEIR_Impl::setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction) {
       bool result = setDouble(OS_Chiller_Electric_ReformulatedEIRFields::CondenserMinimumFlowFraction, condenserMinimumFlowFraction);
       return result;
-    }
-
-    void ChillerElectricReformulatedEIR_Impl::resetCondenserMinimumFlowFraction() {
-      bool result = setString(OS_Chiller_Electric_ReformulatedEIRFields::CondenserMinimumFlowFraction, "");
-      OS_ASSERT(result);
     }
 
     bool ChillerElectricReformulatedEIR_Impl::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
@@ -1276,7 +1273,7 @@ namespace model {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->temperatureDifferenceAcrossCondenserSchedule();
   }
 
-  boost::optional<double> ChillerElectricReformulatedEIR::condenserMinimumFlowFraction() const {
+  double ChillerElectricReformulatedEIR::condenserMinimumFlowFraction() const {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->condenserMinimumFlowFraction();
   }
 
@@ -1313,10 +1310,6 @@ namespace model {
 
   bool ChillerElectricReformulatedEIR::setCondenserMinimumFlowFraction(double condenserMinimumFlowFraction) {
     return getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->setCondenserMinimumFlowFraction(condenserMinimumFlowFraction);
-  }
-
-  void ChillerElectricReformulatedEIR::resetCondenserMinimumFlowFraction() {
-    getImpl<detail::ChillerElectricReformulatedEIR_Impl>()->resetCondenserMinimumFlowFraction();
   }
 
   bool ChillerElectricReformulatedEIR::setThermosiphonCapacityFractionCurve(const Curve& thermosiphonCapacityFractionCurve) {
