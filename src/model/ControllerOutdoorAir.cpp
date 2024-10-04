@@ -27,6 +27,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -99,13 +100,7 @@ namespace model {
     }
 
     bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const Curve& curve) {
-      bool result(false);
-      if (curve) {
-        result = setPointer(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, curve.get().handle());
-      } else {
-        resetElectronicEnthalpyLimitCurve();
-        result = true;
-      }
+      bool result = setPointer(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, curve.handle());
       return result;
     }
 
@@ -296,15 +291,8 @@ namespace model {
     }
 
     bool ControllerOutdoorAir_Impl::setHumidistatControlZone(const ThermalZone& thermalZone) {
-      bool result(false);
-      if (thermalZone) {
-        result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.get().handle());
-        result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
-      } else {
-        resetHumidistatControlZone();
-        result = true;
-        result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
-      }
+      bool result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.handle());
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
       return result;
     }
 
