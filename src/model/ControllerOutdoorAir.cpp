@@ -88,11 +88,6 @@ namespace model {
     // return any children objects in the hierarchy
     std::vector<ModelObject> ControllerOutdoorAir_Impl::children() const {
       std::vector<ModelObject> result;
-      //result.push_back(this->getElectronicEnthalpyLimitCurve());
-      //result.push_back(this->getMinimumOutdoorAirSchedule());
-      //result.push_back(this->getMinimumFractionOfOutdoorAirSchedule());
-      //result.push_back(this->getMaximumFractionOfOutdoorAirSchedule());
-      //result.push_back(this->getTimeOfDayEconomizerControlSchedule());
       std::vector<AirflowNetworkOutdoorAirflow> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
       result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
@@ -117,50 +112,6 @@ namespace model {
     void ControllerOutdoorAir_Impl::resetElectronicEnthalpyLimitCurve() {
       bool result = setString(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
       OS_ASSERT(result);
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getMinimumOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve minimum outdoor air schedule")
-        throw;
-      }
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getMinimumFractionOfOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve minimum fraciton of outdoor air schedule")
-        throw;
-      }
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getMaximumFractionOfOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve maximum fraction of outdoor air schedule")
-        throw;
-      }
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getTimeOfDayEconomizerControlSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve time of day economizer control schedule")
-        throw;
-      }
     }
 
     OptionalAirLoopHVACOutdoorAirSystem ControllerOutdoorAir_Impl::airLoopHVACOutdoorAirSystem() const {
@@ -648,22 +599,6 @@ namespace model {
 
   void ControllerOutdoorAir::resetElectronicEnthalpyLimitCurve() {
     getImpl<detail::ControllerOutdoorAir_Impl>()->resetElectronicEnthalpyLimitCurve();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getMinimumOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMinimumOutdoorAirSchedule();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getMinimumFractionOfOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMinimumFractionOfOutdoorAirSchedule();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getMaximumFractionOfOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMaximumFractionOfOutdoorAirSchedule();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getTimeOfDayEconomizerControlSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getTimeOfDayEconomizerControlSchedule();
   }
 
   boost::optional<AirLoopHVACOutdoorAirSystem> ControllerOutdoorAir::airLoopHVACOutdoorAirSystem() const {

@@ -122,22 +122,18 @@ namespace model {
 
       bool setControllerMechanicalVentilation(const ControllerMechanicalVentilation& controllerMechanicalVentilation);
 
-      ScheduleCompact getMinimumOutdoorAirSchedule() const;
       boost::optional<Schedule> minimumOutdoorAirSchedule() const;
       bool setMinimumOutdoorAirSchedule(Schedule& schedule);
       void resetMinimumOutdoorAirSchedule();
 
-      ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
       boost::optional<Schedule> minimumFractionofOutdoorAirSchedule() const;
       bool setMinimumFractionofOutdoorAirSchedule(Schedule& schedule);
       void resetMinimumFractionofOutdoorAirSchedule();
 
-      ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
       boost::optional<Schedule> maximumFractionofOutdoorAirSchedule() const;
       bool setMaximumFractionofOutdoorAirSchedule(Schedule& schedule);
       void resetMaximumFractionofOutdoorAirSchedule();
 
-      ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
       boost::optional<Schedule> timeofDayEconomizerControlSchedule() const;
       bool setTimeofDayEconomizerControlSchedule(Schedule& schedule);
       void resetTimeofDayEconomizerControlSchedule();

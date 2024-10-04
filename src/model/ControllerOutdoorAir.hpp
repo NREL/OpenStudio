@@ -151,14 +151,6 @@ namespace model {
     explicit ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl);
 
    private:
-    ScheduleCompact getMinimumOutdoorAirSchedule() const;
-
-    ScheduleCompact getMinimumFractionOfOutdoorAirSchedule() const;
-
-    ScheduleCompact getMaximumFractionOfOutdoorAirSchedule() const;
-
-    ScheduleCompact getTimeOfDayEconomizerControlSchedule() const;
-
     ControllerOutdoorAir(const Handle& handle, const Model& model);
 
     REGISTER_LOGGER("openstudio.model.ControllerOutdoorAir");
