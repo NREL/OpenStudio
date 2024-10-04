@@ -80,7 +80,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
 
   // Electronic Enthalpy Limit Curve
-  CurveQuadratic electronicEnthalpyLimitCurve(m);
+  CurveQuadratic electronicEnthalpyLimitCurve(model);
   EXPECT_TRUE(controller.setElectronicEnthalpyLimitCurve(electronicEnthalpyLimitCurve));
   ASSERT_TRUE(controller.electronicEnthalpyLimitCurve());
   EXPECT_EQ(electronicEnthalpyLimitCurve, controller.electronicEnthalpyLimitCurve().get());
@@ -89,7 +89,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
 
   // Humidistat Control Zone
   EXPECT_FALSE(controller.getHighHumidityControl());
-  ThermalZone humidistatControlZone(m);
+  ThermalZone humidistatControlZone(model);
   EXPECT_TRUE(controller.setHumidistatControlZone(humidistatControlZone));
   ASSERT_TRUE(controller.humidistatControlZone());
   EXPECT_EQ(humidistatControlZone, controller.humidistatControlZone().get());
