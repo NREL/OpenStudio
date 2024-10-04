@@ -200,7 +200,7 @@ set(ENERGYPLUS_BUILD_SHA "94a887817b")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v24.2.1-RC1")
+set(ENERGYPLUS_RELEASE_NAME "v24.2.0a")
 
 set(ENERGYPLUS_REPO "NREL")
 
