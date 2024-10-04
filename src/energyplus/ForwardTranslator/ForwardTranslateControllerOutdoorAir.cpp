@@ -163,11 +163,10 @@ namespace energyplus {
     if (auto zone_ = modelObject.humidistatControlZone()) {
       if (boost::optional<ZoneControlHumidistat> humidistat = zone_->zoneControlHumidistat()) {
         idfObject.setString(openstudio::Controller_OutdoorAirFields::HumidistatControlZoneName, zone_->nameString());
-        else {
-          LOG(Warn, modelObject.briefDescription() << " has a humidistat control zone " << zone_->nameString()
-                                                   << " without a zone control humidistat; humidistat control zone field will not be translated");
-          idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
-        }
+      } else {
+        LOG(Warn, modelObject.briefDescription() << " has a humidistat control zone " << zone_->nameString()
+                                                 << " without a zone control humidistat; humidistat control zone field will not be translated");
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
       }
     }
 

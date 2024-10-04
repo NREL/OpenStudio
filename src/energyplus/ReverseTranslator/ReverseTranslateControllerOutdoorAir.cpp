@@ -146,15 +146,6 @@ namespace energyplus {
       }
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::HighHumidityControl);
-    if (s) {
-      if (istringEqual("Yes", s.get())) {
-        mo.setHighHumidityControl(true);
-      } else {
-        mo.setHighHumidityControl(false);
-      }
-    }
-
     if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::HumidistatControlZoneName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
         // Zone is translated, and a Space is returned instead
