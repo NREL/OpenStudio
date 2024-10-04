@@ -20,7 +20,7 @@ jobs:
 
     - name: Upload clang-format patch as artifact
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: OpenStudio-${{ github.sha }}-clang_format.patch
           path: clang_format.patch
