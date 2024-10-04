@@ -110,7 +110,6 @@ namespace model {
     boost::optional<bool> getHighHumidityControl() const;
     OS_DEPRECATED(3, 8, 0) bool setHighHumidityControl(bool val);
 
-    boost::optional<ThermalZone> getHumidistatControlZone() const;
     boost::optional<ThermalZone> humidistatControlZone() const;
     bool setHumidistatControlZone(const ThermalZone& thermalZone);
     void resetHumidistatControlZone();

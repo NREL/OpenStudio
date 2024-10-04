@@ -99,15 +99,11 @@ namespace model {
       return result;
     }
 
-    boost::optional<Curve> ControllerOutdoorAir_Impl::getElectronicEnthalpyLimitCurve() const {
-      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
-    }
-
     boost::optional<Curve> ControllerOutdoorAir_Impl::electronicEnthalpyLimitCurve() const {
       return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
     }
 
-    bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve) {
+    bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const Curve& curve) {
       bool result(false);
       if (curve) {
         result = setPointer(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, curve.get().handle());
@@ -344,15 +340,11 @@ namespace model {
       return retVal;
     }
 
-    boost::optional<ThermalZone> ControllerOutdoorAir_Impl::getHumidistatControlZone() const {
-      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
-    }
-
     boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
     }
 
-    bool ControllerOutdoorAir_Impl::setHumidistatControlZone(const boost::optional<ThermalZone>& thermalZone) {
+    bool ControllerOutdoorAir_Impl::setHumidistatControlZone(const ThermalZone& thermalZone) {
       bool result(false);
       if (thermalZone) {
         result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.get().handle());
@@ -646,10 +638,6 @@ namespace model {
 
   ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl) : ParentObject(std::move(impl)) {}
 
-  boost::optional<Curve> ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
-  }
-
   boost::optional<Curve> ControllerOutdoorAir::electronicEnthalpyLimitCurve() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->electronicEnthalpyLimitCurve();
   }
@@ -773,10 +761,6 @@ namespace model {
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
     DEPRECATED_AT_MSG(3, 8, 0, "Use setHumidistatControlZone instead.");
     return false;
-  }
-
-  boost::optional<ThermalZone> ControllerOutdoorAir::getHumidistatControlZone() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getHumidistatControlZone();
   }
 
   boost::optional<ThermalZone> ControllerOutdoorAir::humidistatControlZone() const {

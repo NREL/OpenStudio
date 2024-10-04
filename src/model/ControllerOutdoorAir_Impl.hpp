@@ -68,9 +68,8 @@ namespace model {
       boost::optional<double> getEconomizerMaximumLimitDewpointTemperature() const;
       bool setEconomizerMaximumLimitDewpointTemperature(boost::optional<double> value);
 
-      boost::optional<Curve> getElectronicEnthalpyLimitCurve() const;
       boost::optional<Curve> electronicEnthalpyLimitCurve() const;
-      bool setElectronicEnthalpyLimitCurve(const boost::optional<Curve>& curve);
+      bool setElectronicEnthalpyLimitCurve(const Curve& curve);
       void resetElectronicEnthalpyLimitCurve();
 
       //get needs to return a boost optional double since "" is a valid input
@@ -85,9 +84,8 @@ namespace model {
 
       boost::optional<bool> getHighHumidityControl() const;
 
-      boost::optional<ThermalZone> getHumidistatControlZone() const;
       boost::optional<ThermalZone> humidistatControlZone() const;
-      bool setHumidistatControlZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setHumidistatControlZone(const ThermalZone& thermalZone);
       void resetHumidistatControlZone();
 
       OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
