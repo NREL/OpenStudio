@@ -8,7 +8,6 @@
 
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -108,7 +107,7 @@ namespace model {
     bool setMinimumLimitType(const std::string& value);
 
     boost::optional<bool> getHighHumidityControl() const;
-    OS_DEPRECATED(3, 8, 0) bool setHighHumidityControl(bool val);
+    bool setHighHumidityControl(bool val);
 
     boost::optional<ThermalZone> humidistatControlZone() const;
     bool setHumidistatControlZone(const ThermalZone& thermalZone);

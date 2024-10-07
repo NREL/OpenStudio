@@ -83,6 +83,7 @@ namespace model {
       bool setMinimumLimitType(const std::string& value);
 
       boost::optional<bool> getHighHumidityControl() const;
+      bool setHighHumidityControl(bool val);
 
       boost::optional<ThermalZone> humidistatControlZone() const;
       bool setHumidistatControlZone(const ThermalZone& thermalZone);

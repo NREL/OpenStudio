@@ -88,13 +88,18 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   EXPECT_FALSE(controller.electronicEnthalpyLimitCurve());
 
   // Humidistat Control Zone
-  EXPECT_FALSE(controller.getHighHumidityControl());
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_FALSE(controller.getHighHumidityControl().get());
   ThermalZone humidistatControlZone(model);
   EXPECT_TRUE(controller.setHumidistatControlZone(humidistatControlZone));
   ASSERT_TRUE(controller.humidistatControlZone());
   EXPECT_EQ(humidistatControlZone, controller.humidistatControlZone().get());
-  EXPECT_TRUE(controller.getHighHumidityControl());
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_TRUE(controller.getHighHumidityControl().get());
   controller.resetHumidistatControlZone();
   EXPECT_FALSE(controller.humidistatControlZone());
-  EXPECT_FALSE(controller.getHighHumidityControl());
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_TRUE(
+    controller.getHighHumidityControl()
+      .get());  // still true because High Humidity Outdoor Air Flow Ratio or Control High Indoor Humidity Based on Outdoor Humidity Ratio may be set
 }

@@ -27,7 +27,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/DeprecatedHelpers.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -278,6 +277,14 @@ namespace model {
       return openstudio::istringEqual(value.get(), "Yes");
     }
 
+    bool ControllerOutdoorAir_Impl::setHighHumidityControl(bool val) {
+      if (val) {
+        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
+      } else {
+        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
+      }
+    }
+
     boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
       return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
     }
@@ -290,7 +297,6 @@ namespace model {
 
     void ControllerOutdoorAir_Impl::resetHumidistatControlZone() {
       bool result = setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
-      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
       OS_ASSERT(result);
     }
 
@@ -299,7 +305,9 @@ namespace model {
     }
 
     bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v) {
-      return setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, v);
+      bool result = setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, v);
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
+      return result;
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
@@ -309,11 +317,14 @@ namespace model {
     }
 
     bool ControllerOutdoorAir_Impl::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v) {
+      bool result;
       if (v) {
-        return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
+        result = setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
       } else {
-        return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
+        result = setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
       }
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
+      return result;
     }
 
     OptionalString ControllerOutdoorAir_Impl::getHeatRecoveryBypassControlType() const {
@@ -547,7 +558,7 @@ namespace model {
     setString(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, "");
     setString(OS_Controller_OutdoorAirFields::ControllerMechanicalVentilation, "");
     setString(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, "");
-    setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
+    setHighHumidityControl(false);
     setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
     setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, "");
     setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "");
@@ -665,8 +676,7 @@ namespace model {
   }
 
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
-    DEPRECATED_AT_MSG(3, 8, 0, "Use setHumidistatControlZone instead.");
-    return false;
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
   }
 
   boost::optional<ThermalZone> ControllerOutdoorAir::humidistatControlZone() const {
