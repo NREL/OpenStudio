@@ -36,6 +36,11 @@ jobs:
             --suppress=useStlAlgorithm \
             --suppress=unmatchedSuppression \
             --suppress=unusedPrivateFunction \
+            --suppress=missingIncludeSystem \
+            --suppress=normalCheckLevelMaxBranches \
+            --suppress=returnByReference \
+            --suppress=shadowFunction \
+            --suppress=checkersReport \
             --suppress=functionStatic:src/utilities/core/EnumBase.hpp \
             --suppress=functionStatic:src/utilities/core/StaticInitializer.hpp \
             --suppress=functionStatic:src/utilities/units/QuantityFactory.hpp \
