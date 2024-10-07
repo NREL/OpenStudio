@@ -273,17 +273,9 @@ namespace model {
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getHighHumidityControl() const {
-      boost::optional<bool> retVal;
-
-      if (OptionalString s = getString(OS_Controller_OutdoorAirFields::HighHumidityControl)) {
-        if (istringEqual(s.get(), "yes")) {
-          retVal = true;
-        } else {
-          retVal = false;
-        }
-      }
-
-      return retVal;
+      boost::optional<std::string> value = getString(OS_Controller_OutdoorAirFields::HighHumidityControl, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
     }
 
     boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
@@ -311,20 +303,11 @@ namespace model {
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
-      boost::optional<bool> retVal;
-      OptionalString s = getString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio);
-      if (!s) {
-        return retVal;
-      }
-      std::string temp = *s;
-      boost::to_lower(temp);
-      if (temp == "no") {
-        retVal = false;
-      } else {
-        retVal = true;
-      }
-      return retVal;
+      boost::optional<std::string> value = getString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
     }
+
     bool ControllerOutdoorAir_Impl::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v) {
       if (v) {
         return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
