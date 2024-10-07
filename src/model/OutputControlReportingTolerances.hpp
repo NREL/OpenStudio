@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlReportingTolerances() = default;
+    virtual ~OutputControlReportingTolerances() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputControlReportingTolerances(const OutputControlReportingTolerances& other) = default;
     OutputControlReportingTolerances(OutputControlReportingTolerances&& other) = default;

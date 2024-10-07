@@ -31,7 +31,7 @@ namespace model {
       AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl(const AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl& other, Model_Impl* model,
                                                         bool keepHandle);
 
-      virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl() = default;
+      virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

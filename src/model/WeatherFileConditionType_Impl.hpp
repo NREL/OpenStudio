@@ -26,7 +26,7 @@ namespace model {
       WeatherFileConditionType_Impl(const WeatherFileConditionType_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~WeatherFileConditionType_Impl() = default;
+      virtual ~WeatherFileConditionType_Impl() override = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

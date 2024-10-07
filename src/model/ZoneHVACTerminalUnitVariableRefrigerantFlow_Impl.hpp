@@ -34,7 +34,7 @@ namespace model {
       ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl(const ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl() = default;
+      virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

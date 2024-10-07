@@ -29,7 +29,7 @@ namespace model {
 
       SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~SetpointManagerScheduled_Impl() = default;
+      virtual ~SetpointManagerScheduled_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

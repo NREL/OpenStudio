@@ -14,13 +14,12 @@
 #include "SurfacePropertyLocalEnvironment.hpp"
 #include "SurfacePropertyLocalEnvironment_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_SurfaceProperty_SurroundingSurfaces_FieldEnums.hxx>
-
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include "../utilities/core/Assert.hpp"
-#include "utilities/core/Compare.hpp"
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/OS_SurfaceProperty_SurroundingSurfaces_FieldEnums.hxx>
 
 namespace openstudio {
 namespace model {

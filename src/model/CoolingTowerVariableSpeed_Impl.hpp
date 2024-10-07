@@ -32,7 +32,7 @@ namespace model {
 
       CoolingTowerVariableSpeed_Impl(const CoolingTowerVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoolingTowerVariableSpeed_Impl() = default;
+      virtual ~CoolingTowerVariableSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -57,7 +57,7 @@ namespace model {
   class MODEL_API HVACComponent : public ParentObject
   {
    public:
-    virtual ~HVACComponent() = default;
+    virtual ~HVACComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HVACComponent(const HVACComponent& other) = default;
     HVACComponent(HVACComponent&& other) = default;

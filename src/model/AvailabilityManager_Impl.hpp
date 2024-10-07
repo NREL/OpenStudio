@@ -29,7 +29,7 @@ namespace model {
 
       AvailabilityManager_Impl(const AvailabilityManager_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~AvailabilityManager_Impl() = default;
+      virtual ~AvailabilityManager_Impl() override = default;
 
       boost::optional<Loop> loop() const;
 

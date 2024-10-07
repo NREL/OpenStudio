@@ -29,7 +29,7 @@ namespace model {
 
       LoadingIndex_Impl(const LoadingIndex_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LoadingIndex_Impl() = default;
+      virtual ~LoadingIndex_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

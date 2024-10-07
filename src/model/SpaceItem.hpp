@@ -23,7 +23,7 @@ namespace model {
   class MODEL_API SpaceItem : public ModelObject
   {
    public:
-    virtual ~SpaceItem() = default;
+    virtual ~SpaceItem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SpaceItem(const SpaceItem& other) = default;
     SpaceItem(SpaceItem&& other) = default;

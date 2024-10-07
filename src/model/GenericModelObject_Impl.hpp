@@ -25,7 +25,7 @@ namespace model {
       // copy constructor
       GenericModelObject_Impl(const GenericModelObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GenericModelObject_Impl() = default;
+      virtual ~GenericModelObject_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

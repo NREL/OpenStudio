@@ -31,7 +31,7 @@ namespace model {
 
     explicit HeaderedPumpsVariableSpeed(const Model& model);
 
-    virtual ~HeaderedPumpsVariableSpeed() = default;
+    virtual ~HeaderedPumpsVariableSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeaderedPumpsVariableSpeed(const HeaderedPumpsVariableSpeed& other) = default;
     HeaderedPumpsVariableSpeed(HeaderedPumpsVariableSpeed&& other) = default;

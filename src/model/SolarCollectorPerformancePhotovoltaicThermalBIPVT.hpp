@@ -32,7 +32,7 @@ namespace model {
     explicit SolarCollectorPerformancePhotovoltaicThermalBIPVT(const Model& model);
     explicit SolarCollectorPerformancePhotovoltaicThermalBIPVT(const SurfacePropertyOtherSideConditionsModel& oscm);
 
-    virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT() = default;
+    virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SolarCollectorPerformancePhotovoltaicThermalBIPVT(const SolarCollectorPerformancePhotovoltaicThermalBIPVT& other) = default;
     SolarCollectorPerformancePhotovoltaicThermalBIPVT(SolarCollectorPerformancePhotovoltaicThermalBIPVT&& other) = default;

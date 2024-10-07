@@ -30,7 +30,7 @@ namespace model {
 
       CoilHeatingDXSingleSpeed_Impl(const CoilHeatingDXSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDXSingleSpeed_Impl() = default;
+      virtual ~CoilHeatingDXSingleSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

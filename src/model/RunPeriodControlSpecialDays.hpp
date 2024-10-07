@@ -40,7 +40,7 @@ namespace model {
     RunPeriodControlSpecialDays(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek,
                                 const openstudio::MonthOfYear& monthOfYear, Model& model);
 
-    virtual ~RunPeriodControlSpecialDays() = default;
+    virtual ~RunPeriodControlSpecialDays() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RunPeriodControlSpecialDays(const RunPeriodControlSpecialDays& other) = default;
     RunPeriodControlSpecialDays(RunPeriodControlSpecialDays&& other) = default;

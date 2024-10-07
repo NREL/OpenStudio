@@ -31,7 +31,7 @@ namespace model {
 
       HeatExchangerFluidToFluid_Impl(const HeatExchangerFluidToFluid_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatExchangerFluidToFluid_Impl() = default;
+      virtual ~HeatExchangerFluidToFluid_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

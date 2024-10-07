@@ -115,7 +115,7 @@ namespace model {
    *  Any unwrapped IDD types will be wrapped with GenericModelObject. */
     explicit Model(const openstudio::Workspace& workspace);
 
-    virtual ~Model() = default;
+    virtual ~Model() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Model(const Model& other) = default;
     Model(Model&& other) = default;

@@ -42,7 +42,7 @@ namespace model {
 
       AirLoopHVAC_Impl(const AirLoopHVAC_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVAC_Impl() = default;
+      virtual ~AirLoopHVAC_Impl() override = default;
 
       boost::optional<double> designSupplyAirFlowRate() const;
 

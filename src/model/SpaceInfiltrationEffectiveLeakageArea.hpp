@@ -30,7 +30,7 @@ namespace model {
 
     explicit SpaceInfiltrationEffectiveLeakageArea(const Model& model);
 
-    virtual ~SpaceInfiltrationEffectiveLeakageArea() = default;
+    virtual ~SpaceInfiltrationEffectiveLeakageArea() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SpaceInfiltrationEffectiveLeakageArea(const SpaceInfiltrationEffectiveLeakageArea& other) = default;
     SpaceInfiltrationEffectiveLeakageArea(SpaceInfiltrationEffectiveLeakageArea&& other) = default;

@@ -30,7 +30,7 @@ namespace model {
 
       boost::optional<ThermalZone> thermalZone() const;
 
-      virtual ~Thermostat_Impl() = default;
+      virtual ~Thermostat_Impl() override = default;
 
      protected:
       friend class Model_Impl;

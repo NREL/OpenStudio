@@ -33,7 +33,7 @@ namespace model {
     // The capacityFractionSchedule is defaulted to alwaysOnContinuousSchedule
     explicit DistrictCooling(const Model& model);
 
-    virtual ~DistrictCooling() = default;
+    virtual ~DistrictCooling() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DistrictCooling(const DistrictCooling& other) = default;
     DistrictCooling(DistrictCooling&& other) = default;

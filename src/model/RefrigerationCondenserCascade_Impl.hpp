@@ -29,7 +29,7 @@ namespace model {
 
       RefrigerationCondenserCascade_Impl(const RefrigerationCondenserCascade_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserCascade_Impl() = default;
+      virtual ~RefrigerationCondenserCascade_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -28,7 +28,7 @@ namespace model {
 
       CoilHeatingDXVariableRefrigerantFlow_Impl(const CoilHeatingDXVariableRefrigerantFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() = default;
+      virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

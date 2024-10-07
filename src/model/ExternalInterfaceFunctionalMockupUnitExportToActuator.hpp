@@ -30,7 +30,7 @@ namespace model {
                                                                    const std::string& actuatedComponentControlType,
                                                                    const std::string& fMUVariableName, double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() = default;
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToActuator() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceFunctionalMockupUnitExportToActuator(const ExternalInterfaceFunctionalMockupUnitExportToActuator& other) = default;
     ExternalInterfaceFunctionalMockupUnitExportToActuator(ExternalInterfaceFunctionalMockupUnitExportToActuator&& other) = default;

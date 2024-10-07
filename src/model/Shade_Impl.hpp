@@ -28,7 +28,7 @@ namespace model {
 
       Shade_Impl(const Shade_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Shade_Impl() = default;
+      virtual ~Shade_Impl() override = default;
 
       //@}
 

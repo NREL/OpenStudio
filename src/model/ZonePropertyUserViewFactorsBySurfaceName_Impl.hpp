@@ -35,7 +35,7 @@ namespace model {
 
       ZonePropertyUserViewFactorsBySurfaceName_Impl(const ZonePropertyUserViewFactorsBySurfaceName_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZonePropertyUserViewFactorsBySurfaceName_Impl() = default;
+      virtual ~ZonePropertyUserViewFactorsBySurfaceName_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

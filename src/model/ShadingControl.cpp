@@ -25,15 +25,14 @@
 #include "Model_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ShadingControl_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-
-#include "../utilities/core/Assert.hpp"
-#include "utilities/core/Compare.hpp"
 
 #include <algorithm>
 #include <array>

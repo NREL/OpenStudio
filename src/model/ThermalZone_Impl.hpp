@@ -46,7 +46,7 @@ namespace model {
 
       ThermalZone_Impl(const ThermalZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermalZone_Impl() = default;
+      virtual ~ThermalZone_Impl() override = default;
 
       //@}
 

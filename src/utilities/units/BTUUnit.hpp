@@ -79,7 +79,7 @@ class UTILITIES_API BTUUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   BTUUnit(const std::string& scaleAbbreviation, const BTUExpnt& exponents = BTUExpnt(), const std::string& prettyString = "");
 
-  virtual ~BTUUnit() = default;
+  virtual ~BTUUnit() override = default;
 
   //@}
  protected:

@@ -28,7 +28,7 @@ namespace model {
     explicit ExternalInterfaceFunctionalMockupUnitExportFromVariable(const Model& model, const std::string& outputVariableIndexKeyName,
                                                                      const std::string& outputVariableName, const std::string& fMUVariableName);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() = default;
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportFromVariable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceFunctionalMockupUnitExportFromVariable(const ExternalInterfaceFunctionalMockupUnitExportFromVariable& other) = default;
     ExternalInterfaceFunctionalMockupUnitExportFromVariable(ExternalInterfaceFunctionalMockupUnitExportFromVariable&& other) = default;

@@ -37,7 +37,7 @@ namespace model {
 
       WaterHeaterMixed_Impl(const WaterHeaterMixed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterMixed_Impl() = default;
+      virtual ~WaterHeaterMixed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

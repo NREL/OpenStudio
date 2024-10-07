@@ -29,7 +29,7 @@ namespace model {
 
       ScheduleWeek_Impl(const ScheduleWeek_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleWeek_Impl() = default;
+      virtual ~ScheduleWeek_Impl() override = default;
 
       //@}
       virtual const std::vector<std::string>& outputVariableNames() const override;

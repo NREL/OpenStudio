@@ -28,7 +28,7 @@ namespace model {
 
     explicit GeneratorWindTurbine(const Model& model);
 
-    virtual ~GeneratorWindTurbine() = default;
+    virtual ~GeneratorWindTurbine() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorWindTurbine(const GeneratorWindTurbine& other) = default;
     GeneratorWindTurbine(GeneratorWindTurbine&& other) = default;

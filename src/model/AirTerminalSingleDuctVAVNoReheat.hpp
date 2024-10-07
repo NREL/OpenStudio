@@ -30,7 +30,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule);
 
-    virtual ~AirTerminalSingleDuctVAVNoReheat() = default;
+    virtual ~AirTerminalSingleDuctVAVNoReheat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctVAVNoReheat(const AirTerminalSingleDuctVAVNoReheat& other) = default;
     AirTerminalSingleDuctVAVNoReheat(AirTerminalSingleDuctVAVNoReheat&& other) = default;

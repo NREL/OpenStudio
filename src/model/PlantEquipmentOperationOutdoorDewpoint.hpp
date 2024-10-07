@@ -27,7 +27,7 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorDewpoint(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorDewpoint() = default;
+    virtual ~PlantEquipmentOperationOutdoorDewpoint() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantEquipmentOperationOutdoorDewpoint(const PlantEquipmentOperationOutdoorDewpoint& other) = default;
     PlantEquipmentOperationOutdoorDewpoint(PlantEquipmentOperationOutdoorDewpoint&& other) = default;

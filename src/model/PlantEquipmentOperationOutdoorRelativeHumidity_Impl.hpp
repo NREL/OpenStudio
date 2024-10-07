@@ -28,7 +28,7 @@ namespace model {
       PlantEquipmentOperationOutdoorRelativeHumidity_Impl(const PlantEquipmentOperationOutdoorRelativeHumidity_Impl& other, Model_Impl* model,
                                                           bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorRelativeHumidity_Impl() = default;
+      virtual ~PlantEquipmentOperationOutdoorRelativeHumidity_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

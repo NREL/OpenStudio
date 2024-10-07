@@ -40,7 +40,7 @@ namespace model {
     /// The given daySchedule is cloned and the new object is owned by (a child of) this rule.
     explicit ScheduleRule(ScheduleRuleset& scheduleRuleset, const ScheduleDay& daySchedule);
 
-    virtual ~ScheduleRule() = default;
+    virtual ~ScheduleRule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleRule(const ScheduleRule& other) = default;
     ScheduleRule(ScheduleRule&& other) = default;

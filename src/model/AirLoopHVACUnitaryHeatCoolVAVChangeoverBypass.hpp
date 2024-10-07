@@ -32,7 +32,7 @@ namespace model {
     explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model, const HVACComponent& fan, const HVACComponent& coolingCoil,
                                                            const HVACComponent& heatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() = default;
+    virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass& other) = default;
     AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass&& other) = default;

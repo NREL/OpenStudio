@@ -27,7 +27,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneAirMassFlowConservation() = default;
+    virtual ~ZoneAirMassFlowConservation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneAirMassFlowConservation(const ZoneAirMassFlowConservation& other) = default;
     ZoneAirMassFlowConservation(ZoneAirMassFlowConservation&& other) = default;

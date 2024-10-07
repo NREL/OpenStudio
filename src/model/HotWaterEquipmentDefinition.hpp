@@ -31,7 +31,7 @@ namespace model {
 
     explicit HotWaterEquipmentDefinition(const Model& model);
 
-    virtual ~HotWaterEquipmentDefinition() = default;
+    virtual ~HotWaterEquipmentDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& other) = default;
     HotWaterEquipmentDefinition(HotWaterEquipmentDefinition&& other) = default;

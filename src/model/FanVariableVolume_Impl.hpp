@@ -33,7 +33,7 @@ namespace model {
 
       FanVariableVolume_Impl(const FanVariableVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanVariableVolume_Impl() = default;
+      virtual ~FanVariableVolume_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

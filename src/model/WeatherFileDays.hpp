@@ -22,7 +22,7 @@ namespace model {
     // constructor
     explicit WeatherFileDays(const Model& model);
 
-    virtual ~WeatherFileDays() = default;
+    virtual ~WeatherFileDays() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WeatherFileDays(const WeatherFileDays& other) = default;
     WeatherFileDays(WeatherFileDays&& other) = default;

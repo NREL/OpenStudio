@@ -45,7 +45,7 @@ class UTILITIES_API FahrenheitUnit : public TemperatureUnit
    *  \param[in] prettyString optional string to use in place of standardString. */
   FahrenheitUnit(const std::string& scaleAbbreviation, int FExp = 0, const std::string& prettyString = "");
 
-  virtual ~FahrenheitUnit() = default;
+  virtual ~FahrenheitUnit() override = default;
 
   //@}
   /** @name Mathematical Operators */

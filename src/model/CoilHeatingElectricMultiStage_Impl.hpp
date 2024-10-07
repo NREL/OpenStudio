@@ -30,7 +30,7 @@ namespace model {
 
       CoilHeatingElectricMultiStage_Impl(const CoilHeatingElectricMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingElectricMultiStage_Impl() = default;
+      virtual ~CoilHeatingElectricMultiStage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

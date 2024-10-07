@@ -43,7 +43,7 @@ namespace model {
    */
     explicit PlantLoop(Model& model);
 
-    virtual ~PlantLoop() = default;
+    virtual ~PlantLoop() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantLoop(const PlantLoop& other) = default;
     PlantLoop(PlantLoop&& other) = default;

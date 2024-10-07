@@ -33,7 +33,7 @@ namespace model {
 
       UtilityBill_Impl(const UtilityBill_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~UtilityBill_Impl() = default;
+      virtual ~UtilityBill_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

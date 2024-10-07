@@ -30,7 +30,7 @@ namespace model {
 
       GeneratorPVWatts_Impl(const GeneratorPVWatts_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorPVWatts_Impl() = default;
+      virtual ~GeneratorPVWatts_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

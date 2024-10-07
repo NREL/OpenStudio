@@ -42,7 +42,7 @@ namespace model {
 
     explicit OutputMeter(const Model& model);
 
-    virtual ~OutputMeter() = default;
+    virtual ~OutputMeter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputMeter(const OutputMeter& other) = default;
     OutputMeter(OutputMeter&& other) = default;

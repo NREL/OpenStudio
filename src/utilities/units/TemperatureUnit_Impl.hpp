@@ -19,7 +19,7 @@ namespace detail {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~TemperatureUnit_Impl() = default;
+    virtual ~TemperatureUnit_Impl() override = default;
 
     //@}
     /** @name Mathematical Operators */

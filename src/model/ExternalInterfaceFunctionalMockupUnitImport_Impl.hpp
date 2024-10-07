@@ -28,7 +28,7 @@ namespace model {
       ExternalInterfaceFunctionalMockupUnitImport_Impl(const ExternalInterfaceFunctionalMockupUnitImport_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~ExternalInterfaceFunctionalMockupUnitImport_Impl() = default;
+      virtual ~ExternalInterfaceFunctionalMockupUnitImport_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

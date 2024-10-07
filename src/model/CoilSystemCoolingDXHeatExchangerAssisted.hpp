@@ -31,7 +31,7 @@ namespace model {
 
     explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
 
-    virtual ~CoilSystemCoolingDXHeatExchangerAssisted() = default;
+    virtual ~CoilSystemCoolingDXHeatExchangerAssisted() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilSystemCoolingDXHeatExchangerAssisted(const CoilSystemCoolingDXHeatExchangerAssisted& other) = default;
     CoilSystemCoolingDXHeatExchangerAssisted(CoilSystemCoolingDXHeatExchangerAssisted&& other) = default;

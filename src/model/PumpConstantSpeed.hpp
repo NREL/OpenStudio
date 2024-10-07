@@ -29,7 +29,7 @@ namespace model {
    public:
     explicit PumpConstantSpeed(const Model& model);
 
-    virtual ~PumpConstantSpeed() = default;
+    virtual ~PumpConstantSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PumpConstantSpeed(const PumpConstantSpeed& other) = default;
     PumpConstantSpeed(PumpConstantSpeed&& other) = default;

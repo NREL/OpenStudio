@@ -31,7 +31,7 @@ namespace model {
 
       SurfacePropertyGroundSurfaces_Impl(const SurfacePropertyGroundSurfaces_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyGroundSurfaces_Impl() = default;
+      virtual ~SurfacePropertyGroundSurfaces_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

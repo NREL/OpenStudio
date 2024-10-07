@@ -1598,7 +1598,7 @@ namespace contam {
     /** Create a new object from another object. */
     CdvDat(const CdvDat& other);
     /** Destroy the object. */
-    ~CdvDat() = default;
+    virtual ~CdvDat() override = default;
 
     //@}
     /** @name Operators */

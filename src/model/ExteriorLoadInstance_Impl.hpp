@@ -31,7 +31,7 @@ namespace model {
       // Clone copy constructor.
       ExteriorLoadInstance_Impl(const ExteriorLoadInstance_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorLoadInstance_Impl() = default;
+      virtual ~ExteriorLoadInstance_Impl() override = default;
 
       /** Returns the definition of this instance. */
       ExteriorLoadDefinition definition() const;

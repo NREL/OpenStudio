@@ -73,7 +73,7 @@ class UTILITIES_API SIUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   SIUnit(const std::string& scaleAbbreviation, const SIExpnt& exponents = SIExpnt(), const std::string& prettyString = "");
 
-  virtual ~SIUnit() = default;
+  virtual ~SIUnit() override = default;
 
   //@}
  protected:

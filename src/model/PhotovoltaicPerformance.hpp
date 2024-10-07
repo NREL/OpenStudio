@@ -24,7 +24,7 @@ namespace model {
    public:
     PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
-    virtual ~PhotovoltaicPerformance() = default;
+    virtual ~PhotovoltaicPerformance() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PhotovoltaicPerformance(const PhotovoltaicPerformance& other) = default;
     PhotovoltaicPerformance(PhotovoltaicPerformance&& other) = default;

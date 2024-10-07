@@ -33,7 +33,7 @@ namespace model {
 
       ExternalFile_Impl(const ExternalFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalFile_Impl() = default;
+      virtual ~ExternalFile_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

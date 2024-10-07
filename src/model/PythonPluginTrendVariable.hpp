@@ -31,7 +31,7 @@ namespace model {
 
     explicit PythonPluginTrendVariable(const PythonPluginVariable& pythonPluginVariable);
 
-    virtual ~PythonPluginTrendVariable() = default;
+    virtual ~PythonPluginTrendVariable() override = default;
 
     //@}
 

@@ -30,7 +30,7 @@ namespace model {
 
     explicit ExternalInterfaceSchedule(const Model& model);
 
-    virtual ~ExternalInterfaceSchedule() = default;
+    virtual ~ExternalInterfaceSchedule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceSchedule(const ExternalInterfaceSchedule& other) = default;
     ExternalInterfaceSchedule(ExternalInterfaceSchedule&& other) = default;

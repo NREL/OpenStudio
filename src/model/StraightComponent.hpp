@@ -30,7 +30,7 @@ namespace model {
    public:
     StraightComponent(IddObjectType type, const Model& model);
 
-    virtual ~StraightComponent() = default;
+    virtual ~StraightComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     StraightComponent(const StraightComponent& other) = default;
     StraightComponent(StraightComponent&& other) = default;

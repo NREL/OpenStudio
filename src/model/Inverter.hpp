@@ -27,7 +27,7 @@ namespace model {
    public:
     Inverter(IddObjectType type, const Model& model);
 
-    virtual ~Inverter() = default;
+    virtual ~Inverter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Inverter(const Inverter& other) = default;
     Inverter(Inverter&& other) = default;

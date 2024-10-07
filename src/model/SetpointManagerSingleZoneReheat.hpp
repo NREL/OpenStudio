@@ -31,7 +31,7 @@ namespace model {
   {
 
    public:
-    virtual ~SetpointManagerSingleZoneReheat() = default;
+    virtual ~SetpointManagerSingleZoneReheat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerSingleZoneReheat(const SetpointManagerSingleZoneReheat& other) = default;
     SetpointManagerSingleZoneReheat(SetpointManagerSingleZoneReheat&& other) = default;

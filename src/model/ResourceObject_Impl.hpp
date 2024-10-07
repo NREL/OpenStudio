@@ -29,7 +29,7 @@ namespace model {
       // Clone copy constructor.
       ResourceObject_Impl(const ResourceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ResourceObject_Impl() = default;
+      virtual ~ResourceObject_Impl() override = default;
 
       unsigned directUseCount(bool excludeChildren) const;
 

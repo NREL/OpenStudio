@@ -29,7 +29,7 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_4 = 1.0,\ c_3 = -1.0\f$, x within [-1.0,1.0]. */
     explicit CurveExponentialSkewNormal(const Model& model);
 
-    virtual ~CurveExponentialSkewNormal() = default;
+    virtual ~CurveExponentialSkewNormal() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveExponentialSkewNormal(const CurveExponentialSkewNormal& other) = default;
     CurveExponentialSkewNormal(CurveExponentialSkewNormal&& other) = default;

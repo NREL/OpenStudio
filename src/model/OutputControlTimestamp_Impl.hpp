@@ -27,7 +27,7 @@ namespace model {
 
       OutputControlTimestamp_Impl(const OutputControlTimestamp_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlTimestamp_Impl() = default;
+      virtual ~OutputControlTimestamp_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

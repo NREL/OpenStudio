@@ -36,7 +36,7 @@ namespace model {
 
       WaterHeaterStratified_Impl(const WaterHeaterStratified_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterStratified_Impl() = default;
+      virtual ~WaterHeaterStratified_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

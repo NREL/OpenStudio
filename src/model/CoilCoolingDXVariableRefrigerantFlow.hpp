@@ -29,7 +29,7 @@ namespace model {
    public:
     explicit CoilCoolingDXVariableRefrigerantFlow(const Model& model);
 
-    virtual ~CoilCoolingDXVariableRefrigerantFlow() = default;
+    virtual ~CoilCoolingDXVariableRefrigerantFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXVariableRefrigerantFlow(const CoilCoolingDXVariableRefrigerantFlow& other) = default;
     CoilCoolingDXVariableRefrigerantFlow(CoilCoolingDXVariableRefrigerantFlow&& other) = default;

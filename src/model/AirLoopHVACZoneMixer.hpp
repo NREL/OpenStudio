@@ -32,7 +32,7 @@ namespace model {
     /** Constructs a new AirLoopHVACZoneMixer object and places it inside the model. */
     explicit AirLoopHVACZoneMixer(const Model& model);
 
-    virtual ~AirLoopHVACZoneMixer() = default;
+    virtual ~AirLoopHVACZoneMixer() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACZoneMixer(const AirLoopHVACZoneMixer& other) = default;
     AirLoopHVACZoneMixer(AirLoopHVACZoneMixer&& other) = default;

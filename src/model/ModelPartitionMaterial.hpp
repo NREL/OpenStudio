@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ModelPartitionMaterial() = default;
+    virtual ~ModelPartitionMaterial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ModelPartitionMaterial(const ModelPartitionMaterial& other) = default;
     ModelPartitionMaterial(ModelPartitionMaterial&& other) = default;

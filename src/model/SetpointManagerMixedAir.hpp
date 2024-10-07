@@ -29,7 +29,7 @@ namespace model {
   class MODEL_API SetpointManagerMixedAir : public SetpointManager
   {
    public:
-    virtual ~SetpointManagerMixedAir() = default;
+    virtual ~SetpointManagerMixedAir() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerMixedAir(const SetpointManagerMixedAir& other) = default;
     SetpointManagerMixedAir(SetpointManagerMixedAir&& other) = default;

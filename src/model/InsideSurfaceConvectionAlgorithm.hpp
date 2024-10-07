@@ -27,7 +27,7 @@ namespace model {
   class MODEL_API InsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~InsideSurfaceConvectionAlgorithm() = default;
+    virtual ~InsideSurfaceConvectionAlgorithm() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     InsideSurfaceConvectionAlgorithm(const InsideSurfaceConvectionAlgorithm& other) = default;
     InsideSurfaceConvectionAlgorithm(InsideSurfaceConvectionAlgorithm&& other) = default;

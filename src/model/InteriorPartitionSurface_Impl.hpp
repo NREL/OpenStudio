@@ -32,7 +32,7 @@ namespace model {
 
       InteriorPartitionSurface_Impl(const InteriorPartitionSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~InteriorPartitionSurface_Impl() = default;
+      virtual ~InteriorPartitionSurface_Impl() override = default;
 
       //@}
 

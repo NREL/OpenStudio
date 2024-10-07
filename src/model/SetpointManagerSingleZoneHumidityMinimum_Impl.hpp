@@ -30,7 +30,7 @@ namespace model {
 
       SetpointManagerSingleZoneHumidityMinimum_Impl(const SetpointManagerSingleZoneHumidityMinimum_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerSingleZoneHumidityMinimum_Impl() = default;
+      virtual ~SetpointManagerSingleZoneHumidityMinimum_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

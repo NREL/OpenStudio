@@ -30,7 +30,7 @@ namespace model {
       SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl(const SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl() = default;
+      virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl() override = default;
 
       //@}
 

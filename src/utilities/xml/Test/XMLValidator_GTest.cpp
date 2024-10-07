@@ -6,13 +6,15 @@
 #include <gtest/gtest.h>
 
 #include "XMLValidatorFixture.hpp"
-#include "utilities/core/Filesystem.hpp"
-#include "utilities/core/PathHelpers.hpp"
+#include "../../core/Filesystem.hpp"
+#include "../../core/PathHelpers.hpp"
+
+#include <resources.hxx>
+
+#include <boost/regex.hpp>
 
 #include <algorithm>
 #include <iostream>
-#include <boost/regex.hpp>
-#include <resources.hxx>
 #include <stdexcept>
 
 using namespace std;
@@ -219,7 +221,6 @@ INSTANTIATE_TEST_SUITE_P(XMLValidatorFixture, GbXMLValidatorParametrizedFixture,
                                            std::make_tuple("gbxml/Building_Central_Conceptual_Model.xml", 0, 3)),
                          [](const testing::TestParamInfo<GbXMLValidatorParametrizedFixture::ParamType>& info) {
                            auto filename = std::get<0>(info.param);
-                           std::replace_if(
-                             filename.begin(), filename.end(), [](char c) { return !std::isalnum(c); }, '_');
+                           std::replace_if(filename.begin(), filename.end(), [](char c) { return !std::isalnum(c); }, '_');
                            return filename;
                          });

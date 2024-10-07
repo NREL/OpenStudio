@@ -33,7 +33,7 @@ namespace model {
     // Constructs a new MeterCustom object in the model.
     explicit MeterCustom(const Model& model);
 
-    virtual ~MeterCustom() = default;
+    virtual ~MeterCustom() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     MeterCustom(const MeterCustom& other) = default;
     MeterCustom(MeterCustom&& other) = default;

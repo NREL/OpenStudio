@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SiteGroundReflectance() = default;
+    virtual ~SiteGroundReflectance() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SiteGroundReflectance(const SiteGroundReflectance& other) = default;
     SiteGroundReflectance(SiteGroundReflectance&& other) = default;

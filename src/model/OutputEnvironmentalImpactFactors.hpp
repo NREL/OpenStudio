@@ -27,7 +27,7 @@ namespace model {
 
     explicit OutputEnvironmentalImpactFactors(const Model& model);
 
-    virtual ~OutputEnvironmentalImpactFactors() = default;
+    virtual ~OutputEnvironmentalImpactFactors() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputEnvironmentalImpactFactors(const OutputEnvironmentalImpactFactors& other) = default;
     OutputEnvironmentalImpactFactors(OutputEnvironmentalImpactFactors&& other) = default;

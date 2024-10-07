@@ -30,7 +30,7 @@ namespace model {
 
       AirflowNetworkExternalNode_Impl(const AirflowNetworkExternalNode_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkExternalNode_Impl() = default;
+      virtual ~AirflowNetworkExternalNode_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

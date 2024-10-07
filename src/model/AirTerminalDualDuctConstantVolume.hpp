@@ -31,7 +31,7 @@ namespace model {
 
     explicit AirTerminalDualDuctConstantVolume(const Model& model);
 
-    virtual ~AirTerminalDualDuctConstantVolume() = default;
+    virtual ~AirTerminalDualDuctConstantVolume() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalDualDuctConstantVolume(const AirTerminalDualDuctConstantVolume& other) = default;
     AirTerminalDualDuctConstantVolume(AirTerminalDualDuctConstantVolume&& other) = default;

@@ -28,7 +28,7 @@ namespace model {
    public:
     Generator(IddObjectType type, const Model& model);
 
-    virtual ~Generator() = default;
+    virtual ~Generator() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Generator(const Generator& other) = default;
     Generator(Generator&& other) = default;

@@ -55,7 +55,7 @@ namespace model {
 
     explicit CoilCoolingDXSingleSpeedThermalStorage(const Model& model);
 
-    virtual ~CoilCoolingDXSingleSpeedThermalStorage() = default;
+    virtual ~CoilCoolingDXSingleSpeedThermalStorage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXSingleSpeedThermalStorage(const CoilCoolingDXSingleSpeedThermalStorage& other) = default;
     CoilCoolingDXSingleSpeedThermalStorage(CoilCoolingDXSingleSpeedThermalStorage&& other) = default;

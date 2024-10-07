@@ -29,7 +29,7 @@ namespace model {
 
     explicit CurveQuadLinear(const Model& model);
 
-    virtual ~CurveQuadLinear() = default;
+    virtual ~CurveQuadLinear() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveQuadLinear(const CurveQuadLinear& other) = default;
     CurveQuadLinear(CurveQuadLinear&& other) = default;

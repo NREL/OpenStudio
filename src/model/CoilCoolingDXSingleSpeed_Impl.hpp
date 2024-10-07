@@ -34,7 +34,7 @@ namespace model {
       // copy constructor
       CoilCoolingDXSingleSpeed_Impl(const CoilCoolingDXSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXSingleSpeed_Impl() = default;
+      virtual ~CoilCoolingDXSingleSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

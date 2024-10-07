@@ -87,7 +87,7 @@ namespace model {
     AirflowNetworkDetailedOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
                                   std::vector<DetailedOpeningFactorData>& openingFactors);
 
-    virtual ~AirflowNetworkDetailedOpening() = default;
+    virtual ~AirflowNetworkDetailedOpening() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkDetailedOpening(const AirflowNetworkDetailedOpening& other) = default;
     AirflowNetworkDetailedOpening(AirflowNetworkDetailedOpening&& other) = default;

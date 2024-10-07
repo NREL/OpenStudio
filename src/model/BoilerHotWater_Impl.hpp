@@ -29,7 +29,7 @@ namespace model {
 
       BoilerHotWater_Impl(const BoilerHotWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BoilerHotWater_Impl() = default;
+      virtual ~BoilerHotWater_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

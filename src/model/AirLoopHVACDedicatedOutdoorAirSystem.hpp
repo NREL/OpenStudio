@@ -31,7 +31,7 @@ namespace model {
     //@{
     explicit AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACOutdoorAirSystem& oaSystem);
 
-    virtual ~AirLoopHVACDedicatedOutdoorAirSystem() = default;
+    virtual ~AirLoopHVACDedicatedOutdoorAirSystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACDedicatedOutdoorAirSystem(const AirLoopHVACDedicatedOutdoorAirSystem& other) = default;
     AirLoopHVACDedicatedOutdoorAirSystem(AirLoopHVACDedicatedOutdoorAirSystem&& other) = default;

@@ -29,7 +29,7 @@ namespace model {
 
     explicit SiteGroundTemperatureDeep(Model& model);
 
-    virtual ~SiteGroundTemperatureDeep() = default;
+    virtual ~SiteGroundTemperatureDeep() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SiteGroundTemperatureDeep(const SiteGroundTemperatureDeep& other) = default;
     SiteGroundTemperatureDeep(SiteGroundTemperatureDeep&& other) = default;

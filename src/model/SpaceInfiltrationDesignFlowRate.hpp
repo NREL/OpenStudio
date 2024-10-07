@@ -30,7 +30,7 @@ namespace model {
 
     explicit SpaceInfiltrationDesignFlowRate(const Model& model);
 
-    virtual ~SpaceInfiltrationDesignFlowRate() = default;
+    virtual ~SpaceInfiltrationDesignFlowRate() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SpaceInfiltrationDesignFlowRate(const SpaceInfiltrationDesignFlowRate& other) = default;
     SpaceInfiltrationDesignFlowRate(SpaceInfiltrationDesignFlowRate&& other) = default;

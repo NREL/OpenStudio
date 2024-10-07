@@ -24,7 +24,7 @@ namespace model {
    public:
     AvailabilityManager(IddObjectType type, const Model& model);
 
-    virtual ~AvailabilityManager() = default;
+    virtual ~AvailabilityManager() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManager(const AvailabilityManager& other) = default;
     AvailabilityManager(AvailabilityManager&& other) = default;

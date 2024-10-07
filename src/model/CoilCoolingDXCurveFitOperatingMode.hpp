@@ -31,7 +31,7 @@ namespace model {
 
     explicit CoilCoolingDXCurveFitOperatingMode(const Model& model);
 
-    virtual ~CoilCoolingDXCurveFitOperatingMode() = default;
+    virtual ~CoilCoolingDXCurveFitOperatingMode() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXCurveFitOperatingMode(const CoilCoolingDXCurveFitOperatingMode& other) = default;
     CoilCoolingDXCurveFitOperatingMode(CoilCoolingDXCurveFitOperatingMode&& other) = default;

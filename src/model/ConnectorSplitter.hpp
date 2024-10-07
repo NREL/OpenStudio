@@ -30,7 +30,7 @@ namespace model {
     /** Constructs a new Splitter object and places it inside the model. */
     explicit ConnectorSplitter(const Model& model);
 
-    virtual ~ConnectorSplitter() = default;
+    virtual ~ConnectorSplitter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ConnectorSplitter(const ConnectorSplitter& other) = default;
     ConnectorSplitter(ConnectorSplitter&& other) = default;

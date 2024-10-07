@@ -30,7 +30,7 @@ namespace model {
 
       SetpointManagerWarmestTemperatureFlow_Impl(const SetpointManagerWarmestTemperatureFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerWarmestTemperatureFlow_Impl() = default;
+      virtual ~SetpointManagerWarmestTemperatureFlow_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

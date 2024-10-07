@@ -31,7 +31,7 @@ namespace model {
 
       ZoneHVACDehumidifierDX_Impl(const ZoneHVACDehumidifierDX_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACDehumidifierDX_Impl() = default;
+      virtual ~ZoneHVACDehumidifierDX_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

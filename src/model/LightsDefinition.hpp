@@ -31,7 +31,7 @@ namespace model {
 
     explicit LightsDefinition(const Model& model);
 
-    virtual ~LightsDefinition() = default;
+    virtual ~LightsDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LightsDefinition(const LightsDefinition& other) = default;
     LightsDefinition(LightsDefinition&& other) = default;

@@ -35,7 +35,7 @@ namespace model {
 
     explicit HeatPumpPlantLoopEIRHeating(const Model& model);
 
-    virtual ~HeatPumpPlantLoopEIRHeating() = default;
+    virtual ~HeatPumpPlantLoopEIRHeating() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeatPumpPlantLoopEIRHeating(const HeatPumpPlantLoopEIRHeating& other) = default;
     HeatPumpPlantLoopEIRHeating(HeatPumpPlantLoopEIRHeating&& other) = default;

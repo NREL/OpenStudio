@@ -46,7 +46,7 @@ namespace model {
     /** Construct a surface with a model subsurface to be linked to and a leakage component. */
     //AirflowNetworkSurface(const Model& model, const SubSurface &surface, const AirflowNetworkComponent &component);
 
-    virtual ~AirflowNetworkSurface() = default;
+    virtual ~AirflowNetworkSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkSurface(const AirflowNetworkSurface& other) = default;
     AirflowNetworkSurface(AirflowNetworkSurface&& other) = default;

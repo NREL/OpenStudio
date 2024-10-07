@@ -33,7 +33,7 @@ namespace model {
 
     explicit ZoneHVACLowTemperatureRadiantElectric(const Model& model, Schedule& availabilitySchedule, Schedule& heatingTemperatureSchedule);
 
-    virtual ~ZoneHVACLowTemperatureRadiantElectric() = default;
+    virtual ~ZoneHVACLowTemperatureRadiantElectric() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACLowTemperatureRadiantElectric(const ZoneHVACLowTemperatureRadiantElectric& other) = default;
     ZoneHVACLowTemperatureRadiantElectric(ZoneHVACLowTemperatureRadiantElectric&& other) = default;

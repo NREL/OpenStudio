@@ -31,7 +31,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    virtual ~Timestep() = default;
+    virtual ~Timestep() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Timestep(const Timestep& other) = default;
     Timestep(Timestep&& other) = default;

@@ -30,7 +30,7 @@ namespace model {
 
       WaterHeaterHeatPumpWrappedCondenser_Impl(const WaterHeaterHeatPumpWrappedCondenser_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterHeatPumpWrappedCondenser_Impl() = default;
+      virtual ~WaterHeaterHeatPumpWrappedCondenser_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

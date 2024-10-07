@@ -29,7 +29,7 @@ namespace model {
 
       FanZoneExhaust_Impl(const FanZoneExhaust_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanZoneExhaust_Impl() = default;
+      virtual ~FanZoneExhaust_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

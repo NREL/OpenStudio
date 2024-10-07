@@ -30,7 +30,7 @@ namespace model {
 
     explicit ZoneVentilationWindandStackOpenArea(const Model& model);
 
-    virtual ~ZoneVentilationWindandStackOpenArea() = default;
+    virtual ~ZoneVentilationWindandStackOpenArea() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneVentilationWindandStackOpenArea(const ZoneVentilationWindandStackOpenArea& other) = default;
     ZoneVentilationWindandStackOpenArea(ZoneVentilationWindandStackOpenArea&& other) = default;

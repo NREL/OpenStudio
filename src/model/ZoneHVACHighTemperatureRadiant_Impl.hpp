@@ -29,7 +29,7 @@ namespace model {
 
       ZoneHVACHighTemperatureRadiant_Impl(const ZoneHVACHighTemperatureRadiant_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACHighTemperatureRadiant_Impl() = default;
+      virtual ~ZoneHVACHighTemperatureRadiant_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

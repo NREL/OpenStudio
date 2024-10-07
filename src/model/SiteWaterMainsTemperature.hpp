@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SiteWaterMainsTemperature() = default;
+    virtual ~SiteWaterMainsTemperature() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SiteWaterMainsTemperature(const SiteWaterMainsTemperature& other) = default;
     SiteWaterMainsTemperature(SiteWaterMainsTemperature&& other) = default;

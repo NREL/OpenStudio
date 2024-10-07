@@ -41,7 +41,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~WeatherFile() = default;
+    virtual ~WeatherFile() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WeatherFile(const WeatherFile& other) = default;
     WeatherFile(WeatherFile&& other) = default;

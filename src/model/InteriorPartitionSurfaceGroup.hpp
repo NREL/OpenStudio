@@ -33,7 +33,7 @@ namespace model {
 
     explicit InteriorPartitionSurfaceGroup(const Model& model);
 
-    virtual ~InteriorPartitionSurfaceGroup() = default;
+    virtual ~InteriorPartitionSurfaceGroup() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     InteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& other) = default;
     InteriorPartitionSurfaceGroup(InteriorPartitionSurfaceGroup&& other) = default;

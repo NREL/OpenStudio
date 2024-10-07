@@ -33,7 +33,7 @@ namespace model {
 
       LightingDesignDay_Impl(const LightingDesignDay_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LightingDesignDay_Impl() = default;
+      virtual ~LightingDesignDay_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

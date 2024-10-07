@@ -33,7 +33,7 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() = default;
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceFunctionalMockupUnitImportToSchedule(const ExternalInterfaceFunctionalMockupUnitImportToSchedule& other) = default;
     ExternalInterfaceFunctionalMockupUnitImportToSchedule(ExternalInterfaceFunctionalMockupUnitImportToSchedule&& other) = default;

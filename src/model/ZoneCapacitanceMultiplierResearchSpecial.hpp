@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneCapacitanceMultiplierResearchSpecial() = default;
+    virtual ~ZoneCapacitanceMultiplierResearchSpecial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneCapacitanceMultiplierResearchSpecial(const ZoneCapacitanceMultiplierResearchSpecial& other) = default;
     ZoneCapacitanceMultiplierResearchSpecial(ZoneCapacitanceMultiplierResearchSpecial&& other) = default;

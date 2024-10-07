@@ -34,7 +34,7 @@ namespace model {
 
     explicit GeneratorFuelCellExhaustGasToWaterHeatExchanger(const Model& model, const Node& exhaustOutletAirNode);
 
-    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() = default;
+    virtual ~GeneratorFuelCellExhaustGasToWaterHeatExchanger() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellExhaustGasToWaterHeatExchanger(const GeneratorFuelCellExhaustGasToWaterHeatExchanger& other) = default;
     GeneratorFuelCellExhaustGasToWaterHeatExchanger(GeneratorFuelCellExhaustGasToWaterHeatExchanger&& other) = default;

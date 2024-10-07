@@ -37,7 +37,7 @@ namespace model {
    *  model. */
     explicit SetpointManagerFollowOutdoorAirTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowOutdoorAirTemperature() = default;
+    virtual ~SetpointManagerFollowOutdoorAirTemperature() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerFollowOutdoorAirTemperature(const SetpointManagerFollowOutdoorAirTemperature& other) = default;
     SetpointManagerFollowOutdoorAirTemperature(SetpointManagerFollowOutdoorAirTemperature&& other) = default;

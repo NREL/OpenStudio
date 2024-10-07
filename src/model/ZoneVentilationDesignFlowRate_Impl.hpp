@@ -29,7 +29,7 @@ namespace model {
 
       ZoneVentilationDesignFlowRate_Impl(const ZoneVentilationDesignFlowRate_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneVentilationDesignFlowRate_Impl() = default;
+      virtual ~ZoneVentilationDesignFlowRate_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -35,7 +35,7 @@ namespace model {
 
     explicit RefrigerationSecondarySystem(const Model& model);
 
-    virtual ~RefrigerationSecondarySystem() = default;
+    virtual ~RefrigerationSecondarySystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationSecondarySystem(const RefrigerationSecondarySystem& other) = default;
     RefrigerationSecondarySystem(RefrigerationSecondarySystem&& other) = default;

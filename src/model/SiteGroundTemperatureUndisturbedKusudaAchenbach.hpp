@@ -28,7 +28,7 @@ namespace model {
 
     explicit SiteGroundTemperatureUndisturbedKusudaAchenbach(const Model& model);
 
-    virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach() = default;
+    virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SiteGroundTemperatureUndisturbedKusudaAchenbach(const SiteGroundTemperatureUndisturbedKusudaAchenbach& other) = default;
     SiteGroundTemperatureUndisturbedKusudaAchenbach(SiteGroundTemperatureUndisturbedKusudaAchenbach&& other) = default;

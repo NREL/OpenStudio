@@ -33,7 +33,7 @@ namespace model {
    public:
     explicit ControllerOutdoorAir(const Model& model);
 
-    virtual ~ControllerOutdoorAir() = default;
+    virtual ~ControllerOutdoorAir() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ControllerOutdoorAir(const ControllerOutdoorAir& other) = default;
     ControllerOutdoorAir(ControllerOutdoorAir&& other) = default;

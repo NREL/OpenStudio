@@ -81,7 +81,7 @@ class UTILITIES_API IPUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   IPUnit(const std::string& scaleAbbreviation, const IPExpnt& exponents = IPExpnt(), const std::string& prettyString = "");
 
-  virtual ~IPUnit() = default;
+  virtual ~IPUnit() override = default;
 
   //@}
 

@@ -27,7 +27,7 @@ namespace model {
 
       SurfacePropertyOtherSideConditionsModel_Impl(const SurfacePropertyOtherSideConditionsModel_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyOtherSideConditionsModel_Impl() = default;
+      virtual ~SurfacePropertyOtherSideConditionsModel_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

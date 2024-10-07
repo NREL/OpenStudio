@@ -30,7 +30,7 @@ namespace model {
       SetpointManagerFollowOutdoorAirTemperature_Impl(const SetpointManagerFollowOutdoorAirTemperature_Impl& other, Model_Impl* model,
                                                       bool keepHandles);
 
-      virtual ~SetpointManagerFollowOutdoorAirTemperature_Impl() = default;
+      virtual ~SetpointManagerFollowOutdoorAirTemperature_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

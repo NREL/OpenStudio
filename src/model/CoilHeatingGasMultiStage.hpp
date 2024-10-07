@@ -34,7 +34,7 @@ namespace model {
 
     explicit CoilHeatingGasMultiStage(const Model& model);
 
-    virtual ~CoilHeatingGasMultiStage() = default;
+    virtual ~CoilHeatingGasMultiStage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingGasMultiStage(const CoilHeatingGasMultiStage& other) = default;
     CoilHeatingGasMultiStage(CoilHeatingGasMultiStage&& other) = default;

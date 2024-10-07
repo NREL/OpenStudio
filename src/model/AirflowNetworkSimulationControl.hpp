@@ -28,7 +28,7 @@ namespace model {
   class MODEL_API AirflowNetworkSimulationControl : public ParentObject
   {
    public:
-    virtual ~AirflowNetworkSimulationControl() = default;
+    virtual ~AirflowNetworkSimulationControl() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkSimulationControl(const AirflowNetworkSimulationControl& other) = default;
     AirflowNetworkSimulationControl(AirflowNetworkSimulationControl&& other) = default;

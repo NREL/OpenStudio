@@ -27,7 +27,7 @@ namespace model {
 
       ExternalInterfaceActuator_Impl(const ExternalInterfaceActuator_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterfaceActuator_Impl() = default;
+      virtual ~ExternalInterfaceActuator_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

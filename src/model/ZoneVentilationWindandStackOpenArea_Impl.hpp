@@ -29,7 +29,7 @@ namespace model {
 
       ZoneVentilationWindandStackOpenArea_Impl(const ZoneVentilationWindandStackOpenArea_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneVentilationWindandStackOpenArea_Impl() = default;
+      virtual ~ZoneVentilationWindandStackOpenArea_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

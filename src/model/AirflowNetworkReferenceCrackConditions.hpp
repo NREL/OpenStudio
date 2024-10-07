@@ -30,7 +30,7 @@ namespace model {
     /** Construct a reference crack conditions object with specified temperature, pressure, and barometric pressure. */
     AirflowNetworkReferenceCrackConditions(const Model& model, double temperature, double barometricPressure, double humidityRatio);
 
-    virtual ~AirflowNetworkReferenceCrackConditions() = default;
+    virtual ~AirflowNetworkReferenceCrackConditions() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkReferenceCrackConditions(const AirflowNetworkReferenceCrackConditions& other) = default;
     AirflowNetworkReferenceCrackConditions(AirflowNetworkReferenceCrackConditions&& other) = default;

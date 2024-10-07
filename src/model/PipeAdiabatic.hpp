@@ -32,7 +32,7 @@ namespace model {
    */
     explicit PipeAdiabatic(const Model& model);
 
-    virtual ~PipeAdiabatic() = default;
+    virtual ~PipeAdiabatic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PipeAdiabatic(const PipeAdiabatic& other) = default;
     PipeAdiabatic(PipeAdiabatic&& other) = default;

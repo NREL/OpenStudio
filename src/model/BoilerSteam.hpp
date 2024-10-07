@@ -26,7 +26,7 @@ namespace model {
    public:
     explicit BoilerSteam(const Model& model);
 
-    virtual ~BoilerSteam() = default;
+    virtual ~BoilerSteam() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     BoilerSteam(const BoilerSteam& other) = default;
     BoilerSteam(BoilerSteam&& other) = default;

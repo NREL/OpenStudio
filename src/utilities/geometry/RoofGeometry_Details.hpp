@@ -1294,7 +1294,6 @@ static void computeSplitEvents(std::shared_ptr<Vertex> vertex, const std::vector
 
     std::shared_ptr<QueueEvent> e2(new QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge));  // SplitVertexEvent
     QueueEvent::insert_sorted(queue, e2);
-    continue;
   }
 }
 
@@ -1335,7 +1334,7 @@ static void computeEdgeEvents(std::shared_ptr<Vertex> previousVertex, std::share
 
 static void initEvents(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
                        const std::vector<std::shared_ptr<Edge>>& edges) {
-  for (std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
+  for (const std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
     for (const std::shared_ptr<Vertex>& vertex : lav) {
       computeSplitEvents(vertex, edges, queue, boost::none);
     }
@@ -1561,7 +1560,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
   }
 
   std::vector<Chain> chains;
-  for (Chain& edgeChain : edgeChains) {
+  for (const Chain& edgeChain : edgeChains) {
     chains.push_back(edgeChain);
   }
 
@@ -1570,7 +1569,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
     splitCluster.erase(splitCluster.begin());
 
     bool inEdgeChain = false;
-    for (Chain& chain : edgeChains) {
+    for (const Chain& chain : edgeChains) {
       // check if chain is split type
       if (isInEdgeChain(split, chain)) {
         // if we have edge chain it can't share split event
@@ -1724,10 +1723,9 @@ static bool isInsidePolygon(const Point3d& point, const std::vector<Point3d>& po
       node2 = points[it];
     }
 
-    double x = point.x();
-    double y = point.y();
-
+    const double y = point.y();
     if ((node1.y() < y && node2.y() >= y) || (node2.y() < y && node1.y() >= y)) {
+      const double x = point.x();
       if (node1.x() + (y - node1.y()) / (node2.y() - node1.y()) * (node2.x() - node1.x()) < x) {
         oddNodes = !oddNodes;
       }

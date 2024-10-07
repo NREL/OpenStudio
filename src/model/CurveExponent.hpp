@@ -29,7 +29,7 @@ namespace model {
     /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = 1.0\f$. Sets the range for x to [0.0,1.0]. */
     explicit CurveExponent(const Model& model);
 
-    virtual ~CurveExponent() = default;
+    virtual ~CurveExponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveExponent(const CurveExponent& other) = default;
     CurveExponent(CurveExponent&& other) = default;

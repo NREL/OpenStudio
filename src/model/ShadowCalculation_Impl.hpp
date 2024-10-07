@@ -30,7 +30,7 @@ namespace model {
       ShadowCalculation_Impl(const ShadowCalculation_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ShadowCalculation_Impl() = default;
+      virtual ~ShadowCalculation_Impl() override = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

@@ -31,7 +31,7 @@ namespace model {
 
       PortList_Impl(const PortList_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PortList_Impl() = default;
+      virtual ~PortList_Impl() override = default;
 
       unsigned port(unsigned portIndex) const;
 

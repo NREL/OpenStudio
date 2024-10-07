@@ -31,7 +31,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriodControlDaylightSavingTime() = default;
+    virtual ~RunPeriodControlDaylightSavingTime() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RunPeriodControlDaylightSavingTime(const RunPeriodControlDaylightSavingTime& other) = default;
     RunPeriodControlDaylightSavingTime(RunPeriodControlDaylightSavingTime&& other) = default;

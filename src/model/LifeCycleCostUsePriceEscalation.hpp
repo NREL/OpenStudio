@@ -27,7 +27,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~LifeCycleCostUsePriceEscalation() = default;
+    virtual ~LifeCycleCostUsePriceEscalation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LifeCycleCostUsePriceEscalation(const LifeCycleCostUsePriceEscalation& other) = default;
     LifeCycleCostUsePriceEscalation(LifeCycleCostUsePriceEscalation&& other) = default;

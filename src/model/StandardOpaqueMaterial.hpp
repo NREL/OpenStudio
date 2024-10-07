@@ -40,7 +40,7 @@ namespace model {
     explicit StandardOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thickness = 0.1, double conductivity = 0.1,
                                     double density = 0.1, double specificHeat = 1400);
 
-    virtual ~StandardOpaqueMaterial() = default;
+    virtual ~StandardOpaqueMaterial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     StandardOpaqueMaterial(const StandardOpaqueMaterial& other) = default;
     StandardOpaqueMaterial(StandardOpaqueMaterial&& other) = default;

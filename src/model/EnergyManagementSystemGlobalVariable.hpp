@@ -27,7 +27,7 @@ namespace model {
 
     explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
 
-    virtual ~EnergyManagementSystemGlobalVariable() = default;
+    virtual ~EnergyManagementSystemGlobalVariable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnergyManagementSystemGlobalVariable(const EnergyManagementSystemGlobalVariable& other) = default;
     EnergyManagementSystemGlobalVariable(EnergyManagementSystemGlobalVariable&& other) = default;

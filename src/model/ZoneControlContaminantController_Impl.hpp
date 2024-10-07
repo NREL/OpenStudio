@@ -30,7 +30,7 @@ namespace model {
 
       ZoneControlContaminantController_Impl(const ZoneControlContaminantController_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneControlContaminantController_Impl() = default;
+      virtual ~ZoneControlContaminantController_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

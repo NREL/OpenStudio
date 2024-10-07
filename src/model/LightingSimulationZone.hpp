@@ -33,7 +33,7 @@ namespace model {
 
     explicit LightingSimulationZone(const Model& model);
 
-    virtual ~LightingSimulationZone() = default;
+    virtual ~LightingSimulationZone() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LightingSimulationZone(const LightingSimulationZone& other) = default;
     LightingSimulationZone(LightingSimulationZone&& other) = default;

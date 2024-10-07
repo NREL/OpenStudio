@@ -29,7 +29,7 @@ namespace model {
   class MODEL_API ZoneHVACComponent : public HVACComponent
   {
    public:
-    virtual ~ZoneHVACComponent() = default;
+    virtual ~ZoneHVACComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACComponent(const ZoneHVACComponent& other) = default;
     ZoneHVACComponent(ZoneHVACComponent&& other) = default;

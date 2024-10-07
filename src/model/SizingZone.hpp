@@ -31,7 +31,7 @@ namespace model {
 
     explicit SizingZone(const Model& model, const ThermalZone& thermalZone);
 
-    virtual ~SizingZone() = default;
+    virtual ~SizingZone() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SizingZone(const SizingZone& other) = default;
     SizingZone(SizingZone&& other) = default;

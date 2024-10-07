@@ -30,7 +30,7 @@ namespace model {
 
     explicit DesignSpecificationOutdoorAir(const Model& model);
 
-    virtual ~DesignSpecificationOutdoorAir() = default;
+    virtual ~DesignSpecificationOutdoorAir() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DesignSpecificationOutdoorAir(const DesignSpecificationOutdoorAir& other) = default;
     DesignSpecificationOutdoorAir(DesignSpecificationOutdoorAir&& other) = default;

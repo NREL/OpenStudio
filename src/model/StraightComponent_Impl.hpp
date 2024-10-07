@@ -30,7 +30,7 @@ namespace model {
 
       StraightComponent_Impl(const StraightComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~StraightComponent_Impl() = default;
+      virtual ~StraightComponent_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

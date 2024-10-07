@@ -61,6 +61,7 @@ OptionalImfFile ImfFile::load(std::istream& is, IddFileType iddFileType) {
   ImfFile temp{IddFileType::EnergyPlus};
   temp.m_iddFileAndFactoryWrapper.setIddFile(iddFileType);
   bool success = temp.m_load(is);
+  // cppcheck-suppress knownConditionTrueFalse
   if (success) {
     result = temp;
   }
@@ -72,6 +73,7 @@ OptionalImfFile ImfFile::load(std::istream& is, const IddFile& iddFile) {
   ImfFile temp{IddFileType::EnergyPlus};
   temp.m_iddFileAndFactoryWrapper.setIddFile(iddFile);
   bool success = temp.m_load(is);
+  // cppcheck-suppress knownConditionTrueFalse
   if (success) {
     result = temp;
   }
@@ -262,14 +264,14 @@ bool ImfFile::m_load(std::istream& is) {
 
       // peek at the object type and name for indexing in map
       std::string objectType;
-      std::string objName;
-      //bool objectHasName(false);
+      // std::string objName;
+      // bool objectHasName(false);
 
       if (boost::regex_search(line, matches, idfRegex::objectTypeAndName())) {
         objectType = std::string(matches[1].first, matches[1].second);
         boost::trim(objectType);
-        objName = std::string(matches[2].first, matches[2].second);
-        boost::trim(objectType);
+        // objName = std::string(matches[2].first, matches[2].second);
+        // boost::trim(objName);
       } else if (boost::regex_search(line, matches, idfRegex::line())) {
         // doesn't match name, just type
         objectType = std::string(matches[1].first, matches[1].second);

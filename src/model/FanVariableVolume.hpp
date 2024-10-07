@@ -35,7 +35,7 @@ namespace model {
 
     FanVariableVolume(const Model& model);
 
-    virtual ~FanVariableVolume() = default;
+    virtual ~FanVariableVolume() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FanVariableVolume(const FanVariableVolume& other) = default;
     FanVariableVolume(FanVariableVolume&& other) = default;

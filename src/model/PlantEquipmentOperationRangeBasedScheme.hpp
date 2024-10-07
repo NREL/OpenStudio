@@ -32,7 +32,7 @@ namespace model {
    public:
     PlantEquipmentOperationRangeBasedScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationRangeBasedScheme() = default;
+    virtual ~PlantEquipmentOperationRangeBasedScheme() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantEquipmentOperationRangeBasedScheme(const PlantEquipmentOperationRangeBasedScheme& other) = default;
     PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationRangeBasedScheme&& other) = default;

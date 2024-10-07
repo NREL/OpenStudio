@@ -56,7 +56,7 @@ namespace model {
 
     explicit MaterialPropertyPhaseChange(MasslessOpaqueMaterial& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
-    virtual ~MaterialPropertyPhaseChange() = default;
+    virtual ~MaterialPropertyPhaseChange() override = default;
 
     //@}
 

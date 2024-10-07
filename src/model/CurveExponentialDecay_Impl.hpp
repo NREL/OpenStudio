@@ -28,7 +28,7 @@ namespace model {
 
       CurveExponentialDecay_Impl(const CurveExponentialDecay_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveExponentialDecay_Impl() = default;
+      virtual ~CurveExponentialDecay_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

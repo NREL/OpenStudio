@@ -33,7 +33,7 @@ namespace model {
 
       SolarCollectorFlatPlateWater_Impl(const SolarCollectorFlatPlateWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SolarCollectorFlatPlateWater_Impl() = default;
+      virtual ~SolarCollectorFlatPlateWater_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

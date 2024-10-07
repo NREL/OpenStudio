@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerFollowSystemNodeTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowSystemNodeTemperature() = default;
+    virtual ~SetpointManagerFollowSystemNodeTemperature() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerFollowSystemNodeTemperature(const SetpointManagerFollowSystemNodeTemperature& other) = default;
     SetpointManagerFollowSystemNodeTemperature(SetpointManagerFollowSystemNodeTemperature&& other) = default;

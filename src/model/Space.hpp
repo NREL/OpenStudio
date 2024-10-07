@@ -67,7 +67,7 @@ namespace model {
     /// the space inherits that by default.
     explicit Space(const Model& model);
 
-    virtual ~Space() = default;
+    virtual ~Space() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Space(const Space& other) = default;
     Space(Space&& other) = default;

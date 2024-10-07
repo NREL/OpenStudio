@@ -31,7 +31,7 @@ namespace model {
 
       PumpVariableSpeed_Impl(const PumpVariableSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PumpVariableSpeed_Impl() = default;
+      virtual ~PumpVariableSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

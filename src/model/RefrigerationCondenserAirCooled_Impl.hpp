@@ -31,7 +31,7 @@ namespace model {
 
       RefrigerationCondenserAirCooled_Impl(const RefrigerationCondenserAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserAirCooled_Impl() = default;
+      virtual ~RefrigerationCondenserAirCooled_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

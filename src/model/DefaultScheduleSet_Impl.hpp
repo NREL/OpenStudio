@@ -32,7 +32,7 @@ namespace model {
 
       DefaultScheduleSet_Impl(const DefaultScheduleSet_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DefaultScheduleSet_Impl() = default;
+      virtual ~DefaultScheduleSet_Impl() override = default;
 
       //@}
 

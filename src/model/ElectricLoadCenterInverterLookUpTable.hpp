@@ -31,7 +31,7 @@ namespace model {
 
     explicit ElectricLoadCenterInverterLookUpTable(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterLookUpTable() = default;
+    virtual ~ElectricLoadCenterInverterLookUpTable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricLoadCenterInverterLookUpTable(const ElectricLoadCenterInverterLookUpTable& other) = default;
     ElectricLoadCenterInverterLookUpTable(ElectricLoadCenterInverterLookUpTable&& other) = default;

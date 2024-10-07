@@ -31,7 +31,7 @@ namespace model {
 
     explicit AvailabilityManagerLowTemperatureTurnOff(const Model& model);
 
-    virtual ~AvailabilityManagerLowTemperatureTurnOff() = default;
+    virtual ~AvailabilityManagerLowTemperatureTurnOff() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerLowTemperatureTurnOff(const AvailabilityManagerLowTemperatureTurnOff& other) = default;
     AvailabilityManagerLowTemperatureTurnOff(AvailabilityManagerLowTemperatureTurnOff&& other) = default;

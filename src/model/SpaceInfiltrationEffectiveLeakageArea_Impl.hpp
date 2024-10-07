@@ -31,7 +31,7 @@ namespace model {
 
       SpaceInfiltrationEffectiveLeakageArea_Impl(const SpaceInfiltrationEffectiveLeakageArea_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceInfiltrationEffectiveLeakageArea_Impl() = default;
+      virtual ~SpaceInfiltrationEffectiveLeakageArea_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

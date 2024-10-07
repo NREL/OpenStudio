@@ -31,7 +31,7 @@ namespace model {
 
       EvaporativeFluidCoolerSingleSpeed_Impl(const EvaporativeFluidCoolerSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() = default;
+      virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() override = default;
 
       //@}
 

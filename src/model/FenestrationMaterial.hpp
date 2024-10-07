@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~FenestrationMaterial() = default;
+    virtual ~FenestrationMaterial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FenestrationMaterial(const FenestrationMaterial& other) = default;
     FenestrationMaterial(FenestrationMaterial&& other) = default;

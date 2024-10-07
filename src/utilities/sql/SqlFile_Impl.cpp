@@ -6,7 +6,6 @@
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
 #include "PreparedStatement.hpp"
-#include "OpenStudio.hxx"
 
 #include "../time/Calendar.hpp"
 #include "../filetypes/EpwFile.hpp"
@@ -14,6 +13,8 @@
 #include "../core/Assert.hpp"
 #include "../core/ASCIIStrings.hpp"
 #include "../core/StringHelpers.hpp"
+
+#include <OpenStudio.hxx>
 
 #include <sqlite3.h>
 

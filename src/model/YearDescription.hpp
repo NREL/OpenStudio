@@ -31,7 +31,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~YearDescription() = default;
+    virtual ~YearDescription() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     YearDescription(const YearDescription& other) = default;
     YearDescription(YearDescription&& other) = default;

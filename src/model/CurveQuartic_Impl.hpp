@@ -28,7 +28,7 @@ namespace model {
 
       CurveQuartic_Impl(const CurveQuartic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveQuartic_Impl() = default;
+      virtual ~CurveQuartic_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -28,7 +28,7 @@ namespace model {
 
     explicit CoolingTowerPerformanceYorkCalc(const Model& model);
 
-    virtual ~CoolingTowerPerformanceYorkCalc() = default;
+    virtual ~CoolingTowerPerformanceYorkCalc() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoolingTowerPerformanceYorkCalc(const CoolingTowerPerformanceYorkCalc& other) = default;
     CoolingTowerPerformanceYorkCalc(CoolingTowerPerformanceYorkCalc&& other) = default;

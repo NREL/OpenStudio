@@ -20,7 +20,7 @@ namespace model {
   class MODEL_API Mixer : public HVACComponent
   {
    public:
-    virtual ~Mixer() = default;
+    virtual ~Mixer() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Mixer(const Mixer& other) = default;
     Mixer(Mixer&& other) = default;

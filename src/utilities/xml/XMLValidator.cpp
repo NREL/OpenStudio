@@ -329,15 +329,15 @@ bool XMLValidator::xsdValidate() const {
   m_logMessages.reserve(m_logMessages.size() + schemaValidErrorCollector.logMessages.size() + schemaParserErrorCollector.logMessages.size()
                         + parseFileErrorCollector.logMessages.size());
 
-  for (auto& logMessage : schemaValidErrorCollector.logMessages) {
+  for (const auto& logMessage : schemaValidErrorCollector.logMessages) {
     logAndStore(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage());
   }
 
-  for (auto& logMessage : schemaParserErrorCollector.logMessages) {
+  for (const auto& logMessage : schemaParserErrorCollector.logMessages) {
     logAndStore(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage());
   }
 
-  for (auto& logMessage : parseFileErrorCollector.logMessages) {
+  for (const auto& logMessage : parseFileErrorCollector.logMessages) {
     logAndStore(logMessage.logLevel(), "xsdValidate.parseFileError: " + logMessage.logMessage());
   }
 
@@ -370,6 +370,7 @@ std::vector<std::string> processXSLTApplyResult(xmlDoc* res) {
   }
 
   /* Evaluate xpath expression */
+  // cppcheck-suppress cstyleCast
   xpathObj = xmlXPathEvalExpression((const xmlChar*)xpathExpr, xpathCtx);
   if (xpathObj == nullptr) {
     xmlXPathFreeContext(xpathCtx);

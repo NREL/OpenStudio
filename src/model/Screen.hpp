@@ -29,7 +29,7 @@ namespace model {
     explicit Screen(const Model& model, double diffuseSolarReflectance = 0.08, double diffuseVisibleReflectance = 0.08,
                     double screenMaterialSpacing = 0.00157, double screenMaterialDiameter = 0.000381);
 
-    virtual ~Screen() = default;
+    virtual ~Screen() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Screen(const Screen& other) = default;
     Screen(Screen&& other) = default;

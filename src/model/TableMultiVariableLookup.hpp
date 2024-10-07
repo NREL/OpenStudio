@@ -59,7 +59,7 @@ namespace model {
     */
     explicit TableMultiVariableLookup(const Model& model, int numberofIndependentVariables);
 
-    virtual ~TableMultiVariableLookup() = default;
+    virtual ~TableMultiVariableLookup() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     TableMultiVariableLookup(const TableMultiVariableLookup& other) = default;
     TableMultiVariableLookup(TableMultiVariableLookup&& other) = default;

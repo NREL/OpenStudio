@@ -37,7 +37,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorWaterEquipment(const ExteriorWaterEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorWaterEquipment() = default;
+    virtual ~ExteriorWaterEquipment() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorWaterEquipment(const ExteriorWaterEquipment& other) = default;
     ExteriorWaterEquipment(ExteriorWaterEquipment&& other) = default;

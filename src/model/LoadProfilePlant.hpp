@@ -32,7 +32,7 @@ namespace model {
 
     explicit LoadProfilePlant(const Model& model, Schedule& loadSchedule, Schedule& flowRateFractionSchedule);
 
-    virtual ~LoadProfilePlant() = default;
+    virtual ~LoadProfilePlant() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LoadProfilePlant(const LoadProfilePlant& other) = default;
     LoadProfilePlant(LoadProfilePlant&& other) = default;

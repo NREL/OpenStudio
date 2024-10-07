@@ -25,7 +25,7 @@ namespace model {
       Construction_Impl(const Construction_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~Construction_Impl() = default;
+      virtual ~Construction_Impl() override = default;
 
       /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary

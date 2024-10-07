@@ -31,7 +31,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctSeriesPIUReheat(const Model& model, HVACComponent& fan, HVACComponent& reheatCoil);
 
-    virtual ~AirTerminalSingleDuctSeriesPIUReheat() = default;
+    virtual ~AirTerminalSingleDuctSeriesPIUReheat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctSeriesPIUReheat(const AirTerminalSingleDuctSeriesPIUReheat& other) = default;
     AirTerminalSingleDuctSeriesPIUReheat(AirTerminalSingleDuctSeriesPIUReheat&& other) = default;

@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Curve() = default;
+    virtual ~Curve() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Curve(const Curve& other) = default;
     Curve(Curve&& other) = default;

@@ -38,7 +38,7 @@ namespace model {
 
     explicit RefrigerationSystem(const Model& model);
 
-    virtual ~RefrigerationSystem() = default;
+    virtual ~RefrigerationSystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationSystem(const RefrigerationSystem& other) = default;
     RefrigerationSystem(RefrigerationSystem&& other) = default;

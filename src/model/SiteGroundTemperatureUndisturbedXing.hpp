@@ -29,7 +29,7 @@ namespace model {
 
     explicit SiteGroundTemperatureUndisturbedXing(const Model& model);
 
-    virtual ~SiteGroundTemperatureUndisturbedXing() = default;
+    virtual ~SiteGroundTemperatureUndisturbedXing() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SiteGroundTemperatureUndisturbedXing(const SiteGroundTemperatureUndisturbedXing& other) = default;
     SiteGroundTemperatureUndisturbedXing(SiteGroundTemperatureUndisturbedXing&& other) = default;

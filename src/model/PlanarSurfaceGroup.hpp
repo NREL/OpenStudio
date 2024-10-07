@@ -26,7 +26,7 @@ namespace model {
   class MODEL_API PlanarSurfaceGroup : public ParentObject
   {
    public:
-    virtual ~PlanarSurfaceGroup() = default;
+    virtual ~PlanarSurfaceGroup() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlanarSurfaceGroup(const PlanarSurfaceGroup& other) = default;
     PlanarSurfaceGroup(PlanarSurfaceGroup&& other) = default;

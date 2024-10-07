@@ -31,7 +31,7 @@ namespace model {
 
       SurfacePropertyExposedFoundationPerimeter_Impl(const SurfacePropertyExposedFoundationPerimeter_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyExposedFoundationPerimeter_Impl() = default;
+      virtual ~SurfacePropertyExposedFoundationPerimeter_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

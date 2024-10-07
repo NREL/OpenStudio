@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputJSON() = default;
+    virtual ~OutputJSON() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputJSON(const OutputJSON& other) = default;
     OutputJSON(OutputJSON&& other) = default;

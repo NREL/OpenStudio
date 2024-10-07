@@ -29,7 +29,7 @@ namespace model {
 
       CoilWaterHeatingAirToWaterHeatPump_Impl(const CoilWaterHeatingAirToWaterHeatPump_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilWaterHeatingAirToWaterHeatPump_Impl() = default;
+      virtual ~CoilWaterHeatingAirToWaterHeatPump_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -29,7 +29,7 @@ namespace model {
       AirLoopHVACZoneMixer_Impl(const AirLoopHVACZoneMixer_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~AirLoopHVACZoneMixer_Impl() = default;
+      virtual ~AirLoopHVACZoneMixer_Impl() override = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

@@ -30,7 +30,7 @@ namespace model {
       EnergyManagementSystemCurveOrTableIndexVariable_Impl(const EnergyManagementSystemCurveOrTableIndexVariable_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~EnergyManagementSystemCurveOrTableIndexVariable_Impl() = default;
+      virtual ~EnergyManagementSystemCurveOrTableIndexVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

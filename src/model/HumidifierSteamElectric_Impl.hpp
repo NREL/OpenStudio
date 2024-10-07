@@ -29,7 +29,7 @@ namespace model {
 
       HumidifierSteamElectric_Impl(const HumidifierSteamElectric_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HumidifierSteamElectric_Impl() = default;
+      virtual ~HumidifierSteamElectric_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

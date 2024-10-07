@@ -29,7 +29,7 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = c_3 = c_4 = 0.0,\ c_5 = 1.0,\ x\ \text{in}\ [0.0,1.0]\f$ */
     explicit CurveQuartic(const Model& model);
 
-    virtual ~CurveQuartic() = default;
+    virtual ~CurveQuartic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveQuartic(const CurveQuartic& other) = default;
     CurveQuartic(CurveQuartic&& other) = default;

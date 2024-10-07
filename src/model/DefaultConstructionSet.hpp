@@ -32,7 +32,7 @@ namespace model {
 
     explicit DefaultConstructionSet(const Model& model);
 
-    virtual ~DefaultConstructionSet() = default;
+    virtual ~DefaultConstructionSet() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DefaultConstructionSet(const DefaultConstructionSet& other) = default;
     DefaultConstructionSet(DefaultConstructionSet&& other) = default;

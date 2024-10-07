@@ -32,7 +32,7 @@ namespace model {
     ZoneHVACPackagedTerminalAirConditioner(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
                                            HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACPackagedTerminalAirConditioner() = default;
+    virtual ~ZoneHVACPackagedTerminalAirConditioner() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACPackagedTerminalAirConditioner(const ZoneHVACPackagedTerminalAirConditioner& other) = default;
     ZoneHVACPackagedTerminalAirConditioner(ZoneHVACPackagedTerminalAirConditioner&& other) = default;

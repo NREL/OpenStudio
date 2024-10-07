@@ -27,7 +27,7 @@ namespace model {
 
       WindowPropertyFrameAndDivider_Impl(const WindowPropertyFrameAndDivider_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WindowPropertyFrameAndDivider_Impl() = default;
+      virtual ~WindowPropertyFrameAndDivider_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -36,7 +36,7 @@
 #include "../../model/HumidifierSteamElectric.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
-#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/AvailabilityManagerAssignmentList_FieldEnums.hxx>
@@ -50,9 +50,6 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
-
-#include "../../utilities/core/Logger.hpp"
-#include "utilities/core/Compare.hpp"
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;

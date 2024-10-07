@@ -30,7 +30,7 @@ namespace model {
 
       WaterHeaterHeatPump_Impl(const WaterHeaterHeatPump_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterHeatPump_Impl() = default;
+      virtual ~WaterHeaterHeatPump_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

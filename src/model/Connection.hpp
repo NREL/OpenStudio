@@ -23,7 +23,7 @@ namespace model {
     // constructor
     explicit Connection(const Model& model);
 
-    virtual ~Connection() = default;
+    virtual ~Connection() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Connection(const Connection& other) = default;
     Connection(Connection&& other) = default;

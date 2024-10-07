@@ -40,7 +40,7 @@ namespace model {
     ZoneHVACFourPipeFanCoil(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& coolingCoil,
                             HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACFourPipeFanCoil() = default;
+    virtual ~ZoneHVACFourPipeFanCoil() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACFourPipeFanCoil(const ZoneHVACFourPipeFanCoil& other) = default;
     ZoneHVACFourPipeFanCoil(ZoneHVACFourPipeFanCoil&& other) = default;

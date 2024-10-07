@@ -32,7 +32,7 @@ namespace model {
       ZoneCapacitanceMultiplierResearchSpecial_Impl(const ZoneCapacitanceMultiplierResearchSpecial_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ZoneCapacitanceMultiplierResearchSpecial_Impl() = default;
+      virtual ~ZoneCapacitanceMultiplierResearchSpecial_Impl() override = default;
 
       //@}
 

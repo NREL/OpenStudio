@@ -33,7 +33,7 @@ namespace model {
 
       AirflowNetworkDistributionLinkage_Impl(const AirflowNetworkDistributionLinkage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkDistributionLinkage_Impl() = default;
+      virtual ~AirflowNetworkDistributionLinkage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

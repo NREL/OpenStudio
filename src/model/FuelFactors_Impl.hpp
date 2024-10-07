@@ -29,7 +29,7 @@ namespace model {
 
       FuelFactors_Impl(const FuelFactors_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FuelFactors_Impl() = default;
+      virtual ~FuelFactors_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

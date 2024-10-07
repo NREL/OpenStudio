@@ -29,7 +29,7 @@ namespace model {
 
       SetpointManagerMultiZoneCoolingAverage_Impl(const SetpointManagerMultiZoneCoolingAverage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerMultiZoneCoolingAverage_Impl() = default;
+      virtual ~SetpointManagerMultiZoneCoolingAverage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

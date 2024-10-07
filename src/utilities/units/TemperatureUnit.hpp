@@ -29,7 +29,7 @@ class UTILITIES_API TemperatureUnit : public Unit
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~TemperatureUnit() = default;
+  virtual ~TemperatureUnit() override = default;
 
   //@}
   /** @name Mathematical Operators */

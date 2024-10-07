@@ -35,7 +35,7 @@ namespace model {
     explicit ZoneHVACEnergyRecoveryVentilator(const Model& model, const HVACComponent& heatExchanger, const HVACComponent& supplyAirFan,
                                               const HVACComponent& exhaustAirFan);
 
-    virtual ~ZoneHVACEnergyRecoveryVentilator() = default;
+    virtual ~ZoneHVACEnergyRecoveryVentilator() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACEnergyRecoveryVentilator(const ZoneHVACEnergyRecoveryVentilator& other) = default;
     ZoneHVACEnergyRecoveryVentilator(ZoneHVACEnergyRecoveryVentilator&& other) = default;

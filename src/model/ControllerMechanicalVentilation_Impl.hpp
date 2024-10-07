@@ -31,7 +31,7 @@ namespace model {
 
       ControllerMechanicalVentilation_Impl(const ControllerMechanicalVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ControllerMechanicalVentilation_Impl() = default;
+      virtual ~ControllerMechanicalVentilation_Impl() override = default;
 
       //@}
 

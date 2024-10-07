@@ -31,7 +31,7 @@ namespace model {
 
     explicit GlareSensor(const Model& model);
 
-    virtual ~GlareSensor() = default;
+    virtual ~GlareSensor() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GlareSensor(const GlareSensor& other) = default;
     GlareSensor(GlareSensor&& other) = default;

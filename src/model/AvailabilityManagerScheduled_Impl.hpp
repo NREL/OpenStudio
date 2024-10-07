@@ -29,7 +29,7 @@ namespace model {
 
       AvailabilityManagerScheduled_Impl(const AvailabilityManagerScheduled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerScheduled_Impl() = default;
+      virtual ~AvailabilityManagerScheduled_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

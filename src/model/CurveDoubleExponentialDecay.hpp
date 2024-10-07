@@ -30,7 +30,7 @@ namespace model {
     /** Sets all coefficients to 0.0 and sets the range for x to [0.0,1.0]. */
     explicit CurveDoubleExponentialDecay(const Model& model);
 
-    virtual ~CurveDoubleExponentialDecay() = default;
+    virtual ~CurveDoubleExponentialDecay() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveDoubleExponentialDecay(const CurveDoubleExponentialDecay& other) = default;
     CurveDoubleExponentialDecay(CurveDoubleExponentialDecay&& other) = default;

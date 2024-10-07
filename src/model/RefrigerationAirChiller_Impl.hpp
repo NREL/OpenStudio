@@ -33,7 +33,7 @@ namespace model {
 
       RefrigerationAirChiller_Impl(const RefrigerationAirChiller_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationAirChiller_Impl() = default;
+      virtual ~RefrigerationAirChiller_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

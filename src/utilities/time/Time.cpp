@@ -77,9 +77,7 @@ Time::Time(tm t_tm) : m_impl(t_tm.tm_hour, t_tm.tm_min, t_tm.tm_sec) {}
 Time::Time(const Time& other) : m_impl(other.impl()) {}
 
 /// Time from impl
-Time::Time(const ImplType& implType) {
-  m_impl = implType;
-}
+Time::Time(const ImplType& implType) : m_impl(implType) {}
 
 /// assignment operator
 Time& Time::operator=(const Time& other) {

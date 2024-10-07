@@ -30,7 +30,7 @@ namespace model {
 
       ElectricLoadCenterInverterLookUpTable_Impl(const ElectricLoadCenterInverterLookUpTable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterInverterLookUpTable_Impl() = default;
+      virtual ~ElectricLoadCenterInverterLookUpTable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

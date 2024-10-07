@@ -33,7 +33,7 @@ namespace model {
 
     explicit RefrigerationCondenserEvaporativeCooled(const Model& model);
 
-    virtual ~RefrigerationCondenserEvaporativeCooled() = default;
+    virtual ~RefrigerationCondenserEvaporativeCooled() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationCondenserEvaporativeCooled(const RefrigerationCondenserEvaporativeCooled& other) = default;
     RefrigerationCondenserEvaporativeCooled(RefrigerationCondenserEvaporativeCooled&& other) = default;

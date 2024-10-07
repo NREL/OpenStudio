@@ -28,7 +28,7 @@ namespace model {
 
       SimpleGlazing_Impl(const SimpleGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SimpleGlazing_Impl() = default;
+      virtual ~SimpleGlazing_Impl() override = default;
 
       //@}
 

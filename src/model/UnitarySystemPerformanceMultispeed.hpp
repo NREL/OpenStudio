@@ -64,7 +64,7 @@ namespace model {
     //@{
     explicit UnitarySystemPerformanceMultispeed(const Model& model);
 
-    virtual ~UnitarySystemPerformanceMultispeed() = default;
+    virtual ~UnitarySystemPerformanceMultispeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     UnitarySystemPerformanceMultispeed(const UnitarySystemPerformanceMultispeed& other) = default;
     UnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed&& other) = default;

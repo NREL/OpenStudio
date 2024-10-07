@@ -30,7 +30,7 @@ namespace model {
 
       SteamEquipment_Impl(const SteamEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SteamEquipment_Impl() = default;
+      virtual ~SteamEquipment_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

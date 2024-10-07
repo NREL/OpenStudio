@@ -27,7 +27,7 @@ namespace model {
 
       ExternalInterface_Impl(const ExternalInterface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterface_Impl() = default;
+      virtual ~ExternalInterface_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

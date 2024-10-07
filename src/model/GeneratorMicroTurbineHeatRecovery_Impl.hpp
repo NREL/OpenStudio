@@ -32,7 +32,7 @@ namespace model {
 
       GeneratorMicroTurbineHeatRecovery_Impl(const GeneratorMicroTurbineHeatRecovery_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorMicroTurbineHeatRecovery_Impl() = default;
+      virtual ~GeneratorMicroTurbineHeatRecovery_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

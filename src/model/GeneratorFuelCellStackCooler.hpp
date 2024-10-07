@@ -31,7 +31,7 @@ namespace model {
 
     explicit GeneratorFuelCellStackCooler(const Model& model);
 
-    virtual ~GeneratorFuelCellStackCooler() = default;
+    virtual ~GeneratorFuelCellStackCooler() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellStackCooler(const GeneratorFuelCellStackCooler& other) = default;
     GeneratorFuelCellStackCooler(GeneratorFuelCellStackCooler&& other) = default;

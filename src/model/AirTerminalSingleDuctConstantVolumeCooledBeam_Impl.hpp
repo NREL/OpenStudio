@@ -31,7 +31,7 @@ namespace model {
       AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(const AirTerminalSingleDuctConstantVolumeCooledBeam_Impl& other, Model_Impl* model,
                                                          bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam_Impl() = default;
+      virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

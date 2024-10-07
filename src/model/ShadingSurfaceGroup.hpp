@@ -35,7 +35,7 @@ namespace model {
 
     explicit ShadingSurfaceGroup(const Model& model);
 
-    virtual ~ShadingSurfaceGroup() = default;
+    virtual ~ShadingSurfaceGroup() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ShadingSurfaceGroup(const ShadingSurfaceGroup& other) = default;
     ShadingSurfaceGroup(ShadingSurfaceGroup&& other) = default;

@@ -28,7 +28,7 @@ namespace model {
 
       ModelObjectList_Impl(const ModelObjectList_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ModelObjectList_Impl() = default;
+      virtual ~ModelObjectList_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

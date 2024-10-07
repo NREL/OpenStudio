@@ -30,7 +30,7 @@ namespace model {
 
       AvailabilityManagerNightCycle_Impl(const AvailabilityManagerNightCycle_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerNightCycle_Impl() = default;
+      virtual ~AvailabilityManagerNightCycle_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

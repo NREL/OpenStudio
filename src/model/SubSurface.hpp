@@ -49,7 +49,7 @@ namespace model {
 
     explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~SubSurface() = default;
+    virtual ~SubSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SubSurface(const SubSurface& other) = default;
     SubSurface(SubSurface&& other) = default;

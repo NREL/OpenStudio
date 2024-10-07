@@ -40,7 +40,7 @@ namespace model {
    *  model.  The object is fully initialized with all companion objects. */
     AirTerminalSingleDuctConstantVolumeNoReheat(const Model& model, Schedule& availabilitySchedule);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() = default;
+    virtual ~AirTerminalSingleDuctConstantVolumeNoReheat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctConstantVolumeNoReheat(const AirTerminalSingleDuctConstantVolumeNoReheat& other) = default;
     AirTerminalSingleDuctConstantVolumeNoReheat(AirTerminalSingleDuctConstantVolumeNoReheat&& other) = default;

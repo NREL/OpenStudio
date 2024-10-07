@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SizingParameters() = default;
+    virtual ~SizingParameters() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SizingParameters(const SizingParameters& other) = default;
     SizingParameters(SizingParameters&& other) = default;

@@ -30,7 +30,7 @@ namespace model {
    public:
     explicit WaterUseConnections(const Model& model);
 
-    virtual ~WaterUseConnections() = default;
+    virtual ~WaterUseConnections() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterUseConnections(const WaterUseConnections& other) = default;
     WaterUseConnections(WaterUseConnections&& other) = default;

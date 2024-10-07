@@ -40,7 +40,7 @@ namespace model {
    *  list in ComponentData must exactly match the contents of idfFile. */
     explicit Component(const openstudio::IdfFile& idfFile);
 
-    virtual ~Component() = default;
+    virtual ~Component() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Component(const Component& other) = default;
     Component(Component&& other) = default;

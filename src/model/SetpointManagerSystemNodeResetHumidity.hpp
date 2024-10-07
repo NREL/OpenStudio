@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerSystemNodeResetHumidity(const Model& model);
 
-    virtual ~SetpointManagerSystemNodeResetHumidity() = default;
+    virtual ~SetpointManagerSystemNodeResetHumidity() override = default;
 
     //@}
 

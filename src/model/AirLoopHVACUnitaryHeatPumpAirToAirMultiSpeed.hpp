@@ -32,7 +32,7 @@ namespace model {
     explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model, const HVACComponent& fan, const HVACComponent& heatingCoil,
                                                           const HVACComponent& coolingCoil, const HVACComponent& supplementalHeatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() = default;
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed& other) = default;
     AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed&& other) = default;

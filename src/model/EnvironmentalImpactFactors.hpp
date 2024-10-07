@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~EnvironmentalImpactFactors() = default;
+    virtual ~EnvironmentalImpactFactors() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnvironmentalImpactFactors(const EnvironmentalImpactFactors& other) = default;
     EnvironmentalImpactFactors(EnvironmentalImpactFactors&& other) = default;

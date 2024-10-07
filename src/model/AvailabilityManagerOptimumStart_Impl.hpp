@@ -30,7 +30,7 @@ namespace model {
 
       AvailabilityManagerOptimumStart_Impl(const AvailabilityManagerOptimumStart_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerOptimumStart_Impl() = default;
+      virtual ~AvailabilityManagerOptimumStart_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

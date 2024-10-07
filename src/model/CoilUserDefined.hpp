@@ -32,7 +32,7 @@ namespace model {
 
     explicit CoilUserDefined(const Model& model);
 
-    virtual ~CoilUserDefined() = default;
+    virtual ~CoilUserDefined() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilUserDefined(const CoilUserDefined& other) = default;
     CoilUserDefined(CoilUserDefined&& other) = default;

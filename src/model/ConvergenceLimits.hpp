@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConvergenceLimits() = default;
+    virtual ~ConvergenceLimits() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ConvergenceLimits(const ConvergenceLimits& other) = default;
     ConvergenceLimits(ConvergenceLimits&& other) = default;

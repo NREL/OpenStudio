@@ -31,7 +31,7 @@ namespace model {
 
     explicit ElectricLoadCenterInverterSimple(const Model& model);
 
-    virtual ~ElectricLoadCenterInverterSimple() = default;
+    virtual ~ElectricLoadCenterInverterSimple() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricLoadCenterInverterSimple(const ElectricLoadCenterInverterSimple& other) = default;
     ElectricLoadCenterInverterSimple(ElectricLoadCenterInverterSimple&& other) = default;

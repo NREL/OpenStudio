@@ -27,7 +27,7 @@ namespace model {
 
     explicit FFactorGroundFloorConstruction(const Model& model, double fFactor = 0.1, double area = 0.1, double perimeterExposed = 0.1);
 
-    virtual ~FFactorGroundFloorConstruction() = default;
+    virtual ~FFactorGroundFloorConstruction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FFactorGroundFloorConstruction(const FFactorGroundFloorConstruction& other) = default;
     FFactorGroundFloorConstruction(FFactorGroundFloorConstruction&& other) = default;

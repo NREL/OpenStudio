@@ -39,7 +39,7 @@ namespace contam {
     }
 
     template <class T>
-    std::vector<T> readSectionVector(std::string name = std::string());
+    std::vector<T> readSectionVector(const std::string& name = std::string());
 
     std::vector<int> readIntVector(bool terminated = false);
     //    std::vector<int> readIntStdVector(bool terminated=false);
@@ -67,7 +67,7 @@ namespace contam {
   };
 
   template <class T>
-  std::vector<T> Reader::readSectionVector(std::string name) {
+  std::vector<T> Reader::readSectionVector(const std::string& name) {
     int n = readInt();
     std::vector<T> vector;
     for (int i = 0; i < n; i++) {

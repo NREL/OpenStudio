@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneHumidityMaximum(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneHumidityMaximum() = default;
+    virtual ~SetpointManagerSingleZoneHumidityMaximum() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerSingleZoneHumidityMaximum(const SetpointManagerSingleZoneHumidityMaximum& other) = default;
     SetpointManagerSingleZoneHumidityMaximum(SetpointManagerSingleZoneHumidityMaximum&& other) = default;

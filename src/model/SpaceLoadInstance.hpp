@@ -25,7 +25,7 @@ namespace model {
   class MODEL_API SpaceLoadInstance : public SpaceLoad
   {
    public:
-    virtual ~SpaceLoadInstance() = default;
+    virtual ~SpaceLoadInstance() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SpaceLoadInstance(const SpaceLoadInstance& other) = default;
     SpaceLoadInstance(SpaceLoadInstance&& other) = default;

@@ -27,7 +27,7 @@ namespace model {
 
     explicit ModelObjectList(const Model& model);
 
-    virtual ~ModelObjectList() = default;
+    virtual ~ModelObjectList() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ModelObjectList(const ModelObjectList& other) = default;
     ModelObjectList(ModelObjectList&& other) = default;

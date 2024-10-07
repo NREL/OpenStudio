@@ -31,7 +31,7 @@ namespace model {
 
       EvaporativeFluidCoolerTwoSpeed_Impl(const EvaporativeFluidCoolerTwoSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EvaporativeFluidCoolerTwoSpeed_Impl() = default;
+      virtual ~EvaporativeFluidCoolerTwoSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

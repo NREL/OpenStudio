@@ -24,7 +24,7 @@ namespace model {
   class MODEL_API ExteriorLoadDefinition : public ResourceObject
   {
    public:
-    virtual ~ExteriorLoadDefinition() = default;
+    virtual ~ExteriorLoadDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorLoadDefinition(const ExteriorLoadDefinition& other) = default;
     ExteriorLoadDefinition(ExteriorLoadDefinition&& other) = default;

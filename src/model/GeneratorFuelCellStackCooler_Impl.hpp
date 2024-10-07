@@ -30,7 +30,7 @@ namespace model {
 
       GeneratorFuelCellStackCooler_Impl(const GeneratorFuelCellStackCooler_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellStackCooler_Impl() = default;
+      virtual ~GeneratorFuelCellStackCooler_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

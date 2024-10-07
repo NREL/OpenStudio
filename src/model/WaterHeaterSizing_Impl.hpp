@@ -29,7 +29,7 @@ namespace model {
 
       WaterHeaterSizing_Impl(const WaterHeaterSizing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterHeaterSizing_Impl() = default;
+      virtual ~WaterHeaterSizing_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -32,7 +32,7 @@ namespace model {
       // Clone copy constructor.
       ModelPartitionMaterial_Impl(const ModelPartitionMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ModelPartitionMaterial_Impl() = default;
+      virtual ~ModelPartitionMaterial_Impl() override = default;
 
       //@}
       /** @name Getters */

@@ -37,7 +37,7 @@ namespace model {
 
     explicit SurfacePropertyConvectionCoefficients(const InternalMass& surface);
 
-    virtual ~SurfacePropertyConvectionCoefficients() = default;
+    virtual ~SurfacePropertyConvectionCoefficients() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SurfacePropertyConvectionCoefficients(const SurfacePropertyConvectionCoefficients& other) = default;
     SurfacePropertyConvectionCoefficients(SurfacePropertyConvectionCoefficients&& other) = default;

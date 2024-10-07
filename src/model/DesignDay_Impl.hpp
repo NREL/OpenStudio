@@ -29,7 +29,7 @@ namespace model {
       DesignDay_Impl(const DesignDay_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~DesignDay_Impl() = default;
+      virtual ~DesignDay_Impl() override = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

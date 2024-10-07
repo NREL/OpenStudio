@@ -28,7 +28,7 @@ namespace model {
 
       CurveRectangularHyperbola1_Impl(const CurveRectangularHyperbola1_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveRectangularHyperbola1_Impl() = default;
+      virtual ~CurveRectangularHyperbola1_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

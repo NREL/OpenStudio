@@ -31,7 +31,7 @@ namespace model {
       EnergyManagementSystemProgramCallingManager_Impl(const EnergyManagementSystemProgramCallingManager_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~EnergyManagementSystemProgramCallingManager_Impl() = default;
+      virtual ~EnergyManagementSystemProgramCallingManager_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

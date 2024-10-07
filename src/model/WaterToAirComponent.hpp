@@ -30,7 +30,7 @@ namespace model {
   class MODEL_API WaterToAirComponent : public HVACComponent
   {
    public:
-    virtual ~WaterToAirComponent() = default;
+    virtual ~WaterToAirComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterToAirComponent(const WaterToAirComponent& other) = default;
     WaterToAirComponent(WaterToAirComponent&& other) = default;

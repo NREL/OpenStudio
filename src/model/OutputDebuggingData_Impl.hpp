@@ -27,7 +27,7 @@ namespace model {
 
       OutputDebuggingData_Impl(const OutputDebuggingData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputDebuggingData_Impl() = default;
+      virtual ~OutputDebuggingData_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

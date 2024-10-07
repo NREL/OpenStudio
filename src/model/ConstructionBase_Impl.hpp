@@ -40,7 +40,7 @@ namespace model {
       // Clone copy constructor.
       ConstructionBase_Impl(const ConstructionBase_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ConstructionBase_Impl() = default;
+      virtual ~ConstructionBase_Impl() override = default;
 
       //@}
       /** @name Getters */

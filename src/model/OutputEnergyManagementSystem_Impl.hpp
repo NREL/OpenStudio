@@ -27,7 +27,7 @@ namespace model {
 
       OutputEnergyManagementSystem_Impl(const OutputEnergyManagementSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputEnergyManagementSystem_Impl() = default;
+      virtual ~OutputEnergyManagementSystem_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

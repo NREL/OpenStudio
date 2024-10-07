@@ -36,7 +36,7 @@ namespace model {
                                                  const Curve& chillerHeaterClgEIRFPLR, const Curve& chillerHeaterHtgCapFT,
                                                  const Curve& chillerHeaterHtgEIRFT, const Curve& chillerHeaterHtgEIRFPLR);
 
-    virtual ~ChillerHeaterPerformanceElectricEIR() = default;
+    virtual ~ChillerHeaterPerformanceElectricEIR() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ChillerHeaterPerformanceElectricEIR(const ChillerHeaterPerformanceElectricEIR& other) = default;
     ChillerHeaterPerformanceElectricEIR(ChillerHeaterPerformanceElectricEIR&& other) = default;

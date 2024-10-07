@@ -30,7 +30,7 @@ namespace model {
 
     explicit PythonPluginVariable(const Model& model);
 
-    virtual ~PythonPluginVariable() = default;
+    virtual ~PythonPluginVariable() override = default;
 
     //@}
 

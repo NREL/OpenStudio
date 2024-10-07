@@ -38,7 +38,7 @@ namespace model {
     // Ctor with hydronicTubingLength autosized
     ZoneHVACLowTempRadiantConstFlow(const Model& model, Schedule& availabilitySchedule, HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACLowTempRadiantConstFlow() = default;
+    virtual ~ZoneHVACLowTempRadiantConstFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACLowTempRadiantConstFlow(const ZoneHVACLowTempRadiantConstFlow& other) = default;
     ZoneHVACLowTempRadiantConstFlow(ZoneHVACLowTempRadiantConstFlow&& other) = default;

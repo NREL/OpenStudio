@@ -33,7 +33,7 @@ namespace model {
     /// Constructor with vector of material layers, throws if opaqueMaterials size < 2.
     explicit ConstructionWithInternalSource(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
-    virtual ~ConstructionWithInternalSource() = default;
+    virtual ~ConstructionWithInternalSource() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ConstructionWithInternalSource(const ConstructionWithInternalSource& other) = default;
     ConstructionWithInternalSource(ConstructionWithInternalSource&& other) = default;

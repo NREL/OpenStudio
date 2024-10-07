@@ -34,7 +34,7 @@ namespace model {
       ZoneAirContaminantBalance_Impl(const ZoneAirContaminantBalance_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ZoneAirContaminantBalance_Impl() = default;
+      virtual ~ZoneAirContaminantBalance_Impl() override = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

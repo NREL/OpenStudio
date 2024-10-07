@@ -44,7 +44,7 @@ namespace model {
 
       Building_Impl(const Building_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Building_Impl() = default;
+      virtual ~Building_Impl() override = default;
 
       //@}
 

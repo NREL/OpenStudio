@@ -30,7 +30,7 @@ namespace model {
    public:
     explicit WaterUseEquipment(const WaterUseEquipmentDefinition& waterUseEquipmentDefinition);
 
-    virtual ~WaterUseEquipment() = default;
+    virtual ~WaterUseEquipment() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterUseEquipment(const WaterUseEquipment& other) = default;
     WaterUseEquipment(WaterUseEquipment&& other) = default;

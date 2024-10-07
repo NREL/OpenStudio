@@ -31,7 +31,7 @@ namespace model {
 
       AirflowNetworkOutdoorAirflow_Impl(const AirflowNetworkOutdoorAirflow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkOutdoorAirflow_Impl() = default;
+      virtual ~AirflowNetworkOutdoorAirflow_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

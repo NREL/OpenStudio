@@ -31,7 +31,7 @@ namespace model {
 
       ThermalStorageIceDetailed_Impl(const ThermalStorageIceDetailed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermalStorageIceDetailed_Impl() = default;
+      virtual ~ThermalStorageIceDetailed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -30,7 +30,7 @@ namespace model {
 
     explicit SurfacePropertyOtherSideCoefficients(const Model& model);
 
-    virtual ~SurfacePropertyOtherSideCoefficients() = default;
+    virtual ~SurfacePropertyOtherSideCoefficients() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SurfacePropertyOtherSideCoefficients(const SurfacePropertyOtherSideCoefficients& other) = default;
     SurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients&& other) = default;

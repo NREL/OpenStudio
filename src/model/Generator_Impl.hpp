@@ -27,7 +27,7 @@ namespace model {
 
       Generator_Impl(const Generator_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Generator_Impl() = default;
+      virtual ~Generator_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -40,7 +40,7 @@ namespace model {
                                                               double moistureEquationCoefficientC, double moistureEquationCoefficientD,
                                                               double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() = default;
+    virtual ~MaterialPropertyMoisturePenetrationDepthSettings() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     MaterialPropertyMoisturePenetrationDepthSettings(const MaterialPropertyMoisturePenetrationDepthSettings& other) = default;
     MaterialPropertyMoisturePenetrationDepthSettings(MaterialPropertyMoisturePenetrationDepthSettings&& other) = default;

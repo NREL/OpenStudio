@@ -20,7 +20,7 @@ namespace model {
   class MODEL_API Splitter : public HVACComponent
   {
    public:
-    virtual ~Splitter() = default;
+    virtual ~Splitter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Splitter(const Splitter& other) = default;
     Splitter(Splitter&& other) = default;

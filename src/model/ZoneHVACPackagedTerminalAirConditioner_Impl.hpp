@@ -32,7 +32,7 @@ namespace model {
 
       ZoneHVACPackagedTerminalAirConditioner_Impl(const ZoneHVACPackagedTerminalAirConditioner_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACPackagedTerminalAirConditioner_Impl() = default;
+      virtual ~ZoneHVACPackagedTerminalAirConditioner_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

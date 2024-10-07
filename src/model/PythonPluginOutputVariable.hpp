@@ -29,7 +29,7 @@ namespace model {
 
     explicit PythonPluginOutputVariable(const PythonPluginVariable& pythonPluginVariable);
 
-    virtual ~PythonPluginOutputVariable() = default;
+    virtual ~PythonPluginOutputVariable() override = default;
 
     //@}
 

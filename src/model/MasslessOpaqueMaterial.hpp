@@ -39,7 +39,7 @@ namespace model {
 
     explicit MasslessOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thermalResistance = 0.1);
 
-    virtual ~MasslessOpaqueMaterial() = default;
+    virtual ~MasslessOpaqueMaterial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     MasslessOpaqueMaterial(const MasslessOpaqueMaterial& other) = default;
     MasslessOpaqueMaterial(MasslessOpaqueMaterial&& other) = default;

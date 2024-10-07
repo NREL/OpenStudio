@@ -31,7 +31,7 @@ namespace model {
 
     explicit AvailabilityManagerNightVentilation(const Model& model);
 
-    virtual ~AvailabilityManagerNightVentilation() = default;
+    virtual ~AvailabilityManagerNightVentilation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerNightVentilation(const AvailabilityManagerNightVentilation& other) = default;
     AvailabilityManagerNightVentilation(AvailabilityManagerNightVentilation&& other) = default;

@@ -26,7 +26,7 @@ namespace model {
     /** Creates new ScheduleConstant in model and sets its value to 0.0. */
     explicit ScheduleConstant(const Model& model);
 
-    virtual ~ScheduleConstant() = default;
+    virtual ~ScheduleConstant() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleConstant(const ScheduleConstant& other) = default;
     ScheduleConstant(ScheduleConstant&& other) = default;

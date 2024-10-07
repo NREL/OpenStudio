@@ -27,7 +27,7 @@ namespace model {
 
     explicit EnergyManagementSystemSubroutine(const Model& model);
 
-    virtual ~EnergyManagementSystemSubroutine() = default;
+    virtual ~EnergyManagementSystemSubroutine() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnergyManagementSystemSubroutine(const EnergyManagementSystemSubroutine& other) = default;
     EnergyManagementSystemSubroutine(EnergyManagementSystemSubroutine&& other) = default;

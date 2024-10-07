@@ -35,7 +35,7 @@ namespace model {
     explicit ZoneHVACDehumidifierDX(const Model& model, const Curve& waterRemovalCurve, const Curve& energyFactorCurve,
                                     const Curve& partLoadFractionCurve);
 
-    virtual ~ZoneHVACDehumidifierDX() = default;
+    virtual ~ZoneHVACDehumidifierDX() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACDehumidifierDX(const ZoneHVACDehumidifierDX& other) = default;
     ZoneHVACDehumidifierDX(ZoneHVACDehumidifierDX&& other) = default;

@@ -32,7 +32,7 @@ namespace model {
       SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl(const SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl& other, Model_Impl* model,
                                                              bool keepHandle);
 
-      virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() = default;
+      virtual ~SolarCollectorPerformancePhotovoltaicThermalBIPVT_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

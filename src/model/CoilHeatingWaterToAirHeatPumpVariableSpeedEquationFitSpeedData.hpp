@@ -38,7 +38,7 @@ namespace model {
                                                                             const Curve& energyInputRatioFunctionofWaterFlowFraction,
                                                                             const Curve& wasteHeatFunctionofTemperature);
 
-    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() = default;
+    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData& other) =
       default;

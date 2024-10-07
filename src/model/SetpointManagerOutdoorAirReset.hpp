@@ -28,7 +28,7 @@ namespace model {
    public:
     explicit SetpointManagerOutdoorAirReset(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirReset() = default;
+    virtual ~SetpointManagerOutdoorAirReset() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerOutdoorAirReset(const SetpointManagerOutdoorAirReset& other) = default;
     SetpointManagerOutdoorAirReset(SetpointManagerOutdoorAirReset&& other) = default;

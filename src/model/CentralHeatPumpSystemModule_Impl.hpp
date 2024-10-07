@@ -31,7 +31,7 @@ namespace model {
 
       CentralHeatPumpSystemModule_Impl(const CentralHeatPumpSystemModule_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CentralHeatPumpSystemModule_Impl() = default;
+      virtual ~CentralHeatPumpSystemModule_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

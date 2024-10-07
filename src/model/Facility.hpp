@@ -45,7 +45,7 @@ namespace model {
   {
 
    public:
-    virtual ~Facility() = default;
+    virtual ~Facility() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Facility(const Facility& other) = default;
     Facility(Facility&& other) = default;

@@ -29,7 +29,7 @@ namespace model {
 
     explicit PlantEquipmentOperationOutdoorDryBulbDifference(const Model& model);
 
-    virtual ~PlantEquipmentOperationOutdoorDryBulbDifference() = default;
+    virtual ~PlantEquipmentOperationOutdoorDryBulbDifference() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantEquipmentOperationOutdoorDryBulbDifference(const PlantEquipmentOperationOutdoorDryBulbDifference& other) = default;
     PlantEquipmentOperationOutdoorDryBulbDifference(PlantEquipmentOperationOutdoorDryBulbDifference&& other) = default;

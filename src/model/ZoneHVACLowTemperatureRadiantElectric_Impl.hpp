@@ -31,7 +31,7 @@ namespace model {
 
       ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() = default;
+      virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() override = default;
 
       virtual unsigned inletPort() const override;
 

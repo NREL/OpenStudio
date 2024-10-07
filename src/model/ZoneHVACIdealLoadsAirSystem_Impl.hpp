@@ -30,7 +30,7 @@ namespace model {
 
       ZoneHVACIdealLoadsAirSystem_Impl(const ZoneHVACIdealLoadsAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACIdealLoadsAirSystem_Impl() = default;
+      virtual ~ZoneHVACIdealLoadsAirSystem_Impl() override = default;
 
       //@}
 

@@ -35,7 +35,7 @@ namespace model {
                                                  const Curve& energyInputRatioFunctionofTemperatureCurve,
                                                  const Curve& energyInputRatioFunctionofAirFlowFractionCurve);
 
-    virtual ~CoilCoolingDXVariableSpeedSpeedData() = default;
+    virtual ~CoilCoolingDXVariableSpeedSpeedData() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXVariableSpeedSpeedData(const CoilCoolingDXVariableSpeedSpeedData& other) = default;
     CoilCoolingDXVariableSpeedSpeedData(CoilCoolingDXVariableSpeedSpeedData&& other) = default;

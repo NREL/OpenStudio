@@ -33,7 +33,7 @@ namespace model {
     // Constructor takes required-field arguments Surface and Material. The Schedule is defaulted to alwaysOnContinuousSchedule
     explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
 
-    virtual ~SurfaceControlMovableInsulation() = default;
+    virtual ~SurfaceControlMovableInsulation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SurfaceControlMovableInsulation(const SurfaceControlMovableInsulation& other) = default;
     SurfaceControlMovableInsulation(SurfaceControlMovableInsulation&& other) = default;

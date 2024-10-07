@@ -31,7 +31,7 @@ namespace model {
                                          double visibleExtinctionCoefficient = 0.1);
     //double dirtCorrectionFactorforSolarandVisibleTransmittance = 0.1);
 
-    virtual ~RefractionExtinctionGlazing() = default;
+    virtual ~RefractionExtinctionGlazing() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefractionExtinctionGlazing(const RefractionExtinctionGlazing& other) = default;
     RefractionExtinctionGlazing(RefractionExtinctionGlazing&& other) = default;

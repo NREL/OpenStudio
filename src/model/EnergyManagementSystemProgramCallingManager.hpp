@@ -28,7 +28,7 @@ namespace model {
 
     explicit EnergyManagementSystemProgramCallingManager(const Model& model);
 
-    virtual ~EnergyManagementSystemProgramCallingManager() = default;
+    virtual ~EnergyManagementSystemProgramCallingManager() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnergyManagementSystemProgramCallingManager(const EnergyManagementSystemProgramCallingManager& other) = default;
     EnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager&& other) = default;

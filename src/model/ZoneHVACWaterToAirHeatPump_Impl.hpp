@@ -32,7 +32,7 @@ namespace model {
 
       ZoneHVACWaterToAirHeatPump_Impl(const ZoneHVACWaterToAirHeatPump_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACWaterToAirHeatPump_Impl() = default;
+      virtual ~ZoneHVACWaterToAirHeatPump_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

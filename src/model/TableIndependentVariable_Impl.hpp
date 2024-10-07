@@ -29,7 +29,7 @@ namespace model {
 
       TableIndependentVariable_Impl(const TableIndependentVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TableIndependentVariable_Impl() = default;
+      virtual ~TableIndependentVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

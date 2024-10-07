@@ -10,11 +10,12 @@
 #include "../BCLXML.hpp"
 #include "../../core/ApplicationPathHelpers.hpp"
 #include "../../core/PathHelpers.hpp"
-#include "utilities/core/Filesystem.hpp"
+#include "../../core/Filesystem.hpp"
+
+#include <pugixml.hpp>
 
 #include <algorithm>
 #include <sstream>
-#include <pugixml.hpp>
 
 using namespace openstudio;
 namespace fs = openstudio::filesystem;
@@ -327,7 +328,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
 
 struct TestPath
 {
-  TestPath(fs::path t_path, bool t_allowed) : path(std::move(t_path)), allowed(t_allowed){};
+  TestPath(fs::path t_path, bool t_allowed) : path(std::move(t_path)), allowed(t_allowed) {};
   fs::path path;
   bool allowed;
 };

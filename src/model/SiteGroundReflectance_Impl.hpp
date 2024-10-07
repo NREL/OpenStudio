@@ -28,7 +28,7 @@ namespace model {
 
       SiteGroundReflectance_Impl(const SiteGroundReflectance_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteGroundReflectance_Impl() = default;
+      virtual ~SiteGroundReflectance_Impl() override = default;
 
       //@}
 

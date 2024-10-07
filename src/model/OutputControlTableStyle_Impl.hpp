@@ -28,7 +28,7 @@ namespace model {
 
       OutputControlTableStyle_Impl(const OutputControlTableStyle_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlTableStyle_Impl() = default;
+      virtual ~OutputControlTableStyle_Impl() override = default;
 
       //@}
 

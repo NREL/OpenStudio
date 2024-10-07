@@ -29,7 +29,7 @@ namespace model {
 
       PythonPluginTrendVariable_Impl(const PythonPluginTrendVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PythonPluginTrendVariable_Impl() = default;
+      virtual ~PythonPluginTrendVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

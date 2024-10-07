@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlFiles() = default;
+    virtual ~OutputControlFiles() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputControlFiles(const OutputControlFiles& other) = default;
     OutputControlFiles(OutputControlFiles&& other) = default;

@@ -31,7 +31,7 @@ namespace model {
 
       ElectricEquipment_Impl(const ElectricEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricEquipment_Impl() = default;
+      virtual ~ElectricEquipment_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

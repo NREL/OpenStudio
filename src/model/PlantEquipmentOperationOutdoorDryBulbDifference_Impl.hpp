@@ -30,7 +30,7 @@ namespace model {
       PlantEquipmentOperationOutdoorDryBulbDifference_Impl(const PlantEquipmentOperationOutdoorDryBulbDifference_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorDryBulbDifference_Impl() = default;
+      virtual ~PlantEquipmentOperationOutdoorDryBulbDifference_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

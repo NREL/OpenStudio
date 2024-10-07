@@ -32,7 +32,7 @@ namespace model {
 
     explicit BoilerHotWater(const Model& model);
 
-    virtual ~BoilerHotWater() = default;
+    virtual ~BoilerHotWater() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     BoilerHotWater(const BoilerHotWater& other) = default;
     BoilerHotWater(BoilerHotWater&& other) = default;

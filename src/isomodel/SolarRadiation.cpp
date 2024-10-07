@@ -174,6 +174,7 @@ namespace isomodel {
 
       //std::stringstream ss;
       for (int s = 0; s < NUM_SURFACES; s++) {
+        // cppcheck-suppress negativeContainerIndex
         m_monthlySolarRadiation[midx][s] += m_eglobe[i][s];
         //ss << s << " " << m_monthlySolarRadiation[midx][s] << " " << m_eglobe[i][s] << " ";
       }

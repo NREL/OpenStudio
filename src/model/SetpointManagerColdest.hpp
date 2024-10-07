@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerColdest(const Model& model);
 
-    virtual ~SetpointManagerColdest() = default;
+    virtual ~SetpointManagerColdest() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerColdest(const SetpointManagerColdest& other) = default;
     SetpointManagerColdest(SetpointManagerColdest&& other) = default;

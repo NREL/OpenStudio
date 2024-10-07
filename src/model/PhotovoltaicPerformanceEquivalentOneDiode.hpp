@@ -28,7 +28,7 @@ namespace model {
 
     explicit PhotovoltaicPerformanceEquivalentOneDiode(const Model& model);
 
-    virtual ~PhotovoltaicPerformanceEquivalentOneDiode() = default;
+    virtual ~PhotovoltaicPerformanceEquivalentOneDiode() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PhotovoltaicPerformanceEquivalentOneDiode(const PhotovoltaicPerformanceEquivalentOneDiode& other) = default;
     PhotovoltaicPerformanceEquivalentOneDiode(PhotovoltaicPerformanceEquivalentOneDiode&& other) = default;

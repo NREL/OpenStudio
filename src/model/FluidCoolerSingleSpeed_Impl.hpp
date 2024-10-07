@@ -30,7 +30,7 @@ namespace model {
 
       FluidCoolerSingleSpeed_Impl(const FluidCoolerSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FluidCoolerSingleSpeed_Impl() = default;
+      virtual ~FluidCoolerSingleSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

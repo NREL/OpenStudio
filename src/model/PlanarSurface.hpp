@@ -58,7 +58,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PlanarSurface() = default;
+    virtual ~PlanarSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlanarSurface(const PlanarSurface& other) = default;
     PlanarSurface(PlanarSurface&& other) = default;

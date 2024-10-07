@@ -31,7 +31,7 @@ namespace model {
     /** Construct a specified flow rate object with a specified airflow value. */
     AirflowNetworkSpecifiedFlowRate(const Model& model, double airFlowValue);
 
-    virtual ~AirflowNetworkSpecifiedFlowRate() = default;
+    virtual ~AirflowNetworkSpecifiedFlowRate() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkSpecifiedFlowRate(const AirflowNetworkSpecifiedFlowRate& other) = default;
     AirflowNetworkSpecifiedFlowRate(AirflowNetworkSpecifiedFlowRate&& other) = default;

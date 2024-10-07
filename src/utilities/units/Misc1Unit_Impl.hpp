@@ -35,7 +35,7 @@ namespace detail {
        *  \param[in] prettyString optional string to use in place of standardString. */
     Misc1Unit_Impl(const std::string& scaleAbbreviation, const Misc1Expnt& exponents = Misc1Expnt(), const std::string& prettyString = "");
 
-    virtual ~Misc1Unit_Impl() = default;
+    virtual ~Misc1Unit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

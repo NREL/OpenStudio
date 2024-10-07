@@ -33,7 +33,7 @@ namespace model {
     AirflowNetworkSimpleOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                 double minimumDensityDifferenceforTwoWayFlow, double dischargeCoefficient);
 
-    virtual ~AirflowNetworkSimpleOpening() = default;
+    virtual ~AirflowNetworkSimpleOpening() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkSimpleOpening(const AirflowNetworkSimpleOpening& other) = default;
     AirflowNetworkSimpleOpening(AirflowNetworkSimpleOpening&& other) = default;

@@ -31,7 +31,7 @@ namespace model {
 
       DefaultSurfaceConstructions_Impl(const DefaultSurfaceConstructions_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DefaultSurfaceConstructions_Impl() = default;
+      virtual ~DefaultSurfaceConstructions_Impl() override = default;
 
       //@}
 

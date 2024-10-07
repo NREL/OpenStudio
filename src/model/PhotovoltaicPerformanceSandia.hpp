@@ -46,7 +46,7 @@ namespace model {
     // as it will throw if it cannot find it
     static PhotovoltaicPerformanceSandia fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
-    virtual ~PhotovoltaicPerformanceSandia() = default;
+    virtual ~PhotovoltaicPerformanceSandia() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PhotovoltaicPerformanceSandia(const PhotovoltaicPerformanceSandia& other) = default;
     PhotovoltaicPerformanceSandia(PhotovoltaicPerformanceSandia&& other) = default;

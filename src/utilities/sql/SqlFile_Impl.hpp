@@ -1310,7 +1310,7 @@ namespace detail {
         PreparedStatement stmt(bindingStatement, m_db, false, args...);
         stmt.execAndThrowOnError();
       }
-      std::runtime_error("Error executing SQL statement as database connection is not open.");
+      throw std::runtime_error("Error executing SQL statement as database connection is not open.");
     }
 
     void addSimulation(const openstudio::EpwFile& t_epwFile, const openstudio::DateTime& t_simulationTime, const openstudio::Calendar& t_calendar);

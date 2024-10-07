@@ -26,7 +26,7 @@ namespace model {
 
       DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DaylightRedirectionDevice_Impl() = default;
+      virtual ~DaylightRedirectionDevice_Impl() override = default;
 
       //@}
 

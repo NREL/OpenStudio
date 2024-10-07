@@ -55,7 +55,7 @@ namespace model {
 
     explicit FanSystemModel(const Model& model);
 
-    virtual ~FanSystemModel() = default;
+    virtual ~FanSystemModel() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FanSystemModel(const FanSystemModel& other) = default;
     FanSystemModel(FanSystemModel&& other) = default;

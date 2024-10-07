@@ -32,7 +32,7 @@ namespace model {
 
     explicit CoilHeatingLowTempRadiantVarFlow(const Model& model, Schedule& heatingControlTemperature);
 
-    virtual ~CoilHeatingLowTempRadiantVarFlow() = default;
+    virtual ~CoilHeatingLowTempRadiantVarFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingLowTempRadiantVarFlow(const CoilHeatingLowTempRadiantVarFlow& other) = default;
     CoilHeatingLowTempRadiantVarFlow(CoilHeatingLowTempRadiantVarFlow&& other) = default;

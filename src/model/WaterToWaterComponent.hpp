@@ -28,7 +28,7 @@ namespace model {
    public:
     WaterToWaterComponent(IddObjectType type, const Model& model);
 
-    virtual ~WaterToWaterComponent() = default;
+    virtual ~WaterToWaterComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterToWaterComponent(const WaterToWaterComponent& other) = default;
     WaterToWaterComponent(WaterToWaterComponent&& other) = default;

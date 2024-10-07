@@ -29,7 +29,7 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = 1.0,\ c_3 = 0.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
     explicit CurveRectangularHyperbola1(const Model& model);
 
-    virtual ~CurveRectangularHyperbola1() = default;
+    virtual ~CurveRectangularHyperbola1() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveRectangularHyperbola1(const CurveRectangularHyperbola1& other) = default;
     CurveRectangularHyperbola1(CurveRectangularHyperbola1&& other) = default;

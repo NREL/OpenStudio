@@ -29,7 +29,7 @@ namespace model {
 
       BuildingUnit_Impl(const BuildingUnit_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BuildingUnit_Impl() = default;
+      virtual ~BuildingUnit_Impl() override = default;
 
       //@}
 

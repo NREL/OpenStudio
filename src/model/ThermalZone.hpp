@@ -44,7 +44,7 @@ namespace model {
 
     explicit ThermalZone(const Model& model);
 
-    virtual ~ThermalZone() = default;
+    virtual ~ThermalZone() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ThermalZone(const ThermalZone& other) = default;
     ThermalZone(ThermalZone&& other) = default;

@@ -19,14 +19,13 @@
 #include "LifeCycleCost.hpp"
 #include "Model.hpp"
 
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/data/DataEnums.hpp"
 
 #include <utilities/idd/OS_OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-
-#include "../utilities/core/Assert.hpp"
-#include "utilities/core/Compare.hpp"
 
 namespace openstudio {
 namespace model {

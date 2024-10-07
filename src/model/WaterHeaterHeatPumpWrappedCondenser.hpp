@@ -34,7 +34,7 @@ namespace model {
     explicit WaterHeaterHeatPumpWrappedCondenser(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
                                                  Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
-    virtual ~WaterHeaterHeatPumpWrappedCondenser() = default;
+    virtual ~WaterHeaterHeatPumpWrappedCondenser() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterHeaterHeatPumpWrappedCondenser(const WaterHeaterHeatPumpWrappedCondenser& other) = default;
     WaterHeaterHeatPumpWrappedCondenser(WaterHeaterHeatPumpWrappedCondenser&& other) = default;

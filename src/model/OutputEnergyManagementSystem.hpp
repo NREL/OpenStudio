@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputEnergyManagementSystem() = default;
+    virtual ~OutputEnergyManagementSystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputEnergyManagementSystem(const OutputEnergyManagementSystem& other) = default;
     OutputEnergyManagementSystem(OutputEnergyManagementSystem&& other) = default;

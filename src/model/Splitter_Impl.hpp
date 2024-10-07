@@ -25,7 +25,7 @@ namespace model {
 
       Splitter_Impl(const Splitter_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Splitter_Impl() = default;
+      virtual ~Splitter_Impl() override = default;
 
       /** Returns the inlet port to the splitter. */
       virtual unsigned inletPort() const = 0;

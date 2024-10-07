@@ -38,7 +38,7 @@ namespace model {
     /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
     explicit CoilCoolingDXMultiSpeedStageData(const Model& model);
 
-    virtual ~CoilCoolingDXMultiSpeedStageData() = default;
+    virtual ~CoilCoolingDXMultiSpeedStageData() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXMultiSpeedStageData(const CoilCoolingDXMultiSpeedStageData& other) = default;
     CoilCoolingDXMultiSpeedStageData(CoilCoolingDXMultiSpeedStageData&& other) = default;

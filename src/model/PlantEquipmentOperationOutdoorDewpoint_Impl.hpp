@@ -27,7 +27,7 @@ namespace model {
 
       PlantEquipmentOperationOutdoorDewpoint_Impl(const PlantEquipmentOperationOutdoorDewpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorDewpoint_Impl() = default;
+      virtual ~PlantEquipmentOperationOutdoorDewpoint_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

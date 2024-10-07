@@ -42,7 +42,7 @@ namespace model {
    *  model. */
     SetpointManagerScheduled(const Model& model, const std::string& controlVariable, Schedule& setpointSchedule);
 
-    virtual ~SetpointManagerScheduled() = default;
+    virtual ~SetpointManagerScheduled() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerScheduled(const SetpointManagerScheduled& other) = default;
     SetpointManagerScheduled(SetpointManagerScheduled&& other) = default;

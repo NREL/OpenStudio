@@ -21,16 +21,17 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 
-#include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
 #include <utilities/idd/DesignSpecification_ZoneAirDistribution_FieldEnums.hxx>
 #include <utilities/idd/Controller_MechanicalVentilation_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
-#include "utilities/core/Compare.hpp"
 
 using namespace openstudio::model;
 

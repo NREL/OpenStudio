@@ -39,7 +39,7 @@ namespace model {
     /** Create ElectricEquipmentITEAirCooledDefinition with default curves **/
     explicit ElectricEquipmentITEAirCooledDefinition(const Model& model);
 
-    virtual ~ElectricEquipmentITEAirCooledDefinition() = default;
+    virtual ~ElectricEquipmentITEAirCooledDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& other) = default;
     ElectricEquipmentITEAirCooledDefinition(ElectricEquipmentITEAirCooledDefinition&& other) = default;

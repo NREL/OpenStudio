@@ -28,7 +28,7 @@ namespace model {
 
     explicit ScheduleFixedInterval(const Model& model);
 
-    virtual ~ScheduleFixedInterval() = default;
+    virtual ~ScheduleFixedInterval() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleFixedInterval(const ScheduleFixedInterval& other) = default;
     ScheduleFixedInterval(ScheduleFixedInterval&& other) = default;

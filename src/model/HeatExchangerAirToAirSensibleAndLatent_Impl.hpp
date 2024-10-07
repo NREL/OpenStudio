@@ -32,7 +32,7 @@ namespace model {
 
       HeatExchangerAirToAirSensibleAndLatent_Impl(const HeatExchangerAirToAirSensibleAndLatent_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() = default;
+      virtual ~HeatExchangerAirToAirSensibleAndLatent_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

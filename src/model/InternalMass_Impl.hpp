@@ -32,7 +32,7 @@ namespace model {
 
       InternalMass_Impl(const InternalMass_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~InternalMass_Impl() = default;
+      virtual ~InternalMass_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

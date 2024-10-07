@@ -30,7 +30,7 @@ namespace model {
 
     explicit ScheduleWeek(const Model& model);
 
-    virtual ~ScheduleWeek() = default;
+    virtual ~ScheduleWeek() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleWeek(const ScheduleWeek& other) = default;
     ScheduleWeek(ScheduleWeek&& other) = default;

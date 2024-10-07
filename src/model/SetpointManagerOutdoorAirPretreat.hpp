@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerOutdoorAirPretreat(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirPretreat() = default;
+    virtual ~SetpointManagerOutdoorAirPretreat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerOutdoorAirPretreat(const SetpointManagerOutdoorAirPretreat& other) = default;
     SetpointManagerOutdoorAirPretreat(SetpointManagerOutdoorAirPretreat&& other) = default;

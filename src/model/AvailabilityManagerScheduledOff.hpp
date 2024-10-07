@@ -29,7 +29,7 @@ namespace model {
 
     explicit AvailabilityManagerScheduledOff(const Model& model);
 
-    virtual ~AvailabilityManagerScheduledOff() = default;
+    virtual ~AvailabilityManagerScheduledOff() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerScheduledOff(const AvailabilityManagerScheduledOff& other) = default;
     AvailabilityManagerScheduledOff(AvailabilityManagerScheduledOff&& other) = default;

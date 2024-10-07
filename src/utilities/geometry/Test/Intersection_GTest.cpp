@@ -2104,12 +2104,12 @@ TEST_F(GeometryFixture, JoinAll_2527) {
     {25867, 40.869, 0},
   };
 
-  std::vector<Point3d> polyx{
-    {30439.131, 40.869, 0},
-    {40.869, 40.869, 0},
-    {4612, 4612, 0},
-    {25867, 4612, 0},
-  };
+  // std::vector<Point3d> polyx{
+  //   {30439.131, 40.869, 0},
+  //   {40.869, 40.869, 0},
+  //   {4612, 4612, 0},
+  //   {25867, 4612, 0},
+  // };
 
   polygons.push_back(poly1);
   polygons.push_back(poly2);

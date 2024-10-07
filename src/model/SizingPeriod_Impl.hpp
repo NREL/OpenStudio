@@ -26,7 +26,7 @@ namespace model {
       SizingPeriod_Impl(const SizingPeriod_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~SizingPeriod_Impl() = default;
+      virtual ~SizingPeriod_Impl() override = default;
 
       // ensure that this object does not contain the date 2/29
       virtual void ensureNoLeapDays() = 0;

@@ -30,7 +30,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~WaterHeaterSizing() = default;
+    virtual ~WaterHeaterSizing() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterHeaterSizing(const WaterHeaterSizing& other) = default;
     WaterHeaterSizing(WaterHeaterSizing&& other) = default;

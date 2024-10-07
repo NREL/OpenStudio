@@ -31,7 +31,7 @@ namespace model {
 
       FanOnOff_Impl(const FanOnOff_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanOnOff_Impl() = default;
+      virtual ~FanOnOff_Impl() override = default;
 
       //@}
 

@@ -34,7 +34,7 @@ namespace detail {
 
     WorkspaceObjectOrder_Impl(const std::vector<IddObjectType>& iddOrder, const ObjectGetter& objectGetter);
 
-    virtual ~WorkspaceObjectOrder_Impl() = default;
+    virtual ~WorkspaceObjectOrder_Impl() override = default;
 
     // GETTERS AND SETTERS
 

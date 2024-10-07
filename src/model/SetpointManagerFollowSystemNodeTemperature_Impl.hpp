@@ -30,7 +30,7 @@ namespace model {
       SetpointManagerFollowSystemNodeTemperature_Impl(const SetpointManagerFollowSystemNodeTemperature_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~SetpointManagerFollowSystemNodeTemperature_Impl() = default;
+      virtual ~SetpointManagerFollowSystemNodeTemperature_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SetpointManager() = default;
+    virtual ~SetpointManager() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManager(const SetpointManager& other) = default;
     SetpointManager(SetpointManager&& other) = default;

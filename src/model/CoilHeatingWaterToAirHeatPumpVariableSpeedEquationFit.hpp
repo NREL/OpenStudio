@@ -33,7 +33,7 @@ namespace model {
 
     explicit CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit() = default;
+    virtual ~CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(const CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit& other) = default;
     CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit&& other) = default;

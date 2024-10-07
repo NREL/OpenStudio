@@ -53,7 +53,7 @@ namespace model {
 
     explicit Surface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~Surface() = default;
+    virtual ~Surface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Surface(const Surface& other) = default;
     Surface(Surface&& other) = default;

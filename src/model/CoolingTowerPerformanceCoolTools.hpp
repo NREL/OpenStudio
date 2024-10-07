@@ -28,7 +28,7 @@ namespace model {
 
     explicit CoolingTowerPerformanceCoolTools(const Model& model);
 
-    virtual ~CoolingTowerPerformanceCoolTools() = default;
+    virtual ~CoolingTowerPerformanceCoolTools() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoolingTowerPerformanceCoolTools(const CoolingTowerPerformanceCoolTools& other) = default;
     CoolingTowerPerformanceCoolTools(CoolingTowerPerformanceCoolTools&& other) = default;

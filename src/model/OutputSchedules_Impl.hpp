@@ -27,7 +27,7 @@ namespace model {
 
       OutputSchedules_Impl(const OutputSchedules_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputSchedules_Impl() = default;
+      virtual ~OutputSchedules_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

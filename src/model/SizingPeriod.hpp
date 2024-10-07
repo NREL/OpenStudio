@@ -19,7 +19,7 @@ namespace model {
   class MODEL_API SizingPeriod : public ParentObject
   {
    public:
-    virtual ~SizingPeriod() = default;
+    virtual ~SizingPeriod() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SizingPeriod(const SizingPeriod& other) = default;
     SizingPeriod(SizingPeriod&& other) = default;

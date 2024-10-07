@@ -47,15 +47,15 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
-#include "utilities/idf/Workspace.hpp"
-#include "utilities/core/Optional.hpp"
-#include "utilities/geometry/Plane.hpp"
-#include "utilities/time/Date.hpp"
-#include "utilities/xml/XMLValidator.hpp"
-#include <resources.hxx>
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/geometry/Plane.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/xml/XMLValidator.hpp"
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
+#include <resources.hxx>
 
 #include <sstream>
 #include <utility>
@@ -266,7 +266,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces) {
   struct ExpectedSurfaceInfo
   {
     ExpectedSurfaceInfo(std::string t_name, std::string t_surfaceType, std::string t_spaceName)
-      : name(std::move(t_name)), surfaceType(std::move(t_surfaceType)), spaceName(std::move(t_spaceName)){};
+      : name(std::move(t_name)), surfaceType(std::move(t_surfaceType)), spaceName(std::move(t_spaceName)) {};
 
     const std::string name;
     const std::string surfaceType;

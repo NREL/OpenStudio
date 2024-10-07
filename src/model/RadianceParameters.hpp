@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RadianceParameters() = default;
+    virtual ~RadianceParameters() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RadianceParameters(const RadianceParameters& other) = default;
     RadianceParameters(RadianceParameters&& other) = default;

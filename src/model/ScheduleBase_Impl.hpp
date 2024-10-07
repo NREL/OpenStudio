@@ -35,7 +35,7 @@ namespace model {
       ScheduleBase_Impl(const ScheduleBase_Impl& other, Model_Impl* model, bool keepHandles);
 
       // virtual destructor
-      virtual ~ScheduleBase_Impl() = default;
+      virtual ~ScheduleBase_Impl() override = default;
 
       //@}
       /** @name Getters */

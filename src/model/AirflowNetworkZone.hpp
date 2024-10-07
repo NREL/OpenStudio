@@ -34,7 +34,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkZone() = default;
+    virtual ~AirflowNetworkZone() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkZone(const AirflowNetworkZone& other) = default;
     AirflowNetworkZone(AirflowNetworkZone&& other) = default;

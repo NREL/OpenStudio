@@ -28,7 +28,7 @@ namespace model {
 
     explicit ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue);
 
-    virtual ~ExternalInterfaceVariable() = default;
+    virtual ~ExternalInterfaceVariable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceVariable(const ExternalInterfaceVariable& other) = default;
     ExternalInterfaceVariable(ExternalInterfaceVariable&& other) = default;

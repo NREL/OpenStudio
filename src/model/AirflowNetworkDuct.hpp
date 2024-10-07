@@ -28,7 +28,7 @@ namespace model {
 
     explicit AirflowNetworkDuct(const Model& model);
 
-    virtual ~AirflowNetworkDuct() = default;
+    virtual ~AirflowNetworkDuct() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkDuct(const AirflowNetworkDuct& other) = default;
     AirflowNetworkDuct(AirflowNetworkDuct&& other) = default;

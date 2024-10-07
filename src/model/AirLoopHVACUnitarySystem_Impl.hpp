@@ -33,7 +33,7 @@ namespace model {
 
       AirLoopHVACUnitarySystem_Impl(const AirLoopHVACUnitarySystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACUnitarySystem_Impl() = default;
+      virtual ~AirLoopHVACUnitarySystem_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

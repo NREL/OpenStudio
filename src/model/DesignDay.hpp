@@ -300,7 +300,7 @@ namespace model {
 
     //@}
 
-    virtual ~DesignDay() = default;
+    virtual ~DesignDay() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DesignDay(const DesignDay& other) = default;
     DesignDay(DesignDay&& other) = default;

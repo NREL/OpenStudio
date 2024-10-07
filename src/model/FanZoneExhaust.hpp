@@ -32,7 +32,7 @@ namespace model {
 
     explicit FanZoneExhaust(const Model& model);
 
-    virtual ~FanZoneExhaust() = default;
+    virtual ~FanZoneExhaust() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FanZoneExhaust(const FanZoneExhaust& other) = default;
     FanZoneExhaust(FanZoneExhaust&& other) = default;

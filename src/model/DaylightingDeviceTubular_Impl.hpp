@@ -32,7 +32,7 @@ namespace model {
 
       DaylightingDeviceTubular_Impl(const DaylightingDeviceTubular_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DaylightingDeviceTubular_Impl() = default;
+      virtual ~DaylightingDeviceTubular_Impl() override = default;
 
       //@}
 

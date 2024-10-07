@@ -27,7 +27,7 @@ namespace model {
 
       InfraredTransparentMaterial_Impl(const InfraredTransparentMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~InfraredTransparentMaterial_Impl() = default;
+      virtual ~InfraredTransparentMaterial_Impl() override = default;
 
       //@}
 

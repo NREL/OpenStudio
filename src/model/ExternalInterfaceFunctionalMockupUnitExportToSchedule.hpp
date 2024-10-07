@@ -28,7 +28,7 @@ namespace model {
 
     explicit ExternalInterfaceFunctionalMockupUnitExportToSchedule(const Model& model, const std::string& fMUVariableName, double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() = default;
+    virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceFunctionalMockupUnitExportToSchedule(const ExternalInterfaceFunctionalMockupUnitExportToSchedule& other) = default;
     ExternalInterfaceFunctionalMockupUnitExportToSchedule(ExternalInterfaceFunctionalMockupUnitExportToSchedule&& other) = default;

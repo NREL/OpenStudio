@@ -33,7 +33,7 @@ namespace model {
       MaterialPropertyMoisturePenetrationDepthSettings_Impl(const MaterialPropertyMoisturePenetrationDepthSettings_Impl& other, Model_Impl* model,
                                                             bool keepHandle);
 
-      virtual ~MaterialPropertyMoisturePenetrationDepthSettings_Impl() = default;
+      virtual ~MaterialPropertyMoisturePenetrationDepthSettings_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

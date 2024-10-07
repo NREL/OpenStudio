@@ -47,7 +47,7 @@ namespace model {
    */
     explicit Node(const Model& model);
 
-    virtual ~Node() = default;
+    virtual ~Node() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Node(const Node& other) = default;
     Node(Node&& other) = default;

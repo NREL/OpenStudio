@@ -29,7 +29,7 @@ namespace model {
 
       ZoneControlHumidistat_Impl(const ZoneControlHumidistat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneControlHumidistat_Impl() = default;
+      virtual ~ZoneControlHumidistat_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

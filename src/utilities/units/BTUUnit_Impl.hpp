@@ -37,7 +37,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     BTUUnit_Impl(const std::string& scaleAbbreviation, const BTUExpnt& exponents = BTUExpnt(), const std::string& prettyString = "");
 
-    virtual ~BTUUnit_Impl() = default;
+    virtual ~BTUUnit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

@@ -69,7 +69,7 @@ namespace model {
      *  new handle is assigned, and it is placed in model. */
       virtual ModelObject clone(Model model) const;
 
-      virtual ~ModelObject_Impl() = default;
+      virtual ~ModelObject_Impl() override = default;
 
       /// remove the object from the model, also removes any cost objects associated with this object
       /// return std::vector<IdfObject> containing any removed object(s)
