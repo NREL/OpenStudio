@@ -60,7 +60,7 @@ namespace model {
       return inletPort(branchIndex++);
     }
 
-    unsigned Mixer_Impl::branchIndexForInletModelObject(ModelObject modelObject) const {
+    unsigned Mixer_Impl::branchIndexForInletModelObject(const ModelObject& modelObject) const {
       unsigned stop = nextBranchIndex();
 
       for (unsigned i = 0; i < stop; i++) {
@@ -160,7 +160,7 @@ namespace model {
     return getImpl<detail::Mixer_Impl>()->newInletPortAfterBranch(branchIndex);
   }
 
-  unsigned Mixer::branchIndexForInletModelObject(ModelObject modelObject) const {
+  unsigned Mixer::branchIndexForInletModelObject(const ModelObject& modelObject) const {
     return getImpl<detail::Mixer_Impl>()->branchIndexForInletModelObject(modelObject);
   }
 
@@ -170,10 +170,6 @@ namespace model {
 
   void Mixer::removePortForBranch(unsigned branchIndex) {
     return getImpl<detail::Mixer_Impl>()->removePortForBranch(branchIndex);
-  }
-
-  bool Mixer::isRemovable() const {
-    return getImpl<detail::Mixer_Impl>()->isRemovable();
   }
 
 }  // namespace model

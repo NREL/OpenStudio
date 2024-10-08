@@ -54,10 +54,6 @@ namespace model {
 
     bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-    boost::optional<Node> setpointNode() const;
-
-    std::string controlVariable() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -69,8 +65,6 @@ namespace model {
     bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
     void resetMaximumSetpointHumidityRatio();
-
-    bool setControlVariable(const std::string& controlVariable);
 
     //@}
     /** @name Other */

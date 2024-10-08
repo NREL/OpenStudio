@@ -56,14 +56,6 @@ namespace model {
 
     std::vector<SetpointManager> setpointManagers() const;
 
-    bool addToNode(Node& node);
-
-    ModelObject clone(Model model) const;
-
-    bool isRemovable() const;
-
-    std::vector<IdfObject> remove();
-
     static IddObjectType iddObjectType();
 
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();

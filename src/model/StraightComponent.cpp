@@ -182,28 +182,12 @@ namespace model {
     return getImpl<detail::StraightComponent_Impl>()->outletModelObject();
   }
 
-  std::vector<IdfObject> StraightComponent::remove() {
-    return getImpl<detail::StraightComponent_Impl>()->remove();
-  }
-
   bool StraightComponent::removeFromLoop() {
     return getImpl<detail::StraightComponent_Impl>()->removeFromLoop();
   }
 
   OptionalAirLoopHVAC StraightComponent::airLoopHVAC() const {
     return getImpl<detail::StraightComponent_Impl>()->airLoopHVAC();
-  }
-
-  bool StraightComponent::addToNode(Node& node) {
-    return getImpl<detail::StraightComponent_Impl>()->addToNode(node);
-  }
-
-  ModelObject StraightComponent::clone(Model model) const {
-    return getImpl<detail::StraightComponent_Impl>()->clone(model);
-  }
-
-  void StraightComponent::disconnect() {
-    getImpl<detail::StraightComponent_Impl>()->disconnect();
   }
 
 }  // namespace model

@@ -48,8 +48,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     std::string referenceGroundTemperatureObjectType() const;
 
     double offsetTemperatureDifference() const;
@@ -58,13 +56,9 @@ namespace model {
 
     double minimumSetpointTemperature() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 

@@ -43,7 +43,7 @@ namespace model {
 
       virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
 
-      virtual unsigned branchIndexForInletModelObject(ModelObject modelObject) const;
+      virtual unsigned branchIndexForInletModelObject(const ModelObject& modelObject) const;
 
       virtual unsigned nextBranchIndex() const;
 

@@ -167,14 +167,6 @@ namespace model {
     getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->resetControlZone();
   }
 
-  bool SetpointManagerSingleZoneCooling::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->setControlVariable(controlVariable);
-  }
-
-  std::string SetpointManagerSingleZoneCooling::controlVariable() const {
-    return getImpl<detail::SetpointManagerSingleZoneCooling_Impl>()->controlVariable();
-  }
-
   /// @cond
   SetpointManagerSingleZoneCooling::SetpointManagerSingleZoneCooling(std::shared_ptr<detail::SetpointManagerSingleZoneCooling_Impl> impl)
     : SetpointManager(std::move(impl)) {}

@@ -66,7 +66,7 @@ namespace model {
     /** Returns the branch index for the ModelObject specified by modelObject.
    *  The specified object must be connected to an inlet port of the mixer.
    */
-    virtual unsigned branchIndexForInletModelObject(ModelObject modelObject) const;
+    virtual unsigned branchIndexForInletModelObject(const ModelObject& modelObject) const;
 
     /** Returns the index of the next available branch */
     virtual unsigned nextBranchIndex() const;
@@ -77,8 +77,6 @@ namespace model {
    *  removing any unconnected ports between branches.
    */
     virtual void removePortForBranch(unsigned branchIndex);
-
-    bool isRemovable() const;
 
    protected:
     Mixer(IddObjectType type, const Model& model);

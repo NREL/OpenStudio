@@ -226,10 +226,6 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SetpointManager_OutdoorAirPretreatFields::ControlVariable);
   }
 
-  std::string SetpointManagerOutdoorAirPretreat::controlVariable() const {
-    return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->controlVariable();
-  }
-
   double SetpointManagerOutdoorAirPretreat::minimumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->minimumSetpointTemperature();
   }
@@ -276,14 +272,6 @@ namespace model {
 
   boost::optional<Node> SetpointManagerOutdoorAirPretreat::returnAirStreamNode() const {
     return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->returnAirStreamNode();
-  }
-
-  boost::optional<Node> SetpointManagerOutdoorAirPretreat::setpointNode() const {
-    return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerOutdoorAirPretreat::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerOutdoorAirPretreat_Impl>()->setControlVariable(controlVariable);
   }
 
   void SetpointManagerOutdoorAirPretreat::resetControlVariable() {

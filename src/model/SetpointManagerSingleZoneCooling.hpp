@@ -45,8 +45,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSupplyAirTemperature() const;
 
     double maximumSupplyAirTemperature() const;
@@ -56,8 +54,6 @@ namespace model {
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 

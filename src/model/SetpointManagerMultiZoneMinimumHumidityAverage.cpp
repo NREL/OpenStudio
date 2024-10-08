@@ -147,14 +147,6 @@ namespace model {
     return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->isMaximumSetpointHumidityRatioDefaulted();
   }
 
-  boost::optional<Node> SetpointManagerMultiZoneMinimumHumidityAverage::setpointNode() const {
-    return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setpointNode();
-  }
-
-  std::string SetpointManagerMultiZoneMinimumHumidityAverage::controlVariable() const {
-    return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->controlVariable();
-  }
-
   bool SetpointManagerMultiZoneMinimumHumidityAverage::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {
     return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setMinimumSetpointHumidityRatio(minimumSetpointHumidityRatio);
   }
@@ -169,10 +161,6 @@ namespace model {
 
   void SetpointManagerMultiZoneMinimumHumidityAverage::resetMaximumSetpointHumidityRatio() {
     getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->resetMaximumSetpointHumidityRatio();
-  }
-
-  bool SetpointManagerMultiZoneMinimumHumidityAverage::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl>()->setControlVariable(controlVariable);
   }
 
   /// @cond

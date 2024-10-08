@@ -46,19 +46,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     boost::optional<Schedule> highSetpointSchedule() const;
 
     boost::optional<Schedule> lowSetpointSchedule() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setHighSetpointSchedule(Schedule& schedule);
 

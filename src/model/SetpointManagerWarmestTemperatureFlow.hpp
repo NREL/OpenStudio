@@ -48,8 +48,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSetpointTemperature() const;
 
     double maximumSetpointTemperature() const;
@@ -62,8 +60,6 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setControlVariable(const std::string& controlVariable);
-
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
     bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
@@ -75,8 +71,6 @@ namespace model {
     //@}
     /** @name Other */
     //@{
-    boost::optional<Node> setpointNode() const;
-
     bool setSetpointNode(const Node& node);
 
     void resetSetpointNode();

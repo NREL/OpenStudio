@@ -46,8 +46,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSetpointTemperature() const;
 
     bool isMinimumSetpointTemperatureDefaulted() const;
@@ -72,13 +70,9 @@ namespace model {
 
     boost::optional<Node> returnAirStreamNode() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 
