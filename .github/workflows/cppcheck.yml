@@ -60,11 +60,11 @@ jobs:
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \
             -j $(nproc) \
             --max-configs=1 \
-            -i src/cli/test \
-            -i src/airflow/contam \
-            -i src/polypartition \
-            -i src/nano \
-            ./src \
+            -i src/cli/test/ \
+            -i src/airflow/contam/ \
+            -i src/polypartition/ \
+            -i src/nano/ \
+            . \
             3>&1 1>&2 2>&3 | tee cppcheck.txt
 
     - name: Parse and colorize cppcheck
