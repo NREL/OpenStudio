@@ -295,7 +295,9 @@ namespace model {
     }
 
     double ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
-      return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
+      boost::optional<double> value = getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v) {
