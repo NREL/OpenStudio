@@ -182,6 +182,7 @@ namespace model {
 
       boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
+      // cppcheck-suppress [duplInheritedMember] because PlanarSurface is dumb and returns a vector
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
       boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;

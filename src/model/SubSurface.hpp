@@ -176,6 +176,7 @@ namespace model {
     void resetAdjacentSubSurface();
 
     /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+    // cppcheck-suppress [duplInheritedMember] because PlanarSurface is dumb and returns a vector
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     /** Returns the SurfacePropertyLocalEnvironment, if it exists. */
