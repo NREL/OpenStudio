@@ -88,10 +88,10 @@ namespace model {
       bool setHumidistatControlZone(const ThermalZone& thermalZone);
       void resetHumidistatControlZone();
 
-      OptionalDouble getHighHumidityOutdoorAirFlowRatio() const;
+      double getHighHumidityOutdoorAirFlowRatio() const;
       bool setHighHumidityOutdoorAirFlowRatio(double v);
 
-      boost::optional<bool> getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
+      bool getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const;
       bool setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v);
 
       OptionalString getHeatRecoveryBypassControlType() const;

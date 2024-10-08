@@ -177,13 +177,10 @@ namespace energyplus {
     }
 
     // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
-    ob = modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
-    if (ob) {
-      if (*ob) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
-      } else {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
-      }
+    if (modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio()) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
     }
 
     // HeatRecoveryBypassControlType

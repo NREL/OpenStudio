@@ -294,7 +294,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    OptionalDouble ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
+    double ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
       return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
     }
 
@@ -303,7 +303,7 @@ namespace model {
       return result;
     }
 
-    boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
+    bool ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
       return getBooleanFieldValue(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio);
     }
 
@@ -676,7 +676,7 @@ namespace model {
     getImpl<detail::ControllerOutdoorAir_Impl>()->resetHumidistatControlZone();
   }
 
-  boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
+  double ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
   }
 
@@ -684,7 +684,7 @@ namespace model {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
   }
 
-  boost::optional<bool> ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
+  bool ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
   }
 
