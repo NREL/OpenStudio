@@ -405,21 +405,25 @@ namespace model {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->roughness();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> MasslessOpaqueMaterial::thermalAbsorptance() const {
     OptionalDouble result = getImpl<detail::MasslessOpaqueMaterial_Impl>()->thermalAbsorptance();
     return result;
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> MasslessOpaqueMaterial::solarAbsorptance() const {
     OptionalDouble result = getImpl<detail::MasslessOpaqueMaterial_Impl>()->solarAbsorptance();
     return result;
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> MasslessOpaqueMaterial::visibleAbsorptance() const {
     OptionalDouble result = getImpl<detail::MasslessOpaqueMaterial_Impl>()->visibleAbsorptance();
     return result;
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double MasslessOpaqueMaterial::thermalResistance() const {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->thermalResistance();
   }
@@ -440,10 +444,12 @@ namespace model {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setRoughness(roughness);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool MasslessOpaqueMaterial::setThermalResistance(double thermalResistance) {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalResistance(thermalResistance);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool MasslessOpaqueMaterial::setThermalAbsorptance(double thermalAbsorptance) {
     return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
   }

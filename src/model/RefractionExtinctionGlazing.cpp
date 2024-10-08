@@ -340,6 +340,7 @@ namespace model {
     return getImpl<detail::RefractionExtinctionGlazing_Impl>()->setThermalTransmittance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double RefractionExtinctionGlazing::thickness() const {
     return getImpl<detail::RefractionExtinctionGlazing_Impl>()->thickness();
   }
@@ -400,6 +401,7 @@ namespace model {
     return getImpl<detail::RefractionExtinctionGlazing_Impl>()->isSolarDiffusingDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool RefractionExtinctionGlazing::setThickness(double thickness) {
     return getImpl<detail::RefractionExtinctionGlazing_Impl>()->setThickness(thickness);
   }

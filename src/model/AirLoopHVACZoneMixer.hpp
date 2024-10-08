@@ -45,14 +45,6 @@ namespace model {
 
     unsigned nextInletPort() const override;
 
-    bool addToNode(Node& node);
-
-    std::vector<openstudio::IdfObject> remove();
-
-    ModelObject clone(Model model) const;
-
-    void disconnect();
-
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
     boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;

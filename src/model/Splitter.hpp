@@ -78,8 +78,6 @@ namespace model {
    */
     virtual void removePortForBranch(unsigned branchIndex);
 
-    bool isRemovable() const;
-
    protected:
     Splitter(IddObjectType type, const Model& model);
 

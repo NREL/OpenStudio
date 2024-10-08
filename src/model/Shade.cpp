@@ -412,6 +412,7 @@ namespace model {
     return getImpl<detail::Shade_Impl>()->setThermalTransmittance(thermalTransmittance);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double Shade::thickness() const {
     return getImpl<detail::Shade_Impl>()->thickness();
   }
@@ -488,6 +489,7 @@ namespace model {
     return getImpl<detail::Shade_Impl>()->setThermalHemisphericalEmissivity(thermalHemisphericalEmissivity);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool Shade::setThickness(double thickness) {
     return getImpl<detail::Shade_Impl>()->setThickness(thickness);
   }

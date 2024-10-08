@@ -60,10 +60,6 @@ namespace model {
    */
     std::vector<ThermalZone> thermalZones();
 
-    std::vector<openstudio::IdfObject> remove();
-
-    void disconnect();
-
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
     boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;

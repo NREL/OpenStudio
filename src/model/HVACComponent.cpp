@@ -485,10 +485,6 @@ namespace model {
     return getImpl<detail::HVACComponent_Impl>()->addToNode(node);
   }
 
-  std::vector<ModelObject> HVACComponent::children() const {
-    return getImpl<detail::HVACComponent_Impl>()->children();
-  }
-
   bool HVACComponent::addToSplitter(Splitter& splitter) {
     return getImpl<detail::HVACComponent_Impl>()->addToSplitter(splitter);
   }

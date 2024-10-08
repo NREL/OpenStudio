@@ -55,10 +55,6 @@ namespace model {
 
     static std::vector<std::string> intercoolerTypeValues();
 
-    std::vector<IdfObject> remove();
-
-    ModelObject clone(Model model) const;
-
     // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you want it on several.
     bool addCase(const RefrigerationCase& refrigerationCase);
 
