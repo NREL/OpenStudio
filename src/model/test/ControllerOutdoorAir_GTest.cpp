@@ -107,7 +107,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   EXPEC_TRUE(controller.setHighHumidityOutdoorAirFlowRatio(2.0));
   ASSERT_TRUE(controller.getHighHumidityOutdoorAirFlowRatio());
   EXPECT_EQ(2.0, controller.getHighHumidityOutdoorAirFlowRatio().get());
-  
+
   // Control High Indoor Humidity Based on Outdoor Humidity Ratio
   ASSERT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio());
   EXPECT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio().get());
