@@ -80,6 +80,7 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
 
   // Electronic Enthalpy Limit Curve
+  EXPECT_FALSE(controller.electronicEnthalpyLimitCurve());
   CurveQuadratic electronicEnthalpyLimitCurve(model);
   EXPECT_TRUE(controller.setElectronicEnthalpyLimitCurve(electronicEnthalpyLimitCurve));
   ASSERT_TRUE(controller.electronicEnthalpyLimitCurve());

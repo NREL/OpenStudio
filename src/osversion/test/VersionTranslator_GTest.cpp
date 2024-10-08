@@ -4244,8 +4244,8 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ControllerOutdoorAir) {
   EXPECT_TRUE(controller.isEmpty(21));                                            // Time of Day Economizer Control Schedule Name
   EXPECT_EQ("No", controller.getString(22).get());                                // High Humidity Control
   EXPECT_TRUE(controller.isEmpty(23));                                            // Humidistat Control Zone Name
-  EXPECT_EQ(1.0, controller.getDouble(24));                                       // High Humidity Outdoor Air Flow Ratio
-  EXPECT_EQ("Yes", controller.getString(25));                                     // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_EQ(1.0, controller.getDouble(24).get());                                 // High Humidity Outdoor Air Flow Ratio
+  EXPECT_EQ("Yes", controller.getString(25).get());                               // Control High Indoor Humidity Based on Outdoor Humidity Ratio
   EXPECT_EQ("BypassWhenWithinEconomizerLimits", controller.getString(26).get());  // Heat Recovery Bypass Control Type
   EXPECT_EQ("InterlockedWithMechanicalCooling", controller.getString(27).get());  // Economizer Operation Staging
 }
