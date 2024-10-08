@@ -99,7 +99,19 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   controller.resetHumidistatControlZone();
   EXPECT_FALSE(controller.humidistatControlZone());
   ASSERT_TRUE(controller.getHighHumidityControl());
-  EXPECT_TRUE(
-    controller.getHighHumidityControl()
-      .get());  // still true because High Humidity Outdoor Air Flow Ratio or Control High Indoor Humidity Based on Outdoor Humidity Ratio may be set
+  EXPECT_FALSE(controller.getHighHumidityControl().get());
+
+  // High Humidity Outdoor Air Flow Ratio
+  ASSERT_TRUE(controller.getHighHumidityOutdoorAirFlowRatio());
+  EXPECT_EQ(1.0, controller.getHighHumidityOutdoorAirFlowRatio().get());
+  EXPEC_TRUE(controller.setHighHumidityOutdoorAirFlowRatio(2.0));
+  ASSERT_TRUE(controller.getHighHumidityOutdoorAirFlowRatio());
+  EXPECT_EQ(2.0, controller.getHighHumidityOutdoorAirFlowRatio().get());
+  
+  // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  ASSERT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio());
+  EXPECT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio().get());
+  EXPEC_TRUE(controller.setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(false));
+  ASSERT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio());
+  EXPECT_FALSE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio().get());
 }

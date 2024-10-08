@@ -4207,3 +4207,45 @@ TEST_F(OSVersionFixture, update_3_7_0_to_3_8_0_ScheduleDay) {
   EXPECT_EQ(0, sch_day.getInt(5).get());                    // Minute 1
   EXPECT_EQ(0, sch_day.getDouble(6).get());                 // Value Until Time 1
 }
+
+TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ControllerOutdoorAir) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_ControllerOutdoorAir.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_ControllerOutdoorAir_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> controllers = model->getObjectsByType("OS:Controller:OutdoorAir");
+  ASSERT_EQ(1u, controllers.size());
+  WorkspaceObject controller = controllers[0];
+
+  EXPECT_EQ("Controller Outdoor Air 1", controller.getString(1).get());  // Name
+  EXPECT_TRUE(controller.isEmpty(2));                               // Relief Air Outlet Node Name
+  EXPECT_TRUE(controller.isEmpty(3));                               // Return Air Node Name
+  EXPECT_TRUE(controller.isEmpty(4));                               // Mixed Air Node Name
+  EXPECT_TRUE(controller.isEmpty(5));                               // Actuator Node Name
+  EXPECT_EQ(0.0, controller.getDouble(6).get());                      // Minimum Outdoor Air Flow Rate {m3/s}
+  EXPECT_EQ("Autosize", controller.getString(7).get());               // Maximum Outdoor Air Flow Rate {m3/s}
+  EXPECT_EQ("NoEconomizer", controller.getString(8).get());               // Economizer Control Type
+  EXPECT_EQ("ModulateFlow", controller.getString(9).get());               // Economizer Control Action Type
+  EXPECT_EQ(28.0, controller.getDouble(10).get());                      // Economizer Maximum Limit Dry-Bulb Temperature {C}
+  EXPECT_EQ(64000.0, controller.getDouble(11).get());                      // Economizer Maximum Limit Enthalpy {J/kg}
+  EXPECT_TRUE(controller.isEmpty(12));                               // Economizer Maximum Limit Dewpoint Temperature {C}
+  EXPECT_TRUE(controller.isEmpty(13));                               // Electronic Enthalpy Limit Curve Name
+  EXPECT_EQ(-100.0, controller.getDouble(14).get());                      // Economizer Minimum Limit Dry-Bulb Temperature {C}
+  EXPECT_EQ("NoLockout", controller.getString(15).get());               // Lockout Type
+  EXPECT_EQ("FixedMinimum", controller.getString(16).get());               // Minimum Limit Type
+  EXPECT_TRUE(controller.isEmpty(17));                               // Minimum Outdoor Air Schedule Name
+  EXPECT_TRUE(controller.isEmpty(18));                               // Minimum Fraction of Outdoor Air Schedule Name
+  EXPECT_TRUE(controller.isEmpty(19));                               // Maximum Fraction of Outdoor Air Schedule Name
+  ASSERT_TRUE(controller.getTarget(15)); // Controller Mechanical Ventilation
+  EXPECT_TRUE(controller.isEmpty(21));                               // Time of Day Economizer Control Schedule Name
+  EXPECT_EQ("No", controller.getString(22).get());               // High Humidity Control
+  EXPECT_TRUE(controller.isEmpty(23));                               // Humidistat Control Zone Name
+  EXPECT_EQ(1.0, controller.getDouble(24));                               // High Humidity Outdoor Air Flow Ratio
+  EXPECT_EQ("Yes", controller.getString(25));                               // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_EQ("BypassWhenWithinEconomizerLimits", controller.getString(26).get());               // Heat Recovery Bypass Control Type
+  EXPECT_EQ("InterlockedWithMechanicalCooling", controller.getString(27).get());               // Economizer Operation Staging
+}
