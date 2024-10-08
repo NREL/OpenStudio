@@ -609,6 +609,7 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   return result;
 }
 
+// cppcheck-suppress constParameterReference
 bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& polygon, double tol) {
 
   // convert vertices to boost rings

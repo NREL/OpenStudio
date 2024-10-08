@@ -78,7 +78,7 @@ namespace model {
 
       void resetExtraCrackLengthorHeightofPivotingAxis();
 
-      bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
+      bool setOpeningFactors(const std::vector<DetailedOpeningFactorData>& factors);
 
       //@}
      protected:

@@ -6,6 +6,7 @@
 #include "SimModel.hpp"
 
 #include <cmath>
+#include <array>
 
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #  define DEBUG_ISO_MODEL_SIMULATION
@@ -577,7 +578,7 @@ v_wall_alpha_sc =In.wall_solar_alpha; %wall solar absorption coefficient
     double n_win_ff = 0.25;
     Vector v_win_ff = Vector(vsize);
 
-    double n_win_SDF_table[] = {0.5, 0.35, 1.0};
+    constexpr std::array<double, 3> n_win_SDF_table = {0.5, 0.35, 1.0};
     Vector v_win_SDF = Vector(vsize);
     Vector v_win_SDF_frac = Vector(vsize);
 
@@ -734,7 +735,7 @@ end
     for (size_t i = 0; i < theta_er.size(); i++) {
       theta_er[i] = 11.0;
     }
-    double n_v_env_form_factors[] = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
+    constexpr std::array<double, 9> n_v_env_form_factors = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1};
 
     Vector v_wall_phi_r = mult(mult(mult(mult(v_wall_R_sc, v_wall_U), v_wall_A), v_win_hr), theta_er);
     Vector v_wall_phi_sol(12);
@@ -1840,11 +1841,11 @@ v_Qcl_gas_tot = v_Qcl_DC_abs; % total gas cooliing energy
 
 */
     Vector v_frac_tot = div(sum(v_Qneed_ht, v_Qneed_cl), Qneed_ht_yr + Qneed_cl_yr);
-    double frac_total = sum(v_frac_tot);
-    double Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
     if (Q_pumps_ht == 0 || Q_pumps_cl == 0) {
       v_Q_pump_tot = sum(v_Q_pumps_ht, v_Q_pumps_cl);
     } else {
+      const double Q_pumps_tot = Q_pumps_ht + Q_pumps_cl;
+      const double frac_total = sum(v_frac_tot);
       v_Q_pump_tot = div(mult(v_frac_tot, Q_pumps_tot), frac_total);
     }
     /*

@@ -61,8 +61,11 @@ class X_Impl
 
  private:
   std::string i;
+  // cppcheck-suppress unusedStructMember
   std::string j;
+  // cppcheck-suppress unusedStructMember
   std::string k;
+  // cppcheck-suppress unusedStructMember
   std::string l;
   static size_t count;
 };

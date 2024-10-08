@@ -3,7 +3,7 @@
 *  See also https://openstudio.net/license
 ***********************************************************************************************************************/
 
-#include "InitRubyBindings.hpp"
+#include "../bindings/InitRubyBindings.hpp"
 #include <RubyAPI.hpp>
 #include <iostream>
 #include <ruby.h>

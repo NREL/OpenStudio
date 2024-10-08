@@ -543,9 +543,9 @@ namespace isomodel {
     }
   }
   void UserModel::loadBuilding(const openstudio::path& t_buildingFile) {
-    string line;
     ifstream inputFile(openstudio::toSystemFilename(t_buildingFile));
     if (inputFile.is_open()) {
+      std::string line;
       while (inputFile.good()) {
         getline(inputFile, line);
         if (!line.empty() && line[0] == '#') {

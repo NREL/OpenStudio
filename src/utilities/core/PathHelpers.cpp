@@ -428,6 +428,7 @@ bool isNetworkPath(const path& p) {
 }
 
 bool isNetworkPathAvailable(const path& p) {
+  // cppcheck-suppress knownConditionTrueFalse
   if (!isNetworkPath(p)) {
     return false;
   }

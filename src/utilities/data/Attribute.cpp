@@ -1133,20 +1133,20 @@ std::ostream& operator<<(std::ostream& os, const Attribute& attribute) {
   return os;
 }
 
-Attribute createAttributeFromVector(const std::string& name, std::vector<int> value) {
+Attribute createAttributeFromVector(const std::string& name, const std::vector<int>& value) {
   AttributeVector valueAsAttributes;
+  valueAsAttributes.reserve(value.size());
   for (int v : value) {
-    Attribute attribute(std::string(), v);
-    valueAsAttributes.push_back(attribute);
+    valueAsAttributes.emplace_back(std::string(), v);
   }
   return Attribute(name, valueAsAttributes);
 }
 
-Attribute createAttributeFromVector(const std::string& name, std::vector<double> value) {
+Attribute createAttributeFromVector(const std::string& name, const std::vector<double>& value) {
   AttributeVector valueAsAttributes;
+  valueAsAttributes.reserve(value.size());
   for (double v : value) {
-    Attribute attribute(std::string(), v);
-    valueAsAttributes.push_back(attribute);
+    valueAsAttributes.emplace_back(std::string(), v);
   }
   return Attribute(name, valueAsAttributes);
 }

@@ -1266,10 +1266,12 @@ namespace model {
     getImpl<detail::TableMultiVariableLookup_Impl>()->resetOutputUnitType();
   }
 
+  // cppcheck-suppress [duplInheritedMember] this is overriden for documentation purposes
   int TableMultiVariableLookup::numVariables() const {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->numVariables();
   }
 
+  // cppcheck-suppress [duplInheritedMember] this is overriden for documentation purposes
   double TableMultiVariableLookup::evaluate(const std::vector<double>& x) const {
     return getImpl<detail::TableMultiVariableLookup_Impl>()->evaluate(x);
   }

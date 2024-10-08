@@ -28,6 +28,7 @@ class Observer
     head = new SSNode{{key, obs}, head};
   }
 
+  // cppcheck-suppress constParameterPointer
   void remove(DelegateKey const& key, Observer* obs) {
     SSNode* node = head;
     SSNode* prev = nullptr;

@@ -109,7 +109,7 @@ TEST_F(BCLFixture, BCLXML_New) {
   EXPECT_TRUE(bclXMLValidator.validate(xmlPath));
   EXPECT_EQ(0, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
     std::string s;
-    for (auto& logMessage : bclXMLValidator.errors()) {
+    for (const auto& logMessage : bclXMLValidator.errors()) {
       s += logMessage.logMessage() + "\n";
     }
     return s;
@@ -171,7 +171,7 @@ TEST_F(BCLFixture, BCLXML_validation_historical) {
     EXPECT_TRUE(bclXMLValidator.validate(xmlPath));
     EXPECT_EQ(0, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
       std::string s;
-      for (auto& logMessage : bclXMLValidator.errors()) {
+      for (const auto& logMessage : bclXMLValidator.errors()) {
         s += logMessage.logMessage() + "\n";
       }
       return s;
@@ -186,7 +186,7 @@ TEST_F(BCLFixture, BCLXML_validation_historical) {
 
     EXPECT_EQ(2, bclXMLValidator.errors().size()) << [&bclXMLValidator]() {
       std::string s;
-      for (auto& logMessage : bclXMLValidator.errors()) {
+      for (const auto& logMessage : bclXMLValidator.errors()) {
         s += logMessage.logMessage() + "\n";
       }
       return s;

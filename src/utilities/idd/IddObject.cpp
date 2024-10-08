@@ -517,10 +517,9 @@ namespace detail {
   void IddObject_Impl::parseObject(const std::string& text) {
     // find the object name and the property text
     smatch matches;
-    string objectName;
     string propertiesText;
     if (boost::regex_search(text, matches, iddRegex::line())) {
-      objectName = string(matches[1].first, matches[1].second);
+      std::string objectName = string(matches[1].first, matches[1].second);
       openstudio::ascii_trim(objectName);
       if (!boost::equals(m_name, objectName)) {
         LOG_AND_THROW("Object name '" << objectName << "' does not match expected '" << m_name << "'");

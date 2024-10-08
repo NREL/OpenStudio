@@ -54,7 +54,8 @@ namespace detail {
     return oss.str();
   }
 
-  void callback_messages_structured_error(void* errorCollectorVoidPtr, const xmlError* error) {
+  // cppcheck-suppress constParameterPointer
+  void callback_messages_structured_error(void* errorCollectorVoidPtr, xmlError* error) {
     // This shouldn't happen, but better be safe than sorry
     if (!error) {
       return;

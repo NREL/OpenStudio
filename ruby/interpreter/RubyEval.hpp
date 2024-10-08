@@ -6,8 +6,8 @@
 #ifndef RUBYEVAL_included
 #define RUBYEVAL_included
 
-#include "ruby.h"
-#include "./RubyException.hpp"
+#include <ruby.h>
+#include "RubyException.hpp"
 
 namespace openstudio {
 
@@ -49,7 +49,7 @@ inline VALUE evalString(const std::string& t_str) {
     // Generally speaking, the backtrace is there, but not for the case where it's a stack too deep error
     const ID ID_backtrace = rb_intern_const("backtrace");
     if (exception_class != rb_eSysStackError && rb_respond_to(errinfo, ID_backtrace)) {
-      std::vector<std::string> backtrace_lines;
+      // std::vector<std::string> backtrace_lines;
       std::string btlines;
       /*volatile*/ VALUE backtrace;
       if (!NIL_P(backtrace = rb_funcall(errinfo, ID_backtrace, 0))) {
@@ -57,13 +57,13 @@ inline VALUE evalString(const std::string& t_str) {
         btlines = StringValuePtr(backtracejoin);
 
         // Get the backing C array of the ruby array
-        VALUE* elements = RARRAY_PTR(backtrace);
-        for (long c = 0; c < RARRAY_LEN(backtrace); ++c) {
-          VALUE entry = elements[c];
-          [[maybe_unused]] char* backtrace_line = RSTRING_PTR(entry);
-          char* backtrace_line2 = StringValuePtr(entry);
-          backtrace_lines.emplace_back(backtrace_line2);
-        }
+        // VALUE* elements = RARRAY_PTR(backtrace);
+        // for (long c = 0; c < RARRAY_LEN(backtrace); ++c) {
+        //   VALUE entry = elements[c];
+        //   [[maybe_unused]] char* backtrace_line = RSTRING_PTR(entry);
+        //   char* backtrace_line2 = StringValuePtr(entry);
+        //   backtrace_lines.emplace_back(backtrace_line2);
+        // }
       }
 
       if (!btlines.empty()) {

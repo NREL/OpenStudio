@@ -36,7 +36,7 @@ namespace detail {
 
     m_startDateTime = DateTime(startDate, Time(0));
 
-    for (unsigned i = 0; i < values.size(); ++i) {
+    for (size_t i = 0; i < values.size(); ++i) {
       m_secondsFromFirstReport[i] = i * secondsPerInterval;
       m_secondsFromStart[i] = (i + 1) * secondsPerInterval;
     }
@@ -78,7 +78,7 @@ namespace detail {
 
     m_startDateTime = m_firstReportDateTime - intervalLength;
 
-    for (unsigned i = 0; i < values.size(); ++i) {
+    for (size_t i = 0; i < values.size(); ++i) {
       m_secondsFromFirstReport[i] = i * secondsPerInterval;
       m_secondsFromStart[i] = (i + 1) * secondsPerInterval;
     }
@@ -944,9 +944,7 @@ TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector) {
       result = result + ts;
     }
     if (result.values().empty()) {
-      LOG_FREE(Info, "zero.sum",
-               "Could not sum the timeSeriesVector. Either the first series is empty, or the "
-                 << "units are incompatible.");
+      LOG_FREE(Info, "zero.sum", "Could not sum the timeSeriesVector. Either the first series is empty, or the " << "units are incompatible.");
       break;
     }
     first = false;

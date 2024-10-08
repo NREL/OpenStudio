@@ -189,6 +189,7 @@ TEST_F(UnitsFixture, Unit_ArithmeticOperators) {
     SCOPED_TRACE("u5*u4");
     testStreamOutput("k(m^2*kg/s^2)", u7);
   }
+  // cppcheck-suppress knownConditionTrueFalse
   EXPECT_TRUE(u6 == u7);
 
   // DIVISION

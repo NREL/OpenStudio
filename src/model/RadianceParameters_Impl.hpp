@@ -28,7 +28,7 @@ namespace model {
 
       RadianceParameters_Impl(const RadianceParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RadianceParameters_Impl();
+      virtual ~RadianceParameters_Impl() override;
 
       //@}
 

@@ -38,13 +38,12 @@ inline std::string applicationFilePath() {
   return {};
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
 
 #ifdef __APPLE__
   if (argc > 1u) {
     openstudio::filesystem::path appDir = openstudio::filesystem::path(applicationFilePath()).parent_path();
     openstudio::filesystem::path cliPath = appDir / "openstudio";
-    openstudio::filesystem::path appPath = appDir.parent_path() / "OpenStudioApp.app";
 
     if (std::string(argv[1]) == "Install") {
       try {

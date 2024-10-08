@@ -211,7 +211,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool AirflowNetworkDetailedOpening_Impl::setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors) {
+    bool AirflowNetworkDetailedOpening_Impl::setOpeningFactors(const std::vector<DetailedOpeningFactorData>& factors) {
       // Number of Sets of Opening Factor Data
       if (factors.size() < 2) {
         LOG(Error, "Insufficient data in opening factors vector, minimum number of factors is 2");
@@ -254,7 +254,7 @@ namespace model {
                                                                double massFlowExponentWhenOpeningisClosed,
                                                                const std::string& typeofRectangularLargeVerticalOpening,
                                                                double extraCrackLengthorHeightofPivotingAxis,
-                                                               std::vector<DetailedOpeningFactorData>& openingFactors)
+                                                               const std::vector<DetailedOpeningFactorData>& openingFactors)
     : AirflowNetworkComponent(AirflowNetworkDetailedOpening::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkDetailedOpening_Impl>());
 
@@ -271,7 +271,7 @@ namespace model {
   }
 
   AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
-                                                               std::vector<DetailedOpeningFactorData>& openingFactors)
+                                                               const std::vector<DetailedOpeningFactorData>& openingFactors)
     : AirflowNetworkComponent(AirflowNetworkDetailedOpening::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkDetailedOpening_Impl>());
 
@@ -351,13 +351,13 @@ namespace model {
     getImpl<detail::AirflowNetworkDetailedOpening_Impl>()->resetExtraCrackLengthorHeightofPivotingAxis();
   }
 
-  bool AirflowNetworkDetailedOpening::setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors) {
+  bool AirflowNetworkDetailedOpening::setOpeningFactors(const std::vector<DetailedOpeningFactorData>& factors) {
     return getImpl<detail::AirflowNetworkDetailedOpening_Impl>()->setOpeningFactors(factors);
   }
 
   /// @cond
   AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(std::shared_ptr<detail::AirflowNetworkDetailedOpening_Impl> impl)
-    : AirflowNetworkComponent(impl) {}
+    : AirflowNetworkComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

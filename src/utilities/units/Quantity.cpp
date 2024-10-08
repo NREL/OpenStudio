@@ -365,6 +365,7 @@ Quantity operator/(const Quantity& lQuantity, const Quantity& rQuantity) {
 
 Quantity pow(const Quantity& rQuantity, int expNum, int expDenom) {
   Quantity result(rQuantity);
+  // cppcheck-suppress ignoredReturnValue
   result.pow(expNum, expDenom);
   return result;
 }

@@ -96,7 +96,7 @@ TEST_F(DataFixture, EndUses) {
   EXPECT_EQ(static_cast<unsigned>(2), subCategories.size());
 
   for (const EndUseFuelType& fuelType : fuelTypes) {
-    std::string units = endUses.getUnitsForFuelType(fuelType);
+    // std::string units = endUses.getUnitsForFuelType(fuelType);
     for (const EndUseCategoryType& category : categories) {
       for (const std::string& subCategory : subCategories) {
         /* double value =*/endUses.getEndUse(fuelType, category, subCategory);

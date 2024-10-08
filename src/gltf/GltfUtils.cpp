@@ -110,7 +110,7 @@ namespace gltf {
 
     // Creates Coordinates / Normal Buffers and Accessors.
     // returns : index
-    int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors) {
+    int createBuffers(const std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors) {
       // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT
       // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
       auto _padding = coordinatesBuffer.size() % 4;

@@ -84,6 +84,7 @@ TEST_F(UnitsFixture, Quantity_ArithmeticOperators) {
   EXPECT_EQ("ft/s^2", a.standardUnitsString());
 
   // pow
+  // cppcheck-suppress ignoredReturnValue
   a.pow(6);
   EXPECT_EQ("ft^6/s^12", a.standardUnitsString());
   Quantity b = openstudio::pow(a, 1, 3);

@@ -21,7 +21,7 @@ namespace detail {
     StringStreamLogSink_Impl();
 
     /// destructor, disables log sink
-    virtual ~StringStreamLogSink_Impl();
+    virtual ~StringStreamLogSink_Impl() override;
 
     /// get the string stream's content
     std::string string() const;

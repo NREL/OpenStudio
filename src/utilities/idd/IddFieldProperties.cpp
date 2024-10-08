@@ -184,7 +184,7 @@ std::ostream& IddFieldProperties::print(std::ostream& os) const {
       os << "       \\reference " << reference << '\n';
     }
   }
-  if (!references.empty()) {
+  if (!referenceClassNames.empty()) {
     for (const std::string& reference : referenceClassNames) {
       os << "       \\reference-class-name " << reference << '\n';
     }

@@ -270,7 +270,7 @@ boost::optional<CalibrationUtilityBill> CalibrationUtilityBill::fromAttribute(co
 CalibrationUtilityBill::CalibrationUtilityBill(
   const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
   boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
-  boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
+  boost::optional<std::string> meterSpecificEndUse, const std::string& consumptionUnit, double consumptionUnitConversionFactor,
   boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
   boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
   boost::optional<unsigned> numberBillingPeriodsInCalculations, boost::optional<double> CVRMSE, boost::optional<double> NMBE)

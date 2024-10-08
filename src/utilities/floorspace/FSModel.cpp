@@ -628,8 +628,8 @@ void FSSpace::simplifyFace(const FSGeometry& geometry) {
       std::vector<FSEdgeReference> edgeRefs;
       // Create new edges for the face
       for (unsigned i = 0; i < simplifiedVertices.size(); i++) {
-        Point3d& p1 = simplifiedVertices[i];
-        Point3d& p2 = simplifiedVertices[(i + 1) % simplifiedVertices.size()];
+        const Point3d& p1 = simplifiedVertices[i];
+        const Point3d& p2 = simplifiedVertices[(i + 1) % simplifiedVertices.size()];
 
         auto v1 = geometry.vertex(p1);
         auto v2 = geometry.vertex(p2);
@@ -785,6 +785,7 @@ FSEdge::FSEdge(const Json::Value& root, const FSGeometry& geometry) {
   load(root, geometry);
 }
 
+// cppcheck-suppress constParameterReference
 FSEdge::FSEdge(FSVertex& v1, FSVertex& v2) {
   m_vertices.push_back(v1);
   m_vertices.push_back(v2);
