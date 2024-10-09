@@ -20,6 +20,7 @@ __**OpenStudio SDK @VERSION@**__
 - Command Line Interface (CLI)
 - Radiance
 - Ruby API
+- Python API
 - C++ SDK
 
 **Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is not included in either the SDK or the OpenStudio Coalition's Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
@@ -27,20 +28,20 @@ __**OpenStudio SDK @VERSION@**__
 # Where to Find OpenStudio SDK Documentation
 
 - OpenStudio SDK release documentation, including these release notes, tutorials, and other user documentation, is available at [https://www.openstudio.net/](https://www.openstudio.net/.)
-- C++ API documentation is available at [https://openstudio-sdk-documentation.s3.amazonaws.com/index.html](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html)
-- Measure development documentation is available at [http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/ )
-- A roadmap for planned features is available at http://nrel.github.io/OpenStudio-user-documentation/getting_started/roadmap/.
+- C++ API documentation is available at [OpenStudio SDK Documentation](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html)
+- Measure development documentation is available at [OpenStudio Measure Writer's Reference Guide](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/ )
+- A roadmap for planned features is available at [Roadmap](http://nrel.github.io/OpenStudio-user-documentation/getting_started/roadmap/)
 
 # Installation Notes
 
 OpenStudio SDK @VERSION@ is supported on:
 
 * 64-bit Windows 7 – 11
-* macOS: 10.15+ x86_64, 12.1+ arm64
+* macOS: 11.6+ x86_64, 12.1+ arm64
 * Ubuntu: 20.04 x86_64, 22.04 x86_64, 22.04 arm64
 * Centos7
 
-OpenStudio SDK @VERSION@ supports [EnergyPlus Release 23.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v23.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK @VERSION@.
+OpenStudio SDK @VERSION@ supports [EnergyPlus Release @EP_VERSION@](https://github.com/NREL/EnergyPlus/releases/tag/v@EP_VERSION@), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK @VERSION@.
 
 OpenStudio SDK @VERSION@ supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK @VERSION@.
 
@@ -49,17 +50,18 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 
 ## Installation Steps
 
-- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
-- Setup a Building Component Library (BCL) account to access online building components and measures. View instructions on how to setup your account and configure the key in OpenStudio.
-- The OpenStudio Application SketchUp Plug-in requires SketchUp 2021-2022 (not available for Linux). The OpenStudio Application SketchUp Plug-in does not support older versions of SketchUp. SketchUp must be installed before OpenStudio Application to automatically activate the plugin. If you install SketchUp after OpenStudio Application, simply re-run the OpenStudio Application installer.
+- Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or any third party tool that embeds the OpenStudio SDK into their software such as [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
+- A BCL AUth Key is no longer needed to access content on [Building Component Library (BCL)](https://bcl.nrel.gov) BCL is typically accessed through third party OpenStudio applications to provide modelers access to building components and OpenStudio measures; however you an also browse it and download content using the BCL link above.
 
-For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
+For help with common installation problems please visit [Getting Started](http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/).
 
 # OpenStudio SDK: Changelog
 
-The @VERSION@ is a <minor/major> release. This update includes several new features, performance improvements, and bug fixes.
-You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2023-05-12..2023-10-26+).
+The @VERSION@ is a **<minor/major>** release. This update includes several new features, performance improvements, and bug fixes.
 
+## C++ Workflow code
+
+As of OpenStudio SDK 3.7.0 a re-written workflow written in C++ is used by default in place of the Ruby based Workflow Gem that had been used in the past. This enhancement is in support of Python measures being used in an OpenStudio workflow, including mixed language workflows that include both Ruby Measures and Python Measures. If you need to use the older Workflow Gem implementation, you can do that by using the `classic` subcommand after `openstudio`. `classic` will be deprecated in a future version of OpenStudio.
 
 ## Python Bindings
 
@@ -78,16 +80,33 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## Minor changes and bug fixes
 
+Refer to the changelog on the release page at [v@VERSION@](https://github.com/NREL/OpenStudio/releases/v@VERSION@)
 
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v@VERSION@...v@VERSION@
 
 **New Contributors**:
 
-### OpenStudio Standards vXXX
+### OpenStudio Standards v@STANDARDS_VERSION@
+
+Update the openstudio-standards gem to version [@STANDARDS_VERSION@](https://github.com/NREL/openstudio-standards/releases/tag/v@STANDARDS_VERSION@)
+In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
 
 
 ### OpenStudio Server vXXX
 
 
-## Issue Statistics Since Previous Release
 
+
+---
+# This YAML header controls the pandoc (via TeX) to PDF settings
+# To convert the markdown to pdf, do `pandoc release_notes.md -o release_notes.pdf`
+title:  'OpenStudio Release Notes - @VERSION@'
+author:
+- National Renewable Energy Laboratory
+colorlinks: true
+linkcolor: blue
+urlcolor: Mahogany
+toccolor: gray
+geometry:
+- margin=1in
+---

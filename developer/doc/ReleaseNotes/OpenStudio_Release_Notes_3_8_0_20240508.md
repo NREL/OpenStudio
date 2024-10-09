@@ -1,6 +1,6 @@
 # OpenStudio Version 3.8.0
 
-_Release Notes_ - _TBD_
+_Release Notes_ - 2024-05-08
 
 These release notes describe version 3.8.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -28,9 +28,9 @@ __**OpenStudio SDK 3.8.0**__
 # Where to Find OpenStudio SDK Documentation
 
 - OpenStudio SDK release documentation, including these release notes, tutorials, and other user documentation, is available at [https://www.openstudio.net/](https://www.openstudio.net/.)
-- C++ API documentation is available at [https://openstudio-sdk-documentation.s3.amazonaws.com/index.html](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html)
-- Measure development documentation is available at [http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/ )
-- A roadmap for planned features is available at http://nrel.github.io/OpenStudio-user-documentation/getting_started/roadmap/.
+- C++ API documentation is available at [OpenStudio SDK Documentation](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html)
+- Measure development documentation is available at [OpenStudio Measure Writer's Reference Guide](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/ )
+- A roadmap for planned features is available at [Roadmap](http://nrel.github.io/OpenStudio-user-documentation/getting_started/roadmap/)
 
 # Installation Notes
 
@@ -53,7 +53,7 @@ As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://g
 - Download and install [OpenStudio SDK](https://github.com/NREL/openstudio) and/or any third party tool that embeds the OpenStudio SDK into their software such as [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
 - A BCL AUth Key is no longer needed to access content on [Building Component Library (BCL)](https://bcl.nrel.gov) BCL is typically accessed through third party OpenStudio applications to provide modelers access to building components and OpenStudio measures; however you an also browse it and download content using the BCL link above.
 
-For help with common installation problems please visit, http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/.
+For help with common installation problems please visit [Getting Started](http://nrel.github.io/OpenStudio-user-documentation/getting_started/getting_started/).
 
 # OpenStudio SDK:
 
@@ -87,11 +87,12 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
    * [#5037](https://github.com/NREL/OpenStudio/issues/5037)
    * [#4918](https://github.com/NREL/OpenStudio/issues/4918)
 
-* [#TBD]() Refactoring and relocating model methods that has been in the openStudio-extension Gem to be in the openstudio-standards Gem or in OpenStudio C++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
 
-* [#TBD]() Update to version 0.6.0 of the openstudio_standards Gem. In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
+* Refactoring and relocating model methods that has been in the openstudio-extensio-gem Gem to be in the openstudio-standards Gem or in OpenStudio C++ SDK. A few methods will be moved directly into measures. The result of this is that with OpenStudio 3.8.0 no measures should have to require 'openstudio-extension' within a measure's Ruby code.
+    * [#5142](https://github.com/NREL/OpenStudio/pull/5142) - Add native support for measure argument methods in OsLib_HelperMethods
 
-* [#TBD]() Enhancements to the Building Component Library (BCL)
+* Enhancements to the Building Component Library (BCL)
+    * [#5126](https://github.com/NREL/OpenStudio/pull/5126) - Add versionModified, repo, org, releaseTag to BCLSearchResult
     * Support for OpenStudio Python Measures
     * Updating Measure Details page to include measure language
     * Link to GitHub Repo from Measure Details page
@@ -111,16 +112,27 @@ For a list of deprecated and removed methods, please refer to [deprecated_method
 
 ## Minor changes and bug fixes
 
-*
-*
-*
-
-## Known Issues / Limitations
-
-*
-*
-*
+Refer to the changelog on the release page at [v3.8.0](https://github.com/NREL/OpenStudio/releases/v3.8.0)
 
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.7.0...v3.8.0
 
 **New Contributors**:
+
+### OpenStudio Standards v0.6.1
+
+Update the openstudio-standards gem to version [0.6.1](https://github.com/NREL/openstudio-standards/releases/tag/v0.6.1)
+In addition to some refactoring, this release also included conversion of 90.1 data to formal database.
+
+---
+# This YAML header controls the pandoc (via TeX) to PDF settings
+# To convert the markdown to pdf, do `pandoc release_notes.md -o release_notes.pdf`
+title:  'OpenStudio Release Notes - 3.8.0'
+author:
+- National Renewable Energy Laboratory
+colorlinks: true
+linkcolor: blue
+urlcolor: Mahogany
+toccolor: gray
+geometry:
+- margin=1in
+---
