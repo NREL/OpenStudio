@@ -1,6 +1,7 @@
 |         | E+      | Radiance | SketchUp   | Ruby | SHA        | Released   | Gemfile |
 |---------|------------------|----------|------------|------|------------|------------|---------
 | v3.1.0  | 9.4.0   | 5.0.a.12  | [See](https://github.com/openstudiocoalition/openstudio-sketchup-plugin/wiki/OpenStudio-SketchUp-Plug-in-Wiki)       | 2.5.5| e165090621| 2020-10-16 | [Gemfile](https://github.com/NREL/openstudio-gems/blob/v3.1.0/Gemfile) |
+| v3.1.0  | 9.4.0   | 5.0.a.12  | [See](https://github.com/openstudiocoalition/openstudio-sketchup-plugin/wiki/OpenStudio-SketchUp-Plug-in-Wiki)       | 2.5.5| e165090621| 2020-10-16 | [Gemfile](https://github.com/NREL/openstudio-gems/blob/v3.1.0/Gemfile) |
 | v3.0.1  | 9.3.0   | 5.0.a.12  | [See](https://github.com/openstudiocoalition/openstudio-sketchup-plugin/wiki/OpenStudio-SketchUp-Plug-in-Wiki)       | 2.5.5| 09b7c8a554| 2020-06-26 | [Gemfile](https://github.com/NREL/openstudio-gems/blob/v3.0.1/Gemfile) |
 | v3.0.0  | 9.3.0   | 5.0.a.12  | [See](https://github.com/openstudiocoalition/openstudio-sketchup-plugin/wiki/OpenStudio-SketchUp-Plug-in-Wiki)       | 2.5.5| 1c9617fa4e| 2020-04-27 | [Gemfile](https://github.com/NREL/openstudio-gems/blob/v3.0.0/Gemfile) |
 | v2.9.1  | 9.2.0   | 5.0.a.12  | 2017       | 2.2.4| 3472e8b799| 2019-12-07 | [Gemfile](https://github.com/NREL/openstudio-gems/blob/v2.9.1/Gemfile) |
