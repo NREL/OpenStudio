@@ -181,7 +181,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setEconomizerControlType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlType, value);
-      ;
     }
 
     std::string ControllerOutdoorAir_Impl::getEconomizerControlActionType() const {
@@ -190,7 +189,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setEconomizerControlActionType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlActionType, value);
-      ;
     }
 
     //get needs to return a boost optional double since "" is a valid input
@@ -260,7 +258,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setLockoutType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::LockoutType, value);
-      ;
     }
 
     std::string ControllerOutdoorAir_Impl::getMinimumLimitType() const {
@@ -269,13 +266,10 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setMinimumLimitType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::MinimumLimitType, value);
-      ;
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getHighHumidityControl() const {
-      boost::optional<std::string> value = getString(OS_Controller_OutdoorAirFields::HighHumidityControl, true);
-      OS_ASSERT(value);
-      return openstudio::istringEqual(value.get(), "Yes");
+      return getBooleanFieldValue(OS_Controller_OutdoorAirFields::HighHumidityControl);
     }
 
     boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
@@ -547,7 +541,6 @@ namespace model {
     setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
     setHighHumidityOutdoorAirFlowRatio(1.0);
     setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(true);
-    setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "");
     setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits");
     setEconomizerOperationStaging("InterlockedWithMechanicalCooling");
 
