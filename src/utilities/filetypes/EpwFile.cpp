@@ -3887,6 +3887,17 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
     return false;
   }
 
+  struct epw_string
+  {
+    int lineNumber;
+    int year;
+    int month;
+    int day;
+    int hour;
+    int currentMinute;
+    std::vector<std::string> strings;
+  };
+
   // read rest of file
   int lineNumber = 8;
   boost::optional<Date> startDate;
@@ -3897,6 +3908,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
   OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60 / m_recordsPerHour;
   int currentMinute = 0;
+  std::vector<epw_string> epw_strings;
   while (std::getline(ifs, line)) {
     lineNumber++;
     std::vector<std::string> strings = splitString(line, ',');
@@ -3948,13 +3960,8 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
               m_minutesMatch = false;
             }
           }
-          boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
-          if (pt) {
-            m_data.push_back(pt.get());
-          } else {
-            LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-            return false;
-          }
+          epw_string epw_s = {lineNumber, year, month, day, hour, currentMinute, strings};
+          epw_strings.push_back(epw_s);
         }
 
       } catch (...) {
@@ -3963,6 +3970,31 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
       }
     } else {
       LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
+      return false;
+    }
+  }
+
+  for (unsigned int i = 0; i < epw_strings.size(); i++) {
+    int year = epw_strings[i].year;
+    int month = epw_strings[i].month;
+    int day = epw_strings[i].day;
+    int hour = epw_strings[i].hour;
+    int currentMinute = epw_strings[i].currentMinute;
+
+    // Fix for #5214: for TMY files where 28-day Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
+    // If the TMY file actually contained Feb 29, we still change xxxx-Feb-29 00:00:00 to xxxx-Mar-01 00:00:00, but it doesn't matter since you'd still get Bad Date on xxxx-Feb-29 01:00:00, etc.
+    if ((!realYear) && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {
+      Date date(month, day, year);
+      if (date.isLeapYear()) {
+        day = 29;
+      }
+    }
+
+    boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, epw_strings[i].strings);
+    if (pt) {
+      m_data.push_back(pt.get());
+    } else {
+      LOG(Error, "Failed to parse line " << epw_strings[i].lineNumber << " of EPW file '" << m_path << "'");
       return false;
     }
   }

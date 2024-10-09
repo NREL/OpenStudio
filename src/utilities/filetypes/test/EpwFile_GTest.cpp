@@ -515,12 +515,59 @@ TEST(Filetypes, EpwFile_LeapTimeSeries) {
     boost::optional<TimeSeries> _t;
     ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
     ASSERT_TRUE(_t);
-    // isActal is true, so it should be a timeSeries with the actual year
+    // isActual is true, so it should be a timeSeries with the actual year
     boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
     ASSERT_TRUE(_timeSeriesBaseYear);
     EXPECT_EQ(2012, _timeSeriesBaseYear.get());
   } catch (...) {
     ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_LeapTimeSeries_AMYNoLeapDay) {
+  // Tests for #5214
+
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test-noleapday.epw");
+    EpwFile epwFile(p);
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+    ASSERT_TRUE(_t);
+    // even though this is AMY, the lack of Feb 29 causes it to be TMY (i.e., successive datapoints greater than 1 day)
+    boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
+    EXPECT_FALSE(_timeSeriesBaseYear);
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_LeapTimeSeries_TMYLeapFebNoLeapDay) {
+  // Tests for #5214
+
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-noleapday.epw");
+    EpwFile epwFile(p);
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+    ASSERT_TRUE(_t);
+    boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
+    EXPECT_FALSE(_timeSeriesBaseYear);
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_LeapTimeSeries_TMYLeapFebLeapDay) {
+  // Tests for #5214
+
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3-leapday.epw");
+    EpwFile epwFile(p);
+    boost::optional<TimeSeries> _t;
+    _t = epwFile.getTimeSeries("Dry Bulb Temperature");
+    ASSERT_TRUE(false);  // we don't hit this because we expect getTimeSeries to fail
+  } catch (...) {
+    ASSERT_TRUE(true);
   }
 }
 
