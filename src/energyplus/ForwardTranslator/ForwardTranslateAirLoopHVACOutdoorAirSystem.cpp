@@ -107,24 +107,6 @@ namespace energyplus {
       }
     }
 
-    // Field: Availability Manager List Name //////////////////////////////////
-    IdfObject availabilityManagerListIdf(IddObjectType::AvailabilityManagerAssignmentList);
-    availabilityManagerListIdf.setName(name + " Availability Manager List");
-    m_idfObjects.push_back(availabilityManagerListIdf);
-
-    IdfObject availabilityManagerScheduledIdf = IdfObject(openstudio::IddObjectType::AvailabilityManager_Scheduled);
-    availabilityManagerScheduledIdf.setName(name + " Availability Manager");
-    m_idfObjects.push_back(availabilityManagerScheduledIdf);
-
-    Schedule alwaysOn = modelObject.model().alwaysOnDiscreteSchedule();
-    IdfObject alwaysOnIdf = translateAndMapModelObject(alwaysOn).get();
-
-    availabilityManagerListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType,
-                                         availabilityManagerScheduledIdf.iddObject().name());
-    availabilityManagerListIdf.setString(1 + openstudio::AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerName,
-                                         availabilityManagerScheduledIdf.name().get());
-    availabilityManagerScheduledIdf.setString(openstudio::AvailabilityManager_ScheduledFields::ScheduleName, alwaysOnIdf.name().get());
-
     // OA Node List
     s = modelObject.outboardOANode()->name();
     IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
