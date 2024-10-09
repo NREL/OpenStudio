@@ -6,6 +6,14 @@
 #include "../ReverseTranslator.hpp"
 #include "../../model/ControllerOutdoorAir.hpp"
 #include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -21,6 +29,9 @@ namespace energyplus {
       LOG(Error, "WorkspaceObject is not IddObjectType: Controller_OutdoorAir");
       return boost::none;
     }
+
+    boost::optional<WorkspaceObject> _wo;
+    boost::optional<ModelObject> _mo;
 
     ControllerOutdoorAir mo(m_model);
 
@@ -64,9 +75,14 @@ namespace energyplus {
       mo.setEconomizerMaximumLimitDewpointTemperature(value.get());
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
-    if (s) {
-      LOG(Error, "ControllerOutdoorAir " << workspaceObject.briefDescription() << " references a curve that is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        if (boost::optional<Curve> _curve = _mo->optionalCast<Curve>()) {
+          mo.setElectronicEnthalpyLimitCurve(_curve.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Electronic Enthalpy Limit Curve Name'");
+        }
+      }
     }
 
     value = workspaceObject.getDouble(Controller_OutdoorAirFields::EconomizerMinimumLimitDryBulbTemperature);
@@ -84,22 +100,34 @@ namespace energyplus {
       mo.setMinimumLimitType(s.get());
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName);
-    if (s) {
-      LOG(Warn,
-          "ControllerOutdoorAir " << workspaceObject.briefDescription() << " references a minimum outdoor air schedule, which is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        if (boost::optional<Schedule> _schedule = _mo->optionalCast<Schedule>()) {
+          mo.setMinimumOutdoorAirSchedule(_schedule.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Minimum Outdoor Air Schedule Name'");
+        }
+      }
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName);
-    if (s) {
-      LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
-                                        << " references a minimum fraction of outdoor air schedule, which is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        if (boost::optional<Schedule> _schedule = _mo->optionalCast<Schedule>()) {
+          mo.setMinimumFractionofOutdoorAirSchedule(_schedule.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Minimum Fraction of Outdoor Air Schedule Name'");
+        }
+      }
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName);
-    if (s) {
-      LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
-                                        << " references a maximum fraction of outdoor air schedule, which is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        if (boost::optional<Schedule> _schedule = _mo->optionalCast<Schedule>()) {
+          mo.setMaximumFractionofOutdoorAirSchedule(_schedule.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Maximum Fraction of Outdoor Air Schedule Name'");
+        }
+      }
     }
 
     s = workspaceObject.getString(Controller_OutdoorAirFields::MechanicalVentilationControllerName);
@@ -108,24 +136,27 @@ namespace energyplus {
           "ControllerOutdoorAir " << workspaceObject.briefDescription() << " references a mechanical ventilation controller, which is not supported");
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName);
-    if (s) {
-      LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription()
-                                        << " references a time of day economizer control schedule, which is not supported");
-    }
-
-    s = workspaceObject.getString(Controller_OutdoorAirFields::HighHumidityControl);
-    if (s) {
-      if (istringEqual("Yes", s.get())) {
-        mo.setHighHumidityControl(true);
-      } else {
-        mo.setHighHumidityControl(false);
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        if (boost::optional<Schedule> _schedule = _mo->optionalCast<Schedule>()) {
+          mo.setTimeofDayEconomizerControlSchedule(_schedule.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Time of Day Economizer Control Schedule Name'");
+        }
       }
     }
 
-    s = workspaceObject.getString(Controller_OutdoorAirFields::HumidistatControlZoneName);
-    if (s) {
-      LOG(Warn, "ControllerOutdoorAir " << workspaceObject.briefDescription() << " references a high humidity control zone, which is not supported");
+    if ((_wo = workspaceObject.getTarget(Controller_OutdoorAirFields::HumidistatControlZoneName))) {
+      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = _mo->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            mo.setHumidistatControlZone(z_.get());
+          }
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Humidistat Control Zone Name'");
+        }
+      }
     }
 
     value = workspaceObject.getDouble(Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);

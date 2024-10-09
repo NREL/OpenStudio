@@ -144,7 +144,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.6.0")] = &VersionTranslator::update_3_5_1_to_3_6_0;
     m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
     m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::update_3_7_0_to_3_8_0;
-    // m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.9.0")] = &VersionTranslator::update_3_8_0_to_3_9_0;
+    // m_updateMethods[VersionString("3.9.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -181,9 +182,9 @@ namespace osversion {
       VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),  VersionString("2.9.0"),
       VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),  VersionString("3.1.0"),  VersionString("3.2.0"),
       VersionString("3.2.1"),  VersionString("3.3.0"),  VersionString("3.4.0"),  VersionString("3.5.0"),  VersionString("3.5.1"),
-      VersionString("3.6.0"),  VersionString("3.6.1"),  VersionString("3.7.0"),
+      VersionString("3.6.0"),  VersionString("3.6.1"),  VersionString("3.7.0"),  VersionString("3.8.0"),
       // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
-      //VersionString("3.8.0"),
+      //VersionString("3.9.0"),
     };
   }
 
@@ -9195,6 +9196,53 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_7_0_to_3_8_0
+
+  std::string VersionTranslator::update_3_8_0_to_3_9_0(const IdfFile& idf_3_8_0, const IddFileAndFactoryWrapper& idd_3_9_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_8_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_9_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_8_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:Controller:OutdoorAir") {
+
+        // 2 Fields have been made required from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * High Humidity Outdoor Air Flow Ratio * 24
+        // * Control High Indoor Humidity Based on Outdoor Humidity Ratio * 25
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        if (newObject.isEmpty(24)) {
+          newObject.setDouble(24, 1.0);
+        }
+        if (newObject.isEmpty(25)) {
+          newObject.setString(25, "Yes");
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_8_0_to_3_9_0
 
 }  // namespace osversion
 }  // namespace openstudio
