@@ -22690,7 +22690,7 @@ OS:Controller:OutdoorAir,
        \note This field is only used when the field High Humidity Control = Yes.
        \type real
        \minimum> 0
-       \default 1.0
+       \required-field
   A19, \field Control High Indoor Humidity Based on Outdoor Humidity Ratio
        \note If No is selected, the outdoor air flow rate is modified any time indoor relative
        \note humidity is above the humidistat setpoint. If Yes is selected, the outdoor air
@@ -22698,7 +22698,7 @@ OS:Controller:OutdoorAir,
        \note setpoint and the outdoor humidity ratio is less than the indoor humidity ratio.
        \note This field is only used when the field High Humidity Control = Yes.
        \type choice
-       \default Yes
+       \required-field
        \key Yes
        \key No
   A20, \field Heat Recovery Bypass Control Type

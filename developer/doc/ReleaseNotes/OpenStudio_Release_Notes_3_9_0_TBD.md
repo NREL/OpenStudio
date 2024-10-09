@@ -1,8 +1,8 @@
-# OpenStudio Version @VERSION@
+# OpenStudio Version 3.9.0
 
 _Release Notes_ -  _TDB_
 
-These release notes describe version @VERSION@ of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
+These release notes describe version 3.9.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
 -  Overview
 -  Where to Find OpenStudio Documentation
@@ -15,7 +15,7 @@ As of April 2020, development and distribution of the OpenStudioApplication and 
 
 Below is the list of components that is included in this SDK installer:
 
-__**OpenStudio SDK @VERSION@**__
+__**OpenStudio SDK 3.9.0**__
 - EnergyPlus
 - Command Line Interface (CLI)
 - Radiance
@@ -34,16 +34,16 @@ __**OpenStudio SDK @VERSION@**__
 
 # Installation Notes
 
-OpenStudio SDK @VERSION@ is supported on:
+OpenStudio SDK 3.9.0 is supported on:
 
 * 64-bit Windows 7 – 11
 * macOS: 11.6+ x86_64, 12.1+ arm64
 * Ubuntu: 20.04 x86_64, 22.04 x86_64, 22.04 arm64
 * Centos7
 
-OpenStudio SDK @VERSION@ supports [EnergyPlus Release @EP_VERSION@](https://github.com/NREL/EnergyPlus/releases/tag/v@EP_VERSION@), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK @VERSION@.
+OpenStudio SDK 3.9.0 supports [EnergyPlus Release 24.2.0a](https://github.com/NREL/EnergyPlus/releases/tag/24.2.0a), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.9.0.
 
-OpenStudio SDK @VERSION@ supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK @VERSION@.
+OpenStudio SDK 3.9.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.9.0.
 
 As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-SDK-Version-Compatibility-Matrix)** for more information.
 
@@ -57,7 +57,7 @@ For help with common installation problems please visit [Getting Started](http:/
 
 # OpenStudio SDK: Changelog
 
-The @VERSION@ is a **<minor/major>** release. This update includes several new features, performance improvements, and bug fixes.
+The 3.9.0 is a **major** release. This update includes several new features, performance improvements, and bug fixes.
 
 ## C++ Workflow code
 
@@ -67,7 +67,7 @@ As of OpenStudio SDK 3.7.0 a re-written workflow written in C++ is used by defau
 
 As of OpenStudio SDK 3.2.0, Python bindings are officially supported and distributed through Python Package Index (PyPI). To install, users will need to have Python3 installed along with pip and simply run the following command in a terminal window.
 
-`pip install openstudio==@VERSION@`
+`pip install openstudio==3.9.0`
 
 Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at [openstudio on TestPyPi](https://test.pypi.org/project/openstudio/) to install development bindings.
 
@@ -75,14 +75,20 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 ## New Features, Major Fixes and API-breaking changes
 
-* [#<PR_NUM>](https://github.com/NREL/OpenStudio/pull/<PR_NUM>) - <PR_TITLE>
-    * <EXTRA_DESCRIPTION>
+* [#5242](https://github.com/NREL/OpenStudio/pull/5242) - Update to EnergyPlus v24.2.0a
+    * To see the full list of additions and changes, refer to the issue [#5240](https://github.com/NREL/OpenStudio/issues/5240)
+
+* [#5237](https://github.com/NREL/OpenStudio/pull/5237) - Updates to Controller:OutdoorAir
+    * This PR implements the fields `Humidistat Control Zone Name` and `Electronic Enthalpy Limit Curve`
+    * `ControllerOutdoorAir` has two API-breaking changes for `High Humidity Outdoor Air Flow Ratio` and `Control High Indoor Humidity Based on Outdoor Humidity Ratio`. These fields are now-required, so the getters no longer return an optional
+        * `getHighHumidityOutdoorAirFlowRatio` (`boost::optional<double>` to `double`)
+        * `getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio` (`boost::optional<bool>` to `bool`)
 
 ## Minor changes and bug fixes
 
-Refer to the changelog on the release page at [v@VERSION@](https://github.com/NREL/OpenStudio/releases/v@VERSION@)
+Refer to the changelog on the release page at [v3.9.0](https://github.com/NREL/OpenStudio/releases/v3.9.0)
 
-**Full Changelog**: https://github.com/NREL/OpenStudio/compare/v@VERSION@...v@VERSION@
+**Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.9.0...v3.9.0
 
 **New Contributors**:
 
@@ -100,7 +106,7 @@ In addition to some refactoring, this release also included conversion of 90.1 d
 ---
 # This YAML header controls the pandoc (via TeX) to PDF settings
 # To convert the markdown to pdf, do `pandoc release_notes.md -o release_notes.pdf`
-title:  'OpenStudio Release Notes - @VERSION@'
+title:  'OpenStudio Release Notes - 3.9.0'
 author:
 - National Renewable Energy Laboratory
 colorlinks: true

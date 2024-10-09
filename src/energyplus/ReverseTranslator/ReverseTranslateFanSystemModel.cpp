@@ -133,6 +133,7 @@ namespace energyplus {
         }
       }
     }
+
     // Night Ventilation Mode Pressure Rise: Optional Double
     if (boost::optional<double> _nightVentilationModePressureRise =
           workspaceObject.getDouble(Fan_SystemModelFields::NightVentilationModePressureRise)) {

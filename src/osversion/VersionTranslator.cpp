@@ -9227,7 +9227,33 @@ namespace osversion {
     for (const IdfObject& object : idf_3_8_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:OutputControl:Files") {
+      if (iddname == "OS:Controller:OutdoorAir") {
+
+        // 2 Fields have been made required from 3.8.0 to 3.9.0:
+        // ----------------------------------------------
+        // * High Humidity Outdoor Air Flow Ratio * 24
+        // * Control High Indoor Humidity Based on Outdoor Humidity Ratio * 25
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        if (newObject.isEmpty(24)) {
+          newObject.setDouble(24, 1.0);
+        }
+        if (newObject.isEmpty(25)) {
+          newObject.setString(25, "Yes");
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:OutputControl:Files") {
         // 1 Field has been added from 3.8.0 to 3.9.0:
         // ----------------------------------------------
         // * Output Space Sizing * 9
