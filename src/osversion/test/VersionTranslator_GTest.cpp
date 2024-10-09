@@ -3938,8 +3938,8 @@ TEST_F(OSVersionFixture, update_3_6_1_to_3_7_0_ControllerOutdoorAir) {
   EXPECT_TRUE(coa.isEmpty(21));                                            // Time of Day Economizer Control Schedule Name
   EXPECT_EQ("No", coa.getString(22).get());                                // High Humidity Control
   EXPECT_TRUE(coa.isEmpty(23));                                            // Humidistat Control Zone Name
-  EXPECT_TRUE(coa.isEmpty(24));                                            // High Humidity Outdoor Air Flow Ratio
-  EXPECT_TRUE(coa.isEmpty(25));                                            // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_EQ(1.0, coa.getDouble(24).get());                                 // High Humidity Outdoor Air Flow Ratio
+  EXPECT_EQ("Yes", coa.getString(25).get());                               // Control High Indoor Humidity Based on Outdoor Humidity Ratio
   EXPECT_EQ("BypassWhenWithinEconomizerLimits", coa.getString(26).get());  // Heat Recovery Bypass Control Type
   EXPECT_EQ("InterlockedWithMechanicalCooling", coa.getString(27).get());  // Economizer Operation Staging
 }
@@ -4240,7 +4240,7 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_ControllerOutdoorAir) {
   EXPECT_TRUE(controller.isEmpty(17));                                            // Minimum Outdoor Air Schedule Name
   EXPECT_TRUE(controller.isEmpty(18));                                            // Minimum Fraction of Outdoor Air Schedule Name
   EXPECT_TRUE(controller.isEmpty(19));                                            // Maximum Fraction of Outdoor Air Schedule Name
-  ASSERT_TRUE(controller.getTarget(15));                                          // Controller Mechanical Ventilation
+  ASSERT_TRUE(controller.getTarget(20));                                          // Controller Mechanical Ventilation
   EXPECT_TRUE(controller.isEmpty(21));                                            // Time of Day Economizer Control Schedule Name
   EXPECT_EQ("No", controller.getString(22).get());                                // High Humidity Control
   EXPECT_TRUE(controller.isEmpty(23));                                            // Humidistat Control Zone Name
