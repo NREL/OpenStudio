@@ -41,6 +41,8 @@ namespace alfalfa {
     std::string componentType() const;
     std::string controlType() const;
 
+    static bool acceptsObjectType(const IddObjectType& idd_type);
+
    private:
     std::string m_component_name;
     std::string m_component_type;

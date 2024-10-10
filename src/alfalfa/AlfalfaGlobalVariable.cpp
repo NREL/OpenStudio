@@ -47,5 +47,10 @@ namespace alfalfa {
   std::string AlfalfaGlobalVariable::variableName() const {
     return m_variable_name;
   }
+
+  bool AlfalfaGlobalVariable::acceptsObjectType(const IddObjectType& idd_type) {
+    return idd_type.value() == IddObjectType::OS_EnergyManagementSystem_GlobalVariable ||
+           idd_type.value() == IddObjectType::EnergyManagementSystem_GlobalVariable;
+  }
 }  // namespace alfalfa
 }  // namespace openstudio

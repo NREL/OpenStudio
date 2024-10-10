@@ -47,5 +47,10 @@ namespace alfalfa {
     return m_meter_name;
   }
 
+  bool AlfalfaMeter::acceptsObjectType(const IddObjectType& idd_type) {
+    return idd_type.value() == IddObjectType::OS_Output_Meter ||
+           idd_type.value() == IddObjectType::Output_Meter;
+  }
+
 }  // namespace alfalfa
 }  // namespace openstudio

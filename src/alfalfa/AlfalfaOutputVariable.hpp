@@ -41,6 +41,8 @@ namespace alfalfa {
     std::string variableKey() const;
     std::string variableName() const;
 
+    static bool acceptsObjectType(const IddObjectType& idd_type);
+
    private:
     std::string m_variable_key;
     std::string m_variable_name;

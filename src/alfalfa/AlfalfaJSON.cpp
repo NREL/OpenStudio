@@ -133,28 +133,17 @@ namespace alfalfa {
 
     boost::optional<AlfalfaComponent> component;
     try {
-      switch (idd_type.value()) {
-        case IddObjectType::OS_Output_Meter:
-        case IddObjectType::Output_Meter:
-          component = AlfalfaMeter(idf_object);
-          break;
-        case IddObjectType::OS_EnergyManagementSystem_Actuator:
-        case IddObjectType::EnergyManagementSystem_Actuator:
-          component = AlfalfaActuator(idf_object);
-          break;
-        case IddObjectType::OS_Output_Variable:
-        case IddObjectType::Output_Variable:
-        case IddObjectType::EnergyManagementSystem_OutputVariable:
-        case IddObjectType::OS_EnergyManagementSystem_OutputVariable:
-          component = AlfalfaOutputVariable(idf_object);
-          break;
-        case IddObjectType::OS_EnergyManagementSystem_GlobalVariable:
-        case IddObjectType::EnergyManagementSystem_GlobalVariable:
-          component = AlfalfaGlobalVariable(idf_object);
-          break;
-        default:
-          LOG(Error, "Unable to create Alfalfa Point from Object of type " + idd_type.valueDescription());
-          return boost::none;
+      if(AlfalfaActuator::acceptsObjectType(idd_type)) {
+        component = AlfalfaActuator(idf_object);
+      } else if (AlfalfaMeter::acceptsObjectType(idd_type)) {
+        component = AlfalfaMeter(idf_object);
+      } else if (AlfalfaOutputVariable::acceptsObjectType(idd_type)) {
+        component = AlfalfaOutputVariable(idf_object);
+      } else if (AlfalfaGlobalVariable::acceptsObjectType(idd_type)) {
+        component = AlfalfaGlobalVariable(idf_object);
+      } else {
+        LOG(Error, "Unable to create Alfalfa Point from Object of type " + idd_type.valueDescription());
+        return boost::none;
       }
     } catch (std::runtime_error& error) {
       LOG(Error, error.what());
