@@ -40,7 +40,7 @@ namespace alfalfa {
       m_points.push_back(point);
     }
 
-    std::vector<AlfalfaPoint> AlfalfaJSON_Impl::getPoints() {
+    std::vector<AlfalfaPoint> AlfalfaJSON_Impl::points() {
       return m_points;
     }
 
@@ -210,8 +210,8 @@ namespace alfalfa {
     return m_impl->toJSON();
   }
 
-  std::vector<AlfalfaPoint> AlfalfaJSON::getPoints() {
-    return m_impl->getPoints();
+  std::vector<AlfalfaPoint> AlfalfaJSON::points() {
+    return m_impl->points();
   }
 
 }  // namespace alfalfa

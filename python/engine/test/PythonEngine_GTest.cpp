@@ -164,9 +164,9 @@ TEST_F(PythonEngineFixture, AlfalfaMeasure) {
   openstudio::model::Model model;
   openstudio::WorkflowJSON workflow = *openstudio::WorkflowJSON::load(workflow_json);
   openstudio::measure::OSRunner runner(workflow);
-  EXPECT_TRUE(runner.alfalfa().getPoints().empty());
+  EXPECT_TRUE(runner.alfalfa().points().empty());
 
   openstudio::measure::OSArgumentMap arguments;
   measurePtr->run(model, runner, arguments);
-  EXPECT_EQ(5, runner.alfalfa().getPoints().size());
+  EXPECT_EQ(5, runner.alfalfa().points().size());
 }
