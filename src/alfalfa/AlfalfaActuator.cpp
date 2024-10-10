@@ -73,8 +73,8 @@ namespace alfalfa {
   }
 
   bool AlfalfaActuator::acceptsObjectType(const IddObjectType& idd_type) {
-    return idd_type.value() == IddObjectType::OS_EnergyManagementSystem_Actuator ||
-           idd_type.value() == IddObjectType::EnergyManagementSystem_Actuator;
+    return idd_type.value() == IddObjectType::OS_EnergyManagementSystem_Actuator
+           || idd_type.value() == IddObjectType::EnergyManagementSystem_Actuator;
   }
 }  // namespace alfalfa
 }  // namespace openstudio

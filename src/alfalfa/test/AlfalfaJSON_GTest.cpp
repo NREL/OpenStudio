@@ -41,7 +41,6 @@ TEST(AlfalfaJSON, basic_export) {
   AlfalfaJSON alfalfa;
   AlfalfaPoint constant = alfalfa.exposeConstant(17, "hello").get();
 
-
   // Check that point has output of type "Constant"
   ASSERT_TRUE(constant.output().is_initialized());
   EXPECT_EQ(constant.output().get().typeName(), "Constant");
@@ -303,29 +302,30 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   ASSERT_EQ(ss.logMessages().size(), 0);
 }
 
-class InputComponent : public ComponentBase {
-  public:
-    InputComponent() = default;
-    ComponentCapability capability() const override {
-      return ComponentCapability::Input;
-    }
+class InputComponent : public ComponentBase
+{
+ public:
+  InputComponent() = default;
+  ComponentCapability capability() const override {
+    return ComponentCapability::Input;
+  }
 
-    openstudio::alfalfa::ComponentType type() const override {
-      return openstudio::alfalfa::ComponentType::Constant;
-    }
+  openstudio::alfalfa::ComponentType type() const override {
+    return openstudio::alfalfa::ComponentType::Constant;
+  }
 
-    std::unique_ptr<ComponentBase> clone() const override {
-      return std::make_unique<InputComponent>(*this);
-    }
+  std::unique_ptr<ComponentBase> clone() const override {
+    return std::make_unique<InputComponent>(*this);
+  }
 
-    std::string deriveName() const override {
-      return "";
-    }
+  std::string deriveName() const override {
+    return "";
+  }
 
-    Json::Value toJSON() const override {
-      Json::Value parameters;
-      return parameters;
-    }
+  Json::Value toJSON() const override {
+    Json::Value parameters;
+    return parameters;
+  }
 };
 
 TEST(AlfalfaJSON, point_component_exceptions) {

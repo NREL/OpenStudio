@@ -48,8 +48,7 @@ namespace alfalfa {
   }
 
   bool AlfalfaMeter::acceptsObjectType(const IddObjectType& idd_type) {
-    return idd_type.value() == IddObjectType::OS_Output_Meter ||
-           idd_type.value() == IddObjectType::Output_Meter;
+    return idd_type.value() == IddObjectType::OS_Output_Meter || idd_type.value() == IddObjectType::Output_Meter;
   }
 
 }  // namespace alfalfa

@@ -76,10 +76,9 @@ namespace alfalfa {
   }
 
   bool AlfalfaOutputVariable::acceptsObjectType(const IddObjectType& idd_type) {
-    return idd_type.value() == IddObjectType::OS_Output_Variable ||
-           idd_type.value() == IddObjectType::Output_Variable ||
-           idd_type.value() == IddObjectType::EnergyManagementSystem_OutputVariable ||
-           idd_type.value() == IddObjectType::OS_EnergyManagementSystem_OutputVariable;
+    return idd_type.value() == IddObjectType::OS_Output_Variable || idd_type.value() == IddObjectType::Output_Variable
+           || idd_type.value() == IddObjectType::EnergyManagementSystem_OutputVariable
+           || idd_type.value() == IddObjectType::OS_EnergyManagementSystem_OutputVariable;
   }
 
 }  // namespace alfalfa

@@ -133,7 +133,7 @@ namespace alfalfa {
 
     boost::optional<AlfalfaComponent> component;
     try {
-      if(AlfalfaActuator::acceptsObjectType(idd_type)) {
+      if (AlfalfaActuator::acceptsObjectType(idd_type)) {
         component = AlfalfaActuator(idf_object);
       } else if (AlfalfaMeter::acceptsObjectType(idd_type)) {
         component = AlfalfaMeter(idf_object);

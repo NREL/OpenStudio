@@ -49,8 +49,8 @@ namespace alfalfa {
   }
 
   bool AlfalfaGlobalVariable::acceptsObjectType(const IddObjectType& idd_type) {
-    return idd_type.value() == IddObjectType::OS_EnergyManagementSystem_GlobalVariable ||
-           idd_type.value() == IddObjectType::EnergyManagementSystem_GlobalVariable;
+    return idd_type.value() == IddObjectType::OS_EnergyManagementSystem_GlobalVariable
+           || idd_type.value() == IddObjectType::EnergyManagementSystem_GlobalVariable;
   }
 }  // namespace alfalfa
 }  // namespace openstudio
