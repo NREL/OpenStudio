@@ -13,7 +13,6 @@
 %import <utilities/UtilitiesTime.i>
 %import <utilities/UtilitiesData.i>
 %import <utilities/UtilitiesBCL.i>
-%import <utilities/UtilitiesAlfalfa.i>
 
 
 %include <utilities/filetypes/Filetypes.i>

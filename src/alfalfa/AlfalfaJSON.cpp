@@ -1,15 +1,16 @@
 #include "AlfalfaJSON.hpp"
 #include "AlfalfaJSON_Impl.hpp"
-#include "../alfalfa/AlfalfaActuator.hpp"
-#include "../alfalfa/AlfalfaOutputVariable.hpp"
-#include "../alfalfa/AlfalfaGlobalVariable.hpp"
-#include "../alfalfa/AlfalfaMeter.hpp"
-#include "../alfalfa/AlfalfaConstant.hpp"
-#include "../core/PathHelpers.hpp"
-#include "../idd/IddObject.hpp"
-#include "../idd/IddEnums.hpp"
-#include "../../model/ModelObject.hpp"
-#include "../../model/ModelObject_Impl.hpp"
+#include "AlfalfaComponent.hpp"
+#include "AlfalfaActuator.hpp"
+#include "AlfalfaConstant.hpp"
+#include "AlfalfaMeter.hpp"
+#include "AlfalfaGlobalVariable.hpp"
+#include "AlfalfaOutputVariable.hpp"
+#include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idd/IddEnums.hpp"
+#include "../model/ModelObject.hpp"
+#include "../model/ModelObject_Impl.hpp"
 
 #include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
@@ -24,18 +25,15 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include <memory>
+#include <fmt/format.h>
 
 namespace openstudio {
 namespace alfalfa {
   namespace detail {
     AlfalfaJSON_Impl::AlfalfaJSON_Impl() = default;
 
-    AlfalfaJSON_Impl::AlfalfaJSON_Impl(const std::string& s) {
-      // TODO: use s
-    }
-
     AlfalfaJSON_Impl::AlfalfaJSON_Impl(const openstudio::path& p) {
-      // TODO: use p
+      setJSONPath(p);
     }
 
     void AlfalfaJSON_Impl::exposePoint(const AlfalfaPoint& point) {
@@ -52,6 +50,10 @@ namespace alfalfa {
     }
 
     bool AlfalfaJSON_Impl::save() const {
+      if (m_JSONPath.empty()) {
+        LOG(Error, "Unable to write Alfalfa JSON as path has not been specified");
+        return false;
+      }
       if (makeParentFolder(m_JSONPath)) {
         Json::Value root = toJSON();
         std::ofstream outFile(openstudio::toSystemFilename(m_JSONPath));
@@ -71,6 +73,10 @@ namespace alfalfa {
                                                   << "could not be created.");
 
       return false;
+    }
+
+    void AlfalfaJSON_Impl::setJSONPath(const openstudio::path& p) {
+      m_JSONPath = p;
     }
 
     Json::Value AlfalfaJSON_Impl::toJSON() const {
@@ -160,21 +166,9 @@ namespace alfalfa {
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeFromComponent(const AlfalfaComponent& component, const std::string& display_name) {
     std::string display_name_ = display_name;
     if (display_name.empty()) {
-      if (component.type == "Actuator") {
-        display_name_ = "Actuator for " + component.parameters["component_name"].asString() + ":" + component.parameters["component_type"].asString()
-                        + ":" + component.parameters["control_type"].asString();
-      } else if (component.type == "Constant") {
-        LOG(Error, "Constant points must be provided with a display name");
-        return boost::none;
-      } else if (component.type == "Meter") {
-        display_name_ = "Meter for " + component.parameters["meter_name"].asString();
-      } else if (component.type == "GlobalVariable") {
-        display_name_ = "Global Variable for " + component.parameters["variable_name"].asString();
-      } else if (component.type == "OutputVariable") {
-        display_name_ =
-          "Output Variable for " + component.parameters["variable_key"].asString() + ":" + component.parameters["variable_name"].asString();
-      } else {
-        LOG(Error, "Invalid component type");
+      display_name_ = component.deriveName();
+      if (display_name_.empty()) {
+        LOG(Error, fmt::format("{} points must be provided with a display name", component.typeName()));
         return boost::none;
       }
     }

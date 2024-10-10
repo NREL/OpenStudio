@@ -68,7 +68,7 @@ extern "C"
   void Init_openstudiomodelresources(void);
   void Init_openstudioutilitiesidf(void);
   void Init_openstudioutilitiesxml(void);
-  void Init_openstudioutilitiesalfalfa(void);
+  void Init_openstudioalfalfa(void);
 
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
@@ -116,9 +116,9 @@ void initBasicRubyBindings() {
   Init_openstudioutilitiesxml();
   rb_provide("openstudioutilitiesxml");
   rb_provide("openstudioutilitiesxml.so");
-  Init_openstudioutilitiesalfalfa();
-  rb_provide("openstudioutilitiesalfalfa");
-  rb_provide("openstudioutilitiesalfalfa.so");
+  Init_openstudioalfalfa();
+  rb_provide("openstudioalfalfa");
+  rb_provide("openstudioalfalfa.so");
   Init_openstudioutilities();
   rb_provide("openstudioutilities");
   rb_provide("openstudioutilities.so");

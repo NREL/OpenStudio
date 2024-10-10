@@ -25,6 +25,7 @@ class AlfalfaMeasure(openstudio.measure.ModelMeasure):
         """
         define what happens when the measure is run
         """
+        super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
         alfalfa = runner.alfalfa()
         alfalfa.exposeConstant(10, "safe value")
@@ -32,7 +33,6 @@ class AlfalfaMeasure(openstudio.measure.ModelMeasure):
         alfalfa.exposeActuator("somehting", "another thing", "key", "example actuator")
         alfalfa.exposeOutputVariable("Whole Building", "Facility Total Purchased Electricity Energy", "output variable")
         alfalfa.exposeGlobalVariable("global_1", "global variable")
-        super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
         return True
 

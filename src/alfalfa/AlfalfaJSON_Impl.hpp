@@ -1,10 +1,10 @@
 #ifndef UTILITIES_FILETYPES_ALFALFAJSON_IMPL_HPP
 #define UTILITIES_FILETYPES_ALFALFAJSON_IMPL_HPP
 
-#include "../UtilitiesAPI.hpp"
+#include "AlfalfaAPI.hpp"
 
-#include "../alfalfa/AlfalfaPoint.hpp"
-#include "../core/Path.hpp"
+#include "AlfalfaPoint.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <vector>
 #include <json/json.h>
@@ -12,18 +12,18 @@
 namespace openstudio {
 namespace alfalfa {
   namespace detail {
-    class UTILITIES_API AlfalfaJSON_Impl
+    class ALFALFA_API AlfalfaJSON_Impl
     {
      public:
       AlfalfaJSON_Impl();
-
-      AlfalfaJSON_Impl(const std::string& s);
 
       AlfalfaJSON_Impl(const openstudio::path& p);
 
       bool save() const;
 
       bool saveAs(const openstudio::path& p);
+
+      void setJSONPath(const openstudio::path& p);
 
       Json::Value toJSON() const;
 

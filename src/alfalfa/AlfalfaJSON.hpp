@@ -9,12 +9,12 @@
 #include <vector>
 #include <json/json.h>
 
-#include "../UtilitiesAPI.hpp"
-#include "../alfalfa/AlfalfaPoint.hpp"
-#include "../core/Path.hpp"
-#include "../core/Logger.hpp"
-#include "../core/Optional.hpp"
-#include "../idf/IdfObject.hpp"
+#include "AlfalfaAPI.hpp"
+#include "AlfalfaPoint.hpp"
+#include "../utilities/core/Path.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
@@ -22,7 +22,7 @@ namespace alfalfa {
     class AlfalfaJSON_Impl;
   }
 
-  class UTILITIES_API AlfalfaJSON
+  class ALFALFA_API AlfalfaJSON
   {
    public:
     /** @name Constructors and Destructors */

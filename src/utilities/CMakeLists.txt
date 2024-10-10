@@ -100,9 +100,6 @@ set(data_src
 )
 
 set(filetypes_src
-  filetypes/AlfalfaJSON.hpp
-  filetypes/AlfalfaJSON_Impl.hpp
-  filetypes/AlfalfaJSON.cpp
   filetypes/CSVFile.hpp
   filetypes/CSVFile_Impl.hpp
   filetypes/CSVFile.cpp
@@ -126,24 +123,6 @@ set(filetypes_src
   filetypes/WorkflowStepResult.hpp
   filetypes/WorkflowStepResult_Impl.hpp
   filetypes/WorkflowStepResult.cpp
-)
-
-set(alfalfa_src
-  alfalfa/AlfalfaComponent.hpp
-  alfalfa/AlfalfaComponent.cpp
-  alfalfa/AlfalfaConstant.hpp
-  alfalfa/AlfalfaConstant.cpp
-  alfalfa/AlfalfaActuator.hpp
-  alfalfa/AlfalfaActuator.cpp
-  alfalfa/AlfalfaGlobalVariable.hpp
-  alfalfa/AlfalfaGlobalVariable.cpp
-  alfalfa/AlfalfaMeter.hpp
-  alfalfa/AlfalfaMeter.cpp
-  alfalfa/AlfalfaOutputVariable.hpp
-  alfalfa/AlfalfaOutputVariable.cpp
-  alfalfa/AlfalfaPoint.hpp
-  alfalfa/AlfalfaPoint_Impl.hpp
-  alfalfa/AlfalfaPoint.cpp
 )
 
 set(geometry_src
@@ -283,7 +262,6 @@ source_group(time FILES ${time_src})
 source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
-source_group(alfalfa FILES ${alfalfa_src})
 
 # Must call CMake itself in order to set the SWIG_DIR env var for add_custom_command
 add_custom_command(
@@ -303,7 +281,6 @@ set(${target_name}_src
   ${data_src}
   ${documentation_src}
   ${filetypes_src}
-  ${alfalfa_src}
   ${idd_src}
   ${idf_src}
   ${sql_src}
@@ -356,7 +333,6 @@ set(${target_name}_test_src
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
   filetypes/test/StandardsJSON_GTest.cpp
-  filetypes/test/AlfalfaJSON_GTest.cpp
 
   geometry/Test/BoundingBox_GTest.cpp
   geometry/Test/GeometryFixture.hpp
@@ -432,7 +408,6 @@ set(${target_name}_swig_src
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
   filetypes/Filetypes.i
-  alfalfa/Alfalfa.i
   geometry/Geometry.i
   time/Time.i
   time/TimeImpl.i
@@ -605,5 +580,4 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_D
 MAKE_SWIG_TARGET(OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesTime)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesUnits)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesXML utilitiesxml "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesXML.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesBCL)
-MAKE_SWIG_TARGET(OpenStudioUtilitiesAlfalfa utilitiesalfalfa "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesAlfalfa.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesXML)
-MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesAlfalfa)
+MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesXML)

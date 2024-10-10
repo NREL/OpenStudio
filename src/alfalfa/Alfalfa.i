@@ -1,0 +1,55 @@
+#ifndef ALFALFA_I
+#define ALFALFA_I
+
+#ifdef SWIGPYTHON
+%module(directors="1") openstudioalfalfa
+#endif
+
+%include <utilities/UtilitiesAPI.hpp>
+%include <utilities/core/CommonInclude.i>
+%import <utilities/core/CommonImport.i>
+%import <utilities/Utilities.i>
+
+%ignore openstudio::alfalfa::detail;
+
+%{
+  #include <alfalfa/AlfalfaAPI.hpp>
+  #include <alfalfa/AlfalfaComponent.hpp>
+  #include <alfalfa/AlfalfaActuator.hpp>
+  #include <alfalfa/AlfalfaConstant.hpp>
+  #include <alfalfa/AlfalfaGlobalVariable.hpp>
+  #include <alfalfa/AlfalfaMeter.hpp>
+  #include <alfalfa/AlfalfaOutputVariable.hpp>
+  #include <alfalfa/AlfalfaPoint.hpp>
+  #include <alfalfa/AlfalfaJSON.hpp>
+  #include <alfalfa/AlfalfaJSON_Impl.hpp>
+
+
+  #include <utilities/idf/IdfObject.hpp>
+  #include <model/ModelObject.hpp>
+
+
+  using namespace openstudio;
+  using namespace openstudio::alfalfa;
+%}
+
+%ignore openstudio::alfalfa::ComponentBase;
+
+%include <alfalfa/AlfalfaAPI.hpp>
+%include <alfalfa/ComponentBase.hpp>
+%include <alfalfa/AlfalfaComponent.hpp>
+%include <alfalfa/AlfalfaActuator.hpp>
+%include <alfalfa/AlfalfaConstant.hpp>
+%include <alfalfa/AlfalfaGlobalVariable.hpp>
+%include <alfalfa/AlfalfaMeter.hpp>
+%include <alfalfa/AlfalfaOutputVariable.hpp>
+%include <alfalfa/AlfalfaPoint.hpp>
+%include <alfalfa/AlfalfaJSON.hpp>
+
+%ignore std::vector<openstudio::alfalfa::AlfalfaPoint>::vector(size_type);
+%ignore std::vector<openstudio::alfalfa::AlfalfaPoint>::resize(size_type);
+%template(AlfalfaPointVector) std::vector<openstudio::alfalfa::AlfalfaPoint>;
+%template(OptionalAlfalfaPoint) boost::optional<openstudio::alfalfa::AlfalfaPoint>;
+%template(OptionalAlfalfaComponent) boost::optional<openstudio::alfalfa::AlfalfaComponent>;
+
+#endif

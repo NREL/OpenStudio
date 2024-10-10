@@ -19,7 +19,7 @@ void OSWorkflow::runPostProcess() {
     LOG(Info, "Finished gathering reports");
   }
   // If no points have been exported, skip file creation
-  if (runner.alfalfa().getPoints().size() > 0) {
+  if (!runner.alfalfa().getPoints().empty()) {
     LOG(Info, "Saving Alfalfa points");
     auto savePath = workflowJSON.absoluteRunDir() / "alfalfa.json";
     runner.alfalfa().saveAs(savePath);

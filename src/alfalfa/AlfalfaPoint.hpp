@@ -7,10 +7,10 @@
 #define ALFALFA_POINT_HPP
 
 #include "AlfalfaComponent.hpp"
-#include "../core/Optional.hpp"
-#include "../core/Logger.hpp"
+#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Logger.hpp"
 
-#include "../UtilitiesAPI.hpp"
+#include "AlfalfaAPI.hpp"
 
 #include <string>
 #include <json/json.h>
@@ -20,12 +20,12 @@ namespace alfalfa {
   namespace detail {
     class AlfalfaPoint_Impl;
   }
-  class UTILITIES_API AlfalfaPoint
+  class ALFALFA_API AlfalfaPoint
   {
    public:
-    AlfalfaPoint();
+    explicit AlfalfaPoint(const std::string& display_name);
 
-    AlfalfaPoint(const std::string& display_name);
+    AlfalfaPoint(const AlfalfaPoint& point);
 
     /**
      * Set input of point. This component will be written to by the Alfalfa API.
@@ -82,7 +82,7 @@ namespace alfalfa {
     /**
      * Get whether a point is marked as optional or not.
      */
-    bool optional() const;
+    bool isOptional() const;
 
     /**
      * Set whether a point is marked as optional or not.
@@ -95,13 +95,6 @@ namespace alfalfa {
 
    private:
     std::shared_ptr<detail::AlfalfaPoint_Impl> m_impl;
-
-    static std::string toIdString(const std::string& str);
-
-    static bool isValidId(const std::string& id);
-
-    // configure logging
-    REGISTER_LOGGER("openstudio.AlfalfaPoint")
   };
 }  // namespace alfalfa
 }  // namespace openstudio

@@ -40,12 +40,6 @@
   #include <utilities/filetypes/WorkflowStep_Impl.hpp>
   #include <utilities/filetypes/WorkflowJSON.hpp>
   #include <utilities/filetypes/StandardsJSON.hpp>
-  #include <utilities/alfalfa/AlfalfaActuator.hpp>
-  #include <utilities/alfalfa/AlfalfaConstant.hpp>
-  #include <utilities/alfalfa/AlfalfaGlobalVariable.hpp>
-  #include <utilities/alfalfa/AlfalfaMeter.hpp>
-  #include <utilities/alfalfa/AlfalfaOutputVariable.hpp>
-  #include <utilities/filetypes/AlfalfaJSON.hpp>
 
   // this is all garbage, I don't know why it is needed, probably comes from quantity
   #include <utilities/units/Quantity.hpp>
@@ -130,7 +124,6 @@
 %include <utilities/filetypes/WorkflowStep.hpp>
 %include <utilities/filetypes/WorkflowJSON.hpp>
 %include <utilities/filetypes/StandardsJSON.hpp>
-%include <utilities/filetypes/AlfalfaJSON.hpp>
 
 // extend class
 %extend openstudio::RunOptions{

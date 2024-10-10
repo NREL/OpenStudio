@@ -15,7 +15,7 @@
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
-#include "../utilities/filetypes/AlfalfaJSON.hpp"
+#include "../alfalfa/AlfalfaJSON.hpp"
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
