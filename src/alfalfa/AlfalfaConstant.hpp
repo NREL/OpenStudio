@@ -7,8 +7,9 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaConstant : public ComponentBase {
-    public:
+  class ALFALFA_API AlfalfaConstant : public ComponentBase
+  {
+   public:
     /**
      * Create an AlfalfaConstant Component with a set value.
      */
@@ -27,12 +28,12 @@ namespace alfalfa {
     }
 
     std::unique_ptr<ComponentBase> clone() const override {
-        return std::make_unique<AlfalfaConstant>(*this);
+      return std::make_unique<AlfalfaConstant>(*this);
     }
 
     double value() const;
 
-    private:
+   private:
     double m_value;
   };
 }  // namespace alfalfa

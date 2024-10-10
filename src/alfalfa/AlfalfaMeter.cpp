@@ -32,11 +32,11 @@ namespace alfalfa {
     }
   }
 
-  std::string AlfalfaMeter::deriveName() const{
+  std::string AlfalfaMeter::deriveName() const {
     return "Meter for " + m_meter_name;
   }
 
-  Json::Value AlfalfaMeter::toJSON() const{
+  Json::Value AlfalfaMeter::toJSON() const {
     Json::Value parameters;
     parameters["meter_name"] = m_meter_name;
 
@@ -46,7 +46,6 @@ namespace alfalfa {
   std::string AlfalfaMeter::meterName() const {
     return m_meter_name;
   }
-
 
 }  // namespace alfalfa
 }  // namespace openstudio

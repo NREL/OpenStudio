@@ -8,8 +8,9 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaGlobalVariable : public ComponentBase {
-    public:
+  class ALFALFA_API AlfalfaGlobalVariable : public ComponentBase
+  {
+   public:
     /**
        * Create an AlfalfaGlobalVariable Component from a variable name which reflect the EneregyManagementSystem:GlobalVariable EnergyPlus IDD
        */
@@ -34,12 +35,12 @@ namespace alfalfa {
     }
 
     std::unique_ptr<ComponentBase> clone() const override {
-        return std::make_unique<AlfalfaGlobalVariable>(*this);
+      return std::make_unique<AlfalfaGlobalVariable>(*this);
     }
 
     std::string variableName() const;
 
-    private:
+   private:
     std::string m_variable_name;
   };
 }  // namespace alfalfa

@@ -8,8 +8,9 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaOutputVariable : public ComponentBase {
-    public:
+  class ALFALFA_API AlfalfaOutputVariable : public ComponentBase
+  {
+   public:
     /**
        * Create an AlfalfaOutputVariable Component from a variable key and variable name which reflect the Output:Variable EnergyPlus IDD
        */
@@ -34,13 +35,13 @@ namespace alfalfa {
     }
 
     std::unique_ptr<ComponentBase> clone() const override {
-        return std::make_unique<AlfalfaOutputVariable>(*this);
+      return std::make_unique<AlfalfaOutputVariable>(*this);
     }
 
     std::string variableKey() const;
     std::string variableName() const;
 
-    private:
+   private:
     std::string m_variable_key;
     std::string m_variable_name;
   };

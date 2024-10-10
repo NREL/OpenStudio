@@ -24,7 +24,6 @@ namespace alfalfa {
   AlfalfaActuator::AlfalfaActuator(const IdfObject& actuator) {
     IddObjectType idd_type = actuator.iddObject().type();
 
-
     if (idd_type == IddObjectType::OS_EnergyManagementSystem_Actuator) {
       m_component_name = actuator.getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName).value_or("");
       m_component_type = actuator.getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentType).value_or("");

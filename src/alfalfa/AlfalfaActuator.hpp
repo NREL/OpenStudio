@@ -7,8 +7,9 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaActuator : public ComponentBase {
-    public:
+  class ALFALFA_API AlfalfaActuator : public ComponentBase
+  {
+   public:
     /**
        * Create an AlfalfaActuator Component from a component_name, component_type, and control_type which reflect the EneregyManagementSystem:Actuator EnergyPlus IDD
        */
@@ -33,14 +34,14 @@ namespace alfalfa {
     }
 
     std::unique_ptr<ComponentBase> clone() const override {
-        return std::make_unique<AlfalfaActuator>(*this);
+      return std::make_unique<AlfalfaActuator>(*this);
     }
 
     std::string componentName() const;
     std::string componentType() const;
     std::string controlType() const;
 
-    private:
+   private:
     std::string m_component_name;
     std::string m_component_type;
     std::string m_control_type;

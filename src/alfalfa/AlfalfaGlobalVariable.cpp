@@ -11,7 +11,7 @@
 
 namespace openstudio {
 namespace alfalfa {
-  AlfalfaGlobalVariable::AlfalfaGlobalVariable(const std::string& variable_name) : m_variable_name(variable_name){
+  AlfalfaGlobalVariable::AlfalfaGlobalVariable(const std::string& variable_name) : m_variable_name(variable_name) {
     if (variable_name.empty()) {
       throw std::runtime_error("Error creating GlobalVariable: variable_name must be non-empty");
     }

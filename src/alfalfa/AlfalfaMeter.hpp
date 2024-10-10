@@ -8,8 +8,9 @@
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaMeter : public ComponentBase {
-    public:
+  class ALFALFA_API AlfalfaMeter : public ComponentBase
+  {
+   public:
     /**
        * Create an AlfalfaMeter Component from a meter_name which reflects the Output:Meter EneregyPlus IDD
        */
@@ -34,12 +35,12 @@ namespace alfalfa {
     }
 
     std::unique_ptr<ComponentBase> clone() const override {
-        return std::make_unique<AlfalfaMeter>(*this);
+      return std::make_unique<AlfalfaMeter>(*this);
     }
 
     std::string meterName() const;
 
-    private:
+   private:
     std::string m_meter_name;
   };
 }  // namespace alfalfa

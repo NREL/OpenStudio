@@ -43,7 +43,6 @@ namespace alfalfa {
       void setOptional(bool optional);
 
      private:
-
       static std::string toIdString(const std::string& str);
 
       static bool isValidId(const std::string& id);
