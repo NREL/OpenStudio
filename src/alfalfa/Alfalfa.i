@@ -34,6 +34,11 @@
 %}
 
 %ignore openstudio::alfalfa::ComponentBase;
+%ignore openstudio::alfalfa::AlfalfaActuator::clone;
+%ignore openstudio::alfalfa::AlfalfaConstant::clone;
+%ignore openstudio::alfalfa::AlfalfaMeter::clone;
+%ignore openstudio::alfalfa::AlfalfaGlobalVariable::clone;
+%ignore openstudio::alfalfa::AlfalfaOutputVariable::clone;
 
 %include <alfalfa/AlfalfaAPI.hpp>
 %include <alfalfa/ComponentBase.hpp>
