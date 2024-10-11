@@ -382,8 +382,7 @@ namespace osversion {
     // bracket allowable versions
     LOG(Debug, "Starting translation from Version " << currentVersion.str() << ".");
     if (currentVersion < VersionString("0.7.0")) {
-      LOG(Error, "Version translation is not provided for OpenStudio models created prior to "
-                   << "Version 0.7.0.");
+      LOG(Error, "Version translation is not provided for OpenStudio models created prior to " << "Version 0.7.0.");
       return;
     }
     if (currentVersion > VersionString(openStudioVersion())) {
@@ -772,8 +771,8 @@ namespace osversion {
               match = candidates[0];
             }
             if (match && match->name()) {
-              LOG(Warn, "Found match for object in OS:ComponentData contents list by type only, even "
-                          << "though this type of object (" << typeStr << ") has a name field.");
+              LOG(Warn, "Found match for object in OS:ComponentData contents list by type only, even " << "though this type of object (" << typeStr
+                                                                                                       << ") has a name field.");
             }
           }
 
@@ -1096,7 +1095,7 @@ namespace osversion {
             }
           }
         }  // for keys
-      }    // for users
+      }  // for users
       m_refactored.emplace_back(originalSchedule, schedule.idfObject());
       for (const auto& candidate : candidates) {
         model::ModelObjectVector wholeCandidate = getRecursiveChildren(candidate);

@@ -10,7 +10,7 @@
 
 #  ifdef SHARED_OS_LIBS
 
-#    if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
+#    if defined(openstudio_alfalfa_EXPORTS) || defined(openstudio_EXPORTS)
 #      define ALFALFA_API __declspec(dllexport)
 #      define ALFALFA_TEMPLATE_EXT
 #    else
