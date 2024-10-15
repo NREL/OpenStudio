@@ -1,10 +1,11 @@
 #ifndef ALFALFA_COMPONENT_OUTPUTVARIABLE_HPP
 #define ALFALFA_COMPONENT_OUTPUTVARIABLE_HPP
 
-#include "ComponentBase.hpp"
-#include "../utilities/idf/IdfObject.hpp"
-
 #include "AlfalfaAPI.hpp"
+
+#include "ComponentBase.hpp"
+
+#include "../utilities/idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {

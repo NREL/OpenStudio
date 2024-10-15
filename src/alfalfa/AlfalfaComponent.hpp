@@ -19,6 +19,8 @@ namespace alfalfa {
 
     AlfalfaComponent(AlfalfaComponent&&) noexcept = default;
 
+    ~AlfalfaComponent() = default;
+
     AlfalfaComponent& operator=(const AlfalfaComponent& other) {
       if (this != &other) {
         m_component = other.m_component->clone();
@@ -46,11 +48,8 @@ namespace alfalfa {
     AlfalfaComponent() = default;
     std::unique_ptr<ComponentBase> m_component;
   };
-  template <typename L, typename R,
-            std::enable_if_t<(std::is_base_of_v<ComponentBase, L> || std::is_same_v<AlfalfaComponent, L>)
-                               && (std::is_base_of_v<ComponentBase, R> || std::is_same_v<AlfalfaComponent, R>),
-                             bool> = true>
-  inline bool operator==(const L& lhs, const R& rhs) {
+
+  inline bool operator==(const AlfalfaComponent& lhs, const AlfalfaComponent& rhs) {
     return (lhs.type() == rhs.type() && lhs.toJSON() == rhs.toJSON());
   }
 }  // namespace alfalfa

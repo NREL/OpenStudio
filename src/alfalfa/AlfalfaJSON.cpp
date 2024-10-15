@@ -1,31 +1,33 @@
 #include "AlfalfaJSON.hpp"
 #include "AlfalfaJSON_Impl.hpp"
+
 #include "AlfalfaComponent.hpp"
 #include "AlfalfaActuator.hpp"
 #include "AlfalfaConstant.hpp"
 #include "AlfalfaMeter.hpp"
 #include "AlfalfaGlobalVariable.hpp"
 #include "AlfalfaOutputVariable.hpp"
+
+#include "../utilities/core/Path.hpp"
 #include "../utilities/core/PathHelpers.hpp"
-#include "../utilities/idd/IddObject.hpp"
-#include "../utilities/idd/IddEnums.hpp"
+#include "../utilities/core/Logger.hpp"
+
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idd/IddEnums.hpp"
 
-#include <utilities/idd/OS_EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
-#include <utilities/idd/OS_EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
-#include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
-#include <utilities/idd/OS_Output_Variable_FieldEnums.hxx>
-#include <utilities/idd/OS_Output_Meter_FieldEnums.hxx>
-#include <utilities/idd/EnergyManagementSystem_OutputVariable_FieldEnums.hxx>
-#include <utilities/idd/EnergyManagementSystem_GlobalVariable_FieldEnums.hxx>
-#include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include <utilities/idd/Output_Meter_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
-
-#include <memory>
+#include <json/json.h>
+#include <boost/optional.hpp>
+#include <boost/none.hpp>
 #include <fmt/format.h>
+
+#include <vector>
+#include <fstream>
+#include <memory>
+#include <utility>
+#include <string>
 
 namespace openstudio {
 namespace alfalfa {
@@ -55,7 +57,7 @@ namespace alfalfa {
         return false;
       }
       if (makeParentFolder(m_JSONPath)) {
-        Json::Value root = toJSON();
+        const Json::Value root = toJSON();
         std::ofstream outFile(openstudio::toSystemFilename(m_JSONPath));
 
         if (outFile) {
@@ -122,7 +124,7 @@ namespace alfalfa {
   }
 
   boost::optional<AlfalfaPoint> AlfalfaJSON::exposeFromObject(const openstudio::IdfObject& idf_object, const std::string& display_name) {
-    IddObjectType idd_type = idf_object.iddObject().type();
+    const IddObjectType idd_type = idf_object.iddObject().type();
     std::string display_name_ = display_name;
 
     if (display_name.empty()) {
@@ -174,7 +176,7 @@ namespace alfalfa {
   }
 
   boost::optional<std::string> AlfalfaJSON::getName(const openstudio::IdfObject& idf_object) {
-    if (auto mo_ = idf_object.optionalCast<model::ModelObject>()) {
+    if (auto mo_ = idf_object.optionalCast<openstudio::model::ModelObject>()) {
       if (boost::optional<std::string> display_name = mo_->displayName()) {
         return display_name;
       }

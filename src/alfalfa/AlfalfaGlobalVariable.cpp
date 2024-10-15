@@ -18,7 +18,7 @@ namespace alfalfa {
   }
 
   AlfalfaGlobalVariable::AlfalfaGlobalVariable(const IdfObject& global_variable) {
-    IddObjectType idd_type = global_variable.iddObject().type();
+    const IddObjectType idd_type = global_variable.iddObject().type();
 
     if (idd_type == IddObjectType::OS_EnergyManagementSystem_GlobalVariable) {
       m_variable_name = global_variable.getString(OS_EnergyManagementSystem_GlobalVariableFields::Name).value_or("");

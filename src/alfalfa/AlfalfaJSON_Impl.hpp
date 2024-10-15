@@ -4,6 +4,7 @@
 #include "AlfalfaAPI.hpp"
 
 #include "AlfalfaPoint.hpp"
+
 #include "../utilities/core/Path.hpp"
 
 #include <vector>

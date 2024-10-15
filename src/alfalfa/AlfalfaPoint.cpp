@@ -106,7 +106,7 @@ namespace alfalfa {
       }
       m_display_name = display_name;
       if (!m_id.is_initialized()) {
-        std::string id = toIdString(display_name);
+        const std::string id = toIdString(display_name);
         if (!isValidId(id)) {
           LOG(Warn, fmt::format("Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.", display_name));
         }
@@ -134,7 +134,7 @@ namespace alfalfa {
     }
   }  // namespace detail
 
-  AlfalfaPoint::AlfalfaPoint(const AlfalfaPoint& point) : m_impl(point.m_impl) {}
+  // AlfalfaPoint::AlfalfaPoint(const AlfalfaPoint& point) : m_impl(point.m_impl) {}
 
   AlfalfaPoint::AlfalfaPoint(const std::string& display_name) : m_impl(std::make_shared<detail::AlfalfaPoint_Impl>(display_name)) {}
 

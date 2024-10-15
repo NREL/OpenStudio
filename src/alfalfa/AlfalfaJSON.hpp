@@ -6,15 +6,19 @@
 #ifndef ALFALFA_ALFALFA_HPP
 #define ALFALFA_ALFALFA_HPP
 
-#include <vector>
-#include <json/json.h>
-
 #include "AlfalfaAPI.hpp"
+
 #include "AlfalfaPoint.hpp"
+
 #include "../utilities/core/Path.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/idf/IdfObject.hpp"
+
+#include <json/json.h>
+
+#include <vector>
+#include <string>
 
 namespace openstudio {
 namespace alfalfa {

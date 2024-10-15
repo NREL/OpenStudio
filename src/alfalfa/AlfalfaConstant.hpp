@@ -1,9 +1,9 @@
 #ifndef ALFALFA_COMPONENT_CONSTANT_HPP
 #define ALFALFA_COMPONENT_CONSTANT_HPP
 
-#include "ComponentBase.hpp"
-
 #include "AlfalfaAPI.hpp"
+
+#include "ComponentBase.hpp"
 
 namespace openstudio {
 namespace alfalfa {

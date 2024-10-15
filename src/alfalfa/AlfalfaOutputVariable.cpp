@@ -25,7 +25,7 @@ namespace alfalfa {
   }
 
   AlfalfaOutputVariable::AlfalfaOutputVariable(const openstudio::IdfObject& output_variable) {
-    openstudio::IddObjectType idd_type = output_variable.iddObject().type();
+    const openstudio::IddObjectType idd_type = output_variable.iddObject().type();
 
     if (idd_type == IddObjectType::OS_Output_Variable) {
       m_variable_key = output_variable.getString(OS_Output_VariableFields::KeyValue).value_or("");

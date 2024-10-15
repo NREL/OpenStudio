@@ -1,12 +1,17 @@
 #include "AlfalfaActuator.hpp"
+
 #include "../utilities/idd/IddObject.hpp"
 #include "../utilities/idd/IddEnums.hpp"
+#include "../utilities/idf/IdfObject.hpp"
 
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/EnergyManagementSystem_Actuator_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <fmt/format.h>
+#include <json/value.h>
+
+#include <string>
 
 namespace openstudio {
 namespace alfalfa {
@@ -22,7 +27,7 @@ namespace alfalfa {
   }
 
   AlfalfaActuator::AlfalfaActuator(const IdfObject& actuator) {
-    IddObjectType idd_type = actuator.iddObject().type();
+    const IddObjectType idd_type = actuator.iddObject().type();
 
     if (idd_type == IddObjectType::OS_EnergyManagementSystem_Actuator) {
       m_component_name = actuator.getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName).value_or("");
@@ -48,7 +53,7 @@ namespace alfalfa {
   }
 
   std::string AlfalfaActuator::deriveName() const {
-    return "Actuator for " + m_component_name + ":" + m_component_type + ":" + m_control_type;
+    return fmt::format("Actuator for {}:{}:{}", m_component_name, m_component_type, m_control_type);
   }
 
   Json::Value AlfalfaActuator::toJSON() const {

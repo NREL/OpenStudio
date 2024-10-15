@@ -18,7 +18,7 @@ namespace alfalfa {
   }
 
   AlfalfaMeter::AlfalfaMeter(const IdfObject& output_meter) {
-    IddObjectType idd_type = output_meter.iddObject().type();
+    const IddObjectType idd_type = output_meter.iddObject().type();
     if (idd_type == IddObjectType::Output_Meter) {
       m_meter_name = output_meter.getString(Output_MeterFields::KeyName).value_or("");
     } else if (idd_type == IddObjectType::OS_Output_Meter) {

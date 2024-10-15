@@ -5,6 +5,8 @@
 #include "AlfalfaComponent.hpp"
 
 #include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Logger.hpp"
+
 #include <string>
 
 namespace openstudio {

@@ -25,7 +25,14 @@ namespace alfalfa {
    public:
     explicit AlfalfaPoint(const std::string& display_name);
 
-    AlfalfaPoint(const AlfalfaPoint& point);
+    virtual ~AlfalfaPoint() = default;
+    // Default the copy and move operators because the virtual dtor is explicit
+    AlfalfaPoint(const AlfalfaPoint& other) = default;
+    AlfalfaPoint(AlfalfaPoint&& other) = default;
+    AlfalfaPoint& operator=(const AlfalfaPoint&) = default;
+    AlfalfaPoint& operator=(AlfalfaPoint&&) = default;
+
+    // AlfalfaPoint(const AlfalfaPoint& point);
 
     /**
      * Set input of point. This component will be written to by the Alfalfa API.
