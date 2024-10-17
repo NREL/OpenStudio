@@ -44,6 +44,10 @@ namespace measure {
     return m_workflow.clone();
   }
 
+  alfalfa::AlfalfaJSON OSRunner::alfalfa() const {
+    return m_alfalfa;
+  }
+
   std::string OSRunner::unitsPreference() const {
     return m_unitsPreference;
   }

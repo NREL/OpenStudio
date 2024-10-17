@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>alfalfa_model_python</name>
+  <uid>fefead22-3939-457a-a923-ae141e201783</uid>
+  <version_id>6a1f63a4-3b90-43f9-95f5-67a19d26c082</version_id>
+  <version_modified>2024-09-09T17:03:02Z</version_modified>
+  <xml_checksum>00000000</xml_checksum>
+  <class_name>AlfalfaModelPython</class_name>
+  <display_name>AlfalfaModelPython</display_name>
+  <description>DESCRIPTION_TEXT</description>
+  <modeler_description>MODELER_DESCRIPTION_TEXT</modeler_description>
+  <arguments>
+    <argument>
+      <name>space_name</name>
+      <display_name>New space name</display_name>
+      <description>This name will be used as the name of the new space.</description>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Fenestration</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>CD7F5672</checksum>
+    </file>
+    <file>
+      <filename>.gitkeep</filename>
+      <filetype>gitkeep</filetype>
+      <usage_type>doc</usage_type>
+      <checksum>00000000</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.8.0</identifier>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>0843402D</checksum>
+    </file>
+    <file>
+      <filename>example_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>D6BD40D0</checksum>
+    </file>
+    <file>
+      <filename>test_alfalfa_model_python.py</filename>
+      <filetype>py</filetype>
+      <usage_type>test</usage_type>
+      <checksum>73D3C91C</checksum>
+    </file>
+  </files>
+</measure>

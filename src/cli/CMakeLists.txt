@@ -83,7 +83,7 @@ endif()
 
 if(BUILD_TESTING)
   # openstudio_tests is a test target for C++ based tests that extend across multiple
-  # compiled units such as the case for openstudio cli. 
+  # compiled units such as the case for openstudio cli.
   # For example, here is a good place to test issues that are concerned with
   # the complexities of sharing data between the Python and Ruby script engines.
   set(openstudio_tests_src
@@ -252,6 +252,14 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
+
+  add_test(NAME OpenStudioCLI.Run_AlfalfaWorkflow
+    COMMAND ${CMAKE_COMMAND} "-DCMD1=$<TARGET_FILE:openstudio> run -m -w compact_alfalfa.osw"
+    "-DCMD2=${CMAKE_COMMAND} -E cat run/alfalfa.json"
+    -P ${CMAKE_SOURCE_DIR}/CMake/RunCommands.cmake
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
+  )
+  set_tests_properties(OpenStudioCLI.Run_AlfalfaWorkflow PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
     COMMAND $<TARGET_FILE:openstudio> run --show-stdout -w python_plugin_jinja_erb.osw

@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>alfalfa_e_plus_ruby</name>
+  <uid>f71072f4-50c1-4ed9-a2b5-dc667b544e22</uid>
+  <version_id>63ba3dcf-517b-4ce4-8e49-67299d1d78cf</version_id>
+  <version_modified>2024-09-09T17:01:09Z</version_modified>
+  <xml_checksum>00000000</xml_checksum>
+  <class_name>AlfalfaEPlusRuby</class_name>
+  <display_name>AlfalfaEPlusRuby</display_name>
+  <description>DESCRIPTION_TEXT</description>
+  <modeler_description>MODELER_DESCRIPTION_TEXT</modeler_description>
+  <arguments>
+    <argument>
+      <name>zone_name</name>
+      <display_name>New zone name</display_name>
+      <description>This name will be used as the name of the new zone.</description>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Fenestration</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>EnergyPlusMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>CD7F5672</checksum>
+    </file>
+    <file>
+      <filename>README.md.erb</filename>
+      <filetype>erb</filetype>
+      <usage_type>readmeerb</usage_type>
+      <checksum>F1C26127</checksum>
+    </file>
+    <file>
+      <filename>.gitkeep</filename>
+      <filetype>gitkeep</filetype>
+      <usage_type>doc</usage_type>
+      <checksum>00000000</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.8.0</identifier>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>6315A165</checksum>
+    </file>
+    <file>
+      <filename>alfalfa_e_plus_ruby_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>C205021A</checksum>
+    </file>
+  </files>
+</measure>

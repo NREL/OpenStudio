@@ -7,6 +7,7 @@
 
 
 %include <utilities/UtilitiesAPI.hpp>
+%include <alfalfa/AlfalfaAPI.hpp>
 #define MODEL_API
 #define STANDARDSINTERFACE_API
 #define MEASURE_API
@@ -15,6 +16,7 @@
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
 %import <model/Model.i>
+%import <alfalfa/Alfalfa.i>
 
 %ignore openstudio::detail;
 %ignore openstudio::model::detail;

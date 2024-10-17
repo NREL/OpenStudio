@@ -15,6 +15,7 @@
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/filetypes/EpwFile.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+#include "../alfalfa/AlfalfaJSON.hpp"
 #include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
@@ -50,6 +51,9 @@ namespace measure {
 
     /** Returns a clone of the workflow currently being run. New in OS 2.0. */
     WorkflowJSON workflow() const;
+
+    /** Returns the alfalfa json contrainer */
+    alfalfa::AlfalfaJSON alfalfa() const;
 
     /** Returns preferred unit system, either 'IP' or 'SI'. New in OS 2.0. */
     std::string unitsPreference() const;
@@ -335,6 +339,8 @@ namespace measure {
 
     boost::optional<openstudio::path> m_currentDir;
     std::set<openstudio::path> m_currentDirFiles;
+
+    openstudio::alfalfa::AlfalfaJSON m_alfalfa;
   };
 
 }  // namespace measure
