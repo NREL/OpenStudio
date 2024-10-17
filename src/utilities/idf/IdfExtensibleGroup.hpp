@@ -159,7 +159,7 @@ class UTILITIES_API IdfExtensibleGroup
   /// cast to type T, can throw std::bad_cast
   template <typename T>
   T cast() const {
-    return T(std::move(this->getImpl<typename T::ImplType>()), m_index);
+    return T(this->getImpl<typename T::ImplType>(), m_index);
   }
 
   /// cast to optional of type T

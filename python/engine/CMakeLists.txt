@@ -45,6 +45,27 @@ target_compile_options(pythonengine PRIVATE
 
 target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
+# Add a command to pip install the requirements into the E+ folder and generate a stamp file
+# Make it depend on the requirements.txt, so that it reruns when it changes
+add_custom_command(
+  OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pip_install_done.stamp"
+  COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_CURRENT_BINARY_DIR}/pip_install_done.stamp"
+  COMMAND ${CMAKE_COMMAND} -E env --unset=PIP_REQUIRE_VIRTUALENV ${Python_EXECUTABLE}
+    -m pip install --target=${ENERGYPLUS_DIR}/python_lib --upgrade -r ${PROJECT_SOURCE_DIR}/python/requirements.txt
+  DEPENDS ${PROJECT_SOURCE_DIR}/python/requirements.txt
+)
+
+# And a target that calls the above command. It is NOT called by default
+add_custom_target(pip_install
+  DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pip_install_done.stamp"
+)
+
+if(BUILD_CLI)
+  # When you build CLI, we want the pip_install to run, so add it as a dependency
+  # which will ensure it's run (beforehand, at **build** not configure time)
+  add_dependencies(pythonengine pip_install)
+endif()
+
 if(BUILD_TESTING)
   set(pythonengine_test_depends
     openstudio_scriptengine

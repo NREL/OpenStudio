@@ -276,6 +276,35 @@ namespace energyplus {
       idfObject.setString(Chiller_Electric_EIRFields::EndUseSubcategory, s.get());
     }
 
+    // Condenser Flow Control
+    idfObject.setString(Chiller_Electric_EIRFields::CondenserFlowControl, modelObject.condenserFlowControl());
+
+    // Condenser Loop Flow Rate Fraction Function of Loop Part Load Ratio Curve Name
+    if (boost::optional<Curve> condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_ =
+          modelObject.condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve()) {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(condenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurve_.get())) {
+        idfObject.setString(Chiller_Electric_EIRFields::CondenserLoopFlowRateFractionFunctionofLoopPartLoadRatioCurveName, wo_->nameString());
+      }
+    }
+
+    // Temperature Difference Across Condenser Schedule Name
+    if (auto _schedule = modelObject.temperatureDifferenceAcrossCondenserSchedule()) {
+      idfObject.setString(Chiller_Electric_EIRFields::TemperatureDifferenceAcrossCondenserScheduleName, _schedule->name().get());
+    }
+
+    // Condenser Minimum Flow Fraction
+    idfObject.setDouble(Chiller_Electric_EIRFields::CondenserMinimumFlowFraction, modelObject.condenserMinimumFlowFraction());
+
+    // Thermosiphon Capacity Fraction Curve Name
+    if (boost::optional<Curve> thermosiphonCapacityFractionCurve_ = modelObject.thermosiphonCapacityFractionCurve()) {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(thermosiphonCapacityFractionCurve_.get())) {
+        idfObject.setString(Chiller_Electric_EIRFields::ThermosiphonCapacityFractionCurveName, wo_->nameString());
+      }
+    }
+
+    // Thermosiphon Minimum Temperature Difference
+    idfObject.setDouble(Chiller_Electric_EIRFields::ThermosiphonMinimumTemperatureDifference, modelObject.thermosiphonMinimumTemperatureDifference());
+
     return boost::optional<IdfObject>(idfObject);
   }
 

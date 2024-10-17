@@ -33,7 +33,7 @@ namespace energyplus {
       illuminanceMap.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(Output_IlluminanceMapFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Output_IlluminanceMapFields::ZoneorSpaceName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

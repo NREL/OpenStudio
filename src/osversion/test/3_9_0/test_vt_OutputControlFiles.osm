@@ -1,0 +1,38 @@
+
+OS:Version,
+  {5a5f47c5-8aa3-4040-adc2-48663f571c27}, !- Handle
+  3.8.0;                                  !- Version Identifier
+
+OS:OutputControl:Files,
+  {a12b68cb-1974-4c38-8a6f-684c1f05712a}, !- Handle
+  No,                                     !- Output CSV
+  Yes,                                    !- Output MTR
+  Yes,                                    !- Output ESO
+  Yes,                                    !- Output EIO
+  Yes,                                    !- Output Tabular
+  Yes,                                    !- Output SQLite
+  Yes,                                    !- Output JSON
+  Yes,                                    !- Output AUDIT
+  No,                                     !- Output Zone Sizing
+  Yes,                                    !- Output System Sizing
+  Yes,                                    !- Output DXF
+  Yes,                                    !- Output BND
+  Yes,                                    !- Output RDD
+  Yes,                                    !- Output MDD
+  Yes,                                    !- Output MTD
+  Yes,                                    !- Output SHD
+  Yes,                                    !- Output DFS
+  Yes,                                    !- Output GLHE
+  Yes,                                    !- Output DelightIn
+  Yes,                                    !- Output DelightELdmp
+  Yes,                                    !- Output DelightDFdmp
+  Yes,                                    !- Output EDD
+  Yes,                                    !- Output DBG
+  Yes,                                    !- Output PerfLog
+  Yes,                                    !- Output SLN
+  Yes,                                    !- Output SCI
+  Yes,                                    !- Output WRL
+  Yes,                                    !- Output Screen
+  Yes,                                    !- Output ExtShd
+  Yes;                                    !- Output Tarcog
+

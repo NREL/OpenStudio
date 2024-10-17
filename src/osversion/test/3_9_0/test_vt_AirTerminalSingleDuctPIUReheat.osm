@@ -1,0 +1,100 @@
+
+OS:Version,
+  {da40192b-d45e-44ba-bd82-99d3be1ab492}, !- Handle
+  3.8.0;                                  !- Version Identifier
+
+OS:Schedule:Constant,
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Handle
+  Always On Discrete,                     !- Name
+  {c7847156-4614-4e0e-a492-e7536b4da5e7}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {c7847156-4614-4e0e-a492-e7536b4da5e7}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Fan:ConstantVolume,
+  {bfd65f3d-1ea1-414f-87e6-9dd027b2ed97}, !- Handle
+  Fan Constant Volume 1,                  !- Name
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Availability Schedule Name
+  ,                                       !- Fan Total Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {604c74ea-ef2b-4ec3-9d2f-2e08f084cc67}, !- Handle
+  Coil Heating Electric 1,                !- Name
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
+  {aa3a3b34-e0a1-4b88-9245-a5bd78e0318e}, !- Handle
+  Air Terminal Single Duct Series PIU Reheat 1, !- Name
+  ,                                       !- Availability Schedule Name
+  autosize,                               !- Maximum Air Flow Rate {m3/s}
+  autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  autosize,                               !- Minimum Primary Air Flow Fraction
+  ,                                       !- Supply Air Inlet Node
+  ,                                       !- Secondary Air Inlet Node
+  ,                                       !- Outlet Node
+  ,                                       !- Reheat Coil Air Inlet Node
+  ,                                       !- Zone Mixer Name
+  {bfd65f3d-1ea1-414f-87e6-9dd027b2ed97}, !- Fan Name
+  {604c74ea-ef2b-4ec3-9d2f-2e08f084cc67}, !- Reheat Coil Name
+  autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
+
+OS:Fan:ConstantVolume,
+  {df743c48-1a1c-4c81-a281-f9096370314c}, !- Handle
+  Fan Constant Volume 2,                  !- Name
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Availability Schedule Name
+  ,                                       !- Fan Total Efficiency
+  ,                                       !- Pressure Rise {Pa}
+  AutoSize,                               !- Maximum Flow Rate {m3/s}
+  ,                                       !- Motor Efficiency
+  ,                                       !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:Coil:Heating:Electric,
+  {242dc261-bfba-44f3-876c-08e59f330278}, !- Handle
+  Coil Heating Electric 2,                !- Name
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Availability Schedule Name
+  ,                                       !- Efficiency
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ;                                       !- Air Outlet Node Name
+
+OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
+  {8dc4f0d4-fb79-40ae-b77b-69843a2b2e51}, !- Handle
+  Air Terminal Single Duct Parallel PIU Reheat 1, !- Name
+  {b857d07e-549f-44a2-acf8-9a2e8294c985}, !- Availability Schedule Name
+  Autosize,                               !- Maximum Primary Air Flow Rate {m3/s}
+  Autosize,                               !- Maximum Secondary Air Flow Rate {m3/s}
+  Autosize,                               !- Minimum Primary Air Flow Fraction
+  Autosize,                               !- Fan On Flow Fraction
+  ,                                       !- Supply Air Inlet Node Name
+  ,                                       !- Secondary Air Inlet Node Name
+  ,                                       !- Outlet Node Name
+  ,                                       !- Reheat Coil Air Inlet Node Name
+  ,                                       !- Zone Mixer Name
+  {df743c48-1a1c-4c81-a281-f9096370314c}, !- Fan Name
+  {242dc261-bfba-44f3-876c-08e59f330278}, !- Reheat Coil Name
+  Autosize,                               !- Maximum Hot Water or Steam Flow Rate {m3/s}
+  0,                                      !- Minimum Hot Water or Steam Flow Rate {m3/s}
+  0.001;                                  !- Convergence Tolerance
+

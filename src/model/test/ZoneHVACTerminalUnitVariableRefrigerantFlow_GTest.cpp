@@ -25,6 +25,7 @@
 #include "../FanOnOff.hpp"
 #include "../FanVariableVolume.hpp"
 #include "../FanSystemModel.hpp"
+#include "../FanSystemModel_Impl.hpp"
 #include "../HVACComponent.hpp"
 #include "../HVACComponent_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
@@ -32,6 +33,9 @@
 #include "../Splitter.hpp"
 #include "../Splitter_Impl.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../Curve.hpp"
+#include "../CurveQuartic.hpp"
+#include "../CurveQuartic_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
 #include "../Schedule.hpp"
@@ -402,5 +406,64 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_MatchingCoilTyp
     CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
     FanConstantVolume fanCV(model);
     EXPECT_ANY_THROW(ZoneHVACTerminalUnitVariableRefrigerantFlow(model, ccFluidCtrl, hcFluidCtrl, fanCV));
+  }
+
+  // Check Fan Type when setting deprecated FanVariableVolume
+  {
+    CoilCoolingDXVariableRefrigerantFlowFluidTemperatureControl ccFluidCtrl(model);
+    CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl hcFluidCtrl(model);
+    FanVariableVolume fanVV(model);
+    ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(model, ccFluidCtrl, hcFluidCtrl, fanVV);
+    EXPECT_NE(fanVV, vrfTerminal.supplyAirFan());
+    HVACComponent fan = vrfTerminal.supplyAirFan();
+    boost::optional<FanSystemModel> _fanSM = fan.optionalCast<FanSystemModel>();
+    ASSERT_TRUE(_fanSM);
+    FanSystemModel fanSM = _fanSM.get();
+    EXPECT_EQ(fanVV.nameString() + " FanSystemModel", fanSM.nameString());
+    EXPECT_EQ(fanVV.availabilitySchedule(), fanSM.availabilitySchedule());
+    EXPECT_FALSE(fanVV.maximumFlowRate());
+    EXPECT_FALSE(fanSM.designMaximumAirFlowRate());
+    EXPECT_EQ(fanVV.isMaximumFlowRateAutosized(), fanSM.isDesignMaximumAirFlowRateAutosized());
+    EXPECT_EQ("Continuous", fanSM.speedControlMethod());
+    EXPECT_EQ(0.0, fanSM.electricPowerMinimumFlowRateFraction());
+    EXPECT_EQ(fanVV.pressureRise(), fanSM.designPressureRise());
+    EXPECT_EQ(fanVV.motorEfficiency(), fanSM.motorEfficiency());
+    EXPECT_EQ(fanVV.motorInAirstreamFraction(), fanSM.motorInAirStreamFraction());
+    EXPECT_FALSE(fanSM.designElectricPowerConsumption());
+    EXPECT_TRUE(fanSM.isDesignElectricPowerConsumptionAutosized());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fanSM.designPowerSizingMethod());
+    EXPECT_EQ(840.0, fanSM.electricPowerPerUnitFlowRate());
+    EXPECT_EQ(1.66667, fanSM.electricPowerPerUnitFlowRatePerUnitPressure());
+    EXPECT_EQ(fanVV.fanTotalEfficiency(), fanSM.fanTotalEfficiency());
+    EXPECT_EQ(fanVV.fanEfficiency(), fanSM.fanTotalEfficiency());
+    boost::optional<Curve> _curve = fanSM.electricPowerFunctionofFlowFractionCurve();
+    ASSERT_TRUE(_curve);
+    boost::optional<CurveQuartic> _curveQuartic = _curve->optionalCast<CurveQuartic>();
+    ASSERT_TRUE(_curveQuartic);
+    CurveQuartic curveQuartic = _curveQuartic.get();
+    ASSERT_TRUE(fanVV.fanPowerCoefficient1());
+    EXPECT_EQ(fanVV.fanPowerCoefficient1().get(), curveQuartic.coefficient1Constant());
+    ASSERT_TRUE(fanVV.fanPowerCoefficient2());
+    EXPECT_EQ(fanVV.fanPowerCoefficient2().get(), curveQuartic.coefficient2x());
+    ASSERT_TRUE(fanVV.fanPowerCoefficient3());
+    EXPECT_EQ(fanVV.fanPowerCoefficient3().get(), curveQuartic.coefficient3xPOW2());
+    ASSERT_TRUE(fanVV.fanPowerCoefficient4());
+    EXPECT_EQ(fanVV.fanPowerCoefficient4().get(), curveQuartic.coefficient4xPOW3());
+    ASSERT_TRUE(fanVV.fanPowerCoefficient5());
+    EXPECT_EQ(fanVV.fanPowerCoefficient5().get(), curveQuartic.coefficient5xPOW4());
+    EXPECT_EQ(0.0, curveQuartic.minimumValueofx());
+    EXPECT_EQ(1.0, curveQuartic.maximumValueofx());
+    ASSERT_TRUE(curveQuartic.minimumCurveOutput());
+    EXPECT_EQ(0.0, curveQuartic.minimumCurveOutput().get());
+    ASSERT_TRUE(curveQuartic.maximumCurveOutput());
+    EXPECT_EQ(5.0, curveQuartic.maximumCurveOutput().get());
+    EXPECT_EQ("Dimensionless", curveQuartic.inputUnitTypeforX());
+    EXPECT_EQ("Dimensionless", curveQuartic.outputUnitType());
+    EXPECT_FALSE(fanSM.nightVentilationModePressureRise());
+    EXPECT_FALSE(fanSM.nightVentilationModeFlowFraction());
+    EXPECT_FALSE(fanSM.motorLossZone());
+    EXPECT_EQ(0.0, fanSM.motorLossRadiativeFraction());
+    EXPECT_EQ("General", fanSM.endUseSubcategory());
+    EXPECT_EQ(1, fanSM.numberofSpeeds());
   }
 }

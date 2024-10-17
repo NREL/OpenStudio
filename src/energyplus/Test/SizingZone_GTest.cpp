@@ -184,6 +184,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingZone) {
     EXPECT_EQ(dehumSch.nameString(), idf_sz.getString(Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName).get());
     EXPECT_EQ(humSch.nameString(), idf_sz.getString(Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName).get());
   }
+
+  EXPECT_TRUE(sz.setSizingOption("NonCoincident"));
+
+  {
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Sizing_Zone);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_sz(idfObjs[0]);
+
+    EXPECT_EQ("NonCoincident", idf_sz.getString(Sizing_ZoneFields::TypeofSpaceSumtoUse).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SizingZone) {

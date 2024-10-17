@@ -1,7 +1,7 @@
 ! Basecase reference for SimpleSurfaces_Test
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,24.1;
+  Version,24.2;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -461,7 +461,7 @@
 
   Output:IlluminanceMap,
     Map1,                    !- Name
-    Zone1,                   !- Zone Name
+    Zone1,                   !- Zone or Space Name
     0.900000,                !- Z height {m}
     0.100000,                !- X Minimum Coordinate {m}
     24.9,                    !- X Maximum Coordinate {m}

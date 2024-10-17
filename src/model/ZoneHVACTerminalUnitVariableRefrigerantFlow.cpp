@@ -8,6 +8,8 @@
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
 #include "FanSystemModel.hpp"
+#include "FanVariableVolume.hpp"
+#include "FanVariableVolume_Impl.hpp"
 #include "CurveCubic.hpp"
 #include "CurveCubic_Impl.hpp"
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
@@ -45,6 +47,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
+
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 namespace openstudio {
 
@@ -421,6 +425,17 @@ namespace model {
           return false;
         }
       }
+
+      if ((fanType == IddObjectType::OS_Fan_VariableVolume)) {
+        FanSystemModel fanSys = component.cast<FanVariableVolume>().convertToFanSystemModel();
+
+        DEPRECATED_AT_MSG(
+          3, 9, 0,
+          "Setting a FanVariableVolume is deprecated. The fan has been converted to FanSystemModel, but in the future use FanSystemModel instead.");
+
+        return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, fanSys.handle());
+      }
+
       return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplyAirFan, component.handle());
     }
 

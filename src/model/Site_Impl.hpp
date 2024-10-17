@@ -83,6 +83,10 @@ namespace model {
 
       bool isTerrainDefaulted() const;
 
+      bool keepSiteLocationInformation() const;
+
+      bool isKeepSiteLocationInformationDefaulted() const;
+
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
       virtual std::vector<std::string> emsInternalVariableNames() const override;
@@ -110,6 +114,10 @@ namespace model {
       bool setTerrain(const std::string& terrain);
 
       void resetTerrain();
+
+      bool setKeepSiteLocationInformation(bool keepSiteLocationInformation);
+
+      void resetKeepSiteLocationInformation();
 
       //@}
 

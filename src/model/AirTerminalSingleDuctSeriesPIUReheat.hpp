@@ -42,6 +42,10 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> fanControlTypeValues();
+
+    static std::vector<std::string> heatingControlTypeValues();
+
     /** @name Getters */
     //@{
 
@@ -70,6 +74,16 @@ namespace model {
     double minimumHotWaterorSteamFlowRate() const;
 
     double convergenceTolerance() const;
+
+    std::string fanControlType() const;
+
+    double minimumFanTurnDownRatio() const;
+
+    std::string heatingControlType() const;
+
+    double designHeatingDischargeAirTemperature() const;
+
+    double highLimitHeatingDischargeAirTemperature() const;
 
     //@}
     /** @name Setters */
@@ -104,6 +118,16 @@ namespace model {
     bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
     bool setConvergenceTolerance(double convergenceTolerance);
+
+    bool setFanControlType(const std::string& fanControlType);
+
+    bool setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio);
+
+    bool setHeatingControlType(const std::string& heatingControlType);
+
+    bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
+
+    bool setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature);
 
     //@}
     /** @name Other */
