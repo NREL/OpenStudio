@@ -253,27 +253,13 @@ if(BUILD_TESTING)
   )
   set_tests_properties(OpenStudioCLI.Run_PythonRuby PROPERTIES RESOURCE_LOCK "compact_osw")
 
-  add_test(NAME OpenStudioCLI.Clean_Run
-    COMMAND ${CMAKE_COMMAND} -E rm -rf "run"
+  add_test(NAME OpenStudioCLI.Run_AlfalfaWorkflow
+    COMMAND ${CMAKE_COMMAND} "-DCMD1=$<TARGET_FILE:openstudio> run -m -w compact_alfalfa.osw"
+    "-DCMD2=${CMAKE_COMMAND} -E cat run/alfalfa.json"
+    -P ${CMAKE_SOURCE_DIR}/CMake/RunCommands.cmake
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
   )
-  set_tests_properties(OpenStudioCLI.Clean_Run PROPERTIES RESOURCE_LOCK "compact_osw")
-  set_tests_properties(OpenStudioCLI.Clean_Run PROPERTIES FIXTURES_SETUP "clean_workflow")
-
-  add_test(NAME OpenStudioCLI.Run_Alfalfa
-    COMMAND $<TARGET_FILE:openstudio> run -m -w compact_alfalfa.osw
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
-  )
-  set_tests_properties(OpenStudioCLI.Run_Alfalfa PROPERTIES RESOURCE_LOCK "compact_osw")
-  set_tests_properties(OpenStudioCLI.Run_Alfalfa PROPERTIES FIXTURES_SETUP "alfalfa_workflow")
-  set_tests_properties(OpenStudioCLI.Run_Alfalfa PROPERTIES FIXTURES_REQUIRED "clean_workflow")
-
-  add_test(NAME OpenStudioCLI.Check_Alfalfa
-    COMMAND ${CMAKE_COMMAND} -E cat "run/alfalfa.json"
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw"
-  )
-  set_tests_properties(OpenStudioCLI.Check_Alfalfa PROPERTIES RESOURCE_LOCK "compact_osw")
-  set_tests_properties(OpenStudioCLI.Check_Alfalfa PROPERTIES FIXTURES_REQUIRED "alfalfa_workflow")
+  set_tests_properties(OpenStudioCLI.Run_AlfalfaWorkflow PROPERTIES RESOURCE_LOCK "compact_osw")
 
   add_test(NAME OpenStudioCLI.Run_RubyPythonPlugin
     COMMAND $<TARGET_FILE:openstudio> run --show-stdout -w python_plugin_jinja_erb.osw
