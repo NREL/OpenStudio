@@ -97,6 +97,26 @@ namespace energyplus {
       idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, optvalue.get());
     }
 
+    if (modelObject.heatRecoveryLoop()) {
+      if (modelObject.isHeatRecoveryReferenceFlowRateAutosized()) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, "Autosize");
+      } else if ((optvalue = modelObject.heatRecoveryReferenceFlowRate())) {
+        idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, optvalue.get());
+      }
+
+      if (boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject()) {
+        if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+          idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryInletNodeName, node->name().get());
+        }
+      }
+
+      if (boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject()) {
+        if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+          idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryOutletNodeName, node->name().get());
+        }
+      }
+    }
+
     if (modelObject.isReferenceCapacityAutosized()) {
       idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::ReferenceCapacity, "Autosize");
     } else if ((optvalue = modelObject.referenceCapacity())) {
@@ -196,6 +216,22 @@ namespace energyplus {
     if (boost::optional<model::Curve> curve = modelObject.timedEmpiricalDefrostHeatInputEnergyFractionCurve()) {
       if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
         idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName, _curve->name().get());
+      }
+    }
+
+    idfObject.setDouble(HeatPump_PlantLoop_EIR_HeatingFields::MinimumHeatRecoveryOutletTemperature,
+                        modelObject.minimumHeatRecoveryOutletTemperature());
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryCapacityModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName, _curve->name().get());
+      }
+    }
+
+    if (boost::optional<model::Curve> curve = modelObject.heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                            _curve->name().get());
       }
     }
 

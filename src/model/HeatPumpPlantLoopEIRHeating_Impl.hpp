@@ -49,10 +49,17 @@ namespace model {
 
       virtual unsigned demandOutletPort() const override;
 
+      virtual unsigned tertiaryInletPort() const override;
+
+      virtual unsigned tertiaryOutletPort() const override;
+
       /* This function will call the base class' method WaterToWaterComponent_Impl::addToNode()
        * If this is connecting to the demand side of a loop, will set the condenserType to 'WaterSource'
        */
       virtual bool addToNode(Node& node) override;
+
+      /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
+      virtual bool addToTertiaryNode(Node& node) override;
 
       /** Override to switch the condenser type to 'AirSource' **/
       virtual bool removeFromSecondaryPlantLoop() override;
@@ -81,6 +88,10 @@ namespace model {
       boost::optional<double> sourceSideReferenceFlowRate() const;
 
       bool isSourceSideReferenceFlowRateAutosized() const;
+
+      boost::optional<double> heatRecoveryReferenceFlowRate() const;
+
+      bool isHeatRecoveryReferenceFlowRateAutosized() const;
 
       boost::optional<double> referenceCapacity() const;
 
@@ -130,6 +141,12 @@ namespace model {
 
       boost::optional<Curve> timedEmpiricalDefrostHeatInputEnergyFractionCurve() const;
 
+      double minimumHeatRecoveryOutletTemperature() const;
+
+      boost::optional<Curve> heatRecoveryCapacityModifierFunctionofTemperatureCurve() const;
+
+      boost::optional<Curve> heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -145,6 +162,10 @@ namespace model {
       bool setSourceSideReferenceFlowRate(double sourceSideReferenceFlowRate);
 
       void autosizeSourceSideReferenceFlowRate();
+
+      bool setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate);
+
+      void autosizeHeatRecoveryReferenceFlowRate();
 
       bool setReferenceCapacity(double referenceCapacity);
 
@@ -209,6 +230,17 @@ namespace model {
 
       void resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
 
+      bool setMinimumHeatRecoveryOutletTemperature(double minimumHeatRecoveryOutletTemperature);
+
+      bool setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+
+      bool setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+        const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+
+      void resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+
       //@}
       /** @name Other */
       //@{
@@ -217,6 +249,8 @@ namespace model {
 
       boost::optional<double> autosizedSourceSideReferenceFlowRate() const;
 
+      boost::optional<double> autosizedHeatRecoveryReferenceFlowRate() const;
+
       boost::optional<double> autosizedReferenceCapacity() const;
 
       /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
@@ -224,6 +258,9 @@ namespace model {
 
       /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
       boost::optional<PlantLoop> sourceSideWaterLoop() const;
+
+      /** Convenience Function to return the Heat Recovery Loop (HeatPump on demand side - tertiary) **/
+      boost::optional<PlantLoop> heatRecoveryLoop() const;
 
       // Convenience function to return the inletNode on the Source Side
       boost::optional<Node> sourceSideWaterInletNode() const;
@@ -234,6 +271,11 @@ namespace model {
       boost::optional<Node> loadSideWaterInletNode() const;
       // Convenience function to return the outletNode on the Load Side
       boost::optional<Node> loadSideWaterOutletNode() const;
+
+      // Convenience function to return the inletNode on the Heat Recovery
+      boost::optional<Node> heatRecoveryInletNode() const;
+      // Convenience function to return the outletNode on the Heat Recovery
+      boost::optional<Node> heatRecoveryOutletNode() const;
 
       //@}
      protected:

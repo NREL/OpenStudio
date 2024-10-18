@@ -87,6 +87,14 @@ namespace energyplus {
       }
     }
 
+    if (boost::optional<std::string> _outputSpaceSizing = workspaceObject.getString(OutputControl_FilesFields::OutputSpaceSizing, true)) {
+      if (istringEqual("Yes", _outputSpaceSizing.get())) {
+        modelObject.setOutputSpaceSizing(true);
+      } else {
+        modelObject.setOutputSpaceSizing(false);
+      }
+    }
+
     if (boost::optional<std::string> _outputZoneSizing = workspaceObject.getString(OutputControl_FilesFields::OutputZoneSizing, true)) {
       if (istringEqual("Yes", _outputZoneSizing.get())) {
         modelObject.setOutputZoneSizing(true);

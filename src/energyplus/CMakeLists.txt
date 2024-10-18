@@ -665,6 +665,8 @@ set(${target_name}_test_src
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   Test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
+  Test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
+  Test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
@@ -687,6 +689,8 @@ set(${target_name}_test_src
   Test/BoilerHotWater_GTest.cpp
   Test/Building_GTest.cpp
   Test/ChillerElectricASHRAE205_GTest.cpp
+  Test/ChillerElectricEIR_GTest.cpp
+  Test/ChillerElectricReformulatedEIR_GTest.cpp
   Test/CentralHeatPumpSystem_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
@@ -799,6 +803,7 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/Site_GTest.cpp
   Test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
   Test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   Test/SizingSystem_GTest.cpp

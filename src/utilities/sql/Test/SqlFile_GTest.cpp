@@ -321,11 +321,12 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // SqlResults ep_2220 = {191883303.43, 27902.68, 407.55, 361.09, 776.63, 3322855.48, 188531000.0};
   // SqlResults ep_2310 = {191883303.43, 27902.68, 407.55, 361.09, 776.63, 3322855.48, 188531000.0};
   // SqlResults ep_2320 = {191883303.43, 27902.68, 407.55, 361.09, 776.63, 3322855.48, 188531000.0};
+  // SqlResults ep_2410 = {191883303.43, 27902.68, 407.55, 361.09, 776.63, 3322855.48, 188531000.0};
   // Note: historically we had a PTAC and a PTHP both with a Fan:ConstantVolume but a blank Supply Air Fan Operating Mode Schedule
   // 22.2.0 forces you to use a schedule with a value of 1, so that produces a lot of deviations
   //                 = {252660024.14000002, 28129.12, 428.19, 360.93, 781.28, 3322324.62, 249308000.0};
   // To reduce the deviation, I switched the PTAC/PTHP to a Fan:OnOff with a Always Off Discrete Schedule, but it still behaves slightly differently
-  SqlResults ep_2410 = {191883303.43, 27902.68, 407.55, 361.09, 776.63, 3322855.48, 188531000.0};
+  SqlResults ep_2420 = {191879399.92, 27905.27, 407.55, 361.09, 776.63, 3328949.38, 188521000.0};
   // To update, cd build/resources, then in Ruby
   /** ```ruby
    sqlFile2 = OpenStudio::SqlFile.new('energyplus/Office_With_Many_HVAC_Types/eplusout.sql')
@@ -358,15 +359,15 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_NEAR(ep_2410.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
+  EXPECT_NEAR(ep_2420.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
 
   // Costs by fuel type
-  EXPECT_DOUBLE_EQ(ep_2410.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
-  EXPECT_DOUBLE_EQ(ep_2410.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
-  EXPECT_DOUBLE_EQ(ep_2410.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
-  EXPECT_DOUBLE_EQ(ep_2410.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_NEAR(ep_2410.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
-  EXPECT_DOUBLE_EQ(ep_2410.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+  EXPECT_DOUBLE_EQ(ep_2420.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_2420.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_2420.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_2420.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_NEAR(ep_2420.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
+  EXPECT_DOUBLE_EQ(ep_2420.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
   // So it's fine to keep it as is
@@ -614,6 +615,7 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V23-1-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V23-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V24-1-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V24-2-0.sql", 43.28, 20, 20);
 }
 
 TEST_F(SqlFileFixture, SqlFile_LeapYear) {

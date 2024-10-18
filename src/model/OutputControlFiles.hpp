@@ -55,6 +55,8 @@ namespace model {
 
     bool outputAUDIT() const;
 
+    bool outputSpaceSizing() const;
+
     bool outputZoneSizing() const;
 
     bool outputSystemSizing() const;
@@ -118,6 +120,8 @@ namespace model {
     bool setOutputJSON(bool outputJSON);
 
     bool setOutputAUDIT(bool outputAUDIT);
+
+    bool setOutputSpaceSizing(bool outputSpaceSizing);
 
     bool setOutputZoneSizing(bool outputZoneSizing);
 

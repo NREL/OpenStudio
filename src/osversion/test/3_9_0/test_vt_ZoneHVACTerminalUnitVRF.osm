@@ -1,0 +1,107 @@
+
+OS:Version,
+  {40d4de23-22ef-4364-ad89-ce82e9712821}, !- Handle
+  3.8.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+  {50cd4557-e87a-4f3b-b7f8-cc35a49eeadd}, !- Handle
+  Coil Cooling DX Variable Refrigerant Flow Fluid Temperature Control 1, !- Name
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Availability Schedule
+  ,                                       !- Coil Air Inlet Node
+  ,                                       !- Coil Air Outlet Node
+  autosize,                               !- Rated Total Cooling Capacity {W}
+  autosize,                               !- Rated Sensible Heat Ratio
+  5,                                      !- Indoor Unit Reference Superheating {deltaC}
+  {62a9261f-7480-4ef1-8d64-133b9b360b57}; !- Indoor Unit Evaporating Temperature Function of Superheating Curve
+
+OS:Schedule:Constant,
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Handle
+  Always On Discrete,                     !- Name
+  {814ee892-c368-4750-ac0d-c888bfa697d8}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {814ee892-c368-4750-ac0d-c888bfa697d8}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Curve:Quadratic,
+  {62a9261f-7480-4ef1-8d64-133b9b360b57}, !- Handle
+  VRFIUEvapTempCurve,                     !- Name
+  0,                                      !- Coefficient1 Constant
+  0.843,                                  !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  15;                                     !- Maximum Value of x
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow:FluidTemperatureControl,
+  {c94a7a30-0fa0-4630-a654-a622542d3123}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow Fluid Temperature Control 1, !- Name
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Availability Schedule
+  ,                                       !- Coil Air Inlet Node
+  ,                                       !- Coil Air Outlet Node
+  autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Indoor Unit Reference Subcooling {deltaC}
+  {04d2b576-3bc3-4340-9ac7-16a2746618a2}; !- Indoor Unit Condensing Temperature Function of Subcooling Curve
+
+OS:Curve:Quadratic,
+  {04d2b576-3bc3-4340-9ac7-16a2746618a2}, !- Handle
+  VRFIUCondTempCurve,                     !- Name
+  -1.85,                                  !- Coefficient1 Constant
+  0.411,                                  !- Coefficient2 x
+  0.0196,                                 !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  20;                                     !- Maximum Value of x
+
+OS:Fan:VariableVolume,
+  {f77178af-3a62-4103-89a9-fedac1f0552b}, !- Handle
+  Fan Variable Volume 1,                  !- Name
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Availability Schedule Name
+  0.6045,                                 !- Fan Total Efficiency
+  1017.592,                               !- Pressure Rise {Pa}
+  Autosize,                               !- Maximum Flow Rate {m3/s}
+  FixedFlowRate,                          !- Fan Power Minimum Flow Rate Input Method
+  0,                                      !- Fan Power Minimum Flow Fraction
+  0,                                      !- Fan Power Minimum Air Flow Rate {m3/s}
+  0.93,                                   !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  0.040759894,                            !- Fan Power Coefficient 1
+  0.08804497,                             !- Fan Power Coefficient 2
+  -0.07292612,                            !- Fan Power Coefficient 3
+  0.943739823,                            !- Fan Power Coefficient 4
+  0,                                      !- Fan Power Coefficient 5
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ;                                       !- End-Use Subcategory
+
+OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+  {9ace6a08-ad14-4ac2-bbff-a5d737e63b06}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1, !- Name
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Terminal Unit Availability schedule
+  ,                                       !- Terminal Unit Air Inlet Node
+  ,                                       !- Terminal Unit Air Outlet Node
+  autosize,                               !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling is Needed {m3/s}
+  autosize,                               !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {75fbce98-a40a-4801-a0dc-a9f02f4ef09a}, !- Supply Air Fan Operating Mode Schedule
+  DrawThrough,                            !- Supply Air Fan Placement
+  {f77178af-3a62-4103-89a9-fedac1f0552b}, !- Supply Air Fan
+  ,                                       !- Outside Air Mixer
+  {50cd4557-e87a-4f3b-b7f8-cc35a49eeadd}, !- Cooling Coil
+  {c94a7a30-0fa0-4630-a654-a622542d3123}, !- Heating Coil
+  30,                                     !- Zone Terminal Unit On Parasitic Electric Energy Use {W}
+  20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
+  1,                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+  ,                                       !- Availability Manager List Name
+  ,                                       !- Design Specification ZoneHVAC Sizing Object Name
+  ,                                       !- Supplemental Heating Coil Name
+  Autosize,                               !- Maximum Supply Air Temperature from Supplemental Heater {C}
+  21;                                     !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+

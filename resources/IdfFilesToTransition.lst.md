@@ -1,7 +1,8 @@
 - Run an initial build to produce build/resources/IdfFilesToTransition.lst from resources/IdfFilesToTransition.lst.in.
 - Install the appropriate version of EnergyPlus.
-- Open EnergyPlus/PreProcess/IDFVersionUpdater/IDFVersionUpdate.exe.
+- Open EnergyPlus/PreProcess/IDFVersionUpdater/IDFVersionUpdater.exe.
 - Choose File to Update... > build/resources/IdfFilesToTransition.lst.
 - New Version should auto-populate to version of EnergyPlus.
 - Create Intermediate Version Files > No.
 - Delete Original Files > Yes.
+- Click Update File.
