@@ -12,6 +12,7 @@ target_link_libraries(
  openstudio_model
  openstudio_energyplus
  openstudio_epjson
+ openstudio_alfalfa
  openstudio_measure
  openstudio_osversion
  openstudio_sdd

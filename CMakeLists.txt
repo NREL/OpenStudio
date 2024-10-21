@@ -1041,6 +1041,7 @@ set(project_directories
   airflow
   isomodel
   osversion
+  alfalfa
   measure
   sdd
   lib
