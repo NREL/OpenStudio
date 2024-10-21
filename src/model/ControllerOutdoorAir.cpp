@@ -11,12 +11,14 @@
 #include "ControllerMechanicalVentilation_Impl.hpp"
 #include "ScheduleCompact.hpp"
 #include "ScheduleCompact_Impl.hpp"
-#include "CurveQuadratic.hpp"
-#include "CurveQuadratic_Impl.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "AirflowNetworkOutdoorAirflow.hpp"
 #include "AirflowNetworkOutdoorAirflow_Impl.hpp"
 #include "AirflowNetworkCrack.hpp"
 #include "AirflowNetworkCrack_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -25,6 +27,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/DeprecatedHelpers.hpp"
 
 using openstudio::Handle;
 using openstudio::OptionalHandle;
@@ -86,70 +89,24 @@ namespace model {
     // return any children objects in the hierarchy
     std::vector<ModelObject> ControllerOutdoorAir_Impl::children() const {
       std::vector<ModelObject> result;
-      //result.push_back(this->getElectronicEnthalpyLimitCurve());
-      //result.push_back(this->getMinimumOutdoorAirSchedule());
-      //result.push_back(this->getMinimumFractionOfOutdoorAirSchedule());
-      //result.push_back(this->getMaximumFractionOfOutdoorAirSchedule());
-      //result.push_back(this->getTimeOfDayEconomizerControlSchedule());
       std::vector<AirflowNetworkOutdoorAirflow> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkOutdoorAirflow>(AirflowNetworkOutdoorAirflow::iddObjectType());
       result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
       return result;
     }
 
-    CurveQuadratic ControllerOutdoorAir_Impl::getElectronicEnthalpyLimitCurve() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
-        OptionalCurveQuadratic curveQuadratic = wo->optionalCast<CurveQuadratic>();
-        return *curveQuadratic;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve electronic enthalpy limit curve")
-        throw;
-      }
+    boost::optional<Curve> ControllerOutdoorAir_Impl::electronicEnthalpyLimitCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName);
     }
 
-    ScheduleCompact ControllerOutdoorAir_Impl::getMinimumOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve minimum outdoor air schedule")
-        throw;
-      }
+    bool ControllerOutdoorAir_Impl::setElectronicEnthalpyLimitCurve(const Curve& curve) {
+      bool result = setPointer(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, curve.handle());
+      return result;
     }
 
-    ScheduleCompact ControllerOutdoorAir_Impl::getMinimumFractionOfOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve minimum fraciton of outdoor air schedule")
-        throw;
-      }
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getMaximumFractionOfOutdoorAirSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve maximum fraction of outdoor air schedule")
-        throw;
-      }
-    }
-
-    ScheduleCompact ControllerOutdoorAir_Impl::getTimeOfDayEconomizerControlSchedule() const {
-      try {
-        OptionalWorkspaceObject wo = this->getTarget(openstudio::OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName);
-        OptionalScheduleCompact schedule = wo->optionalCast<ScheduleCompact>();
-        return *schedule;
-      } catch (...) {
-        LOG(Error, "Failed to retrieve time of day economizer control schedule")
-        throw;
-      }
+    void ControllerOutdoorAir_Impl::resetElectronicEnthalpyLimitCurve() {
+      bool result = setString(OS_Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
+      OS_ASSERT(result);
     }
 
     OptionalAirLoopHVACOutdoorAirSystem ControllerOutdoorAir_Impl::airLoopHVACOutdoorAirSystem() const {
@@ -224,7 +181,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setEconomizerControlType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlType, value);
-      ;
     }
 
     std::string ControllerOutdoorAir_Impl::getEconomizerControlActionType() const {
@@ -233,7 +189,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setEconomizerControlActionType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::EconomizerControlActionType, value);
-      ;
     }
 
     //get needs to return a boost optional double since "" is a valid input
@@ -303,7 +258,6 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setLockoutType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::LockoutType, value);
-      ;
     }
 
     std::string ControllerOutdoorAir_Impl::getMinimumLimitType() const {
@@ -312,60 +266,45 @@ namespace model {
 
     bool ControllerOutdoorAir_Impl::setMinimumLimitType(const std::string& value) {
       return setString(openstudio::OS_Controller_OutdoorAirFields::MinimumLimitType, value);
-      ;
     }
 
     boost::optional<bool> ControllerOutdoorAir_Impl::getHighHumidityControl() const {
-      boost::optional<bool> retVal;
-
-      if (OptionalString s = getString(OS_Controller_OutdoorAirFields::HighHumidityControl)) {
-        if (istringEqual(s.get(), "yes")) {
-          retVal = true;
-        } else {
-          retVal = false;
-        }
-      }
-
-      return retVal;
+      return getBooleanFieldValue(OS_Controller_OutdoorAirFields::HighHumidityControl);
     }
 
-    bool ControllerOutdoorAir_Impl::setHighHumidityControl(bool val) {
-      if (val) {
-        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
-      } else {
-        return setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
-      }
+    boost::optional<ThermalZone> ControllerOutdoorAir_Impl::humidistatControlZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Controller_OutdoorAirFields::HumidistatControlZoneName);
     }
 
-    OptionalDouble ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
-      return getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio);
+    bool ControllerOutdoorAir_Impl::setHumidistatControlZone(const ThermalZone& thermalZone) {
+      bool result = setPointer(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, thermalZone.handle());
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "Yes");
+      return result;
     }
+
+    void ControllerOutdoorAir_Impl::resetHumidistatControlZone() {
+      bool result = setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
+      result = result && setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
+      OS_ASSERT(result);
+    }
+
+    double ControllerOutdoorAir_Impl::getHighHumidityOutdoorAirFlowRatio() const {
+      boost::optional<double> value = getDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     bool ControllerOutdoorAir_Impl::setHighHumidityOutdoorAirFlowRatio(double v) {
-      return setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, v);
-      ;
+      bool result = setDouble(openstudio::OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, v);
+      return result;
     }
 
-    boost::optional<bool> ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
-      boost::optional<bool> retVal;
-      OptionalString s = getString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio);
-      if (!s) {
-        return retVal;
-      }
-      std::string temp = *s;
-      boost::to_lower(temp);
-      if (temp == "no") {
-        retVal = false;
-      } else {
-        retVal = true;
-      }
-      return retVal;
+    bool ControllerOutdoorAir_Impl::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
+      return getBooleanFieldValue(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio);
     }
+
     bool ControllerOutdoorAir_Impl::setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(bool v) {
-      if (v) {
-        return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
-      } else {
-        return setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
-      }
+      return setBooleanFieldValue(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, v);
     }
 
     OptionalString ControllerOutdoorAir_Impl::getHeatRecoveryBypassControlType() const {
@@ -599,10 +538,9 @@ namespace model {
     setString(OS_Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, "");
     setString(OS_Controller_OutdoorAirFields::ControllerMechanicalVentilation, "");
     setString(OS_Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, "");
-    setHighHumidityControl(false);
-    setString(OS_Controller_OutdoorAirFields::HumidistatControlZoneName, "");
-    setString(OS_Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, "");
-    setString(OS_Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "");
+    setString(OS_Controller_OutdoorAirFields::HighHumidityControl, "No");
+    setHighHumidityOutdoorAirFlowRatio(1.0);
+    setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(true);
     setHeatRecoveryBypassControlType("BypassWhenWithinEconomizerLimits");
     setEconomizerOperationStaging("InterlockedWithMechanicalCooling");
 
@@ -612,24 +550,16 @@ namespace model {
 
   ControllerOutdoorAir::ControllerOutdoorAir(std::shared_ptr<detail::ControllerOutdoorAir_Impl> impl) : ParentObject(std::move(impl)) {}
 
-  CurveQuadratic ControllerOutdoorAir::getElectronicEnthalpyLimitCurve() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getElectronicEnthalpyLimitCurve();
+  boost::optional<Curve> ControllerOutdoorAir::electronicEnthalpyLimitCurve() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->electronicEnthalpyLimitCurve();
   }
 
-  ScheduleCompact ControllerOutdoorAir::getMinimumOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMinimumOutdoorAirSchedule();
+  bool ControllerOutdoorAir::setElectronicEnthalpyLimitCurve(const Curve& curve) {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setElectronicEnthalpyLimitCurve(curve);
   }
 
-  ScheduleCompact ControllerOutdoorAir::getMinimumFractionOfOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMinimumFractionOfOutdoorAirSchedule();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getMaximumFractionOfOutdoorAirSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getMaximumFractionOfOutdoorAirSchedule();
-  }
-
-  ScheduleCompact ControllerOutdoorAir::getTimeOfDayEconomizerControlSchedule() const {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->getTimeOfDayEconomizerControlSchedule();
+  void ControllerOutdoorAir::resetElectronicEnthalpyLimitCurve() {
+    getImpl<detail::ControllerOutdoorAir_Impl>()->resetElectronicEnthalpyLimitCurve();
   }
 
   boost::optional<AirLoopHVACOutdoorAirSystem> ControllerOutdoorAir::airLoopHVACOutdoorAirSystem() const {
@@ -725,10 +655,23 @@ namespace model {
   }
 
   bool ControllerOutdoorAir::setHighHumidityControl(bool val) {
-    return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityControl(val);
+    DEPRECATED_AT_MSG(3, 8, 0, "Use setHumidistatControlZone instead.");
+    return false;
   }
 
-  boost::optional<double> ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
+  boost::optional<ThermalZone> ControllerOutdoorAir::humidistatControlZone() const {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->humidistatControlZone();
+  }
+
+  bool ControllerOutdoorAir::setHumidistatControlZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::ControllerOutdoorAir_Impl>()->setHumidistatControlZone(thermalZone);
+  }
+
+  void ControllerOutdoorAir::resetHumidistatControlZone() {
+    getImpl<detail::ControllerOutdoorAir_Impl>()->resetHumidistatControlZone();
+  }
+
+  double ControllerOutdoorAir::getHighHumidityOutdoorAirFlowRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getHighHumidityOutdoorAirFlowRatio();
   }
 
@@ -736,7 +679,7 @@ namespace model {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->setHighHumidityOutdoorAirFlowRatio(v);
   }
 
-  boost::optional<bool> ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
+  bool ControllerOutdoorAir::getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio() const {
     return getImpl<detail::ControllerOutdoorAir_Impl>()->getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
   }
 

@@ -9,6 +9,9 @@
 #include "../../model/ControllerMechanicalVentilation.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/ZoneControlHumidistat.hpp"
 #include <utilities/idd/Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -119,9 +122,14 @@ namespace energyplus {
     } else {
       idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDewpointTemperature, "");
     }
+
     ///////////////////////////////////////////////////////////////////////////
     // Field: Electronic Enthalpy Limit Curve Name ////////////////////////////
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
+    if (boost::optional<model::Curve> curve = modelObject.electronicEnthalpyLimitCurve()) {
+      if (boost::optional<IdfObject> _curve = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, _curve->name().get());
+      }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Economizer Minimum Limit DryBulb Temperature ////////////////////
@@ -151,6 +159,17 @@ namespace energyplus {
       }
     }
 
+    // HumidistatControlZoneName
+    if (auto zone_ = modelObject.humidistatControlZone()) {
+      if (boost::optional<ZoneControlHumidistat> humidistat = zone_->zoneControlHumidistat()) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HumidistatControlZoneName, zone_->nameString());
+      } else {
+        LOG(Warn, modelObject.briefDescription() << " has a humidistat control zone " << zone_->nameString()
+                                                 << " without a zone control humidistat; humidistat control zone field will not be translated");
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
+      }
+    }
+
     // HighHumidityOutdoorAirFlowRatio
     d = modelObject.getHighHumidityOutdoorAirFlowRatio();
     if (d) {
@@ -158,13 +177,10 @@ namespace energyplus {
     }
 
     // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
-    ob = modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
-    if (ob) {
-      if (*ob) {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
-      } else {
-        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
-      }
+    if (modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio()) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
     }
 
     // HeatRecoveryBypassControlType

@@ -15,6 +15,8 @@
 #include "../AirflowNetworkCrack_Impl.hpp"
 #include "../AirflowNetworkReferenceCrackConditions.hpp"
 #include "../AirflowNetworkReferenceCrackConditions_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../CurveQuadratic.hpp"
 
 #include <utilities/idd/OS_Controller_OutdoorAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -76,4 +78,37 @@ TEST_F(ModelFixture, ControllerOutdoorAir_GettersSetters) {
   // Economizer Operation Staging
   EXPECT_TRUE(controller.setEconomizerOperationStaging("EconomizerFirst"));
   EXPECT_EQ("EconomizerFirst", controller.economizerOperationStaging());
+
+  // Electronic Enthalpy Limit Curve
+  EXPECT_FALSE(controller.electronicEnthalpyLimitCurve());
+  CurveQuadratic electronicEnthalpyLimitCurve(model);
+  EXPECT_TRUE(controller.setElectronicEnthalpyLimitCurve(electronicEnthalpyLimitCurve));
+  ASSERT_TRUE(controller.electronicEnthalpyLimitCurve());
+  EXPECT_EQ(electronicEnthalpyLimitCurve, controller.electronicEnthalpyLimitCurve().get());
+  controller.resetElectronicEnthalpyLimitCurve();
+  EXPECT_FALSE(controller.electronicEnthalpyLimitCurve());
+
+  // Humidistat Control Zone
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_FALSE(controller.getHighHumidityControl().get());
+  ThermalZone humidistatControlZone(model);
+  EXPECT_TRUE(controller.setHumidistatControlZone(humidistatControlZone));
+  ASSERT_TRUE(controller.humidistatControlZone());
+  EXPECT_EQ(humidistatControlZone, controller.humidistatControlZone().get());
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_TRUE(controller.getHighHumidityControl().get());
+  controller.resetHumidistatControlZone();
+  EXPECT_FALSE(controller.humidistatControlZone());
+  ASSERT_TRUE(controller.getHighHumidityControl());
+  EXPECT_FALSE(controller.getHighHumidityControl().get());
+
+  // High Humidity Outdoor Air Flow Ratio
+  EXPECT_EQ(1.0, controller.getHighHumidityOutdoorAirFlowRatio());
+  EXPECT_TRUE(controller.setHighHumidityOutdoorAirFlowRatio(2.0));
+  EXPECT_EQ(2.0, controller.getHighHumidityOutdoorAirFlowRatio());
+
+  // Control High Indoor Humidity Based on Outdoor Humidity Ratio
+  EXPECT_TRUE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio());
+  EXPECT_TRUE(controller.setControlHighIndoorHumidityBasedOnOutdoorHumidityRatio(false));
+  EXPECT_FALSE(controller.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio());
 }
