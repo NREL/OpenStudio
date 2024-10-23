@@ -3974,18 +3974,19 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
   }
 
   for (const auto& epw_string : epw_strings) {
+    int day = epw_string.day;
 
     // Fix for #5214: for TMY files where 28-day Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
     // If the TMY file actually contained Feb 29, we still change xxxx-Feb-29 00:00:00 to xxxx-Mar-01 00:00:00, but it doesn't matter since you'd still get Bad Date on xxxx-Feb-29 01:00:00, etc.
-    if ((!realYear) && (month == 2) && (day == 28) && (hour == 24) && (currentMinute == 0)) {
-      Date date(month, day, epw_string.year);
+    if ((!realYear) && (epw_string.month == 2) && (day == 28) && (epw_string.hour == 24) && (epw_string.currentMinute == 0)) {
+      Date date(epw_string.month, day, epw_string.year);
       if (date.isLeapYear()) {
         day = 29;
       }
     }
 
     boost::optional<EpwDataPoint> pt =
-      EpwDataPoint::fromEpwStrings(epw_string.year, epw_string.month, epw_string.day, epw_string.hour, epw_string.currentMinute, epw_string.strings);
+      EpwDataPoint::fromEpwStrings(epw_string.year, epw_string.month, day, epw_string.hour, epw_string.currentMinute, epw_string.strings);
     if (pt) {
       m_data.push_back(pt.get());
     } else {
