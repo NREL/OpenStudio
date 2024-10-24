@@ -93,19 +93,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_S
 
   CoilHeatingDXMultiSpeed htgcoil(m);
   CoilHeatingDXMultiSpeedStageData htgstage1(m);
-  EXPECT_TRUE(htgcoil.addSpeed(htgstage1));
+  EXPECT_TRUE(htgcoil.addStage(htgstage1));
   CoilHeatingDXMultiSpeedStageData htgstage2(m);
-  EXPECT_TRUE(htgcoil.addSpeed(htgstage2));
+  EXPECT_TRUE(htgcoil.addStage(htgstage2));
   CoilHeatingDXMultiSpeedStageData htgstage3(m);
-  EXPECT_TRUE(htgcoil.addSpeed(htgstage3));
+  EXPECT_TRUE(htgcoil.addStage(htgstage3));
   CoilHeatingDXMultiSpeedStageData htgstage4(m);
-  EXPECT_TRUE(htgcoil.addSpeed(htgstage4));
+  EXPECT_TRUE(htgcoil.addStage(htgstage4));
 
   CoilCoolingDXMultiSpeed clgcoil(m);
-  CoilCoolingDXVariableSpeedSpeedData clgstage1(m);
-  EXPECT_TRUE(clgcoil.addSpeed(clgstage1));
-  CoilCoolingDXVariableSpeedSpeedData clgstage2(m);
-  EXPECT_TRUE(clgcoil.addSpeed(clgstage2));
+  CoilCoolingDXMultiSpeedStageData clgstage1(m);
+  EXPECT_TRUE(clgcoil.addStage(clgstage1));
+  CoilCoolingDXMultiSpeedStageData clgstage2(m);
+  EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
   AirLoopHVACUnitarySystem unitary(m);
   unitary.setHeatingCoil(htgcoil);
