@@ -824,6 +824,7 @@ set(${target_name}_test_src
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/ThermostatSetpointDualSetpoint_GTest.cpp
+  Test/UnitarySystemPerformanceMultispeed_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/WaterHeaterMixed_GTest.cpp
   Test/WaterHeaterSizing_GTest.cpp
