@@ -120,7 +120,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_S
 
   EXPECT_EQ("UnitarySystemPerformance:Multispeed",
             idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
-  EXPECT_EQ(unitary.nameString() + " Unitary System Performance", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+  EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
+            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
   WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
   EXPECT_EQ(1, idf_perfs.size());
