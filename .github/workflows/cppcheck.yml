@@ -8,11 +8,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    container:
-      image: nrel/cppcheck:2.3
+    runs-on: ubuntu-20.04
+    # That container is too old to work with the actions that are on node20 now...
+    #container:
+    #  image: nrel/cppcheck:2.3
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
+    - name: Install cppcheck
+      shell: bash
+      run: |
+        # I made a PPA on launchpad where I built cppcheck 2.3 for focal
+        sudo add-apt-repository ppa:jmarrec/ppa
+        sudo apt update
+        sudo apt install -y cppcheck
+        cppcheck --version
+
     - name: Run cppcheck
       shell: bash
       run: |
@@ -57,7 +68,7 @@ jobs:
 
     - name: Upload cppcheck results as artifact
       if: ${{ always() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
           name: OpenStudio-${{ github.sha }}-cppcheck_results.txt
           path: cppcheck.txt

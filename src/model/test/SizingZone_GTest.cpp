@@ -406,4 +406,14 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_TRUE(sz.setZoneHumidistatHumidificationSetPointSchedule(humSch));
   ASSERT_TRUE(sz.zoneHumidistatHumidificationSetPointSchedule());
   EXPECT_EQ(humSch, sz.zoneHumidistatHumidificationSetPointSchedule().get());
+
+  // Sizing Option: String
+  // Default value from IDD, set in Ctor
+  EXPECT_EQ("Coincident", sz.sizingOption());
+  // Set
+  EXPECT_TRUE(sz.setSizingOption("NonCoincident"));
+  EXPECT_EQ("NonCoincident", sz.sizingOption());
+  // Bad Value
+  EXPECT_FALSE(sz.setSizingOption("BADENUM"));
+  EXPECT_EQ("NonCoincident", sz.sizingOption());
 }

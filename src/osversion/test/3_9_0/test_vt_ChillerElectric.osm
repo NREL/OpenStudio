@@ -1,0 +1,158 @@
+
+OS:Version,
+  {f788c27e-7e94-43c3-a80a-8e293f714f4f}, !- Handle
+  3.8.0;                                  !- Version Identifier
+
+OS:Chiller:Electric:EIR,
+  {8b8732ba-8c33-4b23-b64b-f6cc465043ad}, !- Handle
+  Chiller Electric EIR 1,                 !- Name
+  Autosize,                               !- Reference Capacity {W}
+  5.5,                                    !- Reference COP {W/W}
+  ,                                       !- Reference Leaving Chilled Water Temperature {C}
+  ,                                       !- Reference Entering Condenser Fluid Temperature {C}
+  Autosize,                               !- Reference Chilled Water Flow Rate {m3/s}
+  ,                                       !- Reference Condenser Fluid Flow Rate {m3/s}
+  {15c884d5-0b81-4f5e-af41-4782903a8b7d}, !- Cooling Capacity Function of Temperature Curve Name
+  {6fc50b87-dcf5-4011-ae09-0aea1a186a93}, !- Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  {21d7ec2b-5a94-4cd4-bfe9-718601ee9209}, !- Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Minimum Unloading Ratio
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
+  ,                                       !- Condenser Type
+  ,                                       !- Condenser Fan Power Ratio {W/W}
+  ,                                       !- Fraction of Compressor Electric Consumption Rejected by Condenser
+  ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
+  ,                                       !- Chiller Flow Mode
+  Autosize,                               !- Design Heat Recovery Water Flow Rate {m3/s}
+  ,                                       !- Heat Recovery Inlet Node Name
+  ,                                       !- Heat Recovery Outlet Node Name
+  1,                                      !- Sizing Factor
+  0,                                      !- Basin Heater Capacity {W/K}
+  10,                                     !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule Name
+  1,                                      !- Condenser Heat Recovery Relative Capacity Fraction
+  ,                                       !- Heat Recovery Inlet High Temperature Limit Schedule Name
+  ,                                       !- Heat Recovery Leaving Temperature Setpoint Node Name
+  General;                                !- End-Use Subcategory
+
+OS:Curve:Biquadratic,
+  {15c884d5-0b81-4f5e-af41-4782903a8b7d}, !- Handle
+  Curve Biquadratic 1,                    !- Name
+  1.0215158,                              !- Coefficient1 Constant
+  0.037035864,                            !- Coefficient2 x
+  0.0002332476,                           !- Coefficient3 x**2
+  -0.003894048,                           !- Coefficient4 y
+  -6.52536e-05,                           !- Coefficient5 y**2
+  -0.0002680452,                          !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35;                                     !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {6fc50b87-dcf5-4011-ae09-0aea1a186a93}, !- Handle
+  Curve Biquadratic 2,                    !- Name
+  0.70176857,                             !- Coefficient1 Constant
+  -0.00452016,                            !- Coefficient2 x
+  0.0005331096,                           !- Coefficient3 x**2
+  -0.005498208,                           !- Coefficient4 y
+  0.0005445792,                           !- Coefficient5 y**2
+  -0.0007290324,                          !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  24,                                     !- Minimum Value of y
+  35;                                     !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {21d7ec2b-5a94-4cd4-bfe9-718601ee9209}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0.06369119,                             !- Coefficient1 Constant
+  0.58488832,                             !- Coefficient2 x
+  0.35280274,                             !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Chiller:Electric:ReformulatedEIR,
+  {38428dae-cb56-4c22-a32a-f8a57cc51908}, !- Handle
+  Chiller Electric Reformulated EIR 1,    !- Name
+  Autosize,                               !- Reference Capacity {W}
+  3.99,                                   !- Reference COP {W/W}
+  ,                                       !- Reference Leaving Chilled Water Temperature {C}
+  ,                                       !- Reference Leaving Condenser Water Temperature {C}
+  Autosize,                               !- Reference Chilled Water Flow Rate {m3/s}
+  ,                                       !- Reference Condenser Water Flow Rate {m3/s}
+  {8a88d490-6688-471b-859c-5ae580ef3441}, !- Cooling Capacity Function of Temperature Curve Name
+  {bc3b0a22-4c59-455c-8cf7-df023830d63e}, !- Electric Input to Cooling Output Ratio Function of Temperature Curve Name
+  ,                                       !- Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Type
+  {53672dea-0912-49ce-933c-96f16c0e8a97}, !- Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Minimum Unloading Ratio
+  ,                                       !- Chilled Water Inlet Node Name
+  ,                                       !- Chilled Water Outlet Node Name
+  ,                                       !- Condenser Inlet Node Name
+  ,                                       !- Condenser Outlet Node Name
+  ,                                       !- Fraction of Compressor Electric Consumption Rejected by Condenser
+  ,                                       !- Leaving Chilled Water Lower Temperature Limit {C}
+  ,                                       !- Chiller Flow Mode
+  Autosize,                               !- Design Heat Recovery Water Flow Rate {m3/s}
+  ,                                       !- Heat Recovery Inlet Node Name
+  ,                                       !- Heat Recovery Outlet Node Name
+  1,                                      !- Sizing Factor
+  1,                                      !- Condenser Heat Recovery Relative Capacity Fraction
+  ,                                       !- Heat Recovery Inlet High Temperature Limit Schedule Name
+  ,                                       !- Heat Recovery Leaving Temperature Setpoint Node Name
+  General;                                !- End-Use Subcategory
+
+OS:Curve:Biquadratic,
+  {8a88d490-6688-471b-859c-5ae580ef3441}, !- Handle
+  Curve Biquadratic 3,                    !- Name
+  0.958546443,                            !- Coefficient1 Constant
+  0.035168695,                            !- Coefficient2 x
+  0.000124662,                            !- Coefficient3 x**2
+  -0.00274551,                            !- Coefficient4 y
+  -5e-05,                                 !- Coefficient5 y**2
+  -0.00017234,                            !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  40.94;                                  !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {bc3b0a22-4c59-455c-8cf7-df023830d63e}, !- Handle
+  Curve Biquadratic 4,                    !- Name
+  0.732700123,                            !- Coefficient1 Constant
+  -0.0083436,                             !- Coefficient2 x
+  0.00063853,                             !- Coefficient3 x**2
+  -0.00303753,                            !- Coefficient4 y
+  0.000484952,                            !- Coefficient5 y**2
+  -0.00083584,                            !- Coefficient6 x*y
+  5,                                      !- Minimum Value of x
+  10,                                     !- Maximum Value of x
+  20,                                     !- Minimum Value of y
+  40.94;                                  !- Maximum Value of y
+
+OS:Curve:Bicubic,
+  {53672dea-0912-49ce-933c-96f16c0e8a97}, !- Handle
+  Curve Bicubic 1,                        !- Name
+  0.070862846,                            !- Coefficient1 Constant
+  0.00278756,                             !- Coefficient2 x
+  -8.91e-06,                              !- Coefficient3 x**2
+  0.230973399,                            !- Coefficient4 y
+  1.250442176,                            !- Coefficient5 y**2
+  -0.00216102,                            !- Coefficient6 x*y
+  0,                                      !- Coefficient7 x**3
+  -0.56300936,                            !- Coefficient8 y**3
+  0,                                      !- Coefficient9 x**2*y
+  0,                                      !- Coefficient10 x*y**2
+  20,                                     !- Minimum Value of x
+  40.94,                                  !- Maximum Value of x
+  0.01,                                   !- Minimum Value of y
+  1;                                      !- Maximum Value of y
+

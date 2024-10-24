@@ -70,6 +70,12 @@ namespace energyplus {
       idfObject.setString(OutputControl_FilesFields::OutputAUDIT, "No");
     }
 
+    if (modelObject.outputSpaceSizing()) {
+      idfObject.setString(OutputControl_FilesFields::OutputSpaceSizing, "Yes");
+    } else {
+      idfObject.setString(OutputControl_FilesFields::OutputSpaceSizing, "No");
+    }
+
     if (modelObject.outputZoneSizing()) {
       idfObject.setString(OutputControl_FilesFields::OutputZoneSizing, "Yes");
     } else {

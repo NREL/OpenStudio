@@ -87,6 +87,7 @@ TEST_F(PythonEngineFixture, WrongMethodMeasure) {
 Traceback (most recent call last):
   File "{}", line 14, in arguments
     model.nonExistingMethod()
+    ^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'Model' object has no attribute 'nonExistingMethod')",
                 scriptPath.generic_string());
 
@@ -118,10 +119,13 @@ Traceback (most recent call last):
     s(10)
   File "{0}", line 6, in s
     return s(x)
+           ^^^^
   File "{0}", line 6, in s
     return s(x)
+           ^^^^
   File "{0}", line 6, in s
     return s(x)
+           ^^^^
   [Previous line repeated 996 more times]
 RecursionError: maximum recursion depth exceeded)",
                 scriptPath.generic_string());
