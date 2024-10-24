@@ -3887,6 +3887,17 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
     return false;
   }
 
+  struct EPWString
+  {
+    const int lineNumber;
+    const int year;
+    const int month;
+    const int day;
+    const int hour;
+    const int currentMinute;
+    std::vector<std::string> strings;
+  };
+
   // read rest of file
   int lineNumber = 8;
   boost::optional<Date> startDate;
@@ -3897,6 +3908,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
   OS_ASSERT((60 % m_recordsPerHour) == 0);
   int minutesPerRecord = 60 / m_recordsPerHour;
   int currentMinute = 0;
+  std::vector<EPWString> epw_strings;
   while (std::getline(ifs, line)) {
     lineNumber++;
     std::vector<std::string> strings = splitString(line, ',');
@@ -3948,13 +3960,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
               m_minutesMatch = false;
             }
           }
-          boost::optional<EpwDataPoint> pt = EpwDataPoint::fromEpwStrings(year, month, day, hour, currentMinute, strings);
-          if (pt) {
-            m_data.push_back(pt.get());
-          } else {
-            LOG(Error, "Failed to parse line " << lineNumber << " of EPW file '" << m_path << "'");
-            return false;
-          }
+          epw_strings.push_back({lineNumber, year, month, day, hour, currentMinute, strings});
         }
 
       } catch (...) {
@@ -3963,6 +3969,28 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
       }
     } else {
       LOG(Error, "Insufficient weather data on line " << lineNumber << " of EPW file '" << m_path << "'");
+      return false;
+    }
+  }
+
+  for (const auto& epw_string : epw_strings) {
+    int day = epw_string.day;
+
+    // Fix for #5214: for TMY files where 28-day Feb is from a leap year, we need xxxx-Mar-01 00:00:00 and not xxxx-Feb-29 00:00:00
+    // If the TMY file actually contained Feb 29, we still change xxxx-Feb-29 00:00:00 to xxxx-Mar-01 00:00:00, but it doesn't matter since you'd still get Bad Date on xxxx-Feb-29 01:00:00, etc.
+    if ((!realYear) && (epw_string.month == 2) && (day == 28) && (epw_string.hour == 24) && (epw_string.currentMinute == 0)) {
+      Date date(epw_string.month, day, epw_string.year);
+      if (date.isLeapYear()) {
+        day = 29;
+      }
+    }
+
+    boost::optional<EpwDataPoint> pt =
+      EpwDataPoint::fromEpwStrings(epw_string.year, epw_string.month, day, epw_string.hour, epw_string.currentMinute, epw_string.strings);
+    if (pt) {
+      m_data.push_back(pt.get());
+    } else {
+      LOG(Error, "Failed to parse line " << epw_string.lineNumber << " of EPW file '" << m_path << "'");
       return false;
     }
   }
