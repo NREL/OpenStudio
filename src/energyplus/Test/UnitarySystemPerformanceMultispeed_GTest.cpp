@@ -114,6 +114,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_S
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
   WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
   EXPECT_EQ(1, idf_unitarys.size());
   WorkspaceObject& idf_unitary = idf_unitarys.front();
