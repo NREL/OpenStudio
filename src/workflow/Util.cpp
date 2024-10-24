@@ -266,21 +266,11 @@ void zipDirectory(const openstudio::path& dirPath, const openstudio::path& zipFi
           continue;
         }
 
-        auto dirSize = directorySize(dirEntryPath);
-        if (dirSize >= 15'000'000) {
-          LOG_FREE(Info, "openstudio.workflow.Util.zipDirectory", "Skipping too large directory " << dirEntryPath);
-          continue;
-        }
-
         // TODO: do I need a helper like the workflow-gem was doing with add_directory_to_zip?
         zf.addDirectory(dirEntryPath, fs::relative(dirEntryPath, dirPath));
       } else {
         auto ext = dirEntryPath.extension().string();
         if ((ext.find(".zip") != std::string::npos) || (ext.find(".rb") != std::string::npos)) {
-          continue;
-        }
-
-        if ((ext != ".osm") && (ext != ".idf") && (fs::file_size(dirEntryPath) > 100'000'000)) {
           continue;
         }
         zf.addFile(dirEntryPath, fs::relative(dirEntryPath, dirPath));
