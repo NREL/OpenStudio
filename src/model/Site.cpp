@@ -234,6 +234,14 @@ namespace model {
       return isEmpty(OS_SiteFields::Terrain);
     }
 
+    bool Site_Impl::keepSiteLocationInformation() const {
+      return getBooleanFieldValue(OS_SiteFields::KeepSiteLocationInformation);
+    }
+
+    bool Site_Impl::isKeepSiteLocationInformationDefaulted() const {
+      return isEmpty(OS_SiteFields::KeepSiteLocationInformation);
+    }
+
     bool Site_Impl::setLatitude(double latitude) {
       bool result = setDouble(OS_SiteFields::Latitude, latitude);
       return result;
@@ -281,6 +289,15 @@ namespace model {
 
     void Site_Impl::resetTerrain() {
       bool result = setString(OS_SiteFields::Terrain, "");
+      OS_ASSERT(result);
+    }
+
+    bool Site_Impl::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+      return setBooleanFieldValue(OS_SiteFields::KeepSiteLocationInformation, keepSiteLocationInformation);
+    }
+
+    void Site_Impl::resetKeepSiteLocationInformation() {
+      bool result = setString(OS_SiteFields::KeepSiteLocationInformation, "");
       OS_ASSERT(result);
     }
 
@@ -422,6 +439,14 @@ namespace model {
     return getImpl<detail::Site_Impl>()->isTerrainDefaulted();
   }
 
+  bool Site::keepSiteLocationInformation() const {
+    return getImpl<detail::Site_Impl>()->keepSiteLocationInformation();
+  }
+
+  bool Site::isKeepSiteLocationInformationDefaulted() const {
+    return getImpl<detail::Site_Impl>()->isKeepSiteLocationInformationDefaulted();
+  }
+
   bool Site::setLatitude(double latitude) {
     return getImpl<detail::Site_Impl>()->setLatitude(latitude);
   }
@@ -460,6 +485,14 @@ namespace model {
 
   void Site::resetTerrain() {
     getImpl<detail::Site_Impl>()->resetTerrain();
+  }
+
+  bool Site::setKeepSiteLocationInformation(bool keepSiteLocationInformation) {
+    return getImpl<detail::Site_Impl>()->setKeepSiteLocationInformation(keepSiteLocationInformation);
+  }
+
+  void Site::resetKeepSiteLocationInformation() {
+    getImpl<detail::Site_Impl>()->resetKeepSiteLocationInformation();
   }
 
   boost::optional<WeatherFile> Site::weatherFile() const {

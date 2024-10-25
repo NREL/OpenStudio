@@ -99,6 +99,16 @@ namespace model {
 
       double convergenceTolerance() const;
 
+      std::string fanControlType() const;
+
+      double minimumFanTurnDownRatio() const;
+
+      std::string heatingControlType() const;
+
+      double designHeatingDischargeAirTemperature() const;
+
+      double highLimitHeatingDischargeAirTemperature() const;
+
       bool isConvergenceToleranceDefaulted() const;
 
       boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const;
@@ -157,6 +167,16 @@ namespace model {
       bool setConvergenceTolerance(double convergenceTolerance);
 
       void resetConvergenceTolerance();
+
+      bool setFanControlType(const std::string& fanControlType);
+
+      bool setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio);
+
+      bool setHeatingControlType(const std::string& heatingControlType);
+
+      bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
+
+      bool setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature);
 
       // This is a non publlic method to draw recirculation air from a plenum
       // Use carefully.  Removing (or moving) plenum will leave model in invalid state

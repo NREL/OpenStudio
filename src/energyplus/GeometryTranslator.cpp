@@ -2315,7 +2315,7 @@ namespace energyplus {
     // output illuminance map
     for (WorkspaceObject& illuminanceMap : m_workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap)) {
       if (daylightingCoordChange != CoordinateChange::NoChange) {
-        OptionalWorkspaceObject zone = illuminanceMap.getTarget(Output_IlluminanceMapFields::ZoneName);
+        OptionalWorkspaceObject zone = illuminanceMap.getTarget(Output_IlluminanceMapFields::ZoneorSpaceName);
         if (!zone) {
           LOG(Error, "Could not find zone");
           continue;

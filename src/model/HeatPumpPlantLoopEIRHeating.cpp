@@ -47,18 +47,32 @@ namespace model {
       : WaterToWaterComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& HeatPumpPlantLoopEIRHeating_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Heat Pump Electricity Energy",
-                                                   "Heat Pump Load Side Heat Transfer Energy",
-                                                   "Heat Pump Source Side Heat Transfer Energy",
-                                                   "Heat Pump Electricity Rate",
-                                                   "Heat Pump Load Side Heat Transfer Rate",
-                                                   "Heat Pump Source Side Heat Transfer Rate",
-                                                   "Heat Pump Load Side Outlet Temperature",
-                                                   "Heat Pump Load Side Inlet Temperature",
-                                                   "Heat Pump Source Side Outlet Temperature",
-                                                   "Heat Pump Source Side Inlet Temperature",
-                                                   "Heat Pump Load Side Mass Flow Rate",
-                                                   "Heat Pump Source Side Mass Flow Rate"};
+      static const std::vector<std::string> result{
+        "Heat Pump Part Load Ratio",
+        "Heat Pump Cycling Ratio",
+        "Heat Pump Load Side Heat Transfer Rate",
+        "Heat Pump Load Side Heat Transfer Energy",
+        "Heat Pump Source Side Heat Transfer Rate",
+        "Heat Pump Source Side Heat Transfer Energy",
+        "Heat Pump Load Side Inlet Temperature",
+        "Heat Pump Load Side Outlet Temperature",
+        "Heat Pump Source Side Inlet Temperature",
+        "Heat Pump Source Side Outlet Temperature",
+        "Heat Pump Electricity Rate",
+        "Heat Pump Load Side Mass Flow Rate",
+        "Heat Pump Source Side Mass Flow Rate",
+        "Heat Pump Heat Recovery Heat Transfer Rate",
+        "Heat Pump Heat Recovery Heat Transfer Energy",
+        "Heat Pump Heat Recovery Inlet Temperature",
+        "Heat Pump Heat Recovery Outlet Temperature",
+        "Heat Pump Heat Recovery Mass Flow Rate",
+        "Heat Pump Heat Recovery Operation Status",
+        "Heat Pump Electricity Energy",
+        "Heat Pump Load Due To Defrost",
+        "Heat Pump Fractioal Defrost Time",
+        "Heat Pump Defrost Electricity Rate",
+        "Heat Pump Defrost Electricity Energy",
+      };
       return result;
     }
 
@@ -82,6 +96,14 @@ namespace model {
       return OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideOutletNodeName;
     }
 
+    unsigned HeatPumpPlantLoopEIRHeating_Impl::tertiaryInletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryInletNodeName;
+    }
+
+    unsigned HeatPumpPlantLoopEIRHeating_Impl::tertiaryOutletPort() const {
+      return OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryOutletNodeName;
+    }
+
     /** Convenience Function to return the Load Side Water Loop (HeatPump on supply side) **/
     boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating_Impl::loadSideWaterLoop() const {
       return WaterToWaterComponent_Impl::plantLoop();
@@ -90,6 +112,11 @@ namespace model {
     /** Convenience Function to return the Source Side (Condenser) Water Loop (HeatPump on demand side) **/
     boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating_Impl::sourceSideWaterLoop() const {
       return WaterToWaterComponent_Impl::secondaryPlantLoop();
+    }
+
+    /** Convenience Function to return the Heat Recovery Loop (HeatPump on demand side - tertiary) **/
+    boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryLoop() const {
+      return WaterToWaterComponent_Impl::tertiaryPlantLoop();
     }
 
     boost::optional<Node> HeatPumpPlantLoopEIRHeating_Impl::sourceSideWaterInletNode() const {
@@ -128,16 +155,73 @@ namespace model {
       return result;
     }
 
+    boost::optional<Node> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryInletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = tertiaryInletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
+    boost::optional<Node> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryOutletNode() const {
+      boost::optional<Node> result;
+
+      if (auto mo = tertiaryOutletModelObject()) {
+        result = mo->optionalCast<Node>();
+      }
+      return result;
+    }
+
     bool HeatPumpPlantLoopEIRHeating_Impl::addToNode(Node& node) {
 
+      boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+      // If trying to add to a node that is on the demand side of a plant loop
+      if (t_plantLoop) {
+        if (t_plantLoop->demandComponent(node.handle())) {
+          // If there is already a source side water Plant Loop
+          if (boost::optional<PlantLoop> ssLoop = this->sourceSideWaterLoop()) {
+            // And it's not the same as the node's loop
+            if (t_plantLoop.get() != ssLoop.get()) {
+              // And if there is no generator loop (tertiary)
+              if (!this->heatRecoveryLoop().is_initialized()) {
+                // Then try to add it to the tertiary one
+                LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery Loop) loop for " << briefDescription());
+                return this->addToTertiaryNode(node);
+              }
+            }
+          }
+        }
+      }
+
+      // All other cases, call the base class implementation
       // call the base class implementation to connect the component
       bool ok = WaterToWaterComponent_Impl::addToNode(node);
 
-      // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
+      // If there's a secondary plant loop, switch the condenser type to "WaterSource"
       if (this->sourceSideWaterLoop()) {
         this->setCondenserType("WaterSource");
       }
       return ok;
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::addToTertiaryNode(Node& node) {
+
+      auto t_plantLoop = node.plantLoop();
+
+      // Only accept adding to a node that is on a demand side of a plant loop
+      // Since tertiary here = heat recovery loop (cooling)
+      if (t_plantLoop) {
+        if (t_plantLoop->demandComponent(node.handle())) {
+          // Call base class method which accepts both supply and demand
+          return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+        } else {
+          LOG(Info,
+              "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Cooling Loop), for " << briefDescription());
+        }
+      }
+      return false;
     }
 
     bool HeatPumpPlantLoopEIRHeating_Impl::removeFromSecondaryPlantLoop() {
@@ -195,6 +279,19 @@ namespace model {
     bool HeatPumpPlantLoopEIRHeating_Impl::isSourceSideReferenceFlowRateAutosized() const {
       bool result = false;
       boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autosize");
+      }
+      return result;
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryReferenceFlowRate() const {
+      return getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, true);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::isHeatRecoveryReferenceFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, true);
       if (value) {
         result = openstudio::istringEqual(value.get(), "Autosize");
       }
@@ -333,6 +430,22 @@ namespace model {
         OS_HeatPump_PlantLoop_EIR_HeatingFields::TimedEmpiricalDefrostHeatInputEnergyFractionCurveName);
     }
 
+    double HeatPumpPlantLoopEIRHeating_Impl::minimumHeatRecoveryOutletTemperature() const {
+      boost::optional<double> value = getDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::MinimumHeatRecoveryOutletTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryCapacityModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName);
+    }
+
+    boost::optional<Curve> HeatPumpPlantLoopEIRHeating_Impl::heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName);
+    }
+
     bool HeatPumpPlantLoopEIRHeating_Impl::setCompanionCoolingHeatPump(const HeatPumpPlantLoopEIRCooling& companionHP) {
       return this->setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::CompanionHeatPumpName, companionHP.handle());
     }
@@ -352,6 +465,15 @@ namespace model {
 
     void HeatPumpPlantLoopEIRHeating_Impl::autosizeSourceSideReferenceFlowRate() {
       bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::SourceSideReferenceFlowRate, "Autosize");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, heatRecoveryReferenceFlowRate);
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::autosizeHeatRecoveryReferenceFlowRate() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryReferenceFlowRate, "Autosize");
       OS_ASSERT(result);
     }
 
@@ -517,12 +639,45 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool HeatPumpPlantLoopEIRHeating_Impl::setMinimumHeatRecoveryOutletTemperature(double minimumHeatRecoveryOutletTemperature) {
+      return setDouble(OS_HeatPump_PlantLoop_EIR_HeatingFields::MinimumHeatRecoveryOutletTemperature, minimumHeatRecoveryOutletTemperature);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+      const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName,
+                               heatRecoveryCapacityModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve() {
+      bool result = setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryCapacityModifierFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
+    bool HeatPumpPlantLoopEIRHeating_Impl::setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+      bool result = setPointer(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName,
+                               heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve.handle());
+      return result;
+    }
+
+    void HeatPumpPlantLoopEIRHeating_Impl::resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() {
+      bool result =
+        setString(OS_HeatPump_PlantLoop_EIR_HeatingFields::HeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurveName, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedLoadSideReferenceFlowRate() const {
       return getAutosizedValue("Design Size Load Side Volume Flow Rate", "m3/s");
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedSourceSideReferenceFlowRate() const {
       return getAutosizedValue("Design Size Source Side Volume Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedHeatRecoveryReferenceFlowRate() const {
+      return getAutosizedValue("Design Size Heat Recovery Side Volume Flow Rate", "m3/s");
     }
 
     boost::optional<double> HeatPumpPlantLoopEIRHeating_Impl::autosizedReferenceCapacity() const {
@@ -532,6 +687,7 @@ namespace model {
     void HeatPumpPlantLoopEIRHeating_Impl::autosize() {
       autosizeLoadSideReferenceFlowRate();
       autosizeSourceSideReferenceFlowRate();
+      autosizeHeatRecoveryReferenceFlowRate();
       autosizeReferenceCapacity();
     }
 
@@ -545,6 +701,11 @@ namespace model {
       val = autosizedSourceSideReferenceFlowRate();
       if (val) {
         setSourceSideReferenceFlowRate(val.get());
+      }
+
+      val = autosizedHeatRecoveryReferenceFlowRate();
+      if (val) {
+        setHeatRecoveryReferenceFlowRate(val.get());
       }
 
       val = autosizedReferenceCapacity();
@@ -579,6 +740,7 @@ namespace model {
 
     autosizeLoadSideReferenceFlowRate();
     autosizeSourceSideReferenceFlowRate();
+    autosizeHeatRecoveryReferenceFlowRate();
     autosizeReferenceCapacity();
 
     bool ok = setCapacityModifierFunctionofTemperatureCurve(capacityModifierFunctionofTemperatureCurve);
@@ -617,6 +779,7 @@ namespace model {
     setMaximumOutdoorDryBulbTemperatureForDefrostOperation(10.0);
     setHeatPumpDefrostControl("None");
     setHeatPumpDefrostTimePeriodFraction(0.058333);
+    setMinimumHeatRecoveryOutletTemperature(4.5);
   }
 
   HeatPumpPlantLoopEIRHeating::HeatPumpPlantLoopEIRHeating(const Model& model)
@@ -625,6 +788,7 @@ namespace model {
 
     autosizeLoadSideReferenceFlowRate();
     autosizeSourceSideReferenceFlowRate();
+    autosizeHeatRecoveryReferenceFlowRate();
     autosizeReferenceCapacity();
 
     // Note: The default HAS to be AirSource (since it's not connected to a plantLoop...)
@@ -687,6 +851,7 @@ namespace model {
     setMaximumOutdoorDryBulbTemperatureForDefrostOperation(10.0);
     setHeatPumpDefrostControl("None");
     setHeatPumpDefrostTimePeriodFraction(0.058333);
+    setMinimumHeatRecoveryOutletTemperature(4.5);
   }
 
   IddObjectType HeatPumpPlantLoopEIRHeating::iddObjectType() {
@@ -723,6 +888,14 @@ namespace model {
 
   bool HeatPumpPlantLoopEIRHeating::isSourceSideReferenceFlowRateAutosized() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isSourceSideReferenceFlowRateAutosized();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRHeating::heatRecoveryReferenceFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryReferenceFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::isHeatRecoveryReferenceFlowRateAutosized() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->isHeatRecoveryReferenceFlowRateAutosized();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::referenceCapacity() const {
@@ -821,6 +994,18 @@ namespace model {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->timedEmpiricalDefrostHeatInputEnergyFractionCurve();
   }
 
+  double HeatPumpPlantLoopEIRHeating::minimumHeatRecoveryOutletTemperature() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->minimumHeatRecoveryOutletTemperature();
+  }
+
+  boost::optional<Curve> HeatPumpPlantLoopEIRHeating::heatRecoveryCapacityModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryCapacityModifierFunctionofTemperatureCurve();
+  }
+
+  boost::optional<Curve> HeatPumpPlantLoopEIRHeating::heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
   bool HeatPumpPlantLoopEIRHeating::setCondenserType(const std::string& condenserType) {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setCondenserType(condenserType);
   }
@@ -843,6 +1028,14 @@ namespace model {
 
   void HeatPumpPlantLoopEIRHeating::autosizeSourceSideReferenceFlowRate() {
     getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeSourceSideReferenceFlowRate();
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setHeatRecoveryReferenceFlowRate(double heatRecoveryReferenceFlowRate) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatRecoveryReferenceFlowRate(heatRecoveryReferenceFlowRate);
+  }
+
+  void HeatPumpPlantLoopEIRHeating::autosizeHeatRecoveryReferenceFlowRate() {
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizeHeatRecoveryReferenceFlowRate();
   }
 
   bool HeatPumpPlantLoopEIRHeating::setReferenceCapacity(double referenceCapacity) {
@@ -981,12 +1174,40 @@ namespace model {
     getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetTimedEmpiricalDefrostHeatInputEnergyFractionCurve();
   }
 
+  bool HeatPumpPlantLoopEIRHeating::setMinimumHeatRecoveryOutletTemperature(double minimumHeatRecoveryOutletTemperature) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setMinimumHeatRecoveryOutletTemperature(minimumHeatRecoveryOutletTemperature);
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+    const Curve& heatRecoveryCapacityModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatRecoveryCapacityModifierFunctionofTemperatureCurve(
+      heatRecoveryCapacityModifierFunctionofTemperatureCurve);
+  }
+
+  void HeatPumpPlantLoopEIRHeating::resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetHeatRecoveryCapacityModifierFunctionofTemperatureCurve();
+  }
+
+  bool HeatPumpPlantLoopEIRHeating::setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+    const Curve& heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve) {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->setHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve(
+      heatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve);
+  }
+
+  void HeatPumpPlantLoopEIRHeating::resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve() {
+    getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->resetHeatRecoveryElectricInputtoOutputRatioModifierFunctionofTemperatureCurve();
+  }
+
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedLoadSideReferenceFlowRate() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedLoadSideReferenceFlowRate();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedSourceSideReferenceFlowRate() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedSourceSideReferenceFlowRate();
+  }
+
+  boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedHeatRecoveryReferenceFlowRate() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->autosizedHeatRecoveryReferenceFlowRate();
   }
 
   boost::optional<double> HeatPumpPlantLoopEIRHeating::autosizedReferenceCapacity() const {
@@ -1000,6 +1221,10 @@ namespace model {
 
   boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating::sourceSideWaterLoop() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->sourceSideWaterLoop();
+  }
+
+  boost::optional<PlantLoop> HeatPumpPlantLoopEIRHeating::heatRecoveryLoop() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryLoop();
   }
 
   boost::optional<Node> HeatPumpPlantLoopEIRHeating::sourceSideWaterInletNode() const {
@@ -1016,6 +1241,14 @@ namespace model {
 
   boost::optional<Node> HeatPumpPlantLoopEIRHeating::loadSideWaterOutletNode() const {
     return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->loadSideWaterOutletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRHeating::heatRecoveryInletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryInletNode();
+  }
+
+  boost::optional<Node> HeatPumpPlantLoopEIRHeating::heatRecoveryOutletNode() const {
+    return getImpl<detail::HeatPumpPlantLoopEIRHeating_Impl>()->heatRecoveryOutletNode();
   }
 
   /// @cond

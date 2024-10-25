@@ -76,6 +76,10 @@ namespace model {
 
     bool isTerrainDefaulted() const;
 
+    bool keepSiteLocationInformation() const;
+
+    bool isKeepSiteLocationInformationDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -99,6 +103,10 @@ namespace model {
     bool setTerrain(const std::string& terrain);
 
     void resetTerrain();
+
+    bool setKeepSiteLocationInformation(bool keepSiteLocationInformation);
+
+    void resetKeepSiteLocationInformation();
 
     //@}
 

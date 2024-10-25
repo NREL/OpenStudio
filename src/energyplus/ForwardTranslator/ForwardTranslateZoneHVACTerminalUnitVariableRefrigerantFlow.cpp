@@ -36,7 +36,6 @@
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
-#include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -257,8 +256,6 @@ namespace energyplus {
         return std::pair<unsigned, unsigned>{Fan_ConstantVolumeFields::AirInletNodeName, Fan_ConstantVolumeFields::AirOutletNodeName};
       } else if (idf_fan.iddObject().type() == IddObjectType::Fan_SystemModel) {
         return std::pair<unsigned, unsigned>{Fan_SystemModelFields::AirInletNodeName, Fan_SystemModelFields::AirOutletNodeName};
-      } else if (idf_fan.iddObject().type() == IddObjectType::Fan_VariableVolume) {
-        return std::pair<unsigned, unsigned>{Fan_VariableVolumeFields::AirInletNodeName, Fan_VariableVolumeFields::AirOutletNodeName};
       } else {
         LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
         OS_ASSERT(false);

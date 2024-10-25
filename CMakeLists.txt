@@ -18,7 +18,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.8.0)
+project(OpenStudio VERSION 3.9.0)
 
 include(CMake/compiler_flags.cmake)
 
@@ -161,7 +161,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -192,15 +192,15 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 24)
-set(ENERGYPLUS_VERSION_MINOR 1)
+set(ENERGYPLUS_VERSION_MINOR 2)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "9d7789a3ac")
+set(ENERGYPLUS_BUILD_SHA "94a887817b")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v24.1.0")
+set(ENERGYPLUS_RELEASE_NAME "v24.2.0a")
 
 set(ENERGYPLUS_REPO "NREL")
 
@@ -639,26 +639,30 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 3b465e87fc07e18db458e1d058da447b)
-      set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
+      set(ENERGYPLUS_EXPECTED_HASH f36afc055a675ae95523d6f41ec478c0)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS13-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 4f15adccac3df1e699d26f815800c783)
-      set(ENERGYPLUS_PLATFORM "Darwin-macOS11.6-x86_64")
+      set(ENERGYPLUS_EXPECTED_HASH b2003c461277c0bd4e91a4c003b350ac)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-    set(ENERGYPLUS_EXPECTED_HASH c31dfb86d8967636fca0a1ecf4052f22)
+    set(ENERGYPLUS_EXPECTED_HASH 4000e06b944daf4f2b0841ac0d3873b5)
     set(ENERGYPLUS_PLATFORM "Linux-CentOS7.9.2009-x86_64")
   else()
-    if(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
+    if(LSB_RELEASE_VERSION_SHORT MATCHES "24.04")
       if (ARCH MATCHES "arm64")
-        set(ENERGYPLUS_EXPECTED_HASH 2e1e9516b39ca8046b7cf79ad3a81fa7)
+        set(ENERGYPLUS_EXPECTED_HASH afc61e89b7f9e2658c3d99778be50be0)
       else()
-        set(ENERGYPLUS_EXPECTED_HASH fb171a5da7d41da80da7868686b41126)
+        set(ENERGYPLUS_EXPECTED_HASH 22b3e5f6071d6011ffeeacf854a97c73)
       endif()
-    elseif(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH 4ea21126c3989cad35078a711573572e)
-    else() # 18.04
-      message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu 18.04")
+    elseif(LSB_RELEASE_VERSION_SHORT MATCHES "22.04")
+      if (ARCH MATCHES "arm64")
+        set(ENERGYPLUS_EXPECTED_HASH 3c18cb8063ec30ef591109ddf8842bf0)
+      else()
+        set(ENERGYPLUS_EXPECTED_HASH 9f11a16e6f8a7d658791c5389d700ef1)
+      endif()
+    else() # e.g., 18.04, 20.04
+      message(FATAL_ERROR "EnergyPlus no longer provides packages for Ubuntu < 22.04")
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-${ARCH}")
   endif()
@@ -685,19 +689,18 @@ if(UNIX)
     endif()
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
+    file(REMOVE "${PROJECT_BINARY_DIR}/python/engine/pip_install_done.stamp")
   endif()
 
 elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH c9dd8a23b64d1327d00c5d85896b46bb)
+    set(ENERGYPLUS_EXPECTED_HASH 6a2d1d43d64490c87d894ed58f71ccdc)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 766cf42388ca5b682800fe6ded8ac3ee)
-    set(ENERGYPLUS_REPO "jmarrec")
+    set(ENERGYPLUS_EXPECTED_HASH 7f0c2901399f43bff6e23c01a5992df1)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -711,7 +714,7 @@ elseif(WIN32)
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-
+    file(REMOVE "${PROJECT_BINARY_DIR}/python/engine/pip_install_done.stamp")
   endif()
 
 endif()
@@ -1359,7 +1362,7 @@ install(FILES "${ENERGYPLUS_EPJSON_SCHEMA}" DESTINATION ./EnergyPlus/ COMPONENT 
 install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-install(DIRECTORY "${ENERGYPLUS_DIR}/python_standard_lib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(DIRECTORY "${ENERGYPLUS_DIR}/python_lib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 
 if(APPLE)

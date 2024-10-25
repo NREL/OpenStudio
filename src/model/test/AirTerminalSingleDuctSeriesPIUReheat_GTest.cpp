@@ -13,6 +13,8 @@
 #include "../Schedule_Impl.hpp"
 #include "../FanConstantVolume.hpp"
 #include "../FanConstantVolume_Impl.hpp"
+#include "../FanSystemModel.hpp"
+#include "../FanSystemModel_Impl.hpp"
 #include "../CoilHeatingElectric.hpp"
 #include "../CoilHeatingElectric_Impl.hpp"
 #include "../ScheduleRuleset.hpp"
@@ -222,4 +224,40 @@ TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat_connectSecondaryAirInl
     ASSERT_TRUE(zone.exhaustPortList().lastModelObject());
     EXPECT_EQ(_atu->secondaryAirInletNode().get(), zone.exhaustPortList().lastModelObject().get());
   }
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctSeriesPIUReheat_fanControl) {
+  Model m;
+  Schedule schedule = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m, schedule);
+  CoilHeatingElectric coil(m, schedule);
+  AirTerminalSingleDuctSeriesPIUReheat atu(m, fan, coil);
+
+  EXPECT_EQ("ConstantSpeed", atu.fanControlType());
+  EXPECT_FALSE(atu.setFanControlType("VariableSpeed"));
+  EXPECT_EQ("ConstantSpeed", atu.fanControlType());
+
+  FanSystemModel fan2(m);
+  EXPECT_TRUE(atu.setFan(fan2));
+  EXPECT_EQ("ConstantSpeed", atu.fanControlType());
+  EXPECT_TRUE(atu.setFanControlType("VariableSpeed"));
+  EXPECT_EQ("VariableSpeed", atu.fanControlType());
+
+  EXPECT_TRUE(atu.setFan(fan));
+  EXPECT_EQ("ConstantSpeed", atu.fanControlType());
+
+  EXPECT_EQ(0.3, atu.minimumFanTurnDownRatio());
+  EXPECT_EQ("Staged", atu.heatingControlType());
+  EXPECT_EQ(32.1, atu.designHeatingDischargeAirTemperature());
+  EXPECT_EQ(37.7, atu.highLimitHeatingDischargeAirTemperature());
+
+  EXPECT_TRUE(atu.setMinimumFanTurnDownRatio(0.4));
+  EXPECT_TRUE(atu.setHeatingControlType("Modulated"));
+  EXPECT_TRUE(atu.setDesignHeatingDischargeAirTemperature(33.0));
+  EXPECT_TRUE(atu.setHighLimitHeatingDischargeAirTemperature(38.0));
+
+  EXPECT_EQ(0.4, atu.minimumFanTurnDownRatio());
+  EXPECT_EQ("Modulated", atu.heatingControlType());
+  EXPECT_EQ(33.0, atu.designHeatingDischargeAirTemperature());
+  EXPECT_EQ(38.0, atu.highLimitHeatingDischargeAirTemperature());
 }

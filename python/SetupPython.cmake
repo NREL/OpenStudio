@@ -35,10 +35,6 @@ else()
   endif()
 endif()
 
-execute_process(COMMAND ${CMAKE_COMMAND} -E env --unset=PIP_REQUIRE_VIRTUALENV ${Python_EXECUTABLE}
-  -m pip install --target=${ENERGYPLUS_DIR}/python_standard_lib --upgrade -r ${PROJECT_SOURCE_DIR}/python/requirements.txt
-)
-
 get_filename_component(Python_PROGRAM_NAME ${Python_EXECUTABLE} NAME)
 
 get_filename_component(RESOLVED_PYTHON_LIBRARY "${Python_LIBRARIES}" REALPATH)

@@ -77,6 +77,16 @@ namespace model {
 
       double convergenceTolerance() const;
 
+      std::string fanControlType() const;
+
+      double minimumFanTurnDownRatio() const;
+
+      std::string heatingControlType() const;
+
+      double designHeatingDischargeAirTemperature() const;
+
+      double highLimitHeatingDischargeAirTemperature() const;
+
       boost::optional<double> autosizedMaximumAirFlowRate() const;
 
       boost::optional<double> autosizedMaximumPrimaryAirFlowRate() const;
@@ -122,6 +132,16 @@ namespace model {
       bool setMinimumHotWaterorSteamFlowRate(double minimumHotWaterorSteamFlowRate);
 
       bool setConvergenceTolerance(double convergenceTolerance);
+
+      bool setFanControlType(const std::string& fanControlType);
+
+      bool setMinimumFanTurnDownRatio(double minimumFanTurnDownRatio);
+
+      bool setHeatingControlType(const std::string& heatingControlType);
+
+      bool setDesignHeatingDischargeAirTemperature(double designHeatingDischargeAirTemperature);
+
+      bool setHighLimitHeatingDischargeAirTemperature(double highLimitHeatingDischargeAirTemperature);
 
       //@}
       /** @name Other */

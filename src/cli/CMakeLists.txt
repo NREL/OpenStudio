@@ -124,7 +124,7 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> python_version
   )
   set_tests_properties(OpenStudioCLI.python_version PROPERTIES
-    PASS_REGULAR_EXPRESSION "3\.8\.1[0-9]"
+    PASS_REGULAR_EXPRESSION "3\.12\.[0-9]+"
   )
 
   add_test(NAME OpenStudioCLI.ruby_execute_line

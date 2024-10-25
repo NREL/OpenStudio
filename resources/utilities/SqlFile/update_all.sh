@@ -7,8 +7,8 @@ if [ ! -z $token ]; then
 fi;
 
 # All versions you want to run
-# declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0", "9.4.0", "9.5.0", "9.6.0", "22.1.0", "22.2.0", "23.1.0", "23.2.0", "24.1.0")
-declare -a all_versions=("24.1.0")
+# declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0", "9.4.0", "9.5.0", "9.6.0", "22.1.0", "22.2.0", "23.1.0", "23.2.0", "24.1.0", "24.2.0")
+declare -a all_versions=("24.2.0")
 
 # DO NOT RERUN IF SQL ALREADY THERE
 rerun_if_already_there=false
