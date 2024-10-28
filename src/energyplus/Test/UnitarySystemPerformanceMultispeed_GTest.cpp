@@ -15,6 +15,8 @@
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/ZoneHVACWaterToAirHeatPump.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeedSpeedData.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeedSpeedData.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed.hpp"
@@ -43,97 +45,295 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_AirLoopHVACUnitarySystem) {
-  Model m;
+TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Ctor) {
+  {  // h == c
+    Model m;
 
-  CoilCoolingDXVariableSpeed coil(m);
-  CoilCoolingDXVariableSpeedSpeedData speed1(m);
-  EXPECT_TRUE(coil.addSpeed(speed1));
-  CoilCoolingDXVariableSpeedSpeedData speed2(m);
-  EXPECT_TRUE(coil.addSpeed(speed2));
+    CoilHeatingDXVariableSpeed htgcoil(m);
+    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
+    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
+    CoilHeatingDXVariableSpeedSpeedData htgspeed2(m);
+    EXPECT_TRUE(htgcoil.addSpeed(htgspeed2));
 
-  AirLoopHVACUnitarySystem unitary(m);
-  unitary.setCoolingCoil(coil);
+    CoilCoolingDXVariableSpeed clgcoil(m);
+    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
+    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
+    CoilCoolingDXVariableSpeedSpeedData clgspeed2(m);
+    EXPECT_TRUE(clgcoil.addSpeed(clgspeed2));
 
-  AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
-  unitary.addToNode(supplyOutletNode);
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
 
-  UnitarySystemPerformanceMultispeed perf(m);
-  perf.setName("US Perf Multispeed");
-  EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
-  EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
 
-  ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+    UnitarySystemPerformanceMultispeed perf(m);
+    perf.setName("US Perf Multispeed");
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
 
-  WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
-  EXPECT_EQ(1, idf_unitarys.size());
-  WorkspaceObject& idf_unitary = idf_unitarys.front();
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  EXPECT_EQ("UnitarySystemPerformance:Multispeed",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
-  EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
 
-  WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
-  EXPECT_EQ(1, idf_perfs.size());
-  WorkspaceObject& idf_perf = idf_perfs.front();
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-  EXPECT_EQ(0, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
-  EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
-  EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
-  EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
 
-  ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+
+    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+  }
+
+  {  // h > c
+    Model m;
+
+    CoilHeatingDXVariableSpeed htgcoil(m);
+    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
+    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
+    CoilHeatingDXVariableSpeedSpeedData htgspeed2(m);
+    EXPECT_TRUE(htgcoil.addSpeed(htgspeed2));
+
+    CoilCoolingDXVariableSpeed clgcoil(m);
+    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
+    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
+
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    UnitarySystemPerformanceMultispeed perf(m);
+    perf.setName("US Perf Multispeed");
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
+
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
+
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
+
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+
+    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+  }
+
+  {  // h < c
+    Model m;
+
+    CoilHeatingDXVariableSpeed htgcoil(m);
+    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
+    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
+
+    CoilCoolingDXVariableSpeed clgcoil(m);
+    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
+    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
+    CoilCoolingDXVariableSpeedSpeedData clgspeed2(m);
+    EXPECT_TRUE(clgcoil.addSpeed(clgspeed2));
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
+
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
+
+    UnitarySystemPerformanceMultispeed perf(m);
+    perf.setName("US Perf Multispeed");
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
+
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
+
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
+
+    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+
+    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+  }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_Speeds) {
-  // #5277: Forward Translator Issues for UnitarySystemPerformance:Multispeed
-  Model m;
+TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_AirLoopHVACUnitarySystem) {
+  {  // h == c
+    Model m;
 
-  CoilHeatingDXMultiSpeed htgcoil(m);
-  CoilHeatingDXMultiSpeedStageData htgstage1(m);
-  EXPECT_TRUE(htgcoil.addStage(htgstage1));
-  CoilHeatingDXMultiSpeedStageData htgstage2(m);
-  EXPECT_TRUE(htgcoil.addStage(htgstage2));
-  CoilHeatingDXMultiSpeedStageData htgstage3(m);
-  EXPECT_TRUE(htgcoil.addStage(htgstage3));
-  CoilHeatingDXMultiSpeedStageData htgstage4(m);
-  EXPECT_TRUE(htgcoil.addStage(htgstage4));
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+    CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
-  CoilCoolingDXMultiSpeed clgcoil(m);
-  CoilCoolingDXMultiSpeedStageData clgstage1(m);
-  EXPECT_TRUE(clgcoil.addStage(clgstage1));
-  CoilCoolingDXMultiSpeedStageData clgstage2(m);
-  EXPECT_TRUE(clgcoil.addStage(clgstage2));
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
+    CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
-  AirLoopHVACUnitarySystem unitary(m);
-  unitary.setHeatingCoil(htgcoil);
-  unitary.setCoolingCoil(clgcoil);
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
 
-  AirLoopHVAC airLoop(m);
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
 
-  ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
-  EXPECT_EQ(1, idf_unitarys.size());
-  WorkspaceObject& idf_unitary = idf_unitarys.front();
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
 
-  EXPECT_EQ("UnitarySystemPerformance:Multispeed",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
-  EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
-            idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-  WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
-  EXPECT_EQ(1, idf_perfs.size());
-  WorkspaceObject& idf_perf = idf_perfs.front();
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
 
-  EXPECT_EQ(4, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
-  EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
-  EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
-  EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
 
-  ASSERT_EQ(4u, idf_perf.numExtensibleGroups());
+    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+  }
+
+  {  // #5277: Forward Translator Issues for UnitarySystemPerformance:Multispeed
+    Model m;
+
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+    CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage2));
+    CoilHeatingDXMultiSpeedStageData htgstage3(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage3));
+    CoilHeatingDXMultiSpeedStageData htgstage4(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage4));
+
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
+    CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage2));
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
+
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
+
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
+
+    EXPECT_EQ(4, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+
+    ASSERT_EQ(4u, idf_perf.numExtensibleGroups());
+  }
+
+  {  // h < c
+    Model m;
+
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
+    CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage2));
+
+    AirLoopHVACUnitarySystem unitary(m);
+    unitary.setHeatingCoil(htgcoil);
+    unitary.setCoolingCoil(clgcoil);
+
+    AirLoopHVAC airLoop(m);
+    Node supplyOutletNode = airLoop.supplyOutletNode();
+
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    EXPECT_EQ(1, idf_unitarys.size());
+    WorkspaceObject& idf_unitary = idf_unitarys.front();
+
+    EXPECT_EQ("UnitarySystemPerformance:Multispeed",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
+    EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
+              idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
+
+    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    EXPECT_EQ(1, idf_perfs.size());
+    WorkspaceObject& idf_perf = idf_perfs.front();
+
+    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
+    EXPECT_EQ(1.0, idf_perf.getDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+
+    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+  }
 }
