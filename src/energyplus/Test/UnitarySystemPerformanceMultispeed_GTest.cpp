@@ -15,10 +15,6 @@
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/ZoneHVACWaterToAirHeatPump.hpp"
 #include "../../model/ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
-#include "../../model/CoilHeatingDXVariableSpeed.hpp"
-#include "../../model/CoilHeatingDXVariableSpeedSpeedData.hpp"
-#include "../../model/CoilCoolingDXVariableSpeed.hpp"
-#include "../../model/CoilCoolingDXVariableSpeedSpeedData.hpp"
 #include "../../model/CoilHeatingDXMultiSpeed.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
@@ -49,17 +45,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
   {  // h == c
     Model m;
 
-    CoilHeatingDXVariableSpeed htgcoil(m);
-    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
-    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
-    CoilHeatingDXVariableSpeedSpeedData htgspeed2(m);
-    EXPECT_TRUE(htgcoil.addSpeed(htgspeed2));
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+    CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
-    CoilCoolingDXVariableSpeed clgcoil(m);
-    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
-    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
-    CoilCoolingDXVariableSpeedSpeedData clgspeed2(m);
-    EXPECT_TRUE(clgcoil.addSpeed(clgspeed2));
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
+    CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
@@ -71,7 +67,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     UnitarySystemPerformanceMultispeed perf(m);
     perf.setName("US Perf Multispeed");
-    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(0.1, 0.2));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(0.3, 0.4));
     EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
 
     ForwardTranslator ft;
@@ -100,15 +97,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
   {  // h > c
     Model m;
 
-    CoilHeatingDXVariableSpeed htgcoil(m);
-    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
-    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
-    CoilHeatingDXVariableSpeedSpeedData htgspeed2(m);
-    EXPECT_TRUE(htgcoil.addSpeed(htgspeed2));
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+    CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
-    CoilCoolingDXVariableSpeed clgcoil(m);
-    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
-    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
@@ -120,7 +117,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     UnitarySystemPerformanceMultispeed perf(m);
     perf.setName("US Perf Multispeed");
-    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(0.1, 0.2));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(SupplyAirflowRatioField::fromHeatingRatio(0.3)));
     EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
 
     ForwardTranslator ft;
@@ -149,15 +147,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
   {  // h < c
     Model m;
 
-    CoilHeatingDXVariableSpeed htgcoil(m);
-    CoilHeatingDXVariableSpeedSpeedData htgspeed1(m);
-    EXPECT_TRUE(htgcoil.addSpeed(htgspeed1));
+    CoilHeatingDXMultiSpeed htgcoil(m);
+    CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgcoil.addStage(htgstage1));
 
-    CoilCoolingDXVariableSpeed clgcoil(m);
-    CoilCoolingDXVariableSpeedSpeedData clgspeed1(m);
-    EXPECT_TRUE(clgcoil.addSpeed(clgspeed1));
-    CoilCoolingDXVariableSpeedSpeedData clgspeed2(m);
-    EXPECT_TRUE(clgcoil.addSpeed(clgspeed2));
+    CoilCoolingDXMultiSpeed clgcoil(m);
+    CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage1));
+    CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
@@ -169,7 +167,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     UnitarySystemPerformanceMultispeed perf(m);
     perf.setName("US Perf Multispeed");
-    EXPECT_TRUE(perf.addSupplyAirflowRatioField(1.0, 2.0));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(0.1, 0.2));
+    EXPECT_TRUE(perf.addSupplyAirflowRatioField(SupplyAirflowRatioField::fromCoolingRatio(0.3)));
     EXPECT_TRUE(unitary.setDesignSpecificationMultispeedObject(perf));
 
     ForwardTranslator ft;
@@ -218,6 +217,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
 
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
@@ -268,6 +268,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
 
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
@@ -312,6 +313,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
+    unitary.addToNode(supplyOutletNode);
 
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
