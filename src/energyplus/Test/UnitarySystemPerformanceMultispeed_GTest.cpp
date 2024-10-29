@@ -245,7 +245,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
     EXPECT_TRUE(htgstage1.setRatedAirFlowRate(1));
     EXPECT_TRUE(htgcoil.addStage(htgstage1));
     CoilHeatingDXMultiSpeedStageData htgstage2(m);
-    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(2));
+    EXPECT_TRUE(htgstage2.setRatedAirFlowRate(2));
     EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
     CoilCoolingDXMultiSpeed clgcoil(m);
