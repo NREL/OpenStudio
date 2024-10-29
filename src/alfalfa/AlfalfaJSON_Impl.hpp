@@ -30,7 +30,7 @@ namespace alfalfa {
 
       void exposePoint(const AlfalfaPoint& point);
 
-      std::vector<AlfalfaPoint> points();
+      std::vector<AlfalfaPoint> points() const;
 
      private:
       openstudio::path m_JSONPath;

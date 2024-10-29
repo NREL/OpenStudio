@@ -100,7 +100,7 @@ namespace alfalfa {
     /**
      * Get a vector of all points currently exported to the Alfalfa API
      */
-    std::vector<AlfalfaPoint> points();
+    std::vector<AlfalfaPoint> points() const;
 
    private:
     static boost::optional<std::string> getName(const openstudio::IdfObject& idf_object);
