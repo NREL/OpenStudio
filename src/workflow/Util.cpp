@@ -246,17 +246,6 @@ void zipDirectory(const openstudio::path& dirPath, const openstudio::path& zipFi
 
     static constexpr std::array<std::string_view, 3> filterOutDirNames{"seed", "measures", "weather"};
 
-    auto directorySize = [](const openstudio::path& dirPath) {
-      uintmax_t dirSize = 0;
-      for (const auto& dirEnt : fs::recursive_directory_iterator{dirPath}) {
-        const auto& dirEntryPath = dirEnt.path();
-        if (fs::is_regular_file(dirEntryPath)) {
-          dirSize += fs::file_size(dirEntryPath);
-        }
-      }
-      return dirSize;
-    };
-
     for (const auto& dirEnt : fs::directory_iterator{dirPath}) {
       const auto& dirEntryPath = dirEnt.path();
       if (fs::is_directory(dirEntryPath)) {
