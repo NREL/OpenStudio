@@ -73,17 +73,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const WorkspaceObject& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const WorkspaceObject& idf_perf = idf_perfs.front();
 
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
@@ -137,17 +137,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const WorkspaceObject& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const WorkspaceObject& idf_perf = idf_perfs.front();
 
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
@@ -156,19 +156,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
 
-    auto egs = idf_perf.extensibleGroups();
+    const auto egs = idf_perf.extensibleGroups();
 
-    IdfExtensibleGroup eg1 = egs[0];
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
-
-    IdfExtensibleGroup eg2 = egs[1];
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ("autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    {
+      const IdfExtensibleGroup& eg = egs[0];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.2, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
+    {
+      const IdfExtensibleGroup& eg = egs[1];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.3, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_FALSE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ("autosize", eg.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
   }
 
   {  // h < c
@@ -201,17 +204,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const WorkspaceObject& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ("US Perf Multispeed", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const WorkspaceObject& idf_perf = idf_perfs.front();
 
     EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
@@ -220,23 +223,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
 
-    auto egs = idf_perf.extensibleGroups();
-
-    IdfExtensibleGroup eg1 = egs[0];
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
-
-    IdfExtensibleGroup eg2 = egs[1];
-    ASSERT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ("autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    const auto egs = idf_perf.extensibleGroups();
+    {
+      const IdfExtensibleGroup& eg = egs[0];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.2, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
+    {
+      const IdfExtensibleGroup& eg = egs[1];
+      ASSERT_FALSE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ("autosize", eg.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.3, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_AirLoopHVACUnitarySystem) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_AirLoopHVACUnitarySystem_Defaulted) {
+  // When the user didn't specifically instantiate and assign a UnitarySystemPerformanceMultispeed object, the FT creates one
+
   {  // h == c
     Model m;
 
@@ -269,18 +276,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const auto& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const auto& idf_perf = idf_perfs.front();
 
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
@@ -289,19 +296,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
 
-    auto egs = idf_perf.extensibleGroups();
+    const auto egs = idf_perf.extensibleGroups();
 
-    IdfExtensibleGroup eg1 = egs[0];
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    {
+      const IdfExtensibleGroup& eg = egs[0];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.3, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
 
-    IdfExtensibleGroup eg2 = egs[1];
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.4, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    {
+      const IdfExtensibleGroup& eg = egs[1];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.2, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.4, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
   }
 
   {  // h > c
@@ -334,18 +345,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto& idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const WorkspaceObject& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const WorkspaceObject& idf_perf = idf_perfs.front();
 
     EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
     EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
@@ -354,36 +365,43 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
 
-    auto egs = idf_perf.extensibleGroups();
-
-    IdfExtensibleGroup eg1 = egs[0];
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
-
-    IdfExtensibleGroup eg2 = egs[1];
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    const auto egs = idf_perf.extensibleGroups();
+    {
+      const IdfExtensibleGroup& eg = egs[0];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.3, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
+    {
+      const IdfExtensibleGroup& eg = egs[1];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.2, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
   }
 
   {  // h < c
     Model m;
 
+    const int maxHeatingStages = 2;
+    const int maxCoolingStages = 4;
+    const int maxStages = std::max(maxHeatingStages, maxCoolingStages);
+
     CoilHeatingDXMultiSpeed htgcoil(m);
-    CoilHeatingDXMultiSpeedStageData htgstage1(m);
-    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(1));
-    EXPECT_TRUE(htgcoil.addStage(htgstage1));
+    for (int i = 1; i <= maxHeatingStages; ++i) {
+      CoilHeatingDXMultiSpeedStageData htgstage(m);
+      EXPECT_TRUE(htgstage.setRatedAirFlowRate(i));
+      EXPECT_TRUE(htgcoil.addStage(htgstage));
+    }
 
     CoilCoolingDXMultiSpeed clgcoil(m);
-    CoilCoolingDXMultiSpeedStageData clgstage1(m);
-    EXPECT_TRUE(clgstage1.setRatedAirFlowRate(2));
-    EXPECT_TRUE(clgcoil.addStage(clgstage1));
-    CoilCoolingDXMultiSpeedStageData clgstage2(m);
-    EXPECT_TRUE(clgstage2.setRatedAirFlowRate(3));
-    EXPECT_TRUE(clgcoil.addStage(clgstage2));
+    for (int i = 1; i <= maxCoolingStages; ++i) {
+      CoilCoolingDXMultiSpeedStageData clgstage(m);
+      EXPECT_TRUE(clgstage.setRatedAirFlowRate(i + maxHeatingStages));
+      EXPECT_TRUE(clgcoil.addStage(clgstage));
+    }
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
@@ -398,38 +416,56 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
     ForwardTranslator ft;
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idf_unitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+    const auto idf_unitarys = w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem);
     EXPECT_EQ(1, idf_unitarys.size());
-    WorkspaceObject& idf_unitary = idf_unitarys.front();
+    const auto& idf_unitary = idf_unitarys.front();
 
     EXPECT_EQ("UnitarySystemPerformance:Multispeed",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType).get());
     EXPECT_EQ(unitary.nameString() + " Unitary System Performance",
               idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName).get());
 
-    WorkspaceObjectVector idf_perfs(w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed));
+    const auto idf_perfs = w.getObjectsByType(IddObjectType::UnitarySystemPerformance_Multispeed);
     EXPECT_EQ(1, idf_perfs.size());
-    WorkspaceObject& idf_perf = idf_perfs.front();
+    const WorkspaceObject& idf_perf = idf_perfs.front();
 
-    EXPECT_EQ(1, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
-    EXPECT_EQ(2, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
+    EXPECT_EQ(maxHeatingStages, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating).get());
+    EXPECT_EQ(maxCoolingStages, idf_perf.getInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling).get());
     EXPECT_EQ("No", idf_perf.getString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
     EXPECT_TRUE(idf_perf.isEmpty(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio));
 
-    ASSERT_EQ(2u, idf_perf.numExtensibleGroups());
+    ASSERT_EQ(maxStages, idf_perf.numExtensibleGroups());
 
-    auto egs = idf_perf.extensibleGroups();
+    const auto egs = idf_perf.extensibleGroups();
 
-    IdfExtensibleGroup eg1 = egs[0];
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    {
+      const IdfExtensibleGroup& eg = egs[0];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.1, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.3, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
 
-    IdfExtensibleGroup eg2 = egs[1];
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
-    ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    {
+      const IdfExtensibleGroup& eg = egs[1];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.2, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.4, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
+    {
+      const IdfExtensibleGroup& eg = egs[2];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(1.0, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.5, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
+    {
+      const IdfExtensibleGroup& eg = egs[3];
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(1.0, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+      ASSERT_TRUE(eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
+      EXPECT_EQ(0.6, eg.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    }
   }
 }
