@@ -34,7 +34,7 @@ namespace cli {
     app->add_flag(
       "-m,--measures_only",
       [opt](std::int64_t val) {
-        fmt::print("val={}\n", val);
+        // fmt::print("val={}\n", val);
         opt->no_simulation = (val == 1);
       },
       "Only run the OpenStudio and EnergyPlus measures");
