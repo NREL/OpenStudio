@@ -456,7 +456,8 @@ namespace energyplus {
       boost::optional<model::CoilCoolingDXVariableSpeed> varSpeedDXCooling;
       boost::optional<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> varSpeedWaterToAirCooling;
 
-      int maxStages = 0;
+      int maxHeatingStages = 0;
+      int maxCoolingStages = 0;
 
       if (heatingCoil) {
         multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
@@ -482,36 +483,36 @@ namespace energyplus {
 
       if (multispeedDXHeating) {
         heatingStages = multispeedDXHeating->stages();
-        maxStages = heatingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
+        maxHeatingStages = heatingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxHeatingStages);
       } else if (varSpeedDXHeating) {
         varHeatingStages = varSpeedDXHeating->speeds();
-        maxStages = varHeatingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
+        maxHeatingStages = varHeatingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxHeatingStages);
       } else if (multistageGasHeating) {
         gasHeatingStages = multistageGasHeating->stages();
-        maxStages = gasHeatingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
+        maxHeatingStages = gasHeatingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxHeatingStages);
       } else if (varSpeedWaterToAirHeating) {
         waterToAirHeatingStages = varSpeedWaterToAirHeating->speeds();
-        maxStages = waterToAirHeatingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
+        maxHeatingStages = waterToAirHeatingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxHeatingStages);
       } else {
         _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
       }
 
       if (multispeedDXCooling) {
         coolingStages = multispeedDXCooling->stages();
-        maxStages = coolingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
+        maxCoolingStages = coolingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxCoolingStages);
       } else if (varSpeedDXCooling) {
         varCoolingStages = varSpeedDXCooling->speeds();
-        maxStages = varCoolingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
+        maxCoolingStages = varCoolingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxCoolingStages);
       } else if (varSpeedWaterToAirCooling) {
         waterToAirCoolingStages = varSpeedWaterToAirCooling->speeds();
-        maxStages = waterToAirCoolingStages.size();
-        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
+        maxCoolingStages = waterToAirCoolingStages.size();
+        _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxCoolingStages);
       } else {
         _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
       }
@@ -529,7 +530,7 @@ namespace energyplus {
         }
       };
 
-      for (int i = 0; i < maxStages; ++i) {
+      for (int i = 0; i < std::max(maxHeatingStages, maxCoolingStages); ++i) {
         auto extensible = _unitarySystemPerformance.pushExtensibleGroup();
 
         if (static_cast<unsigned>(i) < heatingStages.size()) {
@@ -566,7 +567,7 @@ namespace energyplus {
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, "Autosize");
           }
-        } else if (i < 2) {
+        } else {
           extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio, 1.0);
         }
 
@@ -595,7 +596,7 @@ namespace energyplus {
           } else {
             extensible.setString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, "Autosize");
           }
-        } else if (i < 2) {
+        } else {
           extensible.setDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio, 1.0);
         }
       }
