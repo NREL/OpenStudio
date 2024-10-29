@@ -168,7 +168,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ("autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
 
   {  // h < c
@@ -230,7 +230,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_C
 
     IdfExtensibleGroup eg2 = egs[1];
     ASSERT_FALSE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ("Autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ("autosize", eg2.getString(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
@@ -242,19 +242,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     CoilHeatingDXMultiSpeed htgcoil(m);
     CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(1));
     EXPECT_TRUE(htgcoil.addStage(htgstage1));
     CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(2));
     EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
     CoilCoolingDXMultiSpeed clgcoil(m);
     CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgstage1.setRatedAirFlowRate(3));
     EXPECT_TRUE(clgcoil.addStage(clgstage1));
     CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgstage2.setRatedAirFlowRate(4));
     EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
     unitary.setCoolingCoil(clgcoil);
+    unitary.setSupplyAirFlowRateDuringCoolingOperation(10);
+    unitary.setSupplyAirFlowRateDuringHeatingOperation(10);
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -289,11 +295,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.2, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.3, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
     IdfExtensibleGroup eg2 = egs[1];
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.2, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(0.4, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
@@ -304,17 +310,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     CoilHeatingDXMultiSpeed htgcoil(m);
     CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(1));
     EXPECT_TRUE(htgcoil.addStage(htgstage1));
     CoilHeatingDXMultiSpeedStageData htgstage2(m);
+    EXPECT_TRUE(htgstage2.setRatedAirFlowRate(2));
     EXPECT_TRUE(htgcoil.addStage(htgstage2));
 
     CoilCoolingDXMultiSpeed clgcoil(m);
     CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgstage1.setRatedAirFlowRate(3));
     EXPECT_TRUE(clgcoil.addStage(clgstage1));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
     unitary.setCoolingCoil(clgcoil);
+    unitary.setSupplyAirFlowRateDuringCoolingOperation(10);
+    unitary.setSupplyAirFlowRateDuringHeatingOperation(10);
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -347,13 +358,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     IdfExtensibleGroup eg1 = egs[0];
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.3, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
     IdfExtensibleGroup eg2 = egs[1];
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.2, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
@@ -363,17 +374,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     CoilHeatingDXMultiSpeed htgcoil(m);
     CoilHeatingDXMultiSpeedStageData htgstage1(m);
+    EXPECT_TRUE(htgstage1.setRatedAirFlowRate(1));
     EXPECT_TRUE(htgcoil.addStage(htgstage1));
 
     CoilCoolingDXMultiSpeed clgcoil(m);
     CoilCoolingDXMultiSpeedStageData clgstage1(m);
+    EXPECT_TRUE(clgstage1.setRatedAirFlowRate(2));
     EXPECT_TRUE(clgcoil.addStage(clgstage1));
     CoilCoolingDXMultiSpeedStageData clgstage2(m);
+    EXPECT_TRUE(clgstage2.setRatedAirFlowRate(3));
     EXPECT_TRUE(clgcoil.addStage(clgstage2));
 
     AirLoopHVACUnitarySystem unitary(m);
     unitary.setHeatingCoil(htgcoil);
     unitary.setCoolingCoil(clgcoil);
+    unitary.setSupplyAirFlowRateDuringCoolingOperation(10);
+    unitary.setSupplyAirFlowRateDuringHeatingOperation(10);
 
     AirLoopHVAC airLoop(m);
     Node supplyOutletNode = airLoop.supplyOutletNode();
@@ -406,14 +422,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_UnitarySystemPerformanceMultispeed_A
 
     IdfExtensibleGroup eg1 = egs[0];
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.2, eg1.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
 
     IdfExtensibleGroup eg2 = egs[1];
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio));
     EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::HeatingSpeedSupplyAirFlowRatio).get());
     ASSERT_TRUE(eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio));
-    EXPECT_EQ(1, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
+    EXPECT_EQ(0.3, eg2.getDouble(UnitarySystemPerformance_MultispeedExtensibleFields::CoolingSpeedSupplyAirFlowRatio).get());
   }
 }
