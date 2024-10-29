@@ -71,7 +71,8 @@ namespace detail {
       initschema = true;
     }
 
-    sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
+    int code = sqlite3_open_v2(fileName.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_EXCLUSIVE, nullptr);
+    m_connectionOpen = (code == 0);
 
     if (initschema) {
       execAndThrowOnError(
