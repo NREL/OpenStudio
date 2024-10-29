@@ -963,6 +963,54 @@ namespace sdd {
       }
     }
 
+    //***** Electric Equipment Loads *****
+    {
+
+      //<ElecEqpPwrDens>9.493</ElecEqpPwrDens>
+      //<ElecEqpSchRef>RestaurantGasEquip</ElecEqpSchRef>
+      //<ElecEqpRadFrac>0.15</ElecEqpRadFrac>
+      //<ElecEqpLatFrac>0</ElecEqpLatFrac>
+      //<ElecEqpLostFrac>0.85</ElecEqpLostFrac>
+
+      pugi::xml_node elecEqpPwrDensElement = element.child("ElecEqpPwrDens");
+      pugi::xml_node elecEqpPwrDensSchRefElement = element.child("ElecEqpSchRef");
+      pugi::xml_node elecEqpRadFracElement = element.child("ElecEqpRadFrac");
+      pugi::xml_node elecEqpLatFracElement = element.child("ElecEqpLatFrac");
+      pugi::xml_node elecEqpLostFracElement = element.child("ElecEqpLostFrac");
+      if ((elecEqpPwrDensElement != nullptr) && (elecEqpPwrDensElement.text().as_double() > 0)) {
+        const auto elecDensitySI = unitToUnit(elecEqpPwrDensElement.text().as_double(), "W/ft^2", "W/m^2").get();
+
+        openstudio::model::ElectricEquipmentDefinition elecEquipmentDefinition(model);
+        elecEquipmentDefinition.setName(name + " Electric Equipment Loads Definition");
+        elecEquipmentDefinition.setWattsperSpaceFloorArea(elecDensitySI);  // W/m2
+
+        if (elecEqpRadFracElement) {
+          elecEquipmentDefinition.setFractionRadiant(elecEqpRadFracElement.text().as_double());
+        }
+        if (elecEqpLatFracElement) {
+          elecEquipmentDefinition.setFractionLatent(elecEqpLatFracElement.text().as_double());
+        }
+        if (elecEqpLostFracElement) {
+          elecEquipmentDefinition.setFractionLost(elecEqpLostFracElement.text().as_double());
+        }
+
+        openstudio::model::ElectricEquipment elecEquipment(elecEquipmentDefinition);
+        elecEquipment.setName(name + " Electric Equipment Loads");
+        elecEquipment.setSpace(space);
+        elecEquipment.setEndUseSubcategory("Process");
+
+        if (elecEqpPwrDensSchRefElement) {
+          std::string scheduleName = escapeName(elecEqpPwrDensSchRefElement.text().as_string());
+          boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(scheduleName);
+          if (schedule) {
+            elecEquipment.setSchedule(*schedule);
+          } else {
+            LOG(Error, "Could not find schedule '" << scheduleName << "'");
+          }
+        }
+      }
+    }
+
     //***** Process Electricity Loads *****
     {
       //<ProcElecPwrDens>0</ProcElecPwrDens> - W per ft2
@@ -1326,7 +1374,7 @@ namespace sdd {
 
     openstudio::model::Surface surface(vertices, space.model());
     if (excludeFromSpcArea) {
-      // if excludeFromSpcArea then give this surface its own empty space, so that it does 
+      // if excludeFromSpcArea then give this surface its own empty space, so that it does
       // not count in the combine spaces calculation. ie does not influence floor area.
       model::Space surfaceSpace(space.model());
       const auto surfaceSpaceName = surface.nameString() + " Space";
@@ -1467,7 +1515,7 @@ namespace sdd {
     auto srcAftConsAssmLrNum = element.child("SrcAftConsAssmLrNum").text().as_int(1);
     auto tempCalcAftConsAssmLrNum = element.child("TempCalcAftConsAssmLrNum").text().as_int(1);
     auto cTFCalcDim = element.child("CTFCalcDim").text().as_int(1);
-    auto tubeSpacing = unitToUnit(element.child("TubeSpacing").text().as_double(0.5),"ft","m").get();
+    auto tubeSpacing = unitToUnit(element.child("TubeSpacing").text().as_double(0.5), "ft", "m").get();
 
     if (radSysRefElement) {
       auto radiantSystemName = escapeName(radSysRefElement.text().as_string());
