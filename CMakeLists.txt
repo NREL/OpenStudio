@@ -161,7 +161,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "alpha")
+set(PROJECT_VERSION_PRERELEASE "rc1")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -843,7 +843,10 @@ if(BUILD_CLI)
   set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
 
   # TODO: temp
-  set(OPENSTUDIO_GEMS_BASEURL "https://github.com/NREL/openstudio-gems/releases/download/v3.8.0")
+  set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
+
+  # TODO: temp
+  set(OPENSTUDIO_GEMS_BASEURL "https://github.com/NREL/openstudio-gems/releases/download/v3.9.0-RC1")
 
   # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
   set(USE_OPENSTUDIO_GEMS_PR FALSE)
@@ -855,19 +858,19 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240517-darwin_arm64-3.2.2.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7d50adacb69fc2ff86f3f38048a910ca")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20241029-darwin_arm64-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "88f3c73b38e75827e733c3c7ae1024ef")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240517-darwin-3.2.2.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a5962ec229ed45af4570ff3c60c31b2d")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20241029-darwin-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3958bc2f54495ab0b8fb2b3dbc58c7eb")
        endif()
      else()
        if (ARCH MATCHES "arm64")
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240517-linux_arm64-3.2.2.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f6d094a3bdaf1476ce7911e74276993b")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240517-linux-3.2.2.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b0201a70c96d343b2d1408897f39514f")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20241029-linux-3.2.2.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ea8e4b21074ca790aad31eb4397595d4")
        endif()
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
@@ -875,8 +878,8 @@ if(BUILD_CLI)
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20240517-windows-3.2.2.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4dc746b1fa79dd0044f4066527824193")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20241029-windows-3.2.2.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e78444702e6249149d6ec21a2431d0c6")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
