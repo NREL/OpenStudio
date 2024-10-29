@@ -2239,8 +2239,9 @@ static void addMultiBackFaces(const std::vector<std::shared_ptr<QueueEvent>>& ed
   }
 }
 
-static void pickEvent(const LevelEvent& event, std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
-                      std::vector<std::shared_ptr<Edge>>& /*edges*/, std::vector<std::shared_ptr<Face>>& faces) {
+static void pickEvent(const LevelEvent& event, std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav,
+                      std::vector<std::shared_ptr<QueueEvent>>& queue, std::vector<std::shared_ptr<Edge>>& /*edges*/,
+                      std::vector<std::shared_ptr<Face>>& faces) {
   // lav will be removed so it is final vertex.
   std::shared_ptr<Vertex> pickVertex(new Vertex(event.point, event.distance, nullptr, nullptr, nullptr));
   pickVertex->processed = true;
@@ -2403,7 +2404,8 @@ static std::vector<Point3d> getGableTopAndBottomVertices(const std::vector<Point
   return ret;
 }
 
-static int getOppositeGableIndex(const std::vector<std::vector<Point3d>>& surfaces, const std::vector<unsigned>& connectedSurfaces, unsigned gableIndexNum) {
+static int getOppositeGableIndex(const std::vector<std::vector<Point3d>>& surfaces, const std::vector<unsigned>& connectedSurfaces,
+                                 unsigned gableIndexNum) {
   // Obtain opposite gable index relative to gableIndexNum
   if (connectedSurfaces.size() < 4) {
     // There must be at least 4 connected surfaces (including gableIndexNum) for

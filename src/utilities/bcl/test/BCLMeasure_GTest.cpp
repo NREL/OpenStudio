@@ -328,7 +328,7 @@ TEST_F(BCLFixture, PatApplicationMeasures)
 
 struct TestPath
 {
-  TestPath(fs::path t_path, bool t_allowed) : path(std::move(t_path)), allowed(t_allowed) {};
+  TestPath(fs::path t_path, bool t_allowed) : path(std::move(t_path)), allowed(t_allowed){};
   fs::path path;
   bool allowed;
 };

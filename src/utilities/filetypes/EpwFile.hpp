@@ -459,7 +459,7 @@ class UTILITIES_API EpwHoliday
 
  public:
   EpwHoliday(const std::string& holidayName, const std::string& holidayDateString)
-    : m_holidayName(holidayName), m_holidayDateString(holidayDateString) {};
+    : m_holidayName(holidayName), m_holidayDateString(holidayDateString){};
 
   std::string holidayName() const {
     return m_holidayName;

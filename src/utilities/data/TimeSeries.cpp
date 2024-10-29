@@ -944,7 +944,9 @@ TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector) {
       result = result + ts;
     }
     if (result.values().empty()) {
-      LOG_FREE(Info, "zero.sum", "Could not sum the timeSeriesVector. Either the first series is empty, or the " << "units are incompatible.");
+      LOG_FREE(Info, "zero.sum",
+               "Could not sum the timeSeriesVector. Either the first series is empty, or the "
+                 << "units are incompatible.");
       break;
     }
     first = false;

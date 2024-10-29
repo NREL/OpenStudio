@@ -831,7 +831,7 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
       std::string descriptionFunction = "$1def description\n$1  return \"" + description + "\"\n$1end";
       std::string modelerDescriptionFunction = "$1def modeler_description\n$1  return \"" + modelerDescription + "\"\n$1end";
 
-      std::string fileString  = openstudio::filesystem::read_as_string(file);
+      std::string fileString = openstudio::filesystem::read_as_string(file);
 
       boost::regex re;
 

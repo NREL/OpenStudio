@@ -55,7 +55,7 @@ namespace model {
      *
      *  Reimplemented from HVACComponent.
      */
-    boost::optional<AirLoopHVAC> airLoopHVAC() const; // cppcheck-suppress [duplInheritedMember] for documentation purposes
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
    protected:
     friend class Model;

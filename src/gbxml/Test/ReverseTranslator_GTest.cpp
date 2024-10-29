@@ -266,7 +266,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_FloorSurfaces) {
   struct ExpectedSurfaceInfo
   {
     ExpectedSurfaceInfo(std::string t_name, std::string t_surfaceType, std::string t_spaceName)
-      : name(std::move(t_name)), surfaceType(std::move(t_surfaceType)), spaceName(std::move(t_spaceName)) {};
+      : name(std::move(t_name)), surfaceType(std::move(t_surfaceType)), spaceName(std::move(t_spaceName)){};
 
     const std::string name;
     const std::string surfaceType;

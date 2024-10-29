@@ -384,7 +384,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles, GenerateIddFacto
             std::cout << std::setw(25) << " " << '\n';
           }
         }  // for
-      }  // if
+      }    // if
 
     }  // for
 

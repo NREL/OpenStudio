@@ -150,4 +150,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_HPP
-
