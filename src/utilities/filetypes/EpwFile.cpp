@@ -1286,13 +1286,16 @@ boost::optional<double> EpwDesignCondition::getFieldByName(const std::string& na
 }
 
 boost::optional<double> EpwDesignCondition::getField(EpwDesignField id) {
+  auto optionaIntToOptionalDouble = [](boost::optional<int> val_) -> boost::optional<double> {
+    if (val_) {
+      return *val_;
+    }
+    return boost::none;
+  };
+
   switch (id.value()) {
     case EpwDesignField::HeatingColdestMonth:
-      if (boost::optional<int> _heatingColdestMonth = heatingColdestMonth()) {
-        return _heatingColdestMonth.get();
-      } else {
-        return boost::none;
-      }
+      return optionaIntToOptionalDouble(heatingColdestMonth());
       break;
     case EpwDesignField::HeatingDryBulb99pt6:
       return heatingDryBulb99pt6();
@@ -1334,18 +1337,10 @@ boost::optional<double> EpwDesignCondition::getField(EpwDesignField id) {
       return heatingMeanCoincidentWindSpeed99pt6();
       break;
     case EpwDesignField::HeatingPrevailingCoincidentWindDirection99pt6:
-      if (boost::optional<int> _heatingPrevailingCoincidentWindDirection99pt6 = heatingPrevailingCoincidentWindDirection99pt6()) {
-        return _heatingPrevailingCoincidentWindDirection99pt6.get();
-      } else {
-        return boost::none;
-      }
+      return optionaIntToOptionalDouble(heatingPrevailingCoincidentWindDirection99pt6());
       break;
     case EpwDesignField::CoolingHottestMonth:
-      if (boost::optional<int> _coolingHottestMonth = coolingHottestMonth()) {
-        return _coolingHottestMonth.get();
-      } else {
-        return boost::none;
-      }
+      return optionaIntToOptionalDouble(coolingHottestMonth());
       break;
     case EpwDesignField::CoolingDryBulbRange:
       return coolingDryBulbRange();
@@ -1390,11 +1385,7 @@ boost::optional<double> EpwDesignCondition::getField(EpwDesignField id) {
       return coolingMeanCoincidentWindSpeed0pt4();
       break;
     case EpwDesignField::CoolingPrevailingCoincidentWindDirection0pt4:
-      if (boost::optional<int> _coolingPrevailingCoincidentWindDirection0pt4 = coolingPrevailingCoincidentWindDirection0pt4()) {
-        return _coolingPrevailingCoincidentWindDirection0pt4.get();
-      } else {
-        return boost::none;
-      }
+      return optionaIntToOptionalDouble(coolingPrevailingCoincidentWindDirection0pt4());
       break;
     case EpwDesignField::CoolingDehumidificationDewPoint0pt4:
       return coolingDehumidificationDewPoint0pt4();
@@ -1442,11 +1433,7 @@ boost::optional<double> EpwDesignCondition::getField(EpwDesignField id) {
       return coolingEnthalpyMeanCoincidentDryBulb2();
       break;
     case EpwDesignField::CoolingHours8To4AndDryBulb12pt8To20pt6:
-      if (boost::optional<int> _coolingHours8To4AndDryBulb12pt8To20pt6 = coolingHours8To4AndDryBulb12pt8To20pt6()) {
-        return _coolingHours8To4AndDryBulb12pt8To20pt6.get();
-      } else {
-        return boost::none;
-      }
+      return optionaIntToOptionalDouble(coolingHours8To4AndDryBulb12pt8To20pt6());
       break;
     case EpwDesignField::ExtremeWindSpeed1:
       return extremeWindSpeed1();
@@ -2681,255 +2668,255 @@ std::string EpwDesignCondition::titleOfDesignCondition() const {
 }
 
 boost::optional<int> EpwDesignCondition::heatingColdestMonth() const {
-  return boost::optional<int>(m_heatingColdestMonth);
+  return m_heatingColdestMonth;
 }
 
 boost::optional<double> EpwDesignCondition::heatingDryBulb99pt6() const {
-  return boost::optional<double>(m_heatingDryBulb99pt6);
+  return m_heatingDryBulb99pt6;
 }
 
 boost::optional<double> EpwDesignCondition::heatingDryBulb99() const {
-  return boost::optional<double>(m_heatingDryBulb99);
+  return m_heatingDryBulb99;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationDewPoint99pt6() const {
-  return boost::optional<double>(m_heatingHumidificationDewPoint99pt6);
+  return m_heatingHumidificationDewPoint99pt6;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationHumidityRatio99pt6() const {
-  return boost::optional<double>(m_heatingHumidificationHumidityRatio99pt6);
+  return m_heatingHumidificationHumidityRatio99pt6;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationMeanCoincidentDryBulb99pt6() const {
-  return boost::optional<double>(m_heatingHumidificationMeanCoincidentDryBulb99pt6);
+  return m_heatingHumidificationMeanCoincidentDryBulb99pt6;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationDewPoint99() const {
-  return boost::optional<double>(m_heatingHumidificationDewPoint99);
+  return m_heatingHumidificationDewPoint99;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationHumidityRatio99() const {
-  return boost::optional<double>(m_heatingHumidificationHumidityRatio99);
+  return m_heatingHumidificationHumidityRatio99;
 }
 
 boost::optional<double> EpwDesignCondition::heatingHumidificationMeanCoincidentDryBulb99() const {
-  return boost::optional<double>(m_heatingHumidificationMeanCoincidentDryBulb99);
+  return m_heatingHumidificationMeanCoincidentDryBulb99;
 }
 
 boost::optional<double> EpwDesignCondition::heatingColdestMonthWindSpeed0pt4() const {
-  return boost::optional<double>(m_heatingColdestMonthWindSpeed0pt4);
+  return m_heatingColdestMonthWindSpeed0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::heatingColdestMonthMeanCoincidentDryBulb0pt4() const {
-  return boost::optional<double>(m_heatingColdestMonthMeanCoincidentDryBulb0pt4);
+  return m_heatingColdestMonthMeanCoincidentDryBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::heatingColdestMonthWindSpeed1() const {
-  return boost::optional<double>(m_heatingColdestMonthWindSpeed1);
+  return m_heatingColdestMonthWindSpeed1;
 }
 
 boost::optional<double> EpwDesignCondition::heatingColdestMonthMeanCoincidentDryBulb1() const {
-  return boost::optional<double>(m_heatingColdestMonthMeanCoincidentDryBulb1);
+  return m_heatingColdestMonthMeanCoincidentDryBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::heatingMeanCoincidentWindSpeed99pt6() const {
-  return boost::optional<double>(m_heatingMeanCoincidentWindSpeed99pt6);
+  return m_heatingMeanCoincidentWindSpeed99pt6;
 }
 
 boost::optional<int> EpwDesignCondition::heatingPrevailingCoincidentWindDirection99pt6() const {
-  return boost::optional<int>(m_heatingPrevailingCoincidentWindDirection99pt6);
+  return m_heatingPrevailingCoincidentWindDirection99pt6;
 }
 
 boost::optional<int> EpwDesignCondition::coolingHottestMonth() const {
-  return boost::optional<int>(m_coolingHottestMonth);
+  return m_coolingHottestMonth;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDryBulbRange() const {
-  return boost::optional<double>(m_coolingDryBulbRange);
+  return m_coolingDryBulbRange;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDryBulb0pt4() const {
-  return boost::optional<double>(m_coolingDryBulb0pt4);
+  return m_coolingDryBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingMeanCoincidentWetBulb0pt4() const {
-  return boost::optional<double>(m_coolingMeanCoincidentWetBulb0pt4);
+  return m_coolingMeanCoincidentWetBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDryBulb1() const {
-  return boost::optional<double>(m_coolingDryBulb1);
+  return m_coolingDryBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingMeanCoincidentWetBulb1() const {
-  return boost::optional<double>(m_coolingMeanCoincidentWetBulb1);
+  return m_coolingMeanCoincidentWetBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDryBulb2() const {
-  return boost::optional<double>(m_coolingDryBulb2);
+  return m_coolingDryBulb2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingMeanCoincidentWetBulb2() const {
-  return boost::optional<double>(m_coolingMeanCoincidentWetBulb2);
+  return m_coolingMeanCoincidentWetBulb2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationWetBulb0pt4() const {
-  return boost::optional<double>(m_coolingEvaporationWetBulb0pt4);
+  return m_coolingEvaporationWetBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb0pt4() const {
-  return boost::optional<double>(m_coolingEvaporationMeanCoincidentDryBulb0pt4);
+  return m_coolingEvaporationMeanCoincidentDryBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationWetBulb1() const {
-  return boost::optional<double>(m_coolingEvaporationWetBulb1);
+  return m_coolingEvaporationWetBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb1() const {
-  return boost::optional<double>(m_coolingEvaporationMeanCoincidentDryBulb1);
+  return m_coolingEvaporationMeanCoincidentDryBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationWetBulb2() const {
-  return boost::optional<double>(m_coolingEvaporationWetBulb2);
+  return m_coolingEvaporationWetBulb2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEvaporationMeanCoincidentDryBulb2() const {
-  return boost::optional<double>(m_coolingEvaporationMeanCoincidentDryBulb2);
+  return m_coolingEvaporationMeanCoincidentDryBulb2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingMeanCoincidentWindSpeed0pt4() const {
-  return boost::optional<double>(m_coolingMeanCoincidentWindSpeed0pt4);
+  return m_coolingMeanCoincidentWindSpeed0pt4;
 }
 
 boost::optional<int> EpwDesignCondition::coolingPrevailingCoincidentWindDirection0pt4() const {
-  return boost::optional<int>(m_coolingPrevailingCoincidentWindDirection0pt4);
+  return m_coolingPrevailingCoincidentWindDirection0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationDewPoint0pt4() const {
-  return boost::optional<double>(m_coolingDehumidificationDewPoint0pt4);
+  return m_coolingDehumidificationDewPoint0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationHumidityRatio0pt4() const {
-  return boost::optional<double>(m_coolingDehumidificationHumidityRatio0pt4);
+  return m_coolingDehumidificationHumidityRatio0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb0pt4() const {
-  return boost::optional<double>(m_coolingDehumidificationMeanCoincidentDryBulb0pt4);
+  return m_coolingDehumidificationMeanCoincidentDryBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationDewPoint1() const {
-  return boost::optional<double>(m_coolingDehumidificationDewPoint1);
+  return m_coolingDehumidificationDewPoint1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationHumidityRatio1() const {
-  return boost::optional<double>(m_coolingDehumidificationHumidityRatio1);
+  return m_coolingDehumidificationHumidityRatio1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb1() const {
-  return boost::optional<double>(m_coolingDehumidificationMeanCoincidentDryBulb1);
+  return m_coolingDehumidificationMeanCoincidentDryBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationDewPoint2() const {
-  return boost::optional<double>(m_coolingDehumidificationDewPoint2);
+  return m_coolingDehumidificationDewPoint2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationHumidityRatio2() const {
-  return boost::optional<double>(m_coolingDehumidificationHumidityRatio2);
+  return m_coolingDehumidificationHumidityRatio2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingDehumidificationMeanCoincidentDryBulb2() const {
-  return boost::optional<double>(m_coolingDehumidificationMeanCoincidentDryBulb2);
+  return m_coolingDehumidificationMeanCoincidentDryBulb2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpy0pt4() const {
-  return boost::optional<double>(m_coolingEnthalpy0pt4);
+  return m_coolingEnthalpy0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb0pt4() const {
-  return boost::optional<double>(m_coolingEnthalpyMeanCoincidentDryBulb0pt4);
+  return m_coolingEnthalpyMeanCoincidentDryBulb0pt4;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpy1() const {
-  return boost::optional<double>(m_coolingEnthalpy1);
+  return m_coolingEnthalpy1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb1() const {
-  return boost::optional<double>(m_coolingEnthalpyMeanCoincidentDryBulb1);
+  return m_coolingEnthalpyMeanCoincidentDryBulb1;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpy2() const {
-  return boost::optional<double>(m_coolingEnthalpy2);
+  return m_coolingEnthalpy2;
 }
 
 boost::optional<double> EpwDesignCondition::coolingEnthalpyMeanCoincidentDryBulb2() const {
-  return boost::optional<double>(m_coolingEnthalpyMeanCoincidentDryBulb2);
+  return m_coolingEnthalpyMeanCoincidentDryBulb2;
 }
 
 boost::optional<int> EpwDesignCondition::coolingHours8To4AndDryBulb12pt8To20pt6() const {
-  return boost::optional<int>(m_coolingHours8To4AndDryBulb12pt8To20pt6);
+  return m_coolingHours8To4AndDryBulb12pt8To20pt6;
 }
 
 boost::optional<double> EpwDesignCondition::extremeWindSpeed1() const {
-  return boost::optional<double>(m_extremeWindSpeed1);
+  return m_extremeWindSpeed1;
 }
 
 boost::optional<double> EpwDesignCondition::extremeWindSpeed2pt5() const {
-  return boost::optional<double>(m_extremeWindSpeed2pt5);
+  return m_extremeWindSpeed2pt5;
 }
 
 boost::optional<double> EpwDesignCondition::extremeWindSpeed5() const {
-  return boost::optional<double>(m_extremeWindSpeed5);
+  return m_extremeWindSpeed5;
 }
 
 boost::optional<double> EpwDesignCondition::extremeMaxWetBulb() const {
-  return boost::optional<double>(m_extremeMaxWetBulb);
+  return m_extremeMaxWetBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeMeanMinDryBulb() const {
-  return boost::optional<double>(m_extremeMeanMinDryBulb);
+  return m_extremeMeanMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeMeanMaxDryBulb() const {
-  return boost::optional<double>(m_extremeMeanMaxDryBulb);
+  return m_extremeMeanMaxDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeStdDevMinDryBulb() const {
-  return boost::optional<double>(m_extremeStdDevMinDryBulb);
+  return m_extremeStdDevMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeStdDevMaxDryBulb() const {
-  return boost::optional<double>(m_extremeStdDevMaxDryBulb);
+  return m_extremeStdDevMaxDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN5YearsMinDryBulb() const {
-  return boost::optional<double>(m_extremeN5YearsMinDryBulb);
+  return m_extremeN5YearsMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN5YearsMaxDryBulb() const {
-  return boost::optional<double>(m_extremeN5YearsMaxDryBulb);
+  return m_extremeN5YearsMaxDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN10YearsMinDryBulb() const {
-  return boost::optional<double>(m_extremeN10YearsMinDryBulb);
+  return m_extremeN10YearsMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN10YearsMaxDryBulb() const {
-  return boost::optional<double>(m_extremeN10YearsMaxDryBulb);
+  return m_extremeN10YearsMaxDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN20YearsMinDryBulb() const {
-  return boost::optional<double>(m_extremeN20YearsMinDryBulb);
+  return m_extremeN20YearsMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN20YearsMaxDryBulb() const {
-  return boost::optional<double>(m_extremeN20YearsMaxDryBulb);
+  return m_extremeN20YearsMaxDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN50YearsMinDryBulb() const {
-  return boost::optional<double>(m_extremeN50YearsMinDryBulb);
+  return m_extremeN50YearsMinDryBulb;
 }
 
 boost::optional<double> EpwDesignCondition::extremeN50YearsMaxDryBulb() const {
-  return boost::optional<double>(m_extremeN50YearsMaxDryBulb);
+  return m_extremeN50YearsMaxDryBulb;
 }
 
 void EpwDesignCondition::setTitleOfDesignCondition(const std::string& titleOfDesignCondition) {
