@@ -843,9 +843,6 @@ if(BUILD_CLI)
   set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
 
   # TODO: temp
-  set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
-
-  # TODO: temp
   set(OPENSTUDIO_GEMS_BASEURL "https://github.com/NREL/openstudio-gems/releases/download/v3.9.0-RC1")
 
   # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
