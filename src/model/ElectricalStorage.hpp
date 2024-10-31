@@ -27,7 +27,7 @@ It is the Base Class of ElectricLoadCenterStorageSimple, ElectricLoadCenterStora
    public:
     ElectricalStorage(IddObjectType type, const Model& model);
 
-    virtual ~ElectricalStorage() = default;
+    virtual ~ElectricalStorage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricalStorage(const ElectricalStorage& other) = default;
     ElectricalStorage(ElectricalStorage&& other) = default;

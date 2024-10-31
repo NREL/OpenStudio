@@ -28,7 +28,7 @@ namespace model {
 
       MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~MasslessOpaqueMaterial_Impl() = default;
+      virtual ~MasslessOpaqueMaterial_Impl() override = default;
 
       //@}
 

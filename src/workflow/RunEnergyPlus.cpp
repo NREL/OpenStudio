@@ -22,7 +22,6 @@
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/ASCIIStrings.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
-#include "energyplus/ErrorFile.hpp"
 
 #include <fmt/format.h>
 #include <fmt/color.h>

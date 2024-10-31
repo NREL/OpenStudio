@@ -44,7 +44,7 @@ namespace model {
 
       SubSurface_Impl(const SubSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SubSurface_Impl() = default;
+      virtual ~SubSurface_Impl() override = default;
 
       //@}
 
@@ -210,8 +210,8 @@ namespace model {
       void resetAdjacentSubSurface();
 
       /** Returns the surface property convection coefficients */
+      // cppcheck-suppress [duplInheritedMember] because PlanarSurface is dumb and returns a vector
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
-
       boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
       boost::optional<SurfacePropertyIncidentSolarMultiplier> surfacePropertyIncidentSolarMultiplier() const;

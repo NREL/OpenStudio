@@ -28,7 +28,7 @@ namespace model {
 
       Screen_Impl(const Screen_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Screen_Impl() = default;
+      virtual ~Screen_Impl() override = default;
 
       //@}
 

@@ -31,7 +31,7 @@ namespace model {
 
       CoilHeatingFourPipeBeam_Impl(const CoilHeatingFourPipeBeam_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingFourPipeBeam_Impl() = default;
+      virtual ~CoilHeatingFourPipeBeam_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

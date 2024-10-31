@@ -42,7 +42,7 @@ namespace model {
   *  and assigns it to be the defaultDaySchedule(). */
     ScheduleRuleset(const Model& model, double value);
 
-    virtual ~ScheduleRuleset() = default;
+    virtual ~ScheduleRuleset() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleRuleset(const ScheduleRuleset& other) = default;
     ScheduleRuleset(ScheduleRuleset&& other) = default;

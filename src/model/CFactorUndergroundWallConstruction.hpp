@@ -27,7 +27,7 @@ namespace model {
     /** TODO default values should be reviewed */
     explicit CFactorUndergroundWallConstruction(const Model& model, double cFactor = 0.1, double height = 0.1);
 
-    virtual ~CFactorUndergroundWallConstruction() = default;
+    virtual ~CFactorUndergroundWallConstruction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CFactorUndergroundWallConstruction(const CFactorUndergroundWallConstruction& other) = default;
     CFactorUndergroundWallConstruction(CFactorUndergroundWallConstruction&& other) = default;

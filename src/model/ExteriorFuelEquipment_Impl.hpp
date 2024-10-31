@@ -35,7 +35,7 @@ namespace model {
 
       ExteriorFuelEquipment_Impl(const ExteriorFuelEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorFuelEquipment_Impl() = default;
+      virtual ~ExteriorFuelEquipment_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

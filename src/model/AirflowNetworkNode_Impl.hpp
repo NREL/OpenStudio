@@ -29,7 +29,7 @@ namespace model {
 
       AirflowNetworkNode_Impl(const AirflowNetworkNode_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~AirflowNetworkNode_Impl() = default;
+      virtual ~AirflowNetworkNode_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -35,7 +35,7 @@ namespace model {
 
       RefrigerationSecondarySystem_Impl(const RefrigerationSecondarySystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationSecondarySystem_Impl() = default;
+      virtual ~RefrigerationSecondarySystem_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

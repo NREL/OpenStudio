@@ -372,11 +372,11 @@ spec.loader.exec_module(module)
   return result;
 }
 
-int PythonEngine::numberOfArguments(ScriptObject& classInstanceObject, std::string_view methodName) {
+int PythonEngine::numberOfArguments(ScriptObject& methodObject, std::string_view methodName) {
 
   int numberOfArguments = -1;
 
-  auto val = std::any_cast<PythonObject>(classInstanceObject.object);
+  auto val = std::any_cast<PythonObject>(methodObject.object);
   if (PyObject_HasAttrString(val.obj_, methodName.data()) == 0) {
     // FAILED
     return numberOfArguments;
@@ -386,13 +386,15 @@ int PythonEngine::numberOfArguments(ScriptObject& classInstanceObject, std::stri
   if (PyMethod_Check(method)) {
     PyObject* func = PyMethod_Function(method);   // Borrowed
     if (auto* code = PyFunction_GetCode(func)) {  // Borrowed
-      auto* co = (PyCodeObject*)code;
+      // cppcheck-suppress cstyleCast
+      const auto* co = (PyCodeObject*)code;
       numberOfArguments = co->co_argcount - 1;  // This includes `self`
     }
   } else if (PyFunction_Check(method)) {
     // Shouldn't enter this block here
-    if (auto code = PyFunction_GetCode(method)) {
-      auto* co = (PyCodeObject*)code;
+    if (auto * code = PyFunction_GetCode(method)) {
+      // cppcheck-suppress cstyleCast
+      const auto* co = (PyCodeObject*)code;
       numberOfArguments = co->co_argcount;
     }
   }

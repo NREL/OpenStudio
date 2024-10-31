@@ -29,7 +29,7 @@ namespace model {
 
       AirflowNetworkCrack_Impl(const AirflowNetworkCrack_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkCrack_Impl() = default;
+      virtual ~AirflowNetworkCrack_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

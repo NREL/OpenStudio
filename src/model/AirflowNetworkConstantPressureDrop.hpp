@@ -30,7 +30,7 @@ namespace model {
     /** Construct a constant pressure drop object. */
     AirflowNetworkConstantPressureDrop(const Model& model, double pressureDrop);
 
-    virtual ~AirflowNetworkConstantPressureDrop() = default;
+    virtual ~AirflowNetworkConstantPressureDrop() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkConstantPressureDrop(const AirflowNetworkConstantPressureDrop& other) = default;
     AirflowNetworkConstantPressureDrop(AirflowNetworkConstantPressureDrop&& other) = default;

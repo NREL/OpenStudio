@@ -32,7 +32,7 @@ namespace model {
 
       CoilUserDefined_Impl(const CoilUserDefined_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilUserDefined_Impl() = default;
+      virtual ~CoilUserDefined_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

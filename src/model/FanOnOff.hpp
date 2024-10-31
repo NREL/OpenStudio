@@ -38,7 +38,7 @@ namespace model {
 
     explicit FanOnOff(const Model& model);
 
-    virtual ~FanOnOff() = default;
+    virtual ~FanOnOff() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FanOnOff(const FanOnOff& other) = default;
     FanOnOff(FanOnOff&& other) = default;

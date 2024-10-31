@@ -35,7 +35,7 @@ namespace model {
   class MODEL_API OutputVariable : public ModelObject
   {
    public:
-    virtual ~OutputVariable() = default;
+    virtual ~OutputVariable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputVariable(const OutputVariable& other) = default;
     OutputVariable(OutputVariable&& other) = default;

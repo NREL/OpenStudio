@@ -30,7 +30,7 @@ namespace model {
 
       ElectricLoadCenterStorageLiIonNMCBattery_Impl(const ElectricLoadCenterStorageLiIonNMCBattery_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterStorageLiIonNMCBattery_Impl() = default;
+      virtual ~ElectricLoadCenterStorageLiIonNMCBattery_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

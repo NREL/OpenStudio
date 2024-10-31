@@ -30,7 +30,7 @@ namespace model {
 
     explicit DaylightRedirectionDevice(const Model& model);
 
-    virtual ~DaylightRedirectionDevice() = default;
+    virtual ~DaylightRedirectionDevice() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DaylightRedirectionDevice(const DaylightRedirectionDevice& other) = default;
     DaylightRedirectionDevice(DaylightRedirectionDevice&& other) = default;

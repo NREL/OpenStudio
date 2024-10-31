@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Material() = default;
+    virtual ~Material() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Material(const Material& other) = default;
     Material(Material&& other) = default;

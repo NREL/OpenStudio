@@ -36,7 +36,7 @@ namespace detail {
 
     m_startDateTime = DateTime(startDate, Time(0));
 
-    for (unsigned i = 0; i < values.size(); ++i) {
+    for (size_t i = 0; i < values.size(); ++i) {
       m_secondsFromFirstReport[i] = i * secondsPerInterval;
       m_secondsFromStart[i] = (i + 1) * secondsPerInterval;
     }
@@ -78,7 +78,7 @@ namespace detail {
 
     m_startDateTime = m_firstReportDateTime - intervalLength;
 
-    for (unsigned i = 0; i < values.size(); ++i) {
+    for (size_t i = 0; i < values.size(); ++i) {
       m_secondsFromFirstReport[i] = i * secondsPerInterval;
       m_secondsFromStart[i] = (i + 1) * secondsPerInterval;
     }

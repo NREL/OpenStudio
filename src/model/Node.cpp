@@ -247,26 +247,10 @@ namespace model {
     OS_ASSERT(getImpl<detail::Node_Impl>());
   }
 
-  Node::Node(std::shared_ptr<detail::Node_Impl> p) : StraightComponent(std::move(p)) {}
+  Node::Node(std::shared_ptr<detail::Node_Impl> impl) : StraightComponent(std::move(impl)) {}
 
   std::vector<SetpointManager> Node::setpointManagers() const {
     return getImpl<detail::Node_Impl>()->setpointManagers();
-  }
-
-  bool Node::addToNode(Node& node) {
-    return getImpl<detail::Node_Impl>()->addToNode(node);
-  }
-
-  bool Node::isRemovable() const {
-    return getImpl<detail::Node_Impl>()->isRemovable();
-  }
-
-  std::vector<IdfObject> Node::remove() {
-    return getImpl<detail::Node_Impl>()->remove();
-  }
-
-  ModelObject Node::clone(Model model) const {
-    return getImpl<detail::Node_Impl>()->clone(model);
   }
 
   IddObjectType Node::iddObjectType() {

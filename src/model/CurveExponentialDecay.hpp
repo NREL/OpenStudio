@@ -29,7 +29,7 @@ namespace model {
     /** Sets \f$c_1 = 0.0,\ c_2 = 1.0,\ c_3 = -1.0\f$, and bounds x within [0.0,1.0]. */
     explicit CurveExponentialDecay(const Model& model);
 
-    virtual ~CurveExponentialDecay() = default;
+    virtual ~CurveExponentialDecay() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveExponentialDecay(const CurveExponentialDecay& other) = default;
     CurveExponentialDecay(CurveExponentialDecay&& other) = default;

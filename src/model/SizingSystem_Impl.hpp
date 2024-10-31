@@ -28,7 +28,7 @@ namespace model {
 
       SizingSystem_Impl(const SizingSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingSystem_Impl() = default;
+      virtual ~SizingSystem_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

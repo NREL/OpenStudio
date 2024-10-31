@@ -29,7 +29,7 @@ namespace model {
     /** Initializes all coefficients to 0.0, and bounds x and y within [0.0,1.0]. */
     explicit CurveBicubic(const Model& model);
 
-    virtual ~CurveBicubic() = default;
+    virtual ~CurveBicubic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveBicubic(const CurveBicubic& other) = default;
     CurveBicubic(CurveBicubic&& other) = default;

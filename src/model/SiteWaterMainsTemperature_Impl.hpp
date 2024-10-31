@@ -30,7 +30,7 @@ namespace model {
 
       SiteWaterMainsTemperature_Impl(const SiteWaterMainsTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteWaterMainsTemperature_Impl() = default;
+      virtual ~SiteWaterMainsTemperature_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

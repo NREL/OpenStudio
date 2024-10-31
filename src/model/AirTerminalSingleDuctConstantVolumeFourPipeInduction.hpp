@@ -31,7 +31,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeFourPipeInduction(const Model& model, HVACComponent& heatingCoil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() = default;
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeInduction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctConstantVolumeFourPipeInduction(const AirTerminalSingleDuctConstantVolumeFourPipeInduction& other) = default;
     AirTerminalSingleDuctConstantVolumeFourPipeInduction(AirTerminalSingleDuctConstantVolumeFourPipeInduction&& other) = default;

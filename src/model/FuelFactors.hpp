@@ -30,7 +30,7 @@ namespace model {
 
     explicit FuelFactors(const Model& model);
 
-    virtual ~FuelFactors() = default;
+    virtual ~FuelFactors() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FuelFactors(const FuelFactors& other) = default;
     FuelFactors(FuelFactors&& other) = default;

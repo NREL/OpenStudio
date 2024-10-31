@@ -32,7 +32,7 @@ namespace model {
 
     explicit CoilCoolingDXCurveFitSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXCurveFitSpeed() = default;
+    virtual ~CoilCoolingDXCurveFitSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXCurveFitSpeed(const CoilCoolingDXCurveFitSpeed& other) = default;
     CoilCoolingDXCurveFitSpeed(CoilCoolingDXCurveFitSpeed&& other) = default;

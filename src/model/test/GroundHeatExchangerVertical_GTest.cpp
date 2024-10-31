@@ -16,7 +16,6 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
-#include "OpenStudio.hxx"
 
 using namespace openstudio;
 using namespace openstudio::model;

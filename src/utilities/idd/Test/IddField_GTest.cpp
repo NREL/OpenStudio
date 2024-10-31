@@ -27,7 +27,7 @@ TEST_F(IddFixture, IddField_Properties) {
   // ==, != operators
   ASSERT_TRUE(iddZone.nonextensibleFields().size() > 2);
   ASSERT_TRUE(!iddZoneList.nonextensibleFields().empty());
-  EXPECT_TRUE(iddZone.nonextensibleFields()[0].properties() == iddZone.nonextensibleFields()[0].properties());
+  EXPECT_EQ(iddZone.nonextensibleFields()[0].properties(), iddZone.nonextensibleFields()[0].properties());
   // ETH@20100326 Would expect these to be the same--probably only differ by note/memo.
   // Is that the behavior we want?
   EXPECT_FALSE(iddZone.nonextensibleFields()[0].properties() == iddZoneList.nonextensibleFields()[0].properties());

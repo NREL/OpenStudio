@@ -32,7 +32,7 @@ namespace model {
       CoilCoolingDXTwoStageWithHumidityControlMode_Impl(const CoilCoolingDXTwoStageWithHumidityControlMode_Impl& other, Model_Impl* model,
                                                         bool keepHandle);
 
-      virtual ~CoilCoolingDXTwoStageWithHumidityControlMode_Impl() = default;
+      virtual ~CoilCoolingDXTwoStageWithHumidityControlMode_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

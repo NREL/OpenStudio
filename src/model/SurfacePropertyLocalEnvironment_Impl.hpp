@@ -35,7 +35,7 @@ namespace model {
 
       SurfacePropertyLocalEnvironment_Impl(const SurfacePropertyLocalEnvironment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyLocalEnvironment_Impl() = default;
+      virtual ~SurfacePropertyLocalEnvironment_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

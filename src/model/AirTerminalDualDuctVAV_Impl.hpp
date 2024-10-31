@@ -31,7 +31,7 @@ namespace model {
 
       AirTerminalDualDuctVAV_Impl(const AirTerminalDualDuctVAV_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalDualDuctVAV_Impl() = default;
+      virtual ~AirTerminalDualDuctVAV_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -29,7 +29,7 @@ namespace model {
 
       ThermochromicGlazing_Impl(const ThermochromicGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ThermochromicGlazing_Impl() = default;
+      virtual ~ThermochromicGlazing_Impl() override = default;
 
       //@}
 

@@ -31,7 +31,7 @@ namespace model {
 
       SetpointManagerOutdoorAirReset_Impl(const SetpointManagerOutdoorAirReset_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerOutdoorAirReset_Impl() = default;
+      virtual ~SetpointManagerOutdoorAirReset_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

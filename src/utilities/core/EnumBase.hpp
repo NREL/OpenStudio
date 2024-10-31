@@ -64,7 +64,7 @@ class EnumBase : public ::StaticInitializer<Enum>
   }
 
   /** Returns this instance's current value (as an integer). */
-  int value() const {
+  int integer_value() const {
     return m_value;
   }
 

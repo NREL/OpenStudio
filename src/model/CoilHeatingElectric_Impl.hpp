@@ -32,7 +32,7 @@ namespace model {
 
       CoilHeatingElectric_Impl(const CoilHeatingElectric_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingElectric_Impl() = default;
+      virtual ~CoilHeatingElectric_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

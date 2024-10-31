@@ -29,7 +29,7 @@ namespace model {
 
       UnitarySystemPerformanceMultispeed_Impl(const UnitarySystemPerformanceMultispeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~UnitarySystemPerformanceMultispeed_Impl() = default;
+      virtual ~UnitarySystemPerformanceMultispeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -37,7 +37,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~Site() = default;
+    virtual ~Site() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Site(const Site& other) = default;
     Site(Site&& other) = default;

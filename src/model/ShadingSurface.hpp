@@ -32,7 +32,7 @@ namespace model {
 
     explicit ShadingSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~ShadingSurface() = default;
+    virtual ~ShadingSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ShadingSurface(const ShadingSurface& other) = default;
     ShadingSurface(ShadingSurface&& other) = default;

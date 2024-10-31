@@ -27,7 +27,7 @@ namespace model {
    public:
     explicit DesignSpecificationZoneAirDistribution(const Model& model);
 
-    virtual ~DesignSpecificationZoneAirDistribution() = default;
+    virtual ~DesignSpecificationZoneAirDistribution() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DesignSpecificationZoneAirDistribution(const DesignSpecificationZoneAirDistribution& other) = default;
     DesignSpecificationZoneAirDistribution(DesignSpecificationZoneAirDistribution&& other) = default;

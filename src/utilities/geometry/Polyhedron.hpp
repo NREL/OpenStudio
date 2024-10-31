@@ -47,7 +47,7 @@ class UTILITIES_API Surface3dEdge
   void appendSurface(const Surface3d& surface);
 
   // Checks whether a Point: is not almost equal to the start and end points, and that isPointOnLineBetweenPoints(start, end, testVertex) is true
-  bool containsPoint(const Point3d& testVertex);
+  bool containsPoint(const Point3d& testVertex) const;
 
   void markConflictedOrientation();
   bool hasConflictedOrientation() const;

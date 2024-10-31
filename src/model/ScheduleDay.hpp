@@ -36,7 +36,7 @@ namespace model {
     /** Initializes the schedule to value until 24:00. */
     ScheduleDay(const Model& model, double value);
 
-    virtual ~ScheduleDay() = default;
+    virtual ~ScheduleDay() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleDay(const ScheduleDay& other) = default;
     ScheduleDay(ScheduleDay&& other) = default;

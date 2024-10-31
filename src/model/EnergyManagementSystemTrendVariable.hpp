@@ -52,7 +52,7 @@ namespace model {
 
     explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemConstructionIndexVariable& object);
 
-    virtual ~EnergyManagementSystemTrendVariable() = default;
+    virtual ~EnergyManagementSystemTrendVariable() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnergyManagementSystemTrendVariable(const EnergyManagementSystemTrendVariable& other) = default;
     EnergyManagementSystemTrendVariable(EnergyManagementSystemTrendVariable&& other) = default;

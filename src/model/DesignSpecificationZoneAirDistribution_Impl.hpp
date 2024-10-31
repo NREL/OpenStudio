@@ -30,7 +30,7 @@ namespace model {
 
       DesignSpecificationZoneAirDistribution_Impl(const DesignSpecificationZoneAirDistribution_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DesignSpecificationZoneAirDistribution_Impl() = default;
+      virtual ~DesignSpecificationZoneAirDistribution_Impl() override = default;
 
       //@}
 

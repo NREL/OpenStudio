@@ -31,7 +31,7 @@ namespace model {
     explicit LoadingIndex(const Model& model, double compressorSpeed, const Curve& evaporativeCapacityMultiplierFunctionofTemperatureCurve,
                           const Curve& compressorPowerMultiplierFunctionofTemperatureCurve);
 
-    virtual ~LoadingIndex() = default;
+    virtual ~LoadingIndex() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LoadingIndex(const LoadingIndex& other) = default;
     LoadingIndex(LoadingIndex&& other) = default;

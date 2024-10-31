@@ -1077,9 +1077,8 @@ ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const {
   Json::ArrayIndex storyN = stories.size();
   for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx) {
 
-    std::string storyName;
     if (checkKeyAndType(stories[storyIdx], "name", Json::stringValue)) {
-      storyName = stories[storyIdx].get("name", storyName).asString();
+      std::string storyName = stories[storyIdx].get("name", storyName).asString();
       buildingStoryNames.push_back(storyName);
     }
 
@@ -1190,7 +1189,7 @@ ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const {
           spaceFloorOffset = lengthToMeters * spaces[spaceIdx].get("floor_offset", spaceFloorOffset).asDouble();
         }
 
-        bool openToBelow = false;
+        [[maybe_unused]] bool openToBelow = false;
         if (checkKeyAndType(spaces[spaceIdx], "open_to_below", Json::booleanValue)) {
           openToBelow = spaces[spaceIdx].get("open_to_below", openToBelow).asBool();
         }
@@ -1283,7 +1282,7 @@ ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const {
           shadingFloorOffset = lengthToMeters * shading[shadingdx].get("floor_offset", shadingFloorOffset).asDouble();
         }
 
-        bool openToBelow = false;
+        [[maybe_unused]] bool openToBelow = false;
         if (checkKeyAndType(shading[shadingdx], "open_to_below", Json::booleanValue)) {
           openToBelow = shading[shadingdx].get("open_to_below", openToBelow).asBool();
         }

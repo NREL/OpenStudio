@@ -33,7 +33,7 @@ namespace model {
     /** Construct an external node with a specified wind pressure curve. */
     explicit AirflowNetworkExternalNode(const Model& model, const Curve& curve);
 
-    virtual ~AirflowNetworkExternalNode() = default;
+    virtual ~AirflowNetworkExternalNode() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkExternalNode(const AirflowNetworkExternalNode& other) = default;
     AirflowNetworkExternalNode(AirflowNetworkExternalNode&& other) = default;

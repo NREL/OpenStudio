@@ -29,7 +29,7 @@ namespace model {
 
       HotWaterEquipmentDefinition_Impl(const HotWaterEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HotWaterEquipmentDefinition_Impl() = default;
+      virtual ~HotWaterEquipmentDefinition_Impl() override = default;
 
       //@}
 

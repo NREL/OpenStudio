@@ -56,7 +56,7 @@ namespace model {
     explicit EnergyManagementSystemActuator(const ModelObject& actuatedComponent, const std::string& actuatedComponentType,
                                             const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
 
-    virtual ~EnergyManagementSystemActuator() = default;
+    virtual ~EnergyManagementSystemActuator() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EnergyManagementSystemActuator(const EnergyManagementSystemActuator& other) = default;
     EnergyManagementSystemActuator(EnergyManagementSystemActuator&& other) = default;

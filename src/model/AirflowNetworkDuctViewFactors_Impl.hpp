@@ -32,7 +32,7 @@ namespace model {
 
       AirflowNetworkDuctViewFactors_Impl(const AirflowNetworkDuctViewFactors_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkDuctViewFactors_Impl() = default;
+      virtual ~AirflowNetworkDuctViewFactors_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

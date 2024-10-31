@@ -35,7 +35,7 @@ namespace model {
 
     explicit CoilCoolingDXVariableSpeed(const Model& model, const Curve& partLoadFraction);
 
-    virtual ~CoilCoolingDXVariableSpeed() = default;
+    virtual ~CoilCoolingDXVariableSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXVariableSpeed(const CoilCoolingDXVariableSpeed& other) = default;
     CoilCoolingDXVariableSpeed(CoilCoolingDXVariableSpeed&& other) = default;

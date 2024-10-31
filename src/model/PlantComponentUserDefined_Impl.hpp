@@ -41,7 +41,7 @@ namespace model {
 
       PlantComponentUserDefined_Impl(const PlantComponentUserDefined_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantComponentUserDefined_Impl() = default;
+      virtual ~PlantComponentUserDefined_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

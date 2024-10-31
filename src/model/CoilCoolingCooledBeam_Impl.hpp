@@ -27,7 +27,7 @@ namespace model {
 
       CoilCoolingCooledBeam_Impl(const CoilCoolingCooledBeam_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingCooledBeam_Impl() = default;
+      virtual ~CoilCoolingCooledBeam_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -30,7 +30,7 @@ namespace model {
       // Clone copy constructor.
       OpaqueMaterial_Impl(const OpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OpaqueMaterial_Impl() = default;
+      virtual ~OpaqueMaterial_Impl() override = default;
 
       /** @name Getters */
       //@{

@@ -38,7 +38,7 @@ namespace model {
 
     explicit WaterHeaterMixed(const Model& model);
 
-    virtual ~WaterHeaterMixed() = default;
+    virtual ~WaterHeaterMixed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterHeaterMixed(const WaterHeaterMixed& other) = default;
     WaterHeaterMixed(WaterHeaterMixed&& other) = default;

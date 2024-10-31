@@ -42,7 +42,7 @@ namespace model {
     explicit GeneratorFuelCellWaterSupply(const Model& model, const CurveQuadratic& flowRateCurve, const CurveCubic& pumpPowerCurve,
                                           const Node& waterTempNode, const std::string& waterTempMode);
 
-    virtual ~GeneratorFuelCellWaterSupply() = default;
+    virtual ~GeneratorFuelCellWaterSupply() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellWaterSupply(const GeneratorFuelCellWaterSupply& other) = default;
     GeneratorFuelCellWaterSupply(GeneratorFuelCellWaterSupply&& other) = default;

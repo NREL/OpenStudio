@@ -29,7 +29,7 @@ namespace model {
    public:
     AirToAirComponent(IddObjectType type, const Model& model);
 
-    virtual ~AirToAirComponent() = default;
+    virtual ~AirToAirComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirToAirComponent(const AirToAirComponent& other) = default;
     AirToAirComponent(AirToAirComponent&& other) = default;

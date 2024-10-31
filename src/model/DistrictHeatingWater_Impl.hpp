@@ -32,7 +32,7 @@ namespace model {
 
       DistrictHeatingWater_Impl(const DistrictHeatingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DistrictHeatingWater_Impl() = default;
+      virtual ~DistrictHeatingWater_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

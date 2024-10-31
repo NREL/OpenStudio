@@ -22,7 +22,7 @@ namespace model {
     // constructor
     explicit WeatherFileConditionType(const Model& model);
 
-    virtual ~WeatherFileConditionType() = default;
+    virtual ~WeatherFileConditionType() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WeatherFileConditionType(const WeatherFileConditionType& other) = default;
     WeatherFileConditionType(WeatherFileConditionType&& other) = default;

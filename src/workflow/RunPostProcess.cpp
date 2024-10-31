@@ -6,7 +6,6 @@
 #include "OSWorkflow.hpp"
 
 #include "Util.hpp"
-#include "workflow/Util.hpp"
 
 namespace openstudio {
 

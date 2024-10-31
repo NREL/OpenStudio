@@ -29,7 +29,7 @@ namespace model {
 
       PythonPluginInstance_Impl(const PythonPluginInstance_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PythonPluginInstance_Impl() = default;
+      virtual ~PythonPluginInstance_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

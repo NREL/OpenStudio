@@ -27,7 +27,7 @@ namespace model {
 
       EnergyManagementSystemGlobalVariable_Impl(const EnergyManagementSystemGlobalVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemGlobalVariable_Impl() = default;
+      virtual ~EnergyManagementSystemGlobalVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

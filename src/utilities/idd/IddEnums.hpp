@@ -43,7 +43,7 @@ struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>
   }
 
   domain value() const {
-    return static_cast<domain>(EnumBase<IddFileType>::value());
+    return static_cast<domain>(EnumBase<IddFileType>::integer_value());
   }
 
  private:
@@ -99,7 +99,7 @@ struct UTILITIES_API IddObjectType : public ::EnumBase<IddObjectType>
   }
 
   domain value() const {
-    return static_cast<domain>(EnumBase<IddObjectType>::value());
+    return static_cast<domain>(EnumBase<IddObjectType>::integer_value());
   }
 
  private:

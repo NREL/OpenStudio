@@ -31,7 +31,7 @@ namespace model {
 
       PipeIndoor_Impl(const PipeIndoor_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PipeIndoor_Impl() = default;
+      virtual ~PipeIndoor_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

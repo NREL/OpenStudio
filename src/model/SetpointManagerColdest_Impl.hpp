@@ -29,7 +29,7 @@ namespace model {
 
       SetpointManagerColdest_Impl(const SetpointManagerColdest_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerColdest_Impl() = default;
+      virtual ~SetpointManagerColdest_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

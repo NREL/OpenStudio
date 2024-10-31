@@ -35,7 +35,7 @@ namespace model {
 
     explicit RefrigerationCompressorRack(const Model& model);
 
-    virtual ~RefrigerationCompressorRack() = default;
+    virtual ~RefrigerationCompressorRack() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationCompressorRack(const RefrigerationCompressorRack& other) = default;
     RefrigerationCompressorRack(RefrigerationCompressorRack&& other) = default;

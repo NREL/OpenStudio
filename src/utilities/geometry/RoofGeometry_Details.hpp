@@ -1294,7 +1294,6 @@ static void computeSplitEvents(std::shared_ptr<Vertex> vertex, const std::vector
 
     std::shared_ptr<QueueEvent> e2(new QueueEvent(oppositeEdge.point, oppositeEdge.distance, vertex, oppositeEdge.oppositeEdge));  // SplitVertexEvent
     QueueEvent::insert_sorted(queue, e2);
-    continue;
   }
 }
 
@@ -1335,7 +1334,7 @@ static void computeEdgeEvents(std::shared_ptr<Vertex> previousVertex, std::share
 
 static void initEvents(std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
                        const std::vector<std::shared_ptr<Edge>>& edges) {
-  for (std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
+  for (const std::vector<std::shared_ptr<Vertex>>& lav : sLav) {
     for (const std::shared_ptr<Vertex>& vertex : lav) {
       computeSplitEvents(vertex, edges, queue, boost::none);
     }
@@ -1561,7 +1560,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
   }
 
   std::vector<Chain> chains;
-  for (Chain& edgeChain : edgeChains) {
+  for (const Chain& edgeChain : edgeChains) {
     chains.push_back(edgeChain);
   }
 
@@ -1570,7 +1569,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
     splitCluster.erase(splitCluster.begin());
 
     bool inEdgeChain = false;
-    for (Chain& chain : edgeChains) {
+    for (const Chain& chain : edgeChains) {
       // check if chain is split type
       if (isInEdgeChain(split, chain)) {
         // if we have edge chain it can't share split event
@@ -1600,7 +1599,7 @@ static std::vector<Chain> createChains(const std::vector<std::shared_ptr<QueueEv
   return chains;
 }
 
-static LevelEvent createLevelEvent(Point3d& eventCenter, double distance, const std::vector<std::shared_ptr<QueueEvent>>& eventCluster,
+static LevelEvent createLevelEvent(const Point3d& eventCenter, double distance, const std::vector<std::shared_ptr<QueueEvent>>& eventCluster,
                                    std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav) {
 
   std::vector<Chain> chains = createChains(eventCluster, sLav);
@@ -1724,10 +1723,9 @@ static bool isInsidePolygon(const Point3d& point, const std::vector<Point3d>& po
       node2 = points[it];
     }
 
-    double x = point.x();
-    double y = point.y();
-
+    const double y = point.y();
     if ((node1.y() < y && node2.y() >= y) || (node2.y() < y && node1.y() >= y)) {
+      const double x = point.x();
       if (node1.x() + (y - node1.y()) / (node2.y() - node1.y()) * (node2.x() - node1.x()) < x) {
         oddNodes = !oddNodes;
       }
@@ -1737,7 +1735,7 @@ static bool isInsidePolygon(const Point3d& point, const std::vector<Point3d>& po
   return oddNodes;
 }
 
-static int chooseOppositeEdgeLavIndex(std::vector<std::shared_ptr<Vertex>>& edgeLavs, std::shared_ptr<Edge> oppositeEdge, const Point3d& center,
+static int chooseOppositeEdgeLavIndex(const std::vector<std::shared_ptr<Vertex>>& edgeLavs, std::shared_ptr<Edge> oppositeEdge, const Point3d& center,
                                       std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav) {
   if (edgeLavs.empty()) {
     return -1;
@@ -1817,7 +1815,7 @@ static void createOppositeEdgeChains(std::vector<std::vector<std::shared_ptr<Ver
   std::vector<Chain> oppositeEdgeChains;
   std::vector<Chain> chainsForRemoval;
 
-  for (Chain& chain : chains) {
+  for (const Chain& chain : chains) {
     // add opposite edges as chain parts
     if (chain.chainType == Chain::TYPE_SPLIT) {
       std::shared_ptr<Edge> oppositeEdge = chain.getOppositeEdge();
@@ -1864,12 +1862,12 @@ static void createOppositeEdgeChains(std::vector<std::vector<std::shared_ptr<Ver
     chains.erase(it);
   }
 
-  for (Chain& chain : oppositeEdgeChains) {
+  for (const Chain& chain : oppositeEdgeChains) {
     chains.push_back(chain);
   }
 }
 
-static std::shared_ptr<Vertex> createMultiSplitVertex(std::shared_ptr<Edge> nextEdge, std::shared_ptr<Edge> previousEdge, Point3d& center,
+static std::shared_ptr<Vertex> createMultiSplitVertex(std::shared_ptr<Edge> nextEdge, std::shared_ptr<Edge> previousEdge, const Point3d& center,
                                                       double distance) {
   std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(center, previousEdge, nextEdge)));
 
@@ -1917,7 +1915,7 @@ static void correctBisectorDirection(std::shared_ptr<Ray2d> bisector, std::share
   }
 }
 
-static bool areSameLav(std::vector<std::shared_ptr<Vertex>>& lav1, std::vector<std::shared_ptr<Vertex>>& lav2) {
+static bool areSameLav(const std::vector<std::shared_ptr<Vertex>>& lav1, const std::vector<std::shared_ptr<Vertex>>& lav2) {
   if (lav1.size() != lav2.size()) {
     return false;
   }
@@ -2204,8 +2202,8 @@ static void multiSplitEvent(LevelEvent& event, std::vector<std::vector<std::shar
   // remove all centers of events from lav
   edgeListSize = event.chains.size();
   for (int i = 0; i < edgeListSize; i++) {
-    Chain& chainBegin = event.chains[i];
-    Chain& chainEnd = event.chains[(i + 1) % edgeListSize];
+    const Chain& chainBegin = event.chains[i];
+    const Chain& chainEnd = event.chains[(i + 1) % edgeListSize];
 
     if (chainBegin.getCurrentVertex()) {
       chainBegin.getCurrentVertex()->processed = true;
@@ -2241,8 +2239,9 @@ static void addMultiBackFaces(const std::vector<std::shared_ptr<QueueEvent>>& ed
   }
 }
 
-static void pickEvent(LevelEvent& event, std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav, std::vector<std::shared_ptr<QueueEvent>>& queue,
-                      std::vector<std::shared_ptr<Edge>>& /*edges*/, std::vector<std::shared_ptr<Face>>& faces) {
+static void pickEvent(const LevelEvent& event, std::vector<std::vector<std::shared_ptr<Vertex>>>& sLav,
+                      std::vector<std::shared_ptr<QueueEvent>>& queue, std::vector<std::shared_ptr<Edge>>& /*edges*/,
+                      std::vector<std::shared_ptr<Face>>& faces) {
   // lav will be removed so it is final vertex.
   std::shared_ptr<Vertex> pickVertex(new Vertex(event.point, event.distance, nullptr, nullptr, nullptr));
   pickVertex->processed = true;
@@ -2383,7 +2382,7 @@ static void removeEmptyLav(std::vector<std::vector<std::shared_ptr<Vertex>>>& sL
   return facesToPoint3d(faces, roofPitchDegrees, zcoord);
 }
 
-static std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface) {
+static std::vector<Point3d> getGableTopAndBottomVertices(const std::vector<Point3d>& surface) {
   std::vector<Point3d> ret;
   if (surface.size() != 3) {
     // gable must have 3 vertices
@@ -2405,7 +2404,8 @@ static std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& s
   return ret;
 }
 
-static int getOppositeGableIndex(std::vector<std::vector<Point3d>>& surfaces, std::vector<unsigned> connectedSurfaces, unsigned gableIndexNum) {
+static int getOppositeGableIndex(const std::vector<std::vector<Point3d>>& surfaces, const std::vector<unsigned>& connectedSurfaces,
+                                 unsigned gableIndexNum) {
   // Obtain opposite gable index relative to gableIndexNum
   if (connectedSurfaces.size() < 4) {
     // There must be at least 4 connected surfaces (including gableIndexNum) for
@@ -2454,7 +2454,7 @@ static void applyGableLogicTriangles(std::vector<std::vector<Point3d>>& surfaces
 
     std::vector<unsigned> connectedSurfaces;
     for (unsigned j = 0; j < surfaces.size(); j++) {
-      for (Point3d& vertex : surfaces[j]) {
+      for (const Point3d& vertex : surfaces[j]) {
         if (vertex != gableTop) {
           continue;
         }
@@ -2573,7 +2573,7 @@ static void applyGableLogicTriangles(std::vector<std::vector<Point3d>>& surfaces
   }
 }
 
-static void applyGableLogicRidgeTwoAnglesForward(std::vector<std::vector<Point3d>>& surfaces) {
+static void applyGableLogicRidgeTwoAnglesForward(const std::vector<std::vector<Point3d>>& surfaces) {
   // TODO
 
   /*                  ___________          ___________
@@ -2591,7 +2591,7 @@ static void applyGableLogicRidgeTwoAnglesForward(std::vector<std::vector<Point3d
   */
 }
 
-static void applyGableLogicRidgeTwoAnglesInside(std::vector<std::vector<Point3d>>& surfaces) {
+static void applyGableLogicRidgeTwoAnglesInside(const std::vector<std::vector<Point3d>>& surfaces) {
   // TODO
 
   /*                  ___________          ___________
@@ -2609,7 +2609,7 @@ static void applyGableLogicRidgeTwoAnglesInside(std::vector<std::vector<Point3d>
   */
 }
 
-static void applyGableLogicRidgeTwoAnglesBackward(std::vector<std::vector<Point3d>>& surfaces) {
+static void applyGableLogicRidgeTwoAnglesBackward(const std::vector<std::vector<Point3d>>& surfaces) {
   // TODO
 
   /*    _______________________          _______________________
@@ -2629,7 +2629,7 @@ static void applyGableLogicRidgeTwoAnglesBackward(std::vector<std::vector<Point3
   */
 }
 
-static void applyGableLogicTwoRidgesTwoOppositeAngles(std::vector<std::vector<Point3d>>& surfaces) {
+static void applyGableLogicTwoRidgesTwoOppositeAngles(const std::vector<std::vector<Point3d>>& surfaces) {
   // TODO
 
   /*    _______________________          _______________________
@@ -2722,7 +2722,7 @@ static std::vector<Point3d> getShedLine(const std::vector<Point3d>& polygon, dou
   // Calculate distance from each polygon vertex to the line.
   std::map<Point3d, double, Point3dComparer> distances;
   double minDistance = std::numeric_limits<double>::max();
-  for (Point3d& vertex : polygon) {
+  for (const Point3d& vertex : polygon) {
     distances[vertex] = getDistancePointToLineSegment(vertex, line);
     if (distances[vertex] < minDistance) {
       minDistance = distances[vertex];

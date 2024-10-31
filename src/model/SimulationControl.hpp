@@ -42,7 +42,7 @@ namespace model {
   class MODEL_API SimulationControl : public ParentObject
   {
    public:
-    virtual ~SimulationControl() = default;
+    virtual ~SimulationControl() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SimulationControl(const SimulationControl& other) = default;
     SimulationControl(SimulationControl&& other) = default;

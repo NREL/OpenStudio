@@ -31,7 +31,7 @@ namespace model {
 
       ChillerHeaterPerformanceElectricEIR_Impl(const ChillerHeaterPerformanceElectricEIR_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerHeaterPerformanceElectricEIR_Impl() = default;
+      virtual ~ChillerHeaterPerformanceElectricEIR_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

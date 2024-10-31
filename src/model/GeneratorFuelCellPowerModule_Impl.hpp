@@ -32,7 +32,7 @@ namespace model {
 
       GeneratorFuelCellPowerModule_Impl(const GeneratorFuelCellPowerModule_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellPowerModule_Impl() = default;
+      virtual ~GeneratorFuelCellPowerModule_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

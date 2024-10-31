@@ -27,7 +27,7 @@ namespace model {
 
     explicit ThermochromicGlazing(const Model& model, double opticalDataTemperature = 80.0);
 
-    virtual ~ThermochromicGlazing() = default;
+    virtual ~ThermochromicGlazing() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ThermochromicGlazing(const ThermochromicGlazing& other) = default;
     ThermochromicGlazing(ThermochromicGlazing&& other) = default;

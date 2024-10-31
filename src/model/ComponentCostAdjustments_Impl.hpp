@@ -28,7 +28,7 @@ namespace model {
       ComponentCostAdjustments_Impl(const ComponentCostAdjustments_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ComponentCostAdjustments_Impl() = default;
+      virtual ~ComponentCostAdjustments_Impl() override = default;
 
       boost::optional<double> miscellaneousCostPerConditionedArea() const;
       bool setMiscellaneousCostPerConditionedArea(double num);

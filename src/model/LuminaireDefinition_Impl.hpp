@@ -30,7 +30,7 @@ namespace model {
 
       LuminaireDefinition_Impl(const LuminaireDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LuminaireDefinition_Impl() = default;
+      virtual ~LuminaireDefinition_Impl() override = default;
 
       //@}
 

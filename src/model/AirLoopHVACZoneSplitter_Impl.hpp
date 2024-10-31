@@ -29,7 +29,7 @@ namespace model {
       AirLoopHVACZoneSplitter_Impl(const AirLoopHVACZoneSplitter_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~AirLoopHVACZoneSplitter_Impl() = default;
+      virtual ~AirLoopHVACZoneSplitter_Impl() override = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

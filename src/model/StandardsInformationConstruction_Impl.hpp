@@ -32,7 +32,7 @@ namespace model {
       StandardsInformationConstruction_Impl(const StandardsInformationConstruction_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~StandardsInformationConstruction_Impl() = default;
+      virtual ~StandardsInformationConstruction_Impl() override = default;
 
       //@}
       /** @name Getters */

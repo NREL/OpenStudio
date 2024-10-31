@@ -32,7 +32,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ComponentCostAdjustments() = default;
+    virtual ~ComponentCostAdjustments() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ComponentCostAdjustments(const ComponentCostAdjustments& other) = default;
     ComponentCostAdjustments(ComponentCostAdjustments&& other) = default;

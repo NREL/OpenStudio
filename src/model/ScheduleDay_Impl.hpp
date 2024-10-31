@@ -38,7 +38,7 @@ namespace model {
 
       ScheduleDay_Impl(const ScheduleDay_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ScheduleDay_Impl() = default;
+      virtual ~ScheduleDay_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

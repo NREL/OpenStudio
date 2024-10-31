@@ -68,7 +68,7 @@ class InternalMass; */
    */
     explicit ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
 
-    virtual ~ZonePropertyUserViewFactorsBySurfaceName() = default;
+    virtual ~ZonePropertyUserViewFactorsBySurfaceName() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZonePropertyUserViewFactorsBySurfaceName(const ZonePropertyUserViewFactorsBySurfaceName& other) = default;
     ZonePropertyUserViewFactorsBySurfaceName(ZonePropertyUserViewFactorsBySurfaceName&& other) = default;

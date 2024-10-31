@@ -24,7 +24,7 @@ namespace model {
    public:
     PlantEquipmentOperationScheme(IddObjectType type, const Model& model);
 
-    virtual ~PlantEquipmentOperationScheme() = default;
+    virtual ~PlantEquipmentOperationScheme() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantEquipmentOperationScheme(const PlantEquipmentOperationScheme& other) = default;
     PlantEquipmentOperationScheme(PlantEquipmentOperationScheme&& other) = default;

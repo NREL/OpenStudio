@@ -51,7 +51,7 @@ namespace model {
 
     explicit DefaultScheduleSet(const Model& model);
 
-    virtual ~DefaultScheduleSet() = default;
+    virtual ~DefaultScheduleSet() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DefaultScheduleSet(const DefaultScheduleSet& other) = default;
     DefaultScheduleSet(DefaultScheduleSet&& other) = default;

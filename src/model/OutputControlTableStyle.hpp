@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlTableStyle() = default;
+    virtual ~OutputControlTableStyle() override = default;
 
     //@}
 

@@ -38,7 +38,7 @@ namespace model {
 
     explicit RefrigerationSystem(const Model& model);
 
-    virtual ~RefrigerationSystem() = default;
+    virtual ~RefrigerationSystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationSystem(const RefrigerationSystem& other) = default;
     RefrigerationSystem(RefrigerationSystem&& other) = default;
@@ -54,10 +54,6 @@ namespace model {
     static std::vector<std::string> suctionTemperatureControlTypeValues();
 
     static std::vector<std::string> intercoolerTypeValues();
-
-    std::vector<IdfObject> remove();
-
-    ModelObject clone(Model model) const;
 
     // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you want it on several.
     bool addCase(const RefrigerationCase& refrigerationCase);

@@ -107,7 +107,7 @@
       return BOOST_PP_STRINGIZE(_enum_name);                                                               \
     }                                                                                                      \
     domain value() const {                                                                                 \
-      return static_cast<domain>(EnumBase<_enum_name>::value());                                           \
+      return static_cast<domain>(EnumBase<_enum_name>::integer_value());                                   \
     }                                                                                                      \
                                                                                                            \
    private:                                                                                                \
@@ -241,7 +241,7 @@
  *
  *   domain value() const
  *   {
- *     return static_cast<domain>(EnumBase<MyEnumerationComplex>::value());
+ *     return static_cast<domain>(EnumBase<MyEnumerationComplex>::integer_value());
  *   }
  *
  *  private:

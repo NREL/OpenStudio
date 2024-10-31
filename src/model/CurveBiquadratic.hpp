@@ -29,7 +29,7 @@ namespace model {
     /** Initializes all coefficients to 0.0, and sets the bounds on x and y to [0.0,1.0]. */
     explicit CurveBiquadratic(const Model& model);
 
-    virtual ~CurveBiquadratic() = default;
+    virtual ~CurveBiquadratic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveBiquadratic(const CurveBiquadratic& other) = default;
     CurveBiquadratic(CurveBiquadratic&& other) = default;

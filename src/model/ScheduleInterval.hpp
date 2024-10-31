@@ -28,7 +28,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleInterval() = default;
+    virtual ~ScheduleInterval() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleInterval(const ScheduleInterval& other) = default;
     ScheduleInterval(ScheduleInterval&& other) = default;

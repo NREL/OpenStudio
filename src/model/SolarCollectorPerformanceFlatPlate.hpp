@@ -29,7 +29,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SolarCollectorPerformanceFlatPlate() = default;
+    virtual ~SolarCollectorPerformanceFlatPlate() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SolarCollectorPerformanceFlatPlate(const SolarCollectorPerformanceFlatPlate& other) = default;
     SolarCollectorPerformanceFlatPlate(SolarCollectorPerformanceFlatPlate&& other) = default;

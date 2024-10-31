@@ -28,7 +28,7 @@ namespace model {
 
     explicit CoilHeatingWaterBaseboardRadiant(const Model& model);
 
-    virtual ~CoilHeatingWaterBaseboardRadiant() = default;
+    virtual ~CoilHeatingWaterBaseboardRadiant() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingWaterBaseboardRadiant(const CoilHeatingWaterBaseboardRadiant& other) = default;
     CoilHeatingWaterBaseboardRadiant(CoilHeatingWaterBaseboardRadiant&& other) = default;

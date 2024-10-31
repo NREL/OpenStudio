@@ -37,7 +37,7 @@ namespace model {
       Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~Node_Impl() = default;
+      virtual ~Node_Impl() override = default;
 
       // Get all output variable names that could be associated with this object.
       virtual const std::vector<std::string>& outputVariableNames() const override;

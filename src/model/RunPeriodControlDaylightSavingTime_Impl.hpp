@@ -33,7 +33,7 @@ namespace model {
 
       RunPeriodControlDaylightSavingTime_Impl(const RunPeriodControlDaylightSavingTime_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RunPeriodControlDaylightSavingTime_Impl() = default;
+      virtual ~RunPeriodControlDaylightSavingTime_Impl() override = default;
 
       //@}
 

@@ -28,7 +28,7 @@ namespace model {
 
       OtherEquipmentDefinition_Impl(const OtherEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OtherEquipmentDefinition_Impl() = default;
+      virtual ~OtherEquipmentDefinition_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

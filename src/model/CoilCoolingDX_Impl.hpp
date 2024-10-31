@@ -31,7 +31,7 @@ namespace model {
 
       CoilCoolingDX_Impl(const CoilCoolingDX_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDX_Impl() = default;
+      virtual ~CoilCoolingDX_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

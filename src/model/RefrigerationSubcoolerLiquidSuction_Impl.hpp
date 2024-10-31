@@ -29,7 +29,7 @@ namespace model {
 
       RefrigerationSubcoolerLiquidSuction_Impl(const RefrigerationSubcoolerLiquidSuction_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationSubcoolerLiquidSuction_Impl() = default;
+      virtual ~RefrigerationSubcoolerLiquidSuction_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

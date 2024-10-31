@@ -38,7 +38,7 @@ namespace model {
 
     explicit CoilHeatingDXSingleSpeed(const Model& model);
 
-    virtual ~CoilHeatingDXSingleSpeed() = default;
+    virtual ~CoilHeatingDXSingleSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingDXSingleSpeed(const CoilHeatingDXSingleSpeed& other) = default;
     CoilHeatingDXSingleSpeed(CoilHeatingDXSingleSpeed&& other) = default;

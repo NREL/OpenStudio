@@ -34,7 +34,7 @@ namespace model {
       LifeCycleCostParameters_Impl(const LifeCycleCostParameters_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~LifeCycleCostParameters_Impl() = default;
+      virtual ~LifeCycleCostParameters_Impl() override = default;
 
       //@}
       /** @name Getters */

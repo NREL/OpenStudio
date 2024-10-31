@@ -112,24 +112,12 @@ namespace model {
                           OS_SetpointManager_MultiZone_MaximumHumidity_AverageFields::ControlVariable);
   }
 
-  std::string SetpointManagerMultiZoneMaximumHumidityAverage::controlVariable() const {
-    return getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>()->controlVariable();
-  }
-
   double SetpointManagerMultiZoneMaximumHumidityAverage::minimumSetpointHumidityRatio() const {
     return getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>()->minimumSetpointHumidityRatio();
   }
 
   double SetpointManagerMultiZoneMaximumHumidityAverage::maximumSetpointHumidityRatio() const {
     return getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>()->maximumSetpointHumidityRatio();
-  }
-
-  boost::optional<Node> SetpointManagerMultiZoneMaximumHumidityAverage::setpointNode() const {
-    return getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerMultiZoneMaximumHumidityAverage::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerMultiZoneMaximumHumidityAverage_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerMultiZoneMaximumHumidityAverage::setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio) {

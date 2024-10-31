@@ -46,7 +46,7 @@ namespace model {
 
       // no swap method here because no component-level data
 
-      virtual ~Component_Impl() = default;
+      virtual ~Component_Impl() override = default;
 
       //@}
       /** @name Getters */

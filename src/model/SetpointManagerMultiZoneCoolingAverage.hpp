@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerMultiZoneCoolingAverage(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneCoolingAverage() = default;
+    virtual ~SetpointManagerMultiZoneCoolingAverage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerMultiZoneCoolingAverage(const SetpointManagerMultiZoneCoolingAverage& other) = default;
     SetpointManagerMultiZoneCoolingAverage(SetpointManagerMultiZoneCoolingAverage&& other) = default;
@@ -46,19 +46,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSetpointTemperature() const;
 
     double maximumSetpointTemperature() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 

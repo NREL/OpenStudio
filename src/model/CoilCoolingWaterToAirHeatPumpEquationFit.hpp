@@ -34,7 +34,7 @@ namespace model {
     /** Constructs a new CoilCoolingWaterToAirHeatPumpEquationFit object and places it inside the model.  The coil is fully initialized with all companion objects. */
     CoilCoolingWaterToAirHeatPumpEquationFit(const Model& model);
 
-    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() = default;
+    virtual ~CoilCoolingWaterToAirHeatPumpEquationFit() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingWaterToAirHeatPumpEquationFit(const CoilCoolingWaterToAirHeatPumpEquationFit& other) = default;
     CoilCoolingWaterToAirHeatPumpEquationFit(CoilCoolingWaterToAirHeatPumpEquationFit&& other) = default;

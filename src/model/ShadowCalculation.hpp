@@ -30,7 +30,7 @@ namespace model {
   class MODEL_API ShadowCalculation : public ModelObject
   {
    public:
-    virtual ~ShadowCalculation() = default;
+    virtual ~ShadowCalculation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ShadowCalculation(const ShadowCalculation& other) = default;
     ShadowCalculation(ShadowCalculation&& other) = default;

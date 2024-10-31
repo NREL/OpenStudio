@@ -36,7 +36,7 @@ namespace model {
                                                 const Curve& fuelEnergyInputRatioFunctionofTemperatureCurve,
                                                 const Curve& fuelEnergyInputRatioFunctionofPLRCurve);
 
-    virtual ~HeatPumpAirToWaterFuelFiredCooling() = default;
+    virtual ~HeatPumpAirToWaterFuelFiredCooling() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeatPumpAirToWaterFuelFiredCooling(const HeatPumpAirToWaterFuelFiredCooling& other) = default;
     HeatPumpAirToWaterFuelFiredCooling(HeatPumpAirToWaterFuelFiredCooling&& other) = default;

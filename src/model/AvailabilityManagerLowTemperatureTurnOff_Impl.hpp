@@ -30,7 +30,7 @@ namespace model {
 
       AvailabilityManagerLowTemperatureTurnOff_Impl(const AvailabilityManagerLowTemperatureTurnOff_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerLowTemperatureTurnOff_Impl() = default;
+      virtual ~AvailabilityManagerLowTemperatureTurnOff_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

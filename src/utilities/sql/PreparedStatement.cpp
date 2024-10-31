@@ -4,7 +4,7 @@
 ***********************************************************************************************************************/
 
 #include "PreparedStatement.hpp"
-#include "OpenStudio.hxx"
+#include <OpenStudio.hxx>
 #include <sqlite3.h>
 
 namespace openstudio {

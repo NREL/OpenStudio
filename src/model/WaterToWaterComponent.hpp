@@ -28,7 +28,7 @@ namespace model {
    public:
     WaterToWaterComponent(IddObjectType type, const Model& model);
 
-    virtual ~WaterToWaterComponent() = default;
+    virtual ~WaterToWaterComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterToWaterComponent(const WaterToWaterComponent& other) = default;
     WaterToWaterComponent(WaterToWaterComponent&& other) = default;
@@ -67,11 +67,11 @@ namespace model {
 
     /** Returns the optional PlantLoop object that the HVAC component is a supply component on.
    */
-    boost::optional<PlantLoop> plantLoop() const;
+    boost::optional<PlantLoop> plantLoop() const;  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** Returns the optional PlantLoop object that the HVAC component is a demand component on.
    */
-    boost::optional<PlantLoop> secondaryPlantLoop() const;
+    boost::optional<PlantLoop> secondaryPlantLoop() const;  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** Removes the component from the plantLoop if one is attached.
    *  Repairs the plantLoop connections preserving the integrity of the loop.
@@ -104,8 +104,6 @@ namespace model {
 
     /** Returns the optional ModelObject connected to the tertiary outlet. **/
     boost::optional<ModelObject> tertiaryOutletModelObject() const;
-
-    void disconnect();
 
    protected:
     friend class Model;

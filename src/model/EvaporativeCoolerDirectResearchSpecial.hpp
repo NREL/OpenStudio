@@ -34,7 +34,7 @@ namespace model {
    */
     explicit EvaporativeCoolerDirectResearchSpecial(const Model& model, Schedule& schedule);
 
-    virtual ~EvaporativeCoolerDirectResearchSpecial() = default;
+    virtual ~EvaporativeCoolerDirectResearchSpecial() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EvaporativeCoolerDirectResearchSpecial(const EvaporativeCoolerDirectResearchSpecial& other) = default;
     EvaporativeCoolerDirectResearchSpecial(EvaporativeCoolerDirectResearchSpecial&& other) = default;

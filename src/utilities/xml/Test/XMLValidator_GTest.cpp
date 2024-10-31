@@ -6,13 +6,15 @@
 #include <gtest/gtest.h>
 
 #include "XMLValidatorFixture.hpp"
-#include "utilities/core/Filesystem.hpp"
-#include "utilities/core/PathHelpers.hpp"
+#include "../../core/Filesystem.hpp"
+#include "../../core/PathHelpers.hpp"
+
+#include <resources.hxx>
+
+#include <boost/regex.hpp>
 
 #include <algorithm>
 #include <iostream>
-#include <boost/regex.hpp>
-#include <resources.hxx>
 #include <stdexcept>
 
 using namespace std;

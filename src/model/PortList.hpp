@@ -33,7 +33,7 @@ namespace model {
    public:
     explicit PortList(const HVACComponent& comp);
 
-    virtual ~PortList() = default;
+    virtual ~PortList() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PortList(const PortList& other) = default;
     PortList(PortList&& other) = default;

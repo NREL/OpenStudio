@@ -32,7 +32,7 @@ namespace model {
       ComponentData_Impl(const ComponentData_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ComponentData_Impl() = default;
+      virtual ~ComponentData_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

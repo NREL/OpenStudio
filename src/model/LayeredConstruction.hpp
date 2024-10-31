@@ -29,7 +29,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LayeredConstruction() = default;
+    virtual ~LayeredConstruction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LayeredConstruction(const LayeredConstruction& other) = default;
     LayeredConstruction(LayeredConstruction&& other) = default;

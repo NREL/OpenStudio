@@ -30,7 +30,7 @@ namespace model {
 
     explicit ZoneControlHumidistat(const Model& model);
 
-    virtual ~ZoneControlHumidistat() = default;
+    virtual ~ZoneControlHumidistat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneControlHumidistat(const ZoneControlHumidistat& other) = default;
     ZoneControlHumidistat(ZoneControlHumidistat&& other) = default;

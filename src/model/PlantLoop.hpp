@@ -43,7 +43,7 @@ namespace model {
    */
     explicit PlantLoop(Model& model);
 
-    virtual ~PlantLoop() = default;
+    virtual ~PlantLoop() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PlantLoop(const PlantLoop& other) = default;
     PlantLoop(PlantLoop&& other) = default;
@@ -218,10 +218,10 @@ namespace model {
     Splitter supplySplitter() const;
 
     /** Returns the demand side Mixer. **/
-    Mixer demandMixer();
+    Mixer demandMixer();  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** Returns the demand side Splitter. **/
-    Splitter demandSplitter();
+    Splitter demandSplitter();  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** Adds a new demand branch for component and returns a bool indicating success.
    */

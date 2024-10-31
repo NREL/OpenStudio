@@ -35,7 +35,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     MPHUnit_Impl(const std::string& scaleAbbreviation, const MPHExpnt& exponents = MPHExpnt(), const std::string& prettyString = "");
 
-    virtual ~MPHUnit_Impl() = default;
+    virtual ~MPHUnit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

@@ -34,7 +34,7 @@ namespace model {
 
     explicit MaterialPropertyPhaseChangeHysteresis(MasslessOpaqueMaterial& material);
 
-    virtual ~MaterialPropertyPhaseChangeHysteresis() = default;
+    virtual ~MaterialPropertyPhaseChangeHysteresis() override = default;
 
     //@}
 

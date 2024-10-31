@@ -27,7 +27,7 @@ namespace model {
 
       AirTerminalSingleDuctInletSideMixer_Impl(const AirTerminalSingleDuctInletSideMixer_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctInletSideMixer_Impl() = default;
+      virtual ~AirTerminalSingleDuctInletSideMixer_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

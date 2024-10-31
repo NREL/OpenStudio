@@ -30,7 +30,7 @@ namespace model {
 
     explicit CoolingTowerTwoSpeed(const Model& model);
 
-    virtual ~CoolingTowerTwoSpeed() = default;
+    virtual ~CoolingTowerTwoSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoolingTowerTwoSpeed(const CoolingTowerTwoSpeed& other) = default;
     CoolingTowerTwoSpeed(CoolingTowerTwoSpeed&& other) = default;

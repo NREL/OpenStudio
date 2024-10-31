@@ -146,10 +146,6 @@ namespace model {
                           OS_SetpointManager_FollowGroundTemperatureFields::ReferenceGroundTemperatureObjectType);
   }
 
-  std::string SetpointManagerFollowGroundTemperature::controlVariable() const {
-    return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->controlVariable();
-  }
-
   std::string SetpointManagerFollowGroundTemperature::referenceGroundTemperatureObjectType() const {
     return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->referenceGroundTemperatureObjectType();
   }
@@ -164,14 +160,6 @@ namespace model {
 
   double SetpointManagerFollowGroundTemperature::minimumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->minimumSetpointTemperature();
-  }
-
-  boost::optional<Node> SetpointManagerFollowGroundTemperature::setpointNode() const {
-    return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerFollowGroundTemperature::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerFollowGroundTemperature_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerFollowGroundTemperature::setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType) {

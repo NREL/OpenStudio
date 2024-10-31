@@ -27,7 +27,7 @@ namespace model {
    public:
     explicit SizingPlant(const Model& model, const PlantLoop& plantLoop);
 
-    virtual ~SizingPlant() = default;
+    virtual ~SizingPlant() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SizingPlant(const SizingPlant& other) = default;
     SizingPlant(SizingPlant&& other) = default;

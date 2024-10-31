@@ -27,7 +27,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ConstructionBase() = default;
+    virtual ~ConstructionBase() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ConstructionBase(const ConstructionBase& other) = default;
     ConstructionBase(ConstructionBase&& other) = default;

@@ -63,7 +63,7 @@ namespace model {
     explicit GeneratorFuelCellAirSupply(const Model& model, const Node& airInletNode, const CurveQuadratic& electricPowerCurve,
                                         const CurveQuadratic& fuelRateCurve, const CurveCubic& blowerPowerCurve);
 
-    virtual ~GeneratorFuelCellAirSupply() = default;
+    virtual ~GeneratorFuelCellAirSupply() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellAirSupply(const GeneratorFuelCellAirSupply& other) = default;
     GeneratorFuelCellAirSupply(GeneratorFuelCellAirSupply&& other) = default;

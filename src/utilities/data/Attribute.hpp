@@ -342,11 +342,11 @@ UTILITIES_API std::ostream& operator<<(std::ostream& os, const Attribute& attrib
 
 /** \relates Attribute */
 // DLM: can this be a member of Attribute?
-UTILITIES_API Attribute createAttributeFromVector(const std::string& name, std::vector<int> value);
+UTILITIES_API Attribute createAttributeFromVector(const std::string& name, const std::vector<int>& value);
 
 /** \relates Attribute */
 // DLM: can this be a member of Attribute?
-UTILITIES_API Attribute createAttributeFromVector(const std::string& name, std::vector<double> value);
+UTILITIES_API Attribute createAttributeFromVector(const std::string& name, const std::vector<double>& value);
 
 /** \relates Attribute */
 // DLM: can this be a member of Attribute?

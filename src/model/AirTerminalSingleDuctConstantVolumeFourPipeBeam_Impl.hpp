@@ -34,7 +34,7 @@ namespace model {
       AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl(const AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl& other, Model_Impl* model,
                                                            bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl() = default;
+      virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -30,7 +30,7 @@ namespace model {
 
     explicit ZoneControlThermostatStagedDualSetpoint(const Model& model);
 
-    virtual ~ZoneControlThermostatStagedDualSetpoint() = default;
+    virtual ~ZoneControlThermostatStagedDualSetpoint() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneControlThermostatStagedDualSetpoint(const ZoneControlThermostatStagedDualSetpoint& other) = default;
     ZoneControlThermostatStagedDualSetpoint(ZoneControlThermostatStagedDualSetpoint&& other) = default;

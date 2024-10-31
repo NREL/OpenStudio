@@ -25,7 +25,7 @@ namespace model {
 
       Mixer_Impl(const Mixer_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Mixer_Impl() = default;
+      virtual ~Mixer_Impl() override = default;
 
       virtual unsigned outletPort() const = 0;
 
@@ -43,7 +43,7 @@ namespace model {
 
       virtual unsigned newInletPortAfterBranch(unsigned branchIndex);
 
-      virtual unsigned branchIndexForInletModelObject(ModelObject modelObject) const;
+      virtual unsigned branchIndexForInletModelObject(const ModelObject& modelObject) const;
 
       virtual unsigned nextBranchIndex() const;
 

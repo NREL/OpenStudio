@@ -41,7 +41,7 @@ namespace model {
 
     explicit GeneratorMicroTurbine(const Model& model);
 
-    virtual ~GeneratorMicroTurbine() = default;
+    virtual ~GeneratorMicroTurbine() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorMicroTurbine(const GeneratorMicroTurbine& other) = default;
     GeneratorMicroTurbine(GeneratorMicroTurbine&& other) = default;

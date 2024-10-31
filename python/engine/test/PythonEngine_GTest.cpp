@@ -5,12 +5,12 @@
 
 #include <gtest/gtest.h>
 
-#include "measure/ModelMeasure.hpp"
-#include "measure/OSArgument.hpp"
-#include "measure/OSMeasure.hpp"
-#include "measure/OSRunner.hpp"
-#include "model/Model.hpp"
-#include "scriptengine/ScriptEngine.hpp"
+#include "../../../src/measure/ModelMeasure.hpp"
+#include "../../../src/measure/OSArgument.hpp"
+#include "../../../src/measure/OSMeasure.hpp"
+#include "../../../src/measure/OSRunner.hpp"
+#include "../../../src/model/Model.hpp"
+#include "../../../src/scriptengine/ScriptEngine.hpp"
 
 #include <fmt/format.h>
 

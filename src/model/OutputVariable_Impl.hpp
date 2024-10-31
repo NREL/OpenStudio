@@ -35,7 +35,7 @@ namespace model {
       OutputVariable_Impl(const OutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~OutputVariable_Impl() = default;
+      virtual ~OutputVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

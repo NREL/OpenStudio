@@ -32,7 +32,7 @@ namespace model {
     /** Creates a ScheduleCompact with constantValue applied to the entire year, if
    *  scheduleTypeLimits() and the units are compatible. Otherwise creates an empty
    *  ScheduleCompact. */
-    virtual ~ScheduleCompact() = default;
+    virtual ~ScheduleCompact() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleCompact(const ScheduleCompact& other) = default;
     ScheduleCompact(ScheduleCompact&& other) = default;

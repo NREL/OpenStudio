@@ -61,7 +61,7 @@ namespace model {
 
     explicit FoundationKiva(Model& model);
 
-    virtual ~FoundationKiva() = default;
+    virtual ~FoundationKiva() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FoundationKiva(const FoundationKiva& other) = default;
     FoundationKiva(FoundationKiva&& other) = default;

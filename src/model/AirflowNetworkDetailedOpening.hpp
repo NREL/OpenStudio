@@ -82,12 +82,12 @@ namespace model {
     /** Construct a detailed opening object. */
     AirflowNetworkDetailedOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                   const std::string& typeofRectangularLargeVerticalOpening, double extraCrackLengthorHeightofPivotingAxis,
-                                  std::vector<DetailedOpeningFactorData>& openingFactors);
+                                  const std::vector<DetailedOpeningFactorData>& openingFactors);
     /** Construct a detailed opening object with defaulted values. */
     AirflowNetworkDetailedOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
-                                  std::vector<DetailedOpeningFactorData>& openingFactors);
+                                  const std::vector<DetailedOpeningFactorData>& openingFactors);
 
-    virtual ~AirflowNetworkDetailedOpening() = default;
+    virtual ~AirflowNetworkDetailedOpening() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkDetailedOpening(const AirflowNetworkDetailedOpening& other) = default;
     AirflowNetworkDetailedOpening(AirflowNetworkDetailedOpening&& other) = default;
@@ -137,7 +137,7 @@ namespace model {
     /** Resets the extra crack length or height of pivoting axis. */
     void resetExtraCrackLengthorHeightofPivotingAxis();
     /** Sets the opening factor data. */
-    bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
+    bool setOpeningFactors(const std::vector<DetailedOpeningFactorData>& factors);
 
     //@}
    protected:

@@ -33,7 +33,7 @@ namespace model {
 
     explicit GeneratorFuelCellInverter(const Model& model, const CurveQuadratic& powerCurve);
 
-    virtual ~GeneratorFuelCellInverter() = default;
+    virtual ~GeneratorFuelCellInverter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellInverter(const GeneratorFuelCellInverter& other) = default;
     GeneratorFuelCellInverter(GeneratorFuelCellInverter&& other) = default;

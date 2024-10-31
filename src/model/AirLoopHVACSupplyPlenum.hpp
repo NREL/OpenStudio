@@ -26,7 +26,7 @@ namespace model {
    public:
     explicit AirLoopHVACSupplyPlenum(const Model& model);
 
-    virtual ~AirLoopHVACSupplyPlenum() = default;
+    virtual ~AirLoopHVACSupplyPlenum() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACSupplyPlenum(const AirLoopHVACSupplyPlenum& other) = default;
     AirLoopHVACSupplyPlenum(AirLoopHVACSupplyPlenum&& other) = default;

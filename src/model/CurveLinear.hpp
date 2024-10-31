@@ -29,7 +29,7 @@ namespace model {
     /** Sets \f$c_1 = 0,\ c_2 = 1.0,\ x\ \text{within}\ [0.0,1.0]\f$ */
     explicit CurveLinear(const Model& model);
 
-    virtual ~CurveLinear() = default;
+    virtual ~CurveLinear() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveLinear(const CurveLinear& other) = default;
     CurveLinear(CurveLinear&& other) = default;

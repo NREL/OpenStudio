@@ -189,10 +189,6 @@ namespace model {
     return getImpl<detail::Splitter_Impl>()->removePortForBranch(branchIndex);
   }
 
-  bool Splitter::isRemovable() const {
-    return getImpl<detail::Splitter_Impl>()->isRemovable();
-  }
-
 }  // namespace model
 
 }  // namespace openstudio

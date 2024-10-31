@@ -33,7 +33,7 @@ namespace model {
 
     explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
 
-    virtual ~InternalMass() = default;
+    virtual ~InternalMass() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     InternalMass(const InternalMass& other) = default;
     InternalMass(InternalMass&& other) = default;

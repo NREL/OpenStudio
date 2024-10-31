@@ -26,7 +26,7 @@ namespace model {
       RunPeriod_Impl(const RunPeriod_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~RunPeriod_Impl() = default;
+      virtual ~RunPeriod_Impl() override = default;
 
       int getBeginMonth() const;
       int getBeginDayOfMonth() const;

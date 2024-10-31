@@ -31,7 +31,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneOneStageCooling(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneOneStageCooling() = default;
+    virtual ~SetpointManagerSingleZoneOneStageCooling() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerSingleZoneOneStageCooling(const SetpointManagerSingleZoneOneStageCooling& other) = default;
     SetpointManagerSingleZoneOneStageCooling(SetpointManagerSingleZoneOneStageCooling&& other) = default;

@@ -122,10 +122,6 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SetpointManager_ColdestFields::Strategy);
   }
 
-  std::string SetpointManagerColdest::controlVariable() const {
-    return getImpl<detail::SetpointManagerColdest_Impl>()->controlVariable();
-  }
-
   double SetpointManagerColdest::minimumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerColdest_Impl>()->minimumSetpointTemperature();
   }
@@ -136,14 +132,6 @@ namespace model {
 
   std::string SetpointManagerColdest::strategy() const {
     return getImpl<detail::SetpointManagerColdest_Impl>()->strategy();
-  }
-
-  boost::optional<Node> SetpointManagerColdest::setpointNode() const {
-    return getImpl<detail::SetpointManagerColdest_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerColdest::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerColdest_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerColdest::setMinimumSetpointTemperature(double minimumSetpointTemperature) {

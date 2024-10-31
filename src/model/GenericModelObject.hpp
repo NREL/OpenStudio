@@ -33,7 +33,7 @@ namespace model {
   class MODEL_API GenericModelObject : public ModelObject
   {
    public:
-    virtual ~GenericModelObject() = default;
+    virtual ~GenericModelObject() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GenericModelObject(const GenericModelObject& other) = default;
     GenericModelObject(GenericModelObject&& other) = default;

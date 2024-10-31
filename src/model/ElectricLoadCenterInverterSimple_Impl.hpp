@@ -30,7 +30,7 @@ namespace model {
 
       ElectricLoadCenterInverterSimple_Impl(const ElectricLoadCenterInverterSimple_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterInverterSimple_Impl() = default;
+      virtual ~ElectricLoadCenterInverterSimple_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

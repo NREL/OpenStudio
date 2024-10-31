@@ -34,7 +34,7 @@ namespace model {
       AirLoopHVACOutdoorAirSystem_Impl(const AirLoopHVACOutdoorAirSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~AirLoopHVACOutdoorAirSystem_Impl() = default;
+      virtual ~AirLoopHVACOutdoorAirSystem_Impl() override = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

@@ -29,7 +29,7 @@ namespace model {
     /** Initializes \f$c_1 = 0.0,\ c_2 = c_3 = c_4 = c_5 = 1.0,\ xmin = 0.0,\ xmax = 1.0\f$ */
     explicit CurveSigmoid(const Model& model);
 
-    virtual ~CurveSigmoid() = default;
+    virtual ~CurveSigmoid() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveSigmoid(const CurveSigmoid& other) = default;
     CurveSigmoid(CurveSigmoid&& other) = default;

@@ -31,7 +31,7 @@ namespace model {
 
     explicit ZoneHVACHighTemperatureRadiant(const Model& model);
 
-    virtual ~ZoneHVACHighTemperatureRadiant() = default;
+    virtual ~ZoneHVACHighTemperatureRadiant() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACHighTemperatureRadiant(const ZoneHVACHighTemperatureRadiant& other) = default;
     ZoneHVACHighTemperatureRadiant(ZoneHVACHighTemperatureRadiant&& other) = default;

@@ -31,7 +31,7 @@ namespace model {
 
     explicit CentralHeatPumpSystemModule(const Model& model);
 
-    virtual ~CentralHeatPumpSystemModule() = default;
+    virtual ~CentralHeatPumpSystemModule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CentralHeatPumpSystemModule(const CentralHeatPumpSystemModule& other) = default;
     CentralHeatPumpSystemModule(CentralHeatPumpSystemModule&& other) = default;

@@ -26,13 +26,11 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  auto* infile = argv[1];
+  const auto* infile = argv[1];
   auto* outfile = argv[2];
-  auto* filenum = argv[3];
-  auto* embeddedname = argv[4];
+  const auto* filenum = argv[3];
+  const auto* embeddedname = argv[4];
 
-  int ret, flush;
-  unsigned have;
   z_stream strm;
   unsigned char in[CHUNK];
   unsigned char out[CHUNK];
@@ -41,7 +39,7 @@ int main(int argc, char* argv[]) {
   strm.zalloc = Z_NULL;
   strm.zfree = Z_NULL;
   strm.opaque = Z_NULL;
-  ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
+  int ret = deflateInit(&strm, Z_DEFAULT_COMPRESSION);
   if (ret != Z_OK) return 1;
 
   FILE* source = fopen(infile, "rb");
@@ -52,11 +50,11 @@ int main(int argc, char* argv[]) {
 
   std::fstream outstream(outfile, std::fstream::out | std::fstream::trunc);
 
-  // This is the compressed length in chars;
-  unsigned length = 0;
-
   if (outstream.is_open()) {
     outstream << "static const uint8_t embedded_file_" << filenum << "[] = {";
+    int flush = 0;
+    // This is the compressed length in chars;
+    unsigned length = 0;
     do {
       strm.avail_in = fread(in, 1, CHUNK, source);
       if (ferror(source)) {
@@ -73,7 +71,7 @@ int main(int argc, char* argv[]) {
         strm.next_out = out;
         ret = deflate(&strm, flush);   /* no bad return value */
         assert(ret != Z_STREAM_ERROR); /* state not clobbered */
-        have = CHUNK - strm.avail_out;
+        unsigned have = CHUNK - strm.avail_out;
 
         for (unsigned i = 0; i != have; ++i) {
           if (length != 0) {

@@ -29,7 +29,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorFuelEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorFuelEquipmentDefinition() = default;
+    virtual ~ExteriorFuelEquipmentDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorFuelEquipmentDefinition(const ExteriorFuelEquipmentDefinition& other) = default;
     ExteriorFuelEquipmentDefinition(ExteriorFuelEquipmentDefinition&& other) = default;

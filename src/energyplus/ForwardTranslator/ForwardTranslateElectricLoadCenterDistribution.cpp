@@ -16,12 +16,12 @@
 #include "../../model/ElectricLoadCenterTransformer.hpp"
 #include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
 
 #include <utilities/idd/ElectricLoadCenter_Distribution_FieldEnums.hxx>
 #include <utilities/idd/ElectricLoadCenter_Generators_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include "utilities/core/Compare.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;

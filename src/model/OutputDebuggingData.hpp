@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputDebuggingData() = default;
+    virtual ~OutputDebuggingData() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputDebuggingData(const OutputDebuggingData& other) = default;
     OutputDebuggingData(OutputDebuggingData&& other) = default;

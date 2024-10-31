@@ -30,7 +30,7 @@ namespace model {
 
     explicit InteriorPartitionSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~InteriorPartitionSurface() = default;
+    virtual ~InteriorPartitionSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     InteriorPartitionSurface(const InteriorPartitionSurface& other) = default;
     InteriorPartitionSurface(InteriorPartitionSurface&& other) = default;

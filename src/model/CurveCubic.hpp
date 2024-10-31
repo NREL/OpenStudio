@@ -29,7 +29,7 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_3 = 0.0,\ c_4 = 1.0\f$, and sets the range for x at [0.0,1.0]. */
     explicit CurveCubic(const Model& model);
 
-    virtual ~CurveCubic() = default;
+    virtual ~CurveCubic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveCubic(const CurveCubic& other) = default;
     CurveCubic(CurveCubic&& other) = default;

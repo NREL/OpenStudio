@@ -30,7 +30,7 @@ namespace model {
 
       LoadProfilePlant_Impl(const LoadProfilePlant_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LoadProfilePlant_Impl() = default;
+      virtual ~LoadProfilePlant_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

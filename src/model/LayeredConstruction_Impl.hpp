@@ -42,7 +42,7 @@ namespace model {
       // Clone copy constructor.
       LayeredConstruction_Impl(const LayeredConstruction_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~LayeredConstruction_Impl() = default;
+      virtual ~LayeredConstruction_Impl() override = default;
 
       //@}
       /** @name Getters */

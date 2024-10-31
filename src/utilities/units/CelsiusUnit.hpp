@@ -45,7 +45,7 @@ class UTILITIES_API CelsiusUnit : public TemperatureUnit
    *  \param[in] prettyString optional string to use in place of standardString. */
   CelsiusUnit(const std::string& scaleAbbreviation, int CExp = 0, const std::string& prettyString = "");
 
-  virtual ~CelsiusUnit() = default;
+  virtual ~CelsiusUnit() override = default;
 
   //@}
  protected:

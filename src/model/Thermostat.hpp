@@ -24,7 +24,7 @@ namespace model {
   class MODEL_API Thermostat : public ModelObject
   {
    public:
-    virtual ~Thermostat() = default;
+    virtual ~Thermostat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Thermostat(const Thermostat& other) = default;
     Thermostat(Thermostat&& other) = default;

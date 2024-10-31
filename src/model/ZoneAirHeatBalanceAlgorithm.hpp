@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ZoneAirHeatBalanceAlgorithm() = default;
+    virtual ~ZoneAirHeatBalanceAlgorithm() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneAirHeatBalanceAlgorithm(const ZoneAirHeatBalanceAlgorithm& other) = default;
     ZoneAirHeatBalanceAlgorithm(ZoneAirHeatBalanceAlgorithm&& other) = default;

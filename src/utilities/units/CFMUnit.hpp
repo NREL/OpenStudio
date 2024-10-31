@@ -80,7 +80,7 @@ class UTILITIES_API CFMUnit : public Unit
    *  \param[in] prettyString optional string to use in place of standardString. */
   CFMUnit(const std::string& scaleAbbreviation, const CFMExpnt& exponents = CFMExpnt(), const std::string& prettyString = "");
 
-  virtual ~CFMUnit() = default;
+  virtual ~CFMUnit() override = default;
 
   //@}
  protected:

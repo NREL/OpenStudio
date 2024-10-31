@@ -29,7 +29,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorWaterEquipmentDefinition(const Model& model);
 
-    virtual ~ExteriorWaterEquipmentDefinition() = default;
+    virtual ~ExteriorWaterEquipmentDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorWaterEquipmentDefinition(const ExteriorWaterEquipmentDefinition& other) = default;
     ExteriorWaterEquipmentDefinition(ExteriorWaterEquipmentDefinition&& other) = default;

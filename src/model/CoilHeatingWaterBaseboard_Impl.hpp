@@ -29,7 +29,7 @@ namespace model {
 
       CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingWaterBaseboard_Impl() = default;
+      virtual ~CoilHeatingWaterBaseboard_Impl() override = default;
 
       //@}
 

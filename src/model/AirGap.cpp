@@ -178,10 +178,12 @@ namespace model {
     return {IddObjectType::OS_Material_AirGap};
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double AirGap::thermalResistance() const {
     return getImpl<detail::AirGap_Impl>()->thermalResistance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool AirGap::setThermalResistance(double thermalResistance) {
     return getImpl<detail::AirGap_Impl>()->setThermalResistance(thermalResistance);
   }

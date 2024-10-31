@@ -31,7 +31,7 @@ namespace model {
       // Clone copy constructor.
       SpaceItem_Impl(const SpaceItem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SpaceItem_Impl() = default;
+      virtual ~SpaceItem_Impl() override = default;
 
       // return the parent object in the hierarchy
       virtual boost::optional<ParentObject> parent() const override;

@@ -191,9 +191,9 @@ class UTILITIES_API FloorplanJS
   // recursively traverses through value and finds the largest id
   void setLastId(const Json::Value& value);
 
-  Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
-  Json::Value* findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle);
-  Json::Value* findById(Json::Value& value, const std::string& key, const std::string& id);
+  static Json::Value* findByHandleString(Json::Value& value, const std::string& key, const std::string& handleString);
+  static Json::Value* findByName(Json::Value& value, const std::string& key, const std::string& name, bool requireEmptyHandle);
+  static Json::Value* findById(Json::Value& value, const std::string& key, const std::string& id);
 
   // cppcheck-suppress functionStatic
   const Json::Value* findById(const Json::Value& values, const std::string& id) const;

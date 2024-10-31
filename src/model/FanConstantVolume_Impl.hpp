@@ -33,7 +33,7 @@ namespace model {
       FanConstantVolume_Impl(const FanConstantVolume_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~FanConstantVolume_Impl() = default;
+      virtual ~FanConstantVolume_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

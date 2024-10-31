@@ -29,7 +29,7 @@ namespace model {
     /** Initializes \f$c_1 = c_2 = 0.0,\ c_3 = 1.0,\ xmin = 0,\ xmax = 1\f$ */
     explicit CurveQuadratic(const Model& model);
 
-    virtual ~CurveQuadratic() = default;
+    virtual ~CurveQuadratic() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveQuadratic(const CurveQuadratic& other) = default;
     CurveQuadratic(CurveQuadratic&& other) = default;

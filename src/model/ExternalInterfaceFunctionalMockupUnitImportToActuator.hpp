@@ -35,7 +35,7 @@ namespace model {
                                                                    const std::string& fMUInstanceName, const std::string& fMUVariableName,
                                                                    double initialValue);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() = default;
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToActuator() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterfaceFunctionalMockupUnitImportToActuator(const ExternalInterfaceFunctionalMockupUnitImportToActuator& other) = default;
     ExternalInterfaceFunctionalMockupUnitImportToActuator(ExternalInterfaceFunctionalMockupUnitImportToActuator&& other) = default;

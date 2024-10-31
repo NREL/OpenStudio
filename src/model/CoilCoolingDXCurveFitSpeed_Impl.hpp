@@ -30,7 +30,7 @@ namespace model {
 
       CoilCoolingDXCurveFitSpeed_Impl(const CoilCoolingDXCurveFitSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXCurveFitSpeed_Impl() = default;
+      virtual ~CoilCoolingDXCurveFitSpeed_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

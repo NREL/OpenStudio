@@ -30,7 +30,7 @@ namespace model {
 
       SiteGroundTemperatureBuildingSurface_Impl(const SiteGroundTemperatureBuildingSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteGroundTemperatureBuildingSurface_Impl() = default;
+      virtual ~SiteGroundTemperatureBuildingSurface_Impl() override = default;
 
       //@}
 

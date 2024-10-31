@@ -33,7 +33,7 @@ namespace model {
 
       ShadingSurface_Impl(const ShadingSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ShadingSurface_Impl() = default;
+      virtual ~ShadingSurface_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -502,6 +502,7 @@ namespace model {
     return getImpl<detail::StandardGlazing_Impl>()->solarTransmittance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardGlazing::thickness() const {
     return getImpl<detail::StandardGlazing_Impl>()->thickness();
   }
@@ -606,6 +607,7 @@ namespace model {
     return getImpl<detail::StandardGlazing_Impl>()->setSolarTransmittance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardGlazing::setThickness(double thickness) {
     return getImpl<detail::StandardGlazing_Impl>()->setThickness(thickness);
   }

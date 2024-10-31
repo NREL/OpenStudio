@@ -53,7 +53,7 @@ namespace model {
 
     CoilCoolingDXTwoSpeed(const Model& model);
 
-    virtual ~CoilCoolingDXTwoSpeed() = default;
+    virtual ~CoilCoolingDXTwoSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXTwoSpeed(const CoilCoolingDXTwoSpeed& other) = default;
     CoilCoolingDXTwoSpeed(CoilCoolingDXTwoSpeed&& other) = default;

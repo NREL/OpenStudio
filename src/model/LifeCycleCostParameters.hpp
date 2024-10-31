@@ -31,7 +31,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~LifeCycleCostParameters() = default;
+    virtual ~LifeCycleCostParameters() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LifeCycleCostParameters(const LifeCycleCostParameters& other) = default;
     LifeCycleCostParameters(LifeCycleCostParameters&& other) = default;

@@ -26,7 +26,7 @@ namespace model {
 
     explicit Duct(const Model& model);
 
-    virtual ~Duct() = default;
+    virtual ~Duct() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Duct(const Duct& other) = default;
     Duct(Duct&& other) = default;

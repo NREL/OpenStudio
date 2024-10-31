@@ -27,7 +27,7 @@ namespace model {
 
       OutputConstructions_Impl(const OutputConstructions_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputConstructions_Impl() = default;
+      virtual ~OutputConstructions_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

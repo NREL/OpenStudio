@@ -20,7 +20,7 @@ namespace model {
   class MODEL_API Splitter : public HVACComponent
   {
    public:
-    virtual ~Splitter() = default;
+    virtual ~Splitter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Splitter(const Splitter& other) = default;
     Splitter(Splitter&& other) = default;
@@ -77,8 +77,6 @@ namespace model {
    *  removing any unconnected ports between branches.
    */
     virtual void removePortForBranch(unsigned branchIndex);
-
-    bool isRemovable() const;
 
    protected:
     Splitter(IddObjectType type, const Model& model);

@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalInterface() = default;
+    virtual ~ExternalInterface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalInterface(const ExternalInterface& other) = default;
     ExternalInterface(ExternalInterface&& other) = default;

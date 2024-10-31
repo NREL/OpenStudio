@@ -848,14 +848,6 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Refrigeration_SystemFields::IntercoolerType);
   }
 
-  std::vector<IdfObject> RefrigerationSystem::remove() {
-    return getImpl<detail::RefrigerationSystem_Impl>()->remove();
-  }
-
-  ModelObject RefrigerationSystem::clone(Model model) const {
-    return getImpl<detail::RefrigerationSystem_Impl>()->clone(model);
-  }
-
   std::vector<RefrigerationCase> RefrigerationSystem::cases() const {
     return getImpl<detail::RefrigerationSystem_Impl>()->cases();
   }

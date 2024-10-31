@@ -14,7 +14,7 @@
 #include "../model/Space.hpp"
 #include "../model/RenderingColor.hpp"
 
-#include "utilities/core/UUID.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <tiny_gltf.h>
 

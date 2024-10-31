@@ -35,7 +35,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkFan() = default;
+    virtual ~AirflowNetworkFan() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkFan(const AirflowNetworkFan& other) = default;
     AirflowNetworkFan(AirflowNetworkFan&& other) = default;

@@ -29,7 +29,7 @@ namespace model {
 
       CoilCoolingLowTempRadiantConstFlow_Impl(const CoilCoolingLowTempRadiantConstFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingLowTempRadiantConstFlow_Impl() = default;
+      virtual ~CoilCoolingLowTempRadiantConstFlow_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

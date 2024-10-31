@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputDiagnostics() = default;
+    virtual ~OutputDiagnostics() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputDiagnostics(const OutputDiagnostics& other) = default;
     OutputDiagnostics(OutputDiagnostics&& other) = default;

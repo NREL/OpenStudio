@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~FoundationKivaSettings() = default;
+    virtual ~FoundationKivaSettings() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     FoundationKivaSettings(const FoundationKivaSettings& other) = default;
     FoundationKivaSettings(FoundationKivaSettings&& other) = default;

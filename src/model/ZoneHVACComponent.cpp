@@ -459,10 +459,6 @@ namespace model {
     OS_ASSERT(getImpl<detail::ZoneHVACComponent_Impl>());
   }
 
-  std::vector<ModelObject> ZoneHVACComponent::children() const {
-    return getImpl<detail::ZoneHVACComponent_Impl>()->children();
-  }
-
   unsigned ZoneHVACComponent::inletPort() const {
     return getImpl<detail::ZoneHVACComponent_Impl>()->inletPort();
   }

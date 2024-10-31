@@ -41,7 +41,7 @@ namespace model {
    *  If excludeChildren is true then children of this object do not contribute to the use count.*/
     unsigned nonResourceObjectUseCount(bool excludeChildren = false) const;
 
-    virtual ~ResourceObject() = default;
+    virtual ~ResourceObject() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ResourceObject(const ResourceObject& other) = default;
     ResourceObject(ResourceObject&& other) = default;

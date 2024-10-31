@@ -37,7 +37,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     ThermUnit_Impl(const std::string& scaleAbbreviation, const ThermExpnt& exponents = ThermExpnt(), const std::string& prettyString = "");
 
-    virtual ~ThermUnit_Impl() = default;
+    virtual ~ThermUnit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

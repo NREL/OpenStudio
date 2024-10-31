@@ -34,7 +34,7 @@ namespace model {
     /** Construct an occupant ventilation control object with a low temperature curve. */
     AirflowNetworkOccupantVentilationControl(const Model& model, const Curve& curve);
 
-    virtual ~AirflowNetworkOccupantVentilationControl() = default;
+    virtual ~AirflowNetworkOccupantVentilationControl() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkOccupantVentilationControl(const AirflowNetworkOccupantVentilationControl& other) = default;
     AirflowNetworkOccupantVentilationControl(AirflowNetworkOccupantVentilationControl&& other) = default;

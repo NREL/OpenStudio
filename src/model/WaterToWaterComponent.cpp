@@ -428,10 +428,6 @@ namespace model {
     return getImpl<detail::WaterToWaterComponent_Impl>()->clone(model);
   }
 
-  void WaterToWaterComponent::disconnect() {
-    getImpl<detail::WaterToWaterComponent_Impl>()->disconnect();
-  }
-
   boost::optional<PlantLoop> WaterToWaterComponent::plantLoop() const {
     return getImpl<detail::WaterToWaterComponent_Impl>()->plantLoop();
   }

@@ -42,7 +42,7 @@ MonthOfYear monthOfYear(const std::string& month) {
     return {MonthOfYear::Mar};
   } else if (istringEqual("Apr", month) || istringEqual("April", month)) {
     return {MonthOfYear::Apr};
-  } else if (istringEqual("May", month) || istringEqual("May", month)) {
+  } else if (istringEqual("May", month)) {
     return {MonthOfYear::May};
   } else if (istringEqual("Jun", month) || istringEqual("June", month)) {
     return {MonthOfYear::Jun};

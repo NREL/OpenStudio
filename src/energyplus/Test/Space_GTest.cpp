@@ -50,7 +50,7 @@
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
-#include "utilities/core/Compare.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 

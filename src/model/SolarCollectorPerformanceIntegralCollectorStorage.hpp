@@ -29,7 +29,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~SolarCollectorPerformanceIntegralCollectorStorage() = default;
+    virtual ~SolarCollectorPerformanceIntegralCollectorStorage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SolarCollectorPerformanceIntegralCollectorStorage(const SolarCollectorPerformanceIntegralCollectorStorage& other) = default;
     SolarCollectorPerformanceIntegralCollectorStorage(SolarCollectorPerformanceIntegralCollectorStorage&& other) = default;

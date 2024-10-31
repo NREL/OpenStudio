@@ -26,7 +26,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~PerformancePrecisionTradeoffs() = default;
+    virtual ~PerformancePrecisionTradeoffs() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PerformancePrecisionTradeoffs(const PerformancePrecisionTradeoffs& other) = default;
     PerformancePrecisionTradeoffs(PerformancePrecisionTradeoffs&& other) = default;

@@ -167,11 +167,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::AirLoopHVACZoneSplitter_Impl>());
   }
 
-  AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> p) : Splitter(std::move(p)) {}
-
-  std::vector<openstudio::IdfObject> AirLoopHVACZoneSplitter::remove() {
-    return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->remove();
-  }
+  AirLoopHVACZoneSplitter::AirLoopHVACZoneSplitter(std::shared_ptr<detail::AirLoopHVACZoneSplitter_Impl> impl) : Splitter(std::move(impl)) {}
 
   unsigned AirLoopHVACZoneSplitter::inletPort() const {
     return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->inletPort();
@@ -192,10 +188,6 @@ namespace model {
 
   std::vector<ThermalZone> AirLoopHVACZoneSplitter::thermalZones() {
     return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->thermalZones();
-  }
-
-  void AirLoopHVACZoneSplitter::disconnect() {
-    return getImpl<detail::AirLoopHVACZoneSplitter_Impl>()->disconnect();
   }
 
   AirflowNetworkDistributionNode AirLoopHVACZoneSplitter::getAirflowNetworkDistributionNode() {

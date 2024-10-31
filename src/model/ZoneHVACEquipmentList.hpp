@@ -27,7 +27,7 @@ namespace model {
    public:
     explicit ZoneHVACEquipmentList(const ThermalZone& thermalZone);
 
-    virtual ~ZoneHVACEquipmentList() = default;
+    virtual ~ZoneHVACEquipmentList() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACEquipmentList(const ZoneHVACEquipmentList& other) = default;
     ZoneHVACEquipmentList(ZoneHVACEquipmentList&& other) = default;

@@ -32,7 +32,7 @@ namespace model {
 
       DistrictCooling_Impl(const DistrictCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DistrictCooling_Impl() = default;
+      virtual ~DistrictCooling_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

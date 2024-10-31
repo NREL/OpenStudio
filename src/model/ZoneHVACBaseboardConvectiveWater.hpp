@@ -32,7 +32,7 @@ namespace model {
 
     ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule, StraightComponent& heatingCoilBaseboard);
 
-    virtual ~ZoneHVACBaseboardConvectiveWater() = default;
+    virtual ~ZoneHVACBaseboardConvectiveWater() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACBaseboardConvectiveWater(const ZoneHVACBaseboardConvectiveWater& other) = default;
     ZoneHVACBaseboardConvectiveWater(ZoneHVACBaseboardConvectiveWater&& other) = default;

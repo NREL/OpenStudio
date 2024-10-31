@@ -37,7 +37,7 @@ namespace model {
 
       ShadingSurfaceGroup_Impl(const ShadingSurfaceGroup_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ShadingSurfaceGroup_Impl() = default;
+      virtual ~ShadingSurfaceGroup_Impl() override = default;
 
       //@}
 

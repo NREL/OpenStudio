@@ -33,7 +33,7 @@ namespace model {
 
     explicit ChillerElectricASHRAE205(const ExternalFile& representationFile);
 
-    virtual ~ChillerElectricASHRAE205() = default;
+    virtual ~ChillerElectricASHRAE205() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ChillerElectricASHRAE205(const ChillerElectricASHRAE205& other) = default;
     ChillerElectricASHRAE205(ChillerElectricASHRAE205&& other) = default;

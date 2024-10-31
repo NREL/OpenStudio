@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerScheduledDualSetpoint(const Model& model);
 
-    virtual ~SetpointManagerScheduledDualSetpoint() = default;
+    virtual ~SetpointManagerScheduledDualSetpoint() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerScheduledDualSetpoint(const SetpointManagerScheduledDualSetpoint& other) = default;
     SetpointManagerScheduledDualSetpoint(SetpointManagerScheduledDualSetpoint&& other) = default;
@@ -46,19 +46,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     boost::optional<Schedule> highSetpointSchedule() const;
 
     boost::optional<Schedule> lowSetpointSchedule() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setHighSetpointSchedule(Schedule& schedule);
 

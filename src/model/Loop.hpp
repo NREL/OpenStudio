@@ -97,7 +97,7 @@ waterCoolingCoil.addToSplitter( plantLoop.demandSplitter() );
   class MODEL_API Loop : public ParentObject
   {
    public:
-    virtual ~Loop() = default;
+    virtual ~Loop() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Loop(const Loop& other) = default;
     Loop(Loop&& other) = default;

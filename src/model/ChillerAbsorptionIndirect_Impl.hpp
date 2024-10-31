@@ -30,7 +30,7 @@ namespace model {
 
       ChillerAbsorptionIndirect_Impl(const ChillerAbsorptionIndirect_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerAbsorptionIndirect_Impl() = default;
+      virtual ~ChillerAbsorptionIndirect_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -28,7 +28,7 @@ namespace model {
 
     AirflowNetworkLinkage(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkLinkage() = default;
+    virtual ~AirflowNetworkLinkage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkLinkage(const AirflowNetworkLinkage& other) = default;
     AirflowNetworkLinkage(AirflowNetworkLinkage&& other) = default;

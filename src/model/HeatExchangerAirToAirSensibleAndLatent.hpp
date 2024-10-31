@@ -38,7 +38,7 @@ namespace model {
       * defaults for Sensible/Latent Effectiveness at 75% Heating/Cooling airflow */
     explicit HeatExchangerAirToAirSensibleAndLatent(const Model& model);
 
-    virtual ~HeatExchangerAirToAirSensibleAndLatent() = default;
+    virtual ~HeatExchangerAirToAirSensibleAndLatent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeatExchangerAirToAirSensibleAndLatent(const HeatExchangerAirToAirSensibleAndLatent& other) = default;
     HeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent&& other) = default;

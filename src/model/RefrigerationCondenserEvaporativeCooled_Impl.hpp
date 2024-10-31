@@ -32,7 +32,7 @@ namespace model {
 
       RefrigerationCondenserEvaporativeCooled_Impl(const RefrigerationCondenserEvaporativeCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationCondenserEvaporativeCooled_Impl() = default;
+      virtual ~RefrigerationCondenserEvaporativeCooled_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

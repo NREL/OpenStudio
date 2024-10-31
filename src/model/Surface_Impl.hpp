@@ -45,7 +45,7 @@ namespace model {
 
       Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Surface_Impl() = default;
+      virtual ~Surface_Impl() override = default;
 
       //@}
 
@@ -182,6 +182,7 @@ namespace model {
 
       boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
+      // cppcheck-suppress [duplInheritedMember] because PlanarSurface is dumb and returns a vector
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
       boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;

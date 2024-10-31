@@ -40,7 +40,7 @@ namespace model {
 
     explicit CoilHeatingDesuperheater(const Model& model);
 
-    virtual ~CoilHeatingDesuperheater() = default;
+    virtual ~CoilHeatingDesuperheater() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilHeatingDesuperheater(const CoilHeatingDesuperheater& other) = default;
     CoilHeatingDesuperheater(CoilHeatingDesuperheater&& other) = default;

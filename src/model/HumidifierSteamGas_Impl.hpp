@@ -30,7 +30,7 @@ namespace model {
 
       HumidifierSteamGas_Impl(const HumidifierSteamGas_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~HumidifierSteamGas_Impl() = default;
+      virtual ~HumidifierSteamGas_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

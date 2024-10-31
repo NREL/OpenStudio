@@ -35,7 +35,7 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
-      virtual ~AirConditionerVariableRefrigerantFlow_Impl() = default;
+      virtual ~AirConditionerVariableRefrigerantFlow_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

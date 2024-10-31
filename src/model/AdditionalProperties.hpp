@@ -27,7 +27,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AdditionalProperties() = default;
+    virtual ~AdditionalProperties() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AdditionalProperties(const AdditionalProperties& other) = default;
     AdditionalProperties(AdditionalProperties&& other) = default;

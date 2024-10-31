@@ -32,7 +32,7 @@ namespace model {
 
       AirTerminalSingleDuctConstantVolumeReheat_Impl(const AirTerminalSingleDuctConstantVolumeReheat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctConstantVolumeReheat_Impl() = default;
+      virtual ~AirTerminalSingleDuctConstantVolumeReheat_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

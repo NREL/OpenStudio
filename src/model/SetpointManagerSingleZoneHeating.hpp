@@ -31,7 +31,7 @@ namespace model {
 
     explicit SetpointManagerSingleZoneHeating(const Model& model);
 
-    virtual ~SetpointManagerSingleZoneHeating() = default;
+    virtual ~SetpointManagerSingleZoneHeating() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerSingleZoneHeating(const SetpointManagerSingleZoneHeating& other) = default;
     SetpointManagerSingleZoneHeating(SetpointManagerSingleZoneHeating&& other) = default;
@@ -45,8 +45,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSupplyAirTemperature() const;
 
     double maximumSupplyAirTemperature() const;
@@ -56,8 +54,6 @@ namespace model {
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setMinimumSupplyAirTemperature(double minimumSupplyAirTemperature);
 

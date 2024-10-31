@@ -29,7 +29,7 @@ namespace model {
       // Clone copy constructor.
       ShadingMaterial_Impl(const ShadingMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ShadingMaterial_Impl() = default;
+      virtual ~ShadingMaterial_Impl() override = default;
 
      private:
       REGISTER_LOGGER("openstudio.model.ShadingMaterial");

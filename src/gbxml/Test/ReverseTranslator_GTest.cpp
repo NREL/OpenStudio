@@ -47,15 +47,15 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
-#include "utilities/idf/Workspace.hpp"
-#include "utilities/core/Optional.hpp"
-#include "utilities/geometry/Plane.hpp"
-#include "utilities/time/Date.hpp"
-#include "utilities/xml/XMLValidator.hpp"
-#include <resources.hxx>
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/geometry/Plane.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/xml/XMLValidator.hpp"
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
+#include <resources.hxx>
 
 #include <sstream>
 #include <utility>

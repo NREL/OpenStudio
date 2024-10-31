@@ -35,7 +35,7 @@ namespace model {
 
     explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
 
-    virtual ~Construction() = default;
+    virtual ~Construction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Construction(const Construction& other) = default;
     Construction(Construction&& other) = default;

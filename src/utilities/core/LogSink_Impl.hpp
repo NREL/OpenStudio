@@ -30,9 +30,11 @@ namespace detail {
     bool isEnabled() const;
 
     /// enable the sink
+    // cppcheck-suppress functionConst
     void enable();
 
     /// disable the sink
+    // cppcheck-suppress functionConst
     void disable();
 
     /// get the logging level

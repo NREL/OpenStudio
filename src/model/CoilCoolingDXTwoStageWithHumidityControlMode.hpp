@@ -33,7 +33,7 @@ namespace model {
 
     explicit CoilCoolingDXTwoStageWithHumidityControlMode(const Model& model);
 
-    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() = default;
+    virtual ~CoilCoolingDXTwoStageWithHumidityControlMode() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingDXTwoStageWithHumidityControlMode(const CoilCoolingDXTwoStageWithHumidityControlMode& other) = default;
     CoilCoolingDXTwoStageWithHumidityControlMode(CoilCoolingDXTwoStageWithHumidityControlMode&& other) = default;

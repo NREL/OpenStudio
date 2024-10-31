@@ -29,7 +29,7 @@ namespace model {
   class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup
   {
    public:
-    virtual ~ModelExtensibleGroup() = default;
+    virtual ~ModelExtensibleGroup() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ModelExtensibleGroup(const ModelExtensibleGroup& other) = default;
     ModelExtensibleGroup(ModelExtensibleGroup&& other) = default;

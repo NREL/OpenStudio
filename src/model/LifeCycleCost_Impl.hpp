@@ -32,7 +32,7 @@ namespace model {
       LifeCycleCost_Impl(const LifeCycleCost_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~LifeCycleCost_Impl() = default;
+      virtual ~LifeCycleCost_Impl() override = default;
 
       virtual IddObjectType iddObjectType() const override {
         return LifeCycleCost::iddObjectType();

@@ -40,7 +40,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     SIUnit_Impl(const std::string& scaleAbbreviation, const SIExpnt& exponents = SIExpnt(), const std::string& prettyString = "");
 
-    virtual ~SIUnit_Impl() = default;
+    virtual ~SIUnit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

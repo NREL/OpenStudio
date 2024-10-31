@@ -25,7 +25,7 @@ namespace model {
       FFactorGroundFloorConstruction_Impl(const FFactorGroundFloorConstruction_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~FFactorGroundFloorConstruction_Impl() = default;
+      virtual ~FFactorGroundFloorConstruction_Impl() override = default;
 
       /** Get all output variables names that could be associated with this object. These variables
      *  may or may not be available for each simulation, need to check report variable dictionary

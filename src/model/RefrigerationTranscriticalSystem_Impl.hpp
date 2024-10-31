@@ -34,7 +34,7 @@ namespace model {
 
       RefrigerationTranscriticalSystem_Impl(const RefrigerationTranscriticalSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationTranscriticalSystem_Impl() = default;
+      virtual ~RefrigerationTranscriticalSystem_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

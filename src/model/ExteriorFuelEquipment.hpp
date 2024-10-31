@@ -40,7 +40,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorFuelEquipment(const ExteriorFuelEquipmentDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorFuelEquipment() = default;
+    virtual ~ExteriorFuelEquipment() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorFuelEquipment(const ExteriorFuelEquipment& other) = default;
     ExteriorFuelEquipment(ExteriorFuelEquipment&& other) = default;

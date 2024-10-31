@@ -30,7 +30,7 @@ namespace model {
 
       AirflowNetworkDetailedOpening_Impl(const AirflowNetworkDetailedOpening_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkDetailedOpening_Impl() = default;
+      virtual ~AirflowNetworkDetailedOpening_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */
@@ -78,7 +78,7 @@ namespace model {
 
       void resetExtraCrackLengthorHeightofPivotingAxis();
 
-      bool setOpeningFactors(std::vector<DetailedOpeningFactorData>& factors);
+      bool setOpeningFactors(const std::vector<DetailedOpeningFactorData>& factors);
 
       //@}
      protected:

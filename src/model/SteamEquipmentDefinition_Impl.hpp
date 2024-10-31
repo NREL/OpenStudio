@@ -28,7 +28,7 @@ namespace model {
 
       SteamEquipmentDefinition_Impl(const SteamEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SteamEquipmentDefinition_Impl() = default;
+      virtual ~SteamEquipmentDefinition_Impl() override = default;
 
       //@}
 

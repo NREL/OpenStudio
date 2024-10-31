@@ -27,7 +27,7 @@ namespace model {
 
       AirflowNetworkReferenceCrackConditions_Impl(const AirflowNetworkReferenceCrackConditions_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkReferenceCrackConditions_Impl() = default;
+      virtual ~AirflowNetworkReferenceCrackConditions_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

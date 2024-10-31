@@ -29,7 +29,7 @@ namespace model {
    public:
     explicit AvailabilityManagerNightCycle(const Model& model);
 
-    virtual ~AvailabilityManagerNightCycle() = default;
+    virtual ~AvailabilityManagerNightCycle() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerNightCycle(const AvailabilityManagerNightCycle& other) = default;
     AvailabilityManagerNightCycle(AvailabilityManagerNightCycle&& other) = default;

@@ -33,7 +33,7 @@ namespace model {
 
       ChillerElectricASHRAE205_Impl(const ChillerElectricASHRAE205_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ChillerElectricASHRAE205_Impl() = default;
+      virtual ~ChillerElectricASHRAE205_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

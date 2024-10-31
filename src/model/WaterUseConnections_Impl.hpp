@@ -29,7 +29,7 @@ namespace model {
 
       WaterUseConnections_Impl(const WaterUseConnections_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterUseConnections_Impl() = default;
+      virtual ~WaterUseConnections_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

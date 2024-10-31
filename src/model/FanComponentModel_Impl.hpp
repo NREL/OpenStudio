@@ -31,7 +31,7 @@ namespace model {
 
       FanComponentModel_Impl(const FanComponentModel_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FanComponentModel_Impl() = default;
+      virtual ~FanComponentModel_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

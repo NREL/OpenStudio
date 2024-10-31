@@ -27,7 +27,7 @@ namespace model {
 
       EnergyManagementSystemTrendVariable_Impl(const EnergyManagementSystemTrendVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~EnergyManagementSystemTrendVariable_Impl() = default;
+      virtual ~EnergyManagementSystemTrendVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

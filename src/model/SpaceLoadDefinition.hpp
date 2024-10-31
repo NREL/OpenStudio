@@ -30,7 +30,7 @@ namespace model {
   class MODEL_API SpaceLoadDefinition : public ResourceObject
   {
    public:
-    virtual ~SpaceLoadDefinition() = default;
+    virtual ~SpaceLoadDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SpaceLoadDefinition(const SpaceLoadDefinition& other) = default;
     SpaceLoadDefinition(SpaceLoadDefinition&& other) = default;

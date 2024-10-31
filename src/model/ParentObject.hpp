@@ -24,7 +24,7 @@ namespace model {
   class MODEL_API ParentObject : public ModelObject
   {
    public:
-    virtual ~ParentObject() = default;
+    virtual ~ParentObject() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ParentObject(const ParentObject& other) = default;
     ParentObject(ParentObject&& other) = default;

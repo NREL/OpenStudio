@@ -33,7 +33,7 @@ namespace model {
     // The capacityFractionSchedule is defaulted to alwaysOnContinuousSchedule
     explicit DistrictHeatingWater(const Model& model);
 
-    virtual ~DistrictHeatingWater() = default;
+    virtual ~DistrictHeatingWater() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DistrictHeatingWater(const DistrictHeatingWater& other) = default;
     DistrictHeatingWater(DistrictHeatingWater&& other) = default;

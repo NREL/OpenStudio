@@ -110,24 +110,12 @@ namespace model {
                           OS_SetpointManager_MultiZone_Heating_AverageFields::ControlVariable);
   }
 
-  std::string SetpointManagerMultiZoneHeatingAverage::controlVariable() const {
-    return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->controlVariable();
-  }
-
   double SetpointManagerMultiZoneHeatingAverage::minimumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->minimumSetpointTemperature();
   }
 
   double SetpointManagerMultiZoneHeatingAverage::maximumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->maximumSetpointTemperature();
-  }
-
-  boost::optional<Node> SetpointManagerMultiZoneHeatingAverage::setpointNode() const {
-    return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerMultiZoneHeatingAverage::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerMultiZoneHeatingAverage_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerMultiZoneHeatingAverage::setMinimumSetpointTemperature(double minimumSetpointTemperature) {

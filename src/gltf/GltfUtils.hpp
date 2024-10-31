@@ -58,7 +58,7 @@ namespace gltf {
       //                    std::vector<tinygltf::Accessor>& accessors);
       // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
       //                std::vector<tinygltf::Accessor>& accessors);
-      // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
+      // int createBuffers(const std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
     };
   }  // namespace detail
 

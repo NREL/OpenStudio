@@ -30,7 +30,7 @@ namespace model {
 
       ElectricLoadCenterInverterPVWatts_Impl(const ElectricLoadCenterInverterPVWatts_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricLoadCenterInverterPVWatts_Impl() = default;
+      virtual ~ElectricLoadCenterInverterPVWatts_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

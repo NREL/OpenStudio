@@ -32,7 +32,7 @@ namespace model {
     // Constructs a new GeneratorMicroTurbineHeatRecovery object in the model, given a GeneratorMicroTurbine
     explicit GeneratorMicroTurbineHeatRecovery(const Model& model, GeneratorMicroTurbine& mchp);
 
-    virtual ~GeneratorMicroTurbineHeatRecovery() = default;
+    virtual ~GeneratorMicroTurbineHeatRecovery() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorMicroTurbineHeatRecovery(const GeneratorMicroTurbineHeatRecovery& other) = default;
     GeneratorMicroTurbineHeatRecovery(GeneratorMicroTurbineHeatRecovery&& other) = default;

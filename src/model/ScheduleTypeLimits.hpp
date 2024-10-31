@@ -31,7 +31,7 @@ namespace model {
 
     explicit ScheduleTypeLimits(const Model& model);
 
-    virtual ~ScheduleTypeLimits() = default;
+    virtual ~ScheduleTypeLimits() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleTypeLimits(const ScheduleTypeLimits& other) = default;
     ScheduleTypeLimits(ScheduleTypeLimits&& other) = default;

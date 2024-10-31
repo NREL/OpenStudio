@@ -31,7 +31,7 @@ namespace model {
 
     explicit PipeOutdoor(const Model& model);
 
-    virtual ~PipeOutdoor() = default;
+    virtual ~PipeOutdoor() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PipeOutdoor(const PipeOutdoor& other) = default;
     PipeOutdoor(PipeOutdoor&& other) = default;

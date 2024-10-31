@@ -34,7 +34,7 @@ namespace model {
     explicit ElectricLoadCenterStorageLiIonNMCBattery(const Model& model, const int numberofCellsinSeries, const int numberofStringsinParallel,
                                                       const double batteryMass, const double batterySurfaceArea);
 
-    virtual ~ElectricLoadCenterStorageLiIonNMCBattery() = default;
+    virtual ~ElectricLoadCenterStorageLiIonNMCBattery() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricLoadCenterStorageLiIonNMCBattery(const ElectricLoadCenterStorageLiIonNMCBattery& other) = default;
     ElectricLoadCenterStorageLiIonNMCBattery(ElectricLoadCenterStorageLiIonNMCBattery&& other) = default;

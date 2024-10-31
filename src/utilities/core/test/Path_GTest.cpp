@@ -11,7 +11,6 @@
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
 #include "../Filesystem.hpp"
-#include "utilities/sql/SqlFileDataDictionary.hpp"
 
 #include <clocale>
 

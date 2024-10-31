@@ -37,7 +37,7 @@ namespace model {
 
       GeneratorMicroTurbine_Impl(const GeneratorMicroTurbine_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorMicroTurbine_Impl() = default;
+      virtual ~GeneratorMicroTurbine_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

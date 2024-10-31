@@ -80,7 +80,7 @@ class UTILITIES_API Misc1Unit : public Unit
      *  \param[in] prettyString optional string to use in place of standardString. */
   Misc1Unit(const std::string& scaleAbbreviation, const Misc1Expnt& exponents = Misc1Expnt(), const std::string& prettyString = "");
 
-  virtual ~Misc1Unit() = default;
+  virtual ~Misc1Unit() override = default;
 
   //@}
  protected:

@@ -31,7 +31,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~StandardsInformationConstruction() = default;
+    virtual ~StandardsInformationConstruction() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     StandardsInformationConstruction(const StandardsInformationConstruction& other) = default;
     StandardsInformationConstruction(StandardsInformationConstruction&& other) = default;

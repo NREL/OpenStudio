@@ -27,7 +27,7 @@ namespace model {
 
       AirLoopHVACSupplyPlenum_Impl(const AirLoopHVACSupplyPlenum_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirLoopHVACSupplyPlenum_Impl() = default;
+      virtual ~AirLoopHVACSupplyPlenum_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

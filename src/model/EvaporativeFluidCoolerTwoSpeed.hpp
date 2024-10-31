@@ -31,7 +31,7 @@ namespace model {
 
     explicit EvaporativeFluidCoolerTwoSpeed(const Model& model);
 
-    virtual ~EvaporativeFluidCoolerTwoSpeed() = default;
+    virtual ~EvaporativeFluidCoolerTwoSpeed() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     EvaporativeFluidCoolerTwoSpeed(const EvaporativeFluidCoolerTwoSpeed& other) = default;
     EvaporativeFluidCoolerTwoSpeed(EvaporativeFluidCoolerTwoSpeed&& other) = default;

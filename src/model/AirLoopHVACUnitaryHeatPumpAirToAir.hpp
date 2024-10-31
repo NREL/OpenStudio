@@ -36,7 +36,7 @@ namespace model {
     AirLoopHVACUnitaryHeatPumpAirToAir(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyFan, HVACComponent& heatingCoil,
                                        HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() = default;
+    virtual ~AirLoopHVACUnitaryHeatPumpAirToAir() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACUnitaryHeatPumpAirToAir(const AirLoopHVACUnitaryHeatPumpAirToAir& other) = default;
     AirLoopHVACUnitaryHeatPumpAirToAir(AirLoopHVACUnitaryHeatPumpAirToAir&& other) = default;

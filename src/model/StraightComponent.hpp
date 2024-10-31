@@ -21,23 +21,21 @@ namespace model {
   }
 
   /** StraightComponent is the base class for HVACComponent objects which have precisely one inlet port and one outlet port.
- *
- *  A StraighComponent may appear on either an AirLoopHVAC or a PlantLoop.
- */
+   *
+   *  A StraighComponent may appear on either an AirLoopHVAC or a PlantLoop.
+   */
   class MODEL_API StraightComponent : public HVACComponent
   {
 
    public:
     StraightComponent(IddObjectType type, const Model& model);
 
-    virtual ~StraightComponent() = default;
+    virtual ~StraightComponent() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     StraightComponent(const StraightComponent& other) = default;
     StraightComponent(StraightComponent&& other) = default;
     StraightComponent& operator=(const StraightComponent&) = default;
     StraightComponent& operator=(StraightComponent&&) = default;
-
-    std::vector<openstudio::IdfObject> remove();
 
     bool removeFromLoop();
 
@@ -54,16 +52,10 @@ namespace model {
     boost::optional<ModelObject> outletModelObject() const;
 
     /** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
-   *
-   *  Reimplemented from HVACComponent.
-   */
-    boost::optional<AirLoopHVAC> airLoopHVAC() const;
-
-    bool addToNode(Node& node);
-
-    ModelObject clone(Model model) const;
-
-    void disconnect();
+     *
+     *  Reimplemented from HVACComponent.
+     */
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
    protected:
     friend class Model;

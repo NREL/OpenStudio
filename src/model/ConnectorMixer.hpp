@@ -30,7 +30,7 @@ namespace model {
     /** Constructs a new Mixer object and places it inside the model. */
     explicit ConnectorMixer(const Model& model);
 
-    virtual ~ConnectorMixer() = default;
+    virtual ~ConnectorMixer() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ConnectorMixer(const ConnectorMixer& other) = default;
     ConnectorMixer(ConnectorMixer&& other) = default;

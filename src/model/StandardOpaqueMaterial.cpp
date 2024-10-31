@@ -462,46 +462,57 @@ namespace model {
     return {IddObjectType::OS_Material};
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thermalConductivity() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalConductivity();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thermalConductance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalConductance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thermalResistivity() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalResistivity();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thermalResistance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalResistance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> StandardOpaqueMaterial::thermalReflectance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalReflectance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> StandardOpaqueMaterial::solarReflectance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->solarReflectance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> StandardOpaqueMaterial::visibleReflectance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->visibleReflectance();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalConductivity(double value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalConductivity(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalConductance(double value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalConductance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalResistivity(double value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalResistivity(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalResistance(double value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalResistance(value);
   }
@@ -510,26 +521,32 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalAbsorptance(value.get());
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalReflectance(boost::optional<double> value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalReflectance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setSolarAbsorptance(boost::optional<double> value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSolarAbsorptance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setSolarReflectance(boost::optional<double> value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSolarReflectance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setVisibleAbsorptance(boost::optional<double> value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setVisibleAbsorptance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setVisibleReflectance(boost::optional<double> value) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setVisibleReflectance(value);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   boost::optional<double> StandardOpaqueMaterial::heatCapacity() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->heatCapacity();
   }
@@ -542,6 +559,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->roughness();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thickness() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thickness();
   }
@@ -558,6 +576,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->specificHeat();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::thermalAbsorptance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->thermalAbsorptance();
   }
@@ -566,6 +585,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->isThermalAbsorptanceDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::solarAbsorptance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->solarAbsorptance();
   }
@@ -574,6 +594,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->isSolarAbsorptanceDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double StandardOpaqueMaterial::visibleAbsorptance() const {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->visibleAbsorptance();
   }
@@ -586,6 +607,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setRoughness(roughness);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThickness(double thickness) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThickness(thickness);
   }
@@ -602,6 +624,7 @@ namespace model {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setSpecificHeat(specificHeat);
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool StandardOpaqueMaterial::setThermalAbsorptance(double thermalAbsorptance) {
     return getImpl<detail::StandardOpaqueMaterial_Impl>()->setThermalAbsorptance(thermalAbsorptance);
   }

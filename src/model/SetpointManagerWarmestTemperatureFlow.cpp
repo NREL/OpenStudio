@@ -141,10 +141,6 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SetpointManager_WarmestTemperatureFlowFields::Strategy);
   }
 
-  std::string SetpointManagerWarmestTemperatureFlow::controlVariable() const {
-    return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->controlVariable();
-  }
-
   double SetpointManagerWarmestTemperatureFlow::minimumSetpointTemperature() const {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->minimumSetpointTemperature();
   }
@@ -161,10 +157,6 @@ namespace model {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->minimumTurndownRatio();
   }
 
-  bool SetpointManagerWarmestTemperatureFlow::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setControlVariable(controlVariable);
-  }
-
   bool SetpointManagerWarmestTemperatureFlow::setMinimumSetpointTemperature(double minimumSetpointTemperature) {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setMinimumSetpointTemperature(minimumSetpointTemperature);
   }
@@ -179,10 +171,6 @@ namespace model {
 
   bool SetpointManagerWarmestTemperatureFlow::setMinimumTurndownRatio(double minimumTurndownRatio) {
     return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setMinimumTurndownRatio(minimumTurndownRatio);
-  }
-
-  boost::optional<Node> SetpointManagerWarmestTemperatureFlow::setpointNode() const {
-    return getImpl<detail::SetpointManagerWarmestTemperatureFlow_Impl>()->setpointNode();
   }
 
   bool SetpointManagerWarmestTemperatureFlow::setSetpointNode(const Node& node) {

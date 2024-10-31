@@ -1,6 +1,9 @@
 import re
 from collections import Counter
 
+EXCLUSIONS = {
+    'duplInheritedMember': ["defines member function with name 'iddObjectType' also defined in its parent class"]
+}
 
 def colorize(lines):
     def bold(s):
@@ -64,6 +67,9 @@ def colorize(lines):
         m = re_message.match(line)
         if m:
             d = m.groupdict()
+            if d['id'] in EXCLUSIONS:
+                if any([x in d['message'] for x in EXCLUSIONS[d['id']]]):
+                    continue
             matched_messages.append(d)
         else:
             colored_lines.append(red(line))

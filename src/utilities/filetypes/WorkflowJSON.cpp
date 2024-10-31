@@ -181,6 +181,7 @@ namespace detail {
   }
 
   bool WorkflowJSON_Impl::saveAs(const openstudio::path& p) {
+    // cppcheck-suppress knownConditionTrueFalse
     if (setOswPath(p, true)) {
       checkForUpdates();
       return save();

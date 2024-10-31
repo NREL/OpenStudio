@@ -30,7 +30,7 @@ namespace model {
 
       ZoneHVACUnitHeater_Impl(const ZoneHVACUnitHeater_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACUnitHeater_Impl() = default;
+      virtual ~ZoneHVACUnitHeater_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

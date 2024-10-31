@@ -35,7 +35,7 @@ namespace model {
     /// This will throw if the object type is not known
     explicit LifeCycleCost(const ModelObject& modelObject);
 
-    virtual ~LifeCycleCost() = default;
+    virtual ~LifeCycleCost() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LifeCycleCost(const LifeCycleCost& other) = default;
     LifeCycleCost(LifeCycleCost&& other) = default;

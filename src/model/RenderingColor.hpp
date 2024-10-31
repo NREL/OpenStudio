@@ -42,7 +42,7 @@ namespace model {
 
     explicit RenderingColor(const Model& model);
 
-    virtual ~RenderingColor() = default;
+    virtual ~RenderingColor() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RenderingColor(const RenderingColor& other) = default;
     RenderingColor(RenderingColor&& other) = default;

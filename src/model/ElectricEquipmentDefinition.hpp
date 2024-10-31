@@ -30,7 +30,7 @@ namespace model {
 
     explicit ElectricEquipmentDefinition(const Model& model);
 
-    virtual ~ElectricEquipmentDefinition() = default;
+    virtual ~ElectricEquipmentDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricEquipmentDefinition(const ElectricEquipmentDefinition& other) = default;
     ElectricEquipmentDefinition(ElectricEquipmentDefinition&& other) = default;

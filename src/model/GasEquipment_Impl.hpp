@@ -32,7 +32,7 @@ namespace model {
 
       GasEquipment_Impl(const GasEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GasEquipment_Impl() = default;
+      virtual ~GasEquipment_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

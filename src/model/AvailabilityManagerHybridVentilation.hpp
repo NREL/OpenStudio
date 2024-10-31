@@ -46,7 +46,7 @@ namespace model {
     explicit AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule,
                                                   Schedule& minimumOutdoorVentilationAirSchedule);
 
-    virtual ~AvailabilityManagerHybridVentilation() = default;
+    virtual ~AvailabilityManagerHybridVentilation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerHybridVentilation(const AvailabilityManagerHybridVentilation& other) = default;
     AvailabilityManagerHybridVentilation(AvailabilityManagerHybridVentilation&& other) = default;

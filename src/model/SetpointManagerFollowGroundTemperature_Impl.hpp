@@ -29,7 +29,7 @@ namespace model {
 
       SetpointManagerFollowGroundTemperature_Impl(const SetpointManagerFollowGroundTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerFollowGroundTemperature_Impl() = default;
+      virtual ~SetpointManagerFollowGroundTemperature_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

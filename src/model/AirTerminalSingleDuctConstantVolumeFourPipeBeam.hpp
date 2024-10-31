@@ -39,7 +39,7 @@ namespace model {
    * for this object to be ForwardTranslated, so you will have to do it manually and use setCoolingCoil and/or setHeatingCoil */
     AirTerminalSingleDuctConstantVolumeFourPipeBeam(const Model& model);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() = default;
+    virtual ~AirTerminalSingleDuctConstantVolumeFourPipeBeam() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctConstantVolumeFourPipeBeam(const AirTerminalSingleDuctConstantVolumeFourPipeBeam& other) = default;
     AirTerminalSingleDuctConstantVolumeFourPipeBeam(AirTerminalSingleDuctConstantVolumeFourPipeBeam&& other) = default;

@@ -30,7 +30,7 @@ namespace model {
 
       SetpointManagerSingleZoneOneStageHeating_Impl(const SetpointManagerSingleZoneOneStageHeating_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SetpointManagerSingleZoneOneStageHeating_Impl() = default;
+      virtual ~SetpointManagerSingleZoneOneStageHeating_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

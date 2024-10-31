@@ -29,7 +29,7 @@ namespace model {
 
       GeneratorFuelCellElectricalStorage_Impl(const GeneratorFuelCellElectricalStorage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCellElectricalStorage_Impl() = default;
+      virtual ~GeneratorFuelCellElectricalStorage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

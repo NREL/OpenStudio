@@ -27,7 +27,7 @@ namespace model {
 
       SizingPlant_Impl(const SizingPlant_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SizingPlant_Impl() = default;
+      virtual ~SizingPlant_Impl() override = default;
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 

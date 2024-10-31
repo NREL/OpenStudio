@@ -30,7 +30,7 @@ namespace model {
 
       TableLookup_Impl(const TableLookup_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TableLookup_Impl() = default;
+      virtual ~TableLookup_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

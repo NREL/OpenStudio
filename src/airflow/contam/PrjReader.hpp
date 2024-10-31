@@ -39,7 +39,7 @@ namespace contam {
     }
 
     template <class T>
-    std::vector<T> readSectionVector(std::string name = std::string());
+    std::vector<T> readSectionVector(const std::string& name = std::string());
 
     std::vector<int> readIntVector(bool terminated = false);
     //    std::vector<int> readIntStdVector(bool terminated=false);
@@ -49,7 +49,7 @@ namespace contam {
     //    template <class T> QVector<T> readSectionQVector(STRING name=STRING_INIT);
     //    template <class T> std::vector<T> readSectionStdVector(STRING name=STRING_INIT);
     template <class T>
-    std::vector<std::shared_ptr<T>> readElementVector(std::string name = std::string());
+    std::vector<std::shared_ptr<T>> readElementVector(const std::string& name = std::string());
     template <class T>
     T read();
     template <class T>
@@ -67,7 +67,7 @@ namespace contam {
   };
 
   template <class T>
-  std::vector<T> Reader::readSectionVector(std::string name) {
+  std::vector<T> Reader::readSectionVector(const std::string& name) {
     int n = readInt();
     std::vector<T> vector;
     for (int i = 0; i < n; i++) {
@@ -162,7 +162,7 @@ namespace contam {
   //}
 
   template <class T>
-  std::vector<std::shared_ptr<T>> Reader::readElementVector(std::string name) {
+  std::vector<std::shared_ptr<T>> Reader::readElementVector(const std::string& name) {
     int n = readInt();
     std::vector<std::shared_ptr<T>> vector;
     for (int i = 0; i < n; i++) {

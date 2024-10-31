@@ -49,7 +49,7 @@ namespace model {
 
     explicit SubSurface(const std::vector<Point3d>& vertices, const Model& model);
 
-    virtual ~SubSurface() = default;
+    virtual ~SubSurface() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SubSurface(const SubSurface& other) = default;
     SubSurface(SubSurface&& other) = default;
@@ -176,6 +176,7 @@ namespace model {
     void resetAdjacentSubSurface();
 
     /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+    // cppcheck-suppress [duplInheritedMember] because PlanarSurface is dumb and returns a vector
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
     /** Returns the SurfacePropertyLocalEnvironment, if it exists. */

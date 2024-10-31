@@ -27,7 +27,7 @@ namespace model {
       LifeCycleCostUsePriceEscalation_Impl(const LifeCycleCostUsePriceEscalation_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~LifeCycleCostUsePriceEscalation_Impl() = default;
+      virtual ~LifeCycleCostUsePriceEscalation_Impl() override = default;
 
       OptionalString resource() const;
       bool setResource(const std::string& str);

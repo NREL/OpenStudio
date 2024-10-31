@@ -27,7 +27,7 @@ namespace model {
 
       ExteriorWaterEquipmentDefinition_Impl(const ExteriorWaterEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorWaterEquipmentDefinition_Impl() = default;
+      virtual ~ExteriorWaterEquipmentDefinition_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

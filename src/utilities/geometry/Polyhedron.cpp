@@ -95,7 +95,7 @@ void Surface3dEdge::resetEdgeMatching() {
   m_conflictedOrientation = false;
 }
 
-bool Surface3dEdge::containsPoint(const Point3d& testVertex) {
+bool Surface3dEdge::containsPoint(const Point3d& testVertex) const {
   return !isAlmostEqual3dPt(m_start, testVertex) && !isAlmostEqual3dPt(m_end, testVertex) && isPointOnLineBetweenPoints(m_start, m_end, testVertex);
 }
 
@@ -396,7 +396,7 @@ std::vector<Surface3dEdge> Polyhedron::edgesNotTwo(bool includeCreatedEdges) con
       }
     }
   }
-  for (auto& edge : edgesNotTwo) {
+  for (const auto& edge : edgesNotTwo) {
     LOG(Debug, edge);
   }
 
@@ -443,7 +443,7 @@ std::vector<Surface3d> Polyhedron::findSurfacesWithIncorrectOrientation() const 
   }
 
   std::set<Surface3d> conflictedSurfaces;
-  for (auto& edge : uniqueSurface3dEdges) {
+  for (const auto& edge : uniqueSurface3dEdges) {
     const auto& surfNums = edge.allSurfNums();
     const size_t sfIndex1 = surfNums.front();
     const size_t sfIndex2 = surfNums.back();

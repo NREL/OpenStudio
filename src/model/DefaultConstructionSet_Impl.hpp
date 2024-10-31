@@ -34,7 +34,7 @@ namespace model {
 
       DefaultConstructionSet_Impl(const DefaultConstructionSet_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~DefaultConstructionSet_Impl() = default;
+      virtual ~DefaultConstructionSet_Impl() override = default;
 
       //@}
 

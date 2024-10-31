@@ -30,7 +30,7 @@ namespace model {
 
     PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
 
-    virtual ~PythonPluginInstance() = default;
+    virtual ~PythonPluginInstance() override = default;
 
     //@}
 

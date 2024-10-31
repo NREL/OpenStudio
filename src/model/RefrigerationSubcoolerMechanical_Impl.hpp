@@ -29,7 +29,7 @@ namespace model {
 
       RefrigerationSubcoolerMechanical_Impl(const RefrigerationSubcoolerMechanical_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationSubcoolerMechanical_Impl() = default;
+      virtual ~RefrigerationSubcoolerMechanical_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

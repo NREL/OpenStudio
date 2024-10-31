@@ -44,7 +44,7 @@ namespace model {
 
     explicit ThermalZone(const Model& model);
 
-    virtual ~ThermalZone() = default;
+    virtual ~ThermalZone() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ThermalZone(const ThermalZone& other) = default;
     ThermalZone(ThermalZone&& other) = default;
@@ -234,11 +234,11 @@ namespace model {
     double floorArea() const;
 
     /** Accumulates the exterior surface area (m^2) of spaces. Does not include space
-   *  multiplier. */
+     *  multiplier. */
     double exteriorSurfaceArea() const;
 
     /** Accumulates the exterior wall area (m^2) of spaces. Does not include space
-   *  multiplier. */
+     *  multiplier. */
     double exteriorWallArea() const;
 
     // TODO: How should this interact with the volume field. If there is an interaction,
@@ -284,23 +284,23 @@ namespace model {
     double gasEquipmentPowerPerPerson() const;
 
     /** Returns the infiltration design flow rate (m^3/s) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
     double infiltrationDesignFlowRate() const;
 
     /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
     double infiltrationDesignFlowPerSpaceFloorArea() const;
 
     /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
     double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
     /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
     double infiltrationDesignFlowPerExteriorWallArea() const;
 
     /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
-   *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
     double infiltrationDesignAirChangesPerHour() const;
 
     /** Determines if this zone is conditioned, based on the SqlFile output. Returns 'Yes' if zone is conditioned. */
@@ -319,29 +319,29 @@ namespace model {
     boost::optional<Space> combineSpaces();
 
     /** Removes connections to all other HVACComponent objects */
-    void disconnect();
+    void disconnect();  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** ThermalZone must be disconnected from all loops to be removable
-   */
-    bool isRemovable() const;
+    */
+    bool isRemovable() const;  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** Indicates if the zone will use EnergyPlus ideal air loads.
-   */
+    */
     bool useIdealAirLoads() const;
 
     /** Adds or removes ideal air loads for the zone.
-   *  ThermalZones that are attached to air loops will be removed.
-   *  If the ThermalZone is later added to a loop useIdealAirLoads
-   *  will be reset to false.
-   */
+     *  ThermalZones that are attached to air loops will be removed.
+     *  If the ThermalZone is later added to a loop useIdealAirLoads
+     *  will be reset to false.
+     */
     bool setUseIdealAirLoads(bool useIdealAirLoads);
 
-    bool addToNode(Node& node);
+    bool addToNode(Node& node);  // cppcheck-suppress [duplInheritedMember] for documentation purposes
 
     /** This method is the same as addToNode, except
-   *  existing air loop connections will not be removed.
-   *  This is because EnergyPlus gained the ability to attach multiple air loops.
-   **/
+     *  existing air loop connections will not be removed.
+     *  This is because EnergyPlus gained the ability to attach multiple air loops.
+     **/
     bool multiAddToNode(Node& node);
 
     PortList returnPortList() const;
@@ -351,11 +351,11 @@ namespace model {
     PortList exhaustPortList() const;
 
     /** Add new equipment setting the heating and cooling priorities
-   *  to the next available priority level.
-   *  Air terminals associated with AirLoopHVAC will be moved to first priority.
-   *  This method is relatively dumb.  It will add any model object to the list
-   *  even if it is not hvac equipment.  That might change in the future.
-   */
+     *  to the next available priority level.
+     *  Air terminals associated with AirLoopHVAC will be moved to first priority.
+     *  This method is relatively dumb.  It will add any model object to the list
+     *  even if it is not hvac equipment.  That might change in the future.
+     */
     bool addEquipment(const ModelObject& equipment);
 
     /** Remove equipment from the EquipmentList.
@@ -369,13 +369,13 @@ namespace model {
     bool setLoadDistributionScheme(const std::string& scheme);
 
     /** Set cooling priority of equipment.
-   *  Returns false when equipment is not in the ZoneHVACEquipmentList
-   */
+     *  Returns false when equipment is not in the ZoneHVACEquipmentList
+     */
     bool setCoolingPriority(const ModelObject& equipment, unsigned priority);
 
     /** Set heating priority of equipment.
-   *  Returns false when equipment is not in the ZoneHVACEquipmentList
-   */
+     *  Returns false when equipment is not in the ZoneHVACEquipmentList
+     */
     bool setHeatingPriority(const ModelObject& equipment, unsigned priority);
 
     /** Return all equipment.  Order is determined by heating priority */
@@ -385,69 +385,69 @@ namespace model {
     std::vector<ModelObject> equipmentInCoolingOrder() const;
 
     /** Return the Sequential Cooling Fraction of equipment, if it's a ScheduleConstant.
-   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
 
     /** Return the Sequential Cooling Fraction Schedule of equipment.
-   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
     /** Return the Sequential Heating Fraction of equipment, if it's a ScheduleConstant
-   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
     /** Return the Sequential Heating Fraction Schedule of equipment.
-   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
     /** Set the Sequential Cooling Fraction of equipment, creates a ScheduleConstant for your convenience.
-   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
 
     /** Set the Sequential Cooling Fraction Schedule of equipment.
-   *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
     /** Set the Sequential Heating Fraction of equipment, creates a ScheduleConstant for your convenience.
-   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
     /** Set the Sequential Heating Fraction Schedule of equipment.
-   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
-   *  or the loadDistributionScheme isn't 'Sequential'
-   */
+     *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+     *  or the loadDistributionScheme isn't 'Sequential'
+     */
     bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
     /** Return true if the ThermalZone is attached to
-  *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
-  */
+     *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
+     */
     bool isPlenum() const;
 
     /** Return true if the ThermalZone is unconditioned and available to be used as a plenum
-  *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
-  *   and there is no zone equipment.
-  */
+     *   This means the zone is not attached to an AirLoopHVAC structure as a conditioned zone
+     *   and there is no zone equipment.
+     */
     bool canBePlenum() const;
 
     /** Establish plenumZone as the supply plenum for this ThermalZone.
-  *   This ThermalZone must already be attached to AirLoopHVAC.
-  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
-  *   The method canBePlenum called on plenumZone must return true.
-  */
+     *   This ThermalZone must already be attached to AirLoopHVAC.
+     *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+     *   The method canBePlenum called on plenumZone must return true.
+     */
     bool setSupplyPlenum(const ThermalZone& plenumZone);
 
     /** Overload of setSupplyPlenum()
@@ -458,15 +458,15 @@ namespace model {
     bool setSupplyPlenum(const ThermalZone& plenumZone, unsigned branchIndex);
 
     /** Remove any supply plenum serving this zone,
-   * associated with the AirLoopHVAC returned by
-   * ThermalZone::airLoopHVAC().
+     * associated with the AirLoopHVAC returned by
+     * ThermalZone::airLoopHVAC().
   */
     void removeSupplyPlenum();
 
     /** Remove any supply plenum associated with
-   * the given AirLoopHVAC instance.
-   * This method is important when a zone is connected to multiple AirLoopHVAC instances.
-   */
+     * the given AirLoopHVAC instance.
+     * This method is important when a zone is connected to multiple AirLoopHVAC instances.
+     */
     void removeSupplyPlenum(const AirLoopHVAC& airloop);
 
     /** Overload of removeSupplyPlenum()
@@ -477,32 +477,32 @@ namespace model {
     void removeSupplyPlenum(unsigned branchIndex);
 
     /** Remove any supply plenum associated with
-   * the given AirLoopHVAC instance, and branchIndex in a dual duct system.
-   *  This method is important when a zone is connected to multiple AirLoopHVAC instances.
-    * This variation can account for dual duct systems, branchIndex can be 0 or 1
-    * indicating which branch of a dual duct system to attach to.
-    * branchIndex 0 corresponds to the branch of demandInletNode(0).
-   */
+     * the given AirLoopHVAC instance, and branchIndex in a dual duct system.
+     *  This method is important when a zone is connected to multiple AirLoopHVAC instances.
+     * This variation can account for dual duct systems, branchIndex can be 0 or 1
+     * indicating which branch of a dual duct system to attach to.
+     * branchIndex 0 corresponds to the branch of demandInletNode(0).
+     */
     void removeSupplyPlenum(const AirLoopHVAC& airloop, unsigned branchIndex);
 
     /** Establish plenumZone as the return plenum for this ThermalZone.
-  *   This ThermalZone must already be attached to AirLoopHVAC.
-  *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
-  *   The method canBePlenum called on plenumZone must return true.
-  */
+     *   This ThermalZone must already be attached to AirLoopHVAC.
+     *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
+     *   The method canBePlenum called on plenumZone must return true.
+     */
     bool setReturnPlenum(const ThermalZone& plenumZone);
 
     /** setReturnPlenum for the specified air loop.
-    * This method is used when there are multiple air loops attached to the zone
-    */
+     * This method is used when there are multiple air loops attached to the zone
+     */
     bool setReturnPlenum(const ThermalZone& plenumZone, AirLoopHVAC& airLoop);
 
     /** Remove any return plenum serving this zone
-  */
+    */
     void removeReturnPlenum();
 
     /** Remove any return plenum serving this zone
-  */
+    */
     void removeReturnPlenum(AirLoopHVAC& airLoop);
 
     /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */

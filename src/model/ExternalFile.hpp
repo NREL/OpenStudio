@@ -32,7 +32,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() = default;
+    virtual ~ExternalFile() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExternalFile(const ExternalFile& other) = default;
     ExternalFile(ExternalFile&& other) = default;

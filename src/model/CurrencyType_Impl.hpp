@@ -28,7 +28,7 @@ namespace model {
       CurrencyType_Impl(const CurrencyType_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~CurrencyType_Impl() = default;
+      virtual ~CurrencyType_Impl() override = default;
 
       OptionalString monetaryUnit() const;
       bool setMonetaryUnit(const std::string& str);

@@ -29,7 +29,7 @@ namespace model {
 
       CoilHeatingDXVariableSpeedSpeedData_Impl(const CoilHeatingDXVariableSpeedSpeedData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingDXVariableSpeedSpeedData_Impl() = default;
+      virtual ~CoilHeatingDXVariableSpeedSpeedData_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

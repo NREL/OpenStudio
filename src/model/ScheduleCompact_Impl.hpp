@@ -28,7 +28,7 @@ namespace model {
       ScheduleCompact_Impl(const ScheduleCompact_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ScheduleCompact_Impl() = default;
+      virtual ~ScheduleCompact_Impl() override = default;
 
       //@}
       /** @name Getters */

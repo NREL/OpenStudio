@@ -27,7 +27,7 @@ class WorkspaceObject;
 class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup
 {
  public:
-  virtual ~WorkspaceExtensibleGroup() = default;
+  virtual ~WorkspaceExtensibleGroup() override = default;
 
   /** @name Getters */
   //@{

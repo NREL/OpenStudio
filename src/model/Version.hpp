@@ -21,7 +21,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //{
 
-    virtual ~Version() = default;
+    virtual ~Version() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Version(const Version& other) = default;
     Version(Version&& other) = default;

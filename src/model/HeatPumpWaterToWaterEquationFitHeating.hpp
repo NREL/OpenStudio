@@ -36,7 +36,7 @@ namespace model {
 
     explicit HeatPumpWaterToWaterEquationFitHeating(const Model& model);
 
-    virtual ~HeatPumpWaterToWaterEquationFitHeating() = default;
+    virtual ~HeatPumpWaterToWaterEquationFitHeating() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeatPumpWaterToWaterEquationFitHeating(const HeatPumpWaterToWaterEquationFitHeating& other) = default;
     HeatPumpWaterToWaterEquationFitHeating(HeatPumpWaterToWaterEquationFitHeating&& other) = default;

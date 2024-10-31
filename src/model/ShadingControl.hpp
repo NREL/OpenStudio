@@ -42,7 +42,7 @@ namespace model {
     /// This constructor is preferred for all configurations other than switchable glazing.
     explicit ShadingControl(const ShadingMaterial& shadingMaterial);
 
-    virtual ~ShadingControl() = default;
+    virtual ~ShadingControl() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ShadingControl(const ShadingControl& other) = default;
     ShadingControl(ShadingControl&& other) = default;

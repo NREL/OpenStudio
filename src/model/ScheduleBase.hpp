@@ -32,7 +32,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ScheduleBase() = default;
+    virtual ~ScheduleBase() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ScheduleBase(const ScheduleBase& other) = default;
     ScheduleBase(ScheduleBase&& other) = default;

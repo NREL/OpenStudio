@@ -47,7 +47,7 @@ namespace model {
    */
     explicit Node(const Model& model);
 
-    virtual ~Node() = default;
+    virtual ~Node() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     Node(const Node& other) = default;
     Node(Node&& other) = default;
@@ -55,14 +55,6 @@ namespace model {
     Node& operator=(Node&&) = default;
 
     std::vector<SetpointManager> setpointManagers() const;
-
-    bool addToNode(Node& node);
-
-    ModelObject clone(Model model) const;
-
-    bool isRemovable() const;
-
-    std::vector<IdfObject> remove();
 
     static IddObjectType iddObjectType();
 

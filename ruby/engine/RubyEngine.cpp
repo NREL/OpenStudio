@@ -4,8 +4,8 @@
 ***********************************************************************************************************************/
 
 #include "RubyEngine.hpp"
-#include "InitRubyBindings.hpp"
-#include "RubyException.hpp"
+#include "../bindings/InitRubyBindings.hpp"
+#include "../interpreter/RubyException.hpp"
 #include <embedded_files.hxx>
 #include <csignal>
 #include <stdexcept>

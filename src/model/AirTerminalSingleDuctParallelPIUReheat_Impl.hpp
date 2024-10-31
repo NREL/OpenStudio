@@ -30,7 +30,7 @@ namespace model {
 
       AirTerminalSingleDuctParallelPIUReheat_Impl(const AirTerminalSingleDuctParallelPIUReheat_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctParallelPIUReheat_Impl() = default;
+      virtual ~AirTerminalSingleDuctParallelPIUReheat_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -87,7 +87,7 @@ class UTILITIES_API CalibrationUtilityBill
   /// Create attribute wrapper with all required information.
   CalibrationUtilityBill(const std::string& name, const FuelType& fuelType, const InstallLocationType& meterInstallLocation,
                          boost::optional<std::string> meterSpecificInstallLocation, boost::optional<EndUseCategoryType> meterEndUseCategory,
-                         boost::optional<std::string> meterSpecificEndUse, std::string consumptionUnit, double consumptionUnitConversionFactor,
+                         boost::optional<std::string> meterSpecificEndUse, const std::string& consumptionUnit, double consumptionUnitConversionFactor,
                          boost::optional<std::string> peakDemandUnit, boost::optional<double> peakDemandUnitConversionFactor,
                          boost::optional<unsigned> timestepsInPeakDemandWindow, boost::optional<double> minutesInPeakDemandWindow,
                          boost::optional<unsigned> numberBillingPeriodsInCalculations, boost::optional<double> CVRMSE, boost::optional<double> NMBE);
@@ -129,6 +129,7 @@ class UTILITIES_API CalibrationUtilityBill
   std::vector<CalibrationBillingPeriod> billingPeriods() const;
 
   /// Add a CalibrationBillingPeriod to this CalibrationUtilityBill.
+  // cppcheck-suppress functionConst
   bool addBillingPeriod(const CalibrationBillingPeriod& billingPeriod);
 
  private:

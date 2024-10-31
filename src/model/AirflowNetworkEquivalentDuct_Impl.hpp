@@ -29,7 +29,7 @@ namespace model {
 
       AirflowNetworkEquivalentDuct_Impl(const AirflowNetworkEquivalentDuct_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkEquivalentDuct_Impl() = default;
+      virtual ~AirflowNetworkEquivalentDuct_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

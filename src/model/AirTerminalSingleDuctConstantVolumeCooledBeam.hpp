@@ -35,7 +35,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeCooledBeam(const Model& model, Schedule& availabilitySchedule, HVACComponent& coilCoolingCooledBeam);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() = default;
+    virtual ~AirTerminalSingleDuctConstantVolumeCooledBeam() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctConstantVolumeCooledBeam(const AirTerminalSingleDuctConstantVolumeCooledBeam& other) = default;
     AirTerminalSingleDuctConstantVolumeCooledBeam(AirTerminalSingleDuctConstantVolumeCooledBeam&& other) = default;

@@ -33,7 +33,7 @@ namespace model {
 
     explicit AirTerminalSingleDuctConstantVolumeReheat(const Model& model, Schedule& availabilitySchedule, HVACComponent& coil);
 
-    virtual ~AirTerminalSingleDuctConstantVolumeReheat() = default;
+    virtual ~AirTerminalSingleDuctConstantVolumeReheat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirTerminalSingleDuctConstantVolumeReheat(const AirTerminalSingleDuctConstantVolumeReheat& other) = default;
     AirTerminalSingleDuctConstantVolumeReheat(AirTerminalSingleDuctConstantVolumeReheat&& other) = default;

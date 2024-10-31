@@ -29,7 +29,7 @@ namespace model {
       ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl(const ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl& other,
                                                                  Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl() = default;
+      virtual ~ExternalInterfaceFunctionalMockupUnitExportToSchedule_Impl() override = default;
 
       //@}
       /** @name Getters */

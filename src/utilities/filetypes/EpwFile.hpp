@@ -126,7 +126,7 @@ OPENSTUDIO_ENUM(EpwComputedField,
   ((Density)(Density))
   ((SpecificVolume)(Specific Volume))
 );
-// cppcheck-suppress unknownMacro
+// cppcheck-suppress [unknownMacro, syntaxError]
 OPENSTUDIO_ENUM(EpwDesignField,
   ((TitleOfDesignCondition)(Title of Design Condition)(0))
   ((Blank)(Blank))

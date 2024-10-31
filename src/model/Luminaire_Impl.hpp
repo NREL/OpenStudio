@@ -36,7 +36,7 @@ namespace model {
 
       Luminaire_Impl(const Luminaire_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Luminaire_Impl() = default;
+      virtual ~Luminaire_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

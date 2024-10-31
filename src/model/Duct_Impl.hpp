@@ -27,7 +27,7 @@ namespace model {
 
       Duct_Impl(const Duct_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Duct_Impl() = default;
+      virtual ~Duct_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -28,7 +28,7 @@ namespace model {
    public:
     explicit SizingSystem(const Model& model, const AirLoopHVAC& airLoopHVAC);
 
-    virtual ~SizingSystem() = default;
+    virtual ~SizingSystem() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SizingSystem(const SizingSystem& other) = default;
     SizingSystem(SizingSystem&& other) = default;

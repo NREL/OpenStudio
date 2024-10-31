@@ -31,7 +31,7 @@ namespace model {
                         std::string gas1Type = "Air", double gas1Fraction = .97, std::string gas2Type = "Argon", double gas2Fraction = 0.01,
                         std::string gas3Type = "Krypton", double gas3Fraction = 0.01, std::string gas4Type = "Xenon", double gas4Fraction = 0.01);
 
-    virtual ~GasMixture() = default;
+    virtual ~GasMixture() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GasMixture(const GasMixture& other) = default;
     GasMixture(GasMixture&& other) = default;

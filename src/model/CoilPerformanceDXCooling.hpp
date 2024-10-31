@@ -35,7 +35,7 @@ namespace model {
                                       const Curve& coolingCapacityFunctionofFlowFraction, const Curve& energyInputRatioFunctionofTemperature,
                                       const Curve& energyInputRatioFunctionofFlowFraction, const Curve& partLoadFractionCorrelation);
 
-    virtual ~CoilPerformanceDXCooling() = default;
+    virtual ~CoilPerformanceDXCooling() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilPerformanceDXCooling(const CoilPerformanceDXCooling& other) = default;
     CoilPerformanceDXCooling(CoilPerformanceDXCooling&& other) = default;

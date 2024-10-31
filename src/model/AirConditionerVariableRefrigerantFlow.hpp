@@ -32,7 +32,7 @@ namespace model {
    public:
     explicit AirConditionerVariableRefrigerantFlow(const Model& model);
 
-    virtual ~AirConditionerVariableRefrigerantFlow() = default;
+    virtual ~AirConditionerVariableRefrigerantFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirConditionerVariableRefrigerantFlow(const AirConditionerVariableRefrigerantFlow& other) = default;
     AirConditionerVariableRefrigerantFlow(AirConditionerVariableRefrigerantFlow&& other) = default;

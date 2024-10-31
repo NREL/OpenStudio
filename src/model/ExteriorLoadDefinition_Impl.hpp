@@ -30,7 +30,7 @@ namespace model {
       // Clone copy constructor.
       ExteriorLoadDefinition_Impl(const ExteriorLoadDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExteriorLoadDefinition_Impl() = default;
+      virtual ~ExteriorLoadDefinition_Impl() override = default;
 
       /// Removes the definition and all instances.
       virtual std::vector<openstudio::IdfObject> remove() override;

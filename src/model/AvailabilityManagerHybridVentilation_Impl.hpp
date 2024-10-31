@@ -32,7 +32,7 @@ namespace model {
 
       AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AvailabilityManagerHybridVentilation_Impl() = default;
+      virtual ~AvailabilityManagerHybridVentilation_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

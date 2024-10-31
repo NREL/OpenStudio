@@ -33,7 +33,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject
   //@{
 
   // TODO: virtual dtor, but no copy ctor / assignment nor move ones... The move ones will **not** be declared/defaulted
-  virtual ~WorkspaceObject() = default;
+  virtual ~WorkspaceObject() override = default;
 
   WorkspaceObject(const WorkspaceObject& other) = default;
   WorkspaceObject(WorkspaceObject&& other) = default;

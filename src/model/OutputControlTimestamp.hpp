@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputControlTimestamp() = default;
+    virtual ~OutputControlTimestamp() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputControlTimestamp(const OutputControlTimestamp& other) = default;
     OutputControlTimestamp(OutputControlTimestamp&& other) = default;

@@ -27,7 +27,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~RunPeriod() = default;
+    virtual ~RunPeriod() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RunPeriod(const RunPeriod& other) = default;
     RunPeriod(RunPeriod&& other) = default;

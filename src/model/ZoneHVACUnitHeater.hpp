@@ -31,7 +31,7 @@ namespace model {
 
     ZoneHVACUnitHeater(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil);
 
-    virtual ~ZoneHVACUnitHeater() = default;
+    virtual ~ZoneHVACUnitHeater() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACUnitHeater(const ZoneHVACUnitHeater& other) = default;
     ZoneHVACUnitHeater(ZoneHVACUnitHeater&& other) = default;

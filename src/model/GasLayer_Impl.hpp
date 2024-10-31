@@ -32,7 +32,7 @@ namespace model {
       // Clone copy constructor.
       GasLayer_Impl(const GasLayer_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GasLayer_Impl() = default;
+      virtual ~GasLayer_Impl() override = default;
 
       //@}
       /** @name Getters */

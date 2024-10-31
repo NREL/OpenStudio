@@ -31,7 +31,7 @@ namespace model {
 
       ElectricEquipmentITEAirCooledDefinition_Impl(const ElectricEquipmentITEAirCooledDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ElectricEquipmentITEAirCooledDefinition_Impl() = default;
+      virtual ~ElectricEquipmentITEAirCooledDefinition_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

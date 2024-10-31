@@ -63,7 +63,7 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-    virtual ~ModelObject() = default;
+    virtual ~ModelObject() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ModelObject(const ModelObject& other) = default;
     ModelObject(ModelObject&& other) = default;

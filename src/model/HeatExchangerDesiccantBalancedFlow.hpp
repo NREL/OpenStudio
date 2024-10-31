@@ -33,7 +33,7 @@ namespace model {
     explicit HeatExchangerDesiccantBalancedFlow(const Model& model,
                                                 const HeatExchangerDesiccantBalancedFlowPerformanceDataType1& heatExchangerPerformance);
 
-    virtual ~HeatExchangerDesiccantBalancedFlow() = default;
+    virtual ~HeatExchangerDesiccantBalancedFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     HeatExchangerDesiccantBalancedFlow(const HeatExchangerDesiccantBalancedFlow& other) = default;
     HeatExchangerDesiccantBalancedFlow(HeatExchangerDesiccantBalancedFlow&& other) = default;

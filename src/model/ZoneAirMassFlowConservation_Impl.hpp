@@ -27,7 +27,7 @@ namespace model {
 
       ZoneAirMassFlowConservation_Impl(const ZoneAirMassFlowConservation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneAirMassFlowConservation_Impl() = default;
+      virtual ~ZoneAirMassFlowConservation_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

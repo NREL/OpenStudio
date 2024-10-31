@@ -32,7 +32,7 @@ namespace model {
 
     explicit People(const PeopleDefinition& peopleDefinition);
 
-    virtual ~People() = default;
+    virtual ~People() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     People(const People& other) = default;
     People(People&& other) = default;

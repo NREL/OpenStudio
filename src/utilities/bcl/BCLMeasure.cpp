@@ -177,9 +177,6 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   std::string testTemplate;
 
   std::string templateClassName;
-  std::string templateName = "NAME_TEXT";
-  std::string templateDescription = "DESCRIPTION_TEXT";
-  std::string templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
   std::vector<BCLMeasureArgument> arguments;
   std::vector<BCLMeasureOutput> outputs;
   std::string testOSM;
@@ -257,6 +254,9 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
   if (!measureTemplate.empty()) {
     measureString = ::openstudio::embedded_files::getFileAsString(measureTemplate);
     boost::replace_all(measureString, templateClassName, className);
+    std::string templateName = "NAME_TEXT";
+    std::string templateDescription = "DESCRIPTION_TEXT";
+    std::string templateModelerDescription = "MODELER_DESCRIPTION_TEXT";
     boost::replace_all(measureString, templateName, name);
     boost::replace_all(measureString, templateModelerDescription, modelerDescription);  // put first as this includes description tag
     boost::replace_all(measureString, templateDescription, description);
@@ -823,7 +823,6 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
   boost::optional<openstudio::path> rubyScriptPath_ = primaryRubyScriptPath();
   if (rubyScriptPath_ && exists(*rubyScriptPath_)) {
 
-    std::string fileString;
     openstudio::filesystem::ifstream file(*rubyScriptPath_, std::ios_base::binary);
     if (file.is_open()) {
 
@@ -832,7 +831,7 @@ bool BCLMeasure::updateMeasureScript(const MeasureType& oldMeasureType, const Me
       std::string descriptionFunction = "$1def description\n$1  return \"" + description + "\"\n$1end";
       std::string modelerDescriptionFunction = "$1def modeler_description\n$1  return \"" + modelerDescription + "\"\n$1end";
 
-      fileString = openstudio::filesystem::read_as_string(file);
+      std::string fileString = openstudio::filesystem::read_as_string(file);
 
       boost::regex re;
 

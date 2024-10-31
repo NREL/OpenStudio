@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputSQLite() = default;
+    virtual ~OutputSQLite() override = default;
 
     //@}
 

@@ -223,7 +223,7 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Addition_QuantityVectorBaseCase) 
 TEST_F(UnitsFixture, OSQuantityVector_Profiling_Addition_OSQuantityVector) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     Quantity other(10.0, createSIPower());
-    OSQuantityVector result = testOSQuantityVector + other;
+    [[maybe_unused]] OSQuantityVector result = testOSQuantityVector + other;
   }
 }
 /*
@@ -240,6 +240,6 @@ TEST_F(UnitsFixture,OSQuantityVector_Profiling_Multiplication_QuantityVectorBase
 TEST_F(UnitsFixture, OSQuantityVector_Profiling_Multiplication_OSQuantityVector) {
   for (unsigned i = 0, n = 10; i < n; ++i) {
     Quantity other(8.0, createWhTime());
-    OSQuantityVector result = testOSQuantityVector * other;
+    [[maybe_unused]] OSQuantityVector result = testOSQuantityVector * other;
   }
 }

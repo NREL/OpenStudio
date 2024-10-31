@@ -29,7 +29,7 @@ namespace model {
 
       PythonPluginOutputVariable_Impl(const PythonPluginOutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PythonPluginOutputVariable_Impl() = default;
+      virtual ~PythonPluginOutputVariable_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

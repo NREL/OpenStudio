@@ -4,6 +4,8 @@
 ***********************************************************************************************************************/
 
 #include "RubyCLI.hpp"
+#include "MeasureUpdateCommand.hpp"
+#include "RunCommand.hpp"
 #include "UpdateCommand.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 #include "../workflow/OSWorkflow.hpp"
@@ -14,10 +16,7 @@
 #include "../measure/ModelMeasure.hpp"
 #include "../measure/EnergyPlusMeasure.hpp"
 #include "../measure/ReportingMeasure.hpp"
-
-#include "RunCommand.hpp"
-#include "MeasureUpdateCommand.hpp"
-#include "measure/OSMeasureInfoGetter.hpp"
+#include "../measure/OSMeasureInfoGetter.hpp"
 
 #include <OpenStudio.hxx>
 

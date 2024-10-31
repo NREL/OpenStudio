@@ -36,7 +36,7 @@ namespace model {
     AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode& node1, const AirflowNetworkNode& node2,
                                       const AirflowNetworkComponent& component);
 
-    virtual ~AirflowNetworkDistributionLinkage() = default;
+    virtual ~AirflowNetworkDistributionLinkage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkDistributionLinkage(const AirflowNetworkDistributionLinkage& other) = default;
     AirflowNetworkDistributionLinkage(AirflowNetworkDistributionLinkage&& other) = default;

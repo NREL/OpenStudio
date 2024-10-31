@@ -25,7 +25,7 @@ namespace model {
    public:
     AirflowNetworkNode(IddObjectType type, const Model& model);
 
-    virtual ~AirflowNetworkNode() = default;
+    virtual ~AirflowNetworkNode() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkNode(const AirflowNetworkNode& other) = default;
     AirflowNetworkNode(AirflowNetworkNode&& other) = default;

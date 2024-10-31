@@ -47,15 +47,17 @@
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
-#include "utilities/core/Compare.hpp"
-#include "utilities/geometry/BoundingBox.hpp"
-#include "utilities/xml/XMLValidator.hpp"
+#include "../../utilities/core/Compare.hpp"
+#include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/xml/XMLValidator.hpp"
+
 #include <resources.hxx>
 
-#include <sstream>
-#include <iostream>
-#include <algorithm>
 #include <pugixml.hpp>
+
+#include <algorithm>
+#include <iostream>
+#include <sstream>
 
 using namespace openstudio::model;
 using namespace openstudio::gbxml;

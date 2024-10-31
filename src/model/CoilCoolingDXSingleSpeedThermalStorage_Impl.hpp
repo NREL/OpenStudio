@@ -54,7 +54,7 @@ namespace model {
 
       CoilCoolingDXSingleSpeedThermalStorage_Impl(const CoilCoolingDXSingleSpeedThermalStorage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilCoolingDXSingleSpeedThermalStorage_Impl() = default;
+      virtual ~CoilCoolingDXSingleSpeedThermalStorage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

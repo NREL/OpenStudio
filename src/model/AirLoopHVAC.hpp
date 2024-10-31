@@ -59,7 +59,7 @@ namespace model {
    */
     explicit AirLoopHVAC(Model& model, bool dualDuct = false);
 
-    virtual ~AirLoopHVAC() = default;
+    virtual ~AirLoopHVAC() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVAC(const AirLoopHVAC& other) = default;
     AirLoopHVAC(AirLoopHVAC&& other) = default;

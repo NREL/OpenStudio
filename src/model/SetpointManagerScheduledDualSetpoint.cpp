@@ -139,24 +139,12 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_SetpointManager_Scheduled_DualSetpointFields::ControlVariable);
   }
 
-  std::string SetpointManagerScheduledDualSetpoint::controlVariable() const {
-    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->controlVariable();
-  }
-
   boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::highSetpointSchedule() const {
     return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->highSetpointSchedule();
   }
 
   boost::optional<Schedule> SetpointManagerScheduledDualSetpoint::lowSetpointSchedule() const {
     return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->lowSetpointSchedule();
-  }
-
-  boost::optional<Node> SetpointManagerScheduledDualSetpoint::setpointNode() const {
-    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setpointNode();
-  }
-
-  bool SetpointManagerScheduledDualSetpoint::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerScheduledDualSetpoint_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerScheduledDualSetpoint::setHighSetpointSchedule(Schedule& schedule) {

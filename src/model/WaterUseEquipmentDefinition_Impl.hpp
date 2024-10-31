@@ -26,7 +26,7 @@ namespace model {
 
       WaterUseEquipmentDefinition_Impl(const WaterUseEquipmentDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~WaterUseEquipmentDefinition_Impl() = default;
+      virtual ~WaterUseEquipmentDefinition_Impl() override = default;
 
       // TODO: remove (unused)
       virtual const std::vector<std::string>& outputVariableNames() const override;

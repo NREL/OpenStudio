@@ -234,7 +234,7 @@ void initializeOutFiles(GenerateIddFactoryOutFiles& outFiles, const std::vector<
                                   << "}" << '\n';
 
   // start other IddFactory cxx files
-  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
+  for (const std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile << "#include <utilities/idd/IddFactory.hxx>" << '\n'
                       << "#include <utilities/idd/IddEnums.hxx>" << '\n'
                       << '\n'
@@ -751,7 +751,7 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles, GenerateIddFacto
   outFiles.iddFactoryCxx.tempFile << '\n' << "} // openstudio" << '\n';
 
   // close out other IddFactory cxx files
-  for (std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
+  for (const std::shared_ptr<IddFactoryOutFile>& cxxFile : outFiles.iddFactoryIddFileCxxs) {
     cxxFile->tempFile << '\n' << "} // openstudio" << '\n';
   }
 

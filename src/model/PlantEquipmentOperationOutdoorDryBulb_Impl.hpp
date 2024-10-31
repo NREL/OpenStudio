@@ -27,7 +27,7 @@ namespace model {
 
       PlantEquipmentOperationOutdoorDryBulb_Impl(const PlantEquipmentOperationOutdoorDryBulb_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PlantEquipmentOperationOutdoorDryBulb_Impl() = default;
+      virtual ~PlantEquipmentOperationOutdoorDryBulb_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

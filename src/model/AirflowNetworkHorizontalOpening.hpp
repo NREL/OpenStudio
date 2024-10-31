@@ -31,7 +31,7 @@ namespace model {
     AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
                                     double slopingPlaneAngle, double dischargeCoefficient);
 
-    virtual ~AirflowNetworkHorizontalOpening() = default;
+    virtual ~AirflowNetworkHorizontalOpening() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkHorizontalOpening(const AirflowNetworkHorizontalOpening& other) = default;
     AirflowNetworkHorizontalOpening(AirflowNetworkHorizontalOpening&& other) = default;

@@ -29,7 +29,7 @@ namespace model {
 
       OutputTableSummaryReports_Impl(const OutputTableSummaryReports_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputTableSummaryReports_Impl() = default;
+      virtual ~OutputTableSummaryReports_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

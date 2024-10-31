@@ -32,7 +32,7 @@ namespace model {
 
     explicit PipeIndoor(const Model& model);
 
-    virtual ~PipeIndoor() = default;
+    virtual ~PipeIndoor() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     PipeIndoor(const PipeIndoor& other) = default;
     PipeIndoor(PipeIndoor&& other) = default;

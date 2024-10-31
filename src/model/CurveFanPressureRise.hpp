@@ -29,7 +29,7 @@ namespace model {
     /** Sets \f$c_1 = c_2 = c_3 = c_4 = 1.0,\ Q_{fan}\ \text{within}\ [0.0,10.0], P_{sm}\ \text{within}\ [0.0,500.0]\f$ */
     explicit CurveFanPressureRise(const Model& model);
 
-    virtual ~CurveFanPressureRise() = default;
+    virtual ~CurveFanPressureRise() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveFanPressureRise(const CurveFanPressureRise& other) = default;
     CurveFanPressureRise(CurveFanPressureRise&& other) = default;

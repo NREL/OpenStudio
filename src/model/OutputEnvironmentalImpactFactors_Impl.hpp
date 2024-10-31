@@ -27,7 +27,7 @@ namespace model {
 
       OutputEnvironmentalImpactFactors_Impl(const OutputEnvironmentalImpactFactors_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputEnvironmentalImpactFactors_Impl() = default;
+      virtual ~OutputEnvironmentalImpactFactors_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

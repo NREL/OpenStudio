@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputConstructions() = default;
+    virtual ~OutputConstructions() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputConstructions(const OutputConstructions& other) = default;
     OutputConstructions(OutputConstructions&& other) = default;

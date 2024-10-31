@@ -38,7 +38,7 @@ namespace model {
     /** This constructor requires a user-specified schedule. */
     ExteriorLights(const ExteriorLightsDefinition& definition, Schedule& schedule);
 
-    virtual ~ExteriorLights() = default;
+    virtual ~ExteriorLights() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorLights(const ExteriorLights& other) = default;
     ExteriorLights(ExteriorLights&& other) = default;

@@ -141,10 +141,11 @@ namespace model {
     OS_ASSERT(getImpl<detail::AirLoopHVACZoneMixer_Impl>());
   }
 
-  AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> p) : Mixer(std::move(p)) {}
+  AirLoopHVACZoneMixer::AirLoopHVACZoneMixer(std::shared_ptr<detail::AirLoopHVACZoneMixer_Impl> impl) : Mixer(std::move(impl)) {}
 
-  std::vector<openstudio::IdfObject> AirLoopHVACZoneMixer::remove() {
-    return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->remove();
+  IddObjectType AirLoopHVACZoneMixer::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
+    return result;
   }
 
   unsigned AirLoopHVACZoneMixer::outletPort() const {
@@ -157,23 +158,6 @@ namespace model {
 
   unsigned AirLoopHVACZoneMixer::nextInletPort() const {
     return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->nextInletPort();
-  }
-
-  bool AirLoopHVACZoneMixer::addToNode(Node& node) {
-    return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->addToNode(node);
-  }
-
-  ModelObject AirLoopHVACZoneMixer::clone(Model model) const {
-    return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->clone(model);
-  }
-
-  void AirLoopHVACZoneMixer::disconnect() {
-    return getImpl<detail::AirLoopHVACZoneMixer_Impl>()->disconnect();
-  }
-
-  IddObjectType AirLoopHVACZoneMixer::iddObjectType() {
-    IddObjectType result(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
-    return result;
   }
 
   AirflowNetworkDistributionNode AirLoopHVACZoneMixer::getAirflowNetworkDistributionNode() {

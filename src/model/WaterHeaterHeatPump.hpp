@@ -36,7 +36,7 @@ namespace model {
     explicit WaterHeaterHeatPump(const Model& model, const ModelObject& dxCoil, const HVACComponent& tank, const HVACComponent& fan,
                                  Schedule& compressorSetpointTemperatureSchedule, Schedule& inletAirMixerSchedule);
 
-    virtual ~WaterHeaterHeatPump() = default;
+    virtual ~WaterHeaterHeatPump() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterHeaterHeatPump(const WaterHeaterHeatPump& other) = default;
     WaterHeaterHeatPump(WaterHeaterHeatPump&& other) = default;

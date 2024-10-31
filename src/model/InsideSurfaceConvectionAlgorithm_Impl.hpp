@@ -30,7 +30,7 @@ namespace model {
       InsideSurfaceConvectionAlgorithm_Impl(const InsideSurfaceConvectionAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~InsideSurfaceConvectionAlgorithm_Impl() = default;
+      virtual ~InsideSurfaceConvectionAlgorithm_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

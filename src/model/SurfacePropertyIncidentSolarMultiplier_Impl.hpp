@@ -30,7 +30,7 @@ namespace model {
 
       SurfacePropertyIncidentSolarMultiplier_Impl(const SurfacePropertyIncidentSolarMultiplier_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyIncidentSolarMultiplier_Impl() = default;
+      virtual ~SurfacePropertyIncidentSolarMultiplier_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

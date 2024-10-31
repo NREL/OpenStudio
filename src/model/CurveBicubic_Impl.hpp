@@ -27,7 +27,7 @@ namespace model {
 
       CurveBicubic_Impl(const CurveBicubic_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveBicubic_Impl() = default;
+      virtual ~CurveBicubic_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

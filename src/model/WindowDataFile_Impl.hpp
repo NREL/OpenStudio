@@ -27,7 +27,7 @@ namespace model {
       WindowDataFile_Impl(const WindowDataFile_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~WindowDataFile_Impl() = default;
+      virtual ~WindowDataFile_Impl() override = default;
 
       //@}
       /** @name Getters */

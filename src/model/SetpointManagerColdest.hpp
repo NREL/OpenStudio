@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerColdest(const Model& model);
 
-    virtual ~SetpointManagerColdest() = default;
+    virtual ~SetpointManagerColdest() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerColdest(const SetpointManagerColdest& other) = default;
     SetpointManagerColdest(SetpointManagerColdest&& other) = default;
@@ -48,21 +48,15 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double minimumSetpointTemperature() const;
 
     double maximumSetpointTemperature() const;
 
     std::string strategy() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 

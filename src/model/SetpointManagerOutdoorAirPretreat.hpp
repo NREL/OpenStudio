@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerOutdoorAirPretreat(const Model& model);
 
-    virtual ~SetpointManagerOutdoorAirPretreat() = default;
+    virtual ~SetpointManagerOutdoorAirPretreat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerOutdoorAirPretreat(const SetpointManagerOutdoorAirPretreat& other) = default;
     SetpointManagerOutdoorAirPretreat(SetpointManagerOutdoorAirPretreat&& other) = default;
@@ -45,8 +45,6 @@ namespace model {
 
     /** @name Getters */
     //@{
-
-    std::string controlVariable() const;
 
     double minimumSetpointTemperature() const;
 
@@ -72,13 +70,9 @@ namespace model {
 
     boost::optional<Node> returnAirStreamNode() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     void resetControlVariable();
 

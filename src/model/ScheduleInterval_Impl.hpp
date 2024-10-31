@@ -31,7 +31,7 @@ namespace model {
       ScheduleInterval_Impl(const ScheduleInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
       // virtual destructor
-      virtual ~ScheduleInterval_Impl() = default;
+      virtual ~ScheduleInterval_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

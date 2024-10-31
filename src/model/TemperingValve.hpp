@@ -29,7 +29,7 @@ namespace model {
 
     explicit TemperingValve(const Model& model);
 
-    virtual ~TemperingValve() = default;
+    virtual ~TemperingValve() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     TemperingValve(const TemperingValve& other) = default;
     TemperingValve(TemperingValve&& other) = default;

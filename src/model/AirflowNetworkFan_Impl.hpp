@@ -33,7 +33,7 @@ namespace model {
 
       AirflowNetworkFan_Impl(const AirflowNetworkFan_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~AirflowNetworkFan_Impl() = default;
+      virtual ~AirflowNetworkFan_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

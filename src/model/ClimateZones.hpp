@@ -87,7 +87,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ClimateZones() = default;
+    virtual ~ClimateZones() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ClimateZones(const ClimateZones& other) = default;
     ClimateZones(ClimateZones&& other) = default;

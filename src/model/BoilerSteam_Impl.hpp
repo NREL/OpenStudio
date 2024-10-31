@@ -30,7 +30,7 @@ namespace model {
 
       BoilerSteam_Impl(const BoilerSteam_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~BoilerSteam_Impl() = default;
+      virtual ~BoilerSteam_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

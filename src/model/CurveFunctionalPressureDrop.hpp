@@ -38,7 +38,7 @@ namespace model {
     /** Sets \f$D = 0.05\f$ */
     explicit CurveFunctionalPressureDrop(const Model& model);
 
-    virtual ~CurveFunctionalPressureDrop() = default;
+    virtual ~CurveFunctionalPressureDrop() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CurveFunctionalPressureDrop(const CurveFunctionalPressureDrop& other) = default;
     CurveFunctionalPressureDrop(CurveFunctionalPressureDrop&& other) = default;

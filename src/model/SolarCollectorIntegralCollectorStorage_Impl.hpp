@@ -32,7 +32,7 @@ namespace model {
 
       SolarCollectorIntegralCollectorStorage_Impl(const SolarCollectorIntegralCollectorStorage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SolarCollectorIntegralCollectorStorage_Impl() = default;
+      virtual ~SolarCollectorIntegralCollectorStorage_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

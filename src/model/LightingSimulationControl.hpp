@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~LightingSimulationControl() = default;
+    virtual ~LightingSimulationControl() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     LightingSimulationControl(const LightingSimulationControl& other) = default;
     LightingSimulationControl(LightingSimulationControl&& other) = default;

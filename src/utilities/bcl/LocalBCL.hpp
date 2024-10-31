@@ -47,7 +47,7 @@ class UTILITIES_API LocalBCL : public BCL
   static void close();
 
   /// virtual destructor
-  virtual ~LocalBCL();
+  virtual ~LocalBCL() override;
 
   //@}
   /** @name Inherited members */
@@ -71,6 +71,7 @@ class UTILITIES_API LocalBCL : public BCL
   // TODO: make this take a vector of remote bcl filters
   /// Perform a component search of the library
   std::vector<BCLComponent> searchComponents(const std::string& searchTerm, const std::string& componentType) const;
+  // cppcheck-suppress functionStatic
   std::vector<BCLComponent> searchComponents(const std::string& searchTerm, const unsigned componentTypeTID) const;
 
   // TODO: make this take a vector of remote bcl filters

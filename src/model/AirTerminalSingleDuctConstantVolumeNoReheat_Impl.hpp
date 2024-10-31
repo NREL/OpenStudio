@@ -31,7 +31,7 @@ namespace model {
                                                        bool keepHandle);
 
       // virtual destructor
-      virtual ~AirTerminalSingleDuctConstantVolumeNoReheat_Impl() = default;
+      virtual ~AirTerminalSingleDuctConstantVolumeNoReheat_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

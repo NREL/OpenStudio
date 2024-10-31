@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     # That container is too old to work with the actions that are on node20 now...
     #container:
     #  image: nrel/cppcheck:2.3
@@ -36,6 +36,11 @@ jobs:
             --suppress=useStlAlgorithm \
             --suppress=unmatchedSuppression \
             --suppress=unusedPrivateFunction \
+            --suppress=missingIncludeSystem \
+            --suppress=normalCheckLevelMaxBranches \
+            --suppress=returnByReference \
+            --suppress=shadowFunction \
+            --suppress=checkersReport \
             --suppress=functionStatic:src/utilities/core/EnumBase.hpp \
             --suppress=functionStatic:src/utilities/core/StaticInitializer.hpp \
             --suppress=functionStatic:src/utilities/units/QuantityFactory.hpp \
@@ -55,11 +60,11 @@ jobs:
             --template='[{file}:{line}]:({severity}),[{id}],{message}' \
             -j $(nproc) \
             --max-configs=1 \
-            -i src/cli/test \
-            -i src/airflow/contam \
-            -i src/polypartition \
-            -i src/nano \
-            ./src \
+            -i src/cli/test/ \
+            -i src/airflow/contam/ \
+            -i src/polypartition/ \
+            -i src/nano/ \
+            . \
             3>&1 1>&2 2>&3 | tee cppcheck.txt
 
     - name: Parse and colorize cppcheck

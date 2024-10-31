@@ -31,7 +31,7 @@ namespace model {
 
       SurfaceControlMovableInsulation_Impl(const SurfaceControlMovableInsulation_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfaceControlMovableInsulation_Impl() = default;
+      virtual ~SurfaceControlMovableInsulation_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

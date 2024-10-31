@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerMultiZoneMinimumHumidityAverage(const Model& model);
 
-    virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() = default;
+    virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerMultiZoneMinimumHumidityAverage(const SetpointManagerMultiZoneMinimumHumidityAverage& other) = default;
     SetpointManagerMultiZoneMinimumHumidityAverage(SetpointManagerMultiZoneMinimumHumidityAverage&& other) = default;
@@ -54,10 +54,6 @@ namespace model {
 
     bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-    boost::optional<Node> setpointNode() const;
-
-    std::string controlVariable() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -69,8 +65,6 @@ namespace model {
     bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
     void resetMaximumSetpointHumidityRatio();
-
-    bool setControlVariable(const std::string& controlVariable);
 
     //@}
     /** @name Other */

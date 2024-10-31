@@ -29,7 +29,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~AirflowNetworkZoneExhaustFan() = default;
+    virtual ~AirflowNetworkZoneExhaustFan() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkZoneExhaustFan(const AirflowNetworkZoneExhaustFan& other) = default;
     AirflowNetworkZoneExhaustFan(AirflowNetworkZoneExhaustFan&& other) = default;

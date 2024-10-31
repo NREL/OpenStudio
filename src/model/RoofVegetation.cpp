@@ -731,6 +731,7 @@ namespace model {
     return getImpl<detail::RoofVegetation_Impl>()->isRoughnessDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   double RoofVegetation::thickness() const {
     return getImpl<detail::RoofVegetation_Impl>()->thickness();
   }
@@ -763,6 +764,7 @@ namespace model {
     return getImpl<detail::RoofVegetation_Impl>()->isSpecificHeatofDrySoilDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   OptionalDouble RoofVegetation::thermalAbsorptance() const {
     return getImpl<detail::RoofVegetation_Impl>()->thermalAbsorptance();
   }
@@ -771,6 +773,7 @@ namespace model {
     return getImpl<detail::RoofVegetation_Impl>()->isThermalAbsorptanceDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   OptionalDouble RoofVegetation::solarAbsorptance() const {
     return getImpl<detail::RoofVegetation_Impl>()->solarAbsorptance();
   }
@@ -779,6 +782,7 @@ namespace model {
     return getImpl<detail::RoofVegetation_Impl>()->isSolarAbsorptanceDefaulted();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   OptionalDouble RoofVegetation::visibleAbsorptance() const {
     return getImpl<detail::RoofVegetation_Impl>()->visibleAbsorptance();
   }
@@ -899,6 +903,7 @@ namespace model {
     getImpl<detail::RoofVegetation_Impl>()->resetRoughness();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool RoofVegetation::setThickness(double thickness) {
     return getImpl<detail::RoofVegetation_Impl>()->setThickness(thickness);
   }
@@ -931,6 +936,7 @@ namespace model {
     getImpl<detail::RoofVegetation_Impl>()->resetSpecificHeatofDrySoil();
   }
 
+  // cppcheck-suppress [duplInheritedMember] for documentation purposes
   bool RoofVegetation::setThermalAbsorptance(double thermalAbsorptance) {
     return getImpl<detail::RoofVegetation_Impl>()->setThermalAbsorptance(thermalAbsorptance);
   }

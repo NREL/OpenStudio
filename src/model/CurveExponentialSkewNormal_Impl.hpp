@@ -28,7 +28,7 @@ namespace model {
 
       CurveExponentialSkewNormal_Impl(const CurveExponentialSkewNormal_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveExponentialSkewNormal_Impl() = default;
+      virtual ~CurveExponentialSkewNormal_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

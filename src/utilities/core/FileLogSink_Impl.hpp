@@ -23,7 +23,7 @@ namespace detail {
     FileLogSink_Impl(const openstudio::path& path);
 
     /// destructor, does not disable log sink
-    virtual ~FileLogSink_Impl();
+    virtual ~FileLogSink_Impl() override;
 
     /// returns the path that log messages are written to
     openstudio::path path() const;

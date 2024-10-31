@@ -31,7 +31,7 @@ namespace model {
       AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other, Model_Impl* model,
                                                        bool keepHandle);
 
-      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() = default;
+      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

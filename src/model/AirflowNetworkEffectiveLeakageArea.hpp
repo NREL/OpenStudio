@@ -32,7 +32,7 @@ namespace model {
     AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea, double dischargeCoefficient,
                                        double referencePressureDifference, double massFlowExponent);
 
-    virtual ~AirflowNetworkEffectiveLeakageArea() = default;
+    virtual ~AirflowNetworkEffectiveLeakageArea() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirflowNetworkEffectiveLeakageArea(const AirflowNetworkEffectiveLeakageArea& other) = default;
     AirflowNetworkEffectiveLeakageArea(AirflowNetworkEffectiveLeakageArea&& other) = default;

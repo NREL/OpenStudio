@@ -28,7 +28,7 @@ namespace model {
 
       Blind_Impl(const Blind_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Blind_Impl() = default;
+      virtual ~Blind_Impl() override = default;
 
       //@}
 

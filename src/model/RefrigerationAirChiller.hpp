@@ -37,7 +37,7 @@ namespace model {
 
     explicit RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule);
 
-    virtual ~RefrigerationAirChiller() = default;
+    virtual ~RefrigerationAirChiller() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationAirChiller(const RefrigerationAirChiller& other) = default;
     RefrigerationAirChiller(RefrigerationAirChiller&& other) = default;

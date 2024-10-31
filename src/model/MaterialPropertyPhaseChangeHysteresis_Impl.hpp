@@ -31,7 +31,7 @@ namespace model {
 
       MaterialPropertyPhaseChangeHysteresis_Impl(const MaterialPropertyPhaseChangeHysteresis_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~MaterialPropertyPhaseChangeHysteresis_Impl() = default;
+      virtual ~MaterialPropertyPhaseChangeHysteresis_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

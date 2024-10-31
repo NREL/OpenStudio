@@ -30,7 +30,7 @@ namespace model {
 
       RefrigerationWalkInZoneBoundary_Impl(const RefrigerationWalkInZoneBoundary_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~RefrigerationWalkInZoneBoundary_Impl() = default;
+      virtual ~RefrigerationWalkInZoneBoundary_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

@@ -92,7 +92,7 @@ void writeEnumFast(std::ostream& t_os, const std::string& t_name, const Containe
        << "   : EnumBase<" << t_name << ">(t_value) {} " << '\n'
        << "  static std::string enumName() " << '\n'
        << "  { return \"" << t_name << "\"; }" << '\n'
-       << "  domain value() const { return static_cast<domain>(EnumBase<" << t_name << ">::value()); }" << '\n'
+       << "  domain value() const { return static_cast<domain>(EnumBase<" << t_name << ">::integer_value()); }" << '\n'
        <<
 
     "   private:" << '\n'

@@ -30,7 +30,7 @@ namespace model {
 
     explicit SetpointManagerFollowGroundTemperature(const Model& model);
 
-    virtual ~SetpointManagerFollowGroundTemperature() = default;
+    virtual ~SetpointManagerFollowGroundTemperature() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     SetpointManagerFollowGroundTemperature(const SetpointManagerFollowGroundTemperature& other) = default;
     SetpointManagerFollowGroundTemperature(SetpointManagerFollowGroundTemperature&& other) = default;
@@ -48,8 +48,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     std::string referenceGroundTemperatureObjectType() const;
 
     double offsetTemperatureDifference() const;
@@ -58,13 +56,9 @@ namespace model {
 
     double minimumSetpointTemperature() const;
 
-    boost::optional<Node> setpointNode() const;
-
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 

@@ -30,7 +30,7 @@ namespace model {
 
       SiteGroundTemperatureDeep_Impl(const SiteGroundTemperatureDeep_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SiteGroundTemperatureDeep_Impl() = default;
+      virtual ~SiteGroundTemperatureDeep_Impl() override = default;
 
       //@}
 

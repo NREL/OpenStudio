@@ -31,7 +31,7 @@ namespace model {
 
       ZoneHVACComponent_Impl(const ZoneHVACComponent_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~ZoneHVACComponent_Impl() = default;
+      virtual ~ZoneHVACComponent_Impl() override = default;
 
       virtual boost::optional<ParentObject> parent() const override;
 

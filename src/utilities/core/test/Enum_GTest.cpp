@@ -30,6 +30,7 @@ TEST(Enum, EnumThrows) {
   EXPECT_THROW(openstudio::enums::TestEnum("forth"), std::runtime_error);
   // #1741, we expect an informative error message
   try {
+    // cppcheck-suppress unusedScopedObject
     openstudio::enums::TestEnum("forth");
   } catch (std::runtime_error& e) {
     std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH' for Enum TestEnum");
@@ -39,6 +40,7 @@ TEST(Enum, EnumThrows) {
   EXPECT_NO_THROW(openstudio::enums::TestEnum("third"));
   EXPECT_THROW(openstudio::enums::TestEnum(3), std::runtime_error);
   try {
+    // cppcheck-suppress unusedScopedObject
     openstudio::enums::TestEnum(3);
   } catch (std::runtime_error& e) {
     std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3 for Enum TestEnum");

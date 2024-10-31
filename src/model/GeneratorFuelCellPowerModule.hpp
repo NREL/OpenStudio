@@ -46,7 +46,7 @@ namespace model {
 
     explicit GeneratorFuelCellPowerModule(const Model& model);
 
-    virtual ~GeneratorFuelCellPowerModule() = default;
+    virtual ~GeneratorFuelCellPowerModule() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     GeneratorFuelCellPowerModule(const GeneratorFuelCellPowerModule& other) = default;
     GeneratorFuelCellPowerModule(GeneratorFuelCellPowerModule&& other) = default;

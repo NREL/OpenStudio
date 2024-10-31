@@ -30,7 +30,7 @@ namespace model {
 
     explicit AvailabilityManagerDifferentialThermostat(const Model& model);
 
-    virtual ~AvailabilityManagerDifferentialThermostat() = default;
+    virtual ~AvailabilityManagerDifferentialThermostat() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AvailabilityManagerDifferentialThermostat(const AvailabilityManagerDifferentialThermostat& other) = default;
     AvailabilityManagerDifferentialThermostat(AvailabilityManagerDifferentialThermostat&& other) = default;

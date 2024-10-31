@@ -10,11 +10,12 @@
 #include "../BCLXML.hpp"
 #include "../../core/ApplicationPathHelpers.hpp"
 #include "../../core/PathHelpers.hpp"
-#include "utilities/core/Filesystem.hpp"
+#include "../../core/Filesystem.hpp"
+
+#include <pugixml.hpp>
 
 #include <algorithm>
 #include <sstream>
-#include <pugixml.hpp>
 
 using namespace openstudio;
 namespace fs = openstudio::filesystem;

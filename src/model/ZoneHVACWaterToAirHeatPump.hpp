@@ -35,7 +35,7 @@ namespace model {
     ZoneHVACWaterToAirHeatPump(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& heatingCoil,
                                HVACComponent& coolingCoil, HVACComponent& supplementalHeatingCoil);
 
-    virtual ~ZoneHVACWaterToAirHeatPump() = default;
+    virtual ~ZoneHVACWaterToAirHeatPump() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACWaterToAirHeatPump(const ZoneHVACWaterToAirHeatPump& other) = default;
     ZoneHVACWaterToAirHeatPump(ZoneHVACWaterToAirHeatPump&& other) = default;

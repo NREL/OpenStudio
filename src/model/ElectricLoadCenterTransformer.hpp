@@ -32,7 +32,7 @@ namespace model {
 
     explicit ElectricLoadCenterTransformer(const Model& model);
 
-    virtual ~ElectricLoadCenterTransformer() = default;
+    virtual ~ElectricLoadCenterTransformer() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ElectricLoadCenterTransformer(const ElectricLoadCenterTransformer& other) = default;
     ElectricLoadCenterTransformer(ElectricLoadCenterTransformer&& other) = default;

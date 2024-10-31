@@ -27,7 +27,7 @@ namespace model {
   class MODEL_API OutsideSurfaceConvectionAlgorithm : public ModelObject
   {
    public:
-    virtual ~OutsideSurfaceConvectionAlgorithm() = default;
+    virtual ~OutsideSurfaceConvectionAlgorithm() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutsideSurfaceConvectionAlgorithm(const OutsideSurfaceConvectionAlgorithm& other) = default;
     OutsideSurfaceConvectionAlgorithm(OutsideSurfaceConvectionAlgorithm&& other) = default;

@@ -25,7 +25,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputSchedules() = default;
+    virtual ~OutputSchedules() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     OutputSchedules(const OutputSchedules& other) = default;
     OutputSchedules(OutputSchedules&& other) = default;

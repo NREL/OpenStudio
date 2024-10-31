@@ -31,7 +31,7 @@ namespace model {
 
     explicit DaylightingDeviceShelf(const SubSurface& subSurface);
 
-    virtual ~DaylightingDeviceShelf() = default;
+    virtual ~DaylightingDeviceShelf() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     DaylightingDeviceShelf(const DaylightingDeviceShelf& other) = default;
     DaylightingDeviceShelf(DaylightingDeviceShelf&& other) = default;

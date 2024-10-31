@@ -37,7 +37,7 @@ namespace model {
 
       GeneratorFuelCell_Impl(const GeneratorFuelCell_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~GeneratorFuelCell_Impl() = default;
+      virtual ~GeneratorFuelCell_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

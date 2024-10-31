@@ -1306,11 +1306,11 @@ namespace detail {
     // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
     template <typename... Args>
     void execAndThrowOnError(const std::string& bindingStatement, Args&&... args) {
-      if (m_db) {
-        PreparedStatement stmt(bindingStatement, m_db, false, args...);
-        stmt.execAndThrowOnError();
+      if (!m_connectionOpen) {
+        throw std::runtime_error("Error executing SQL statement as database connection is not open.");
       }
-      std::runtime_error("Error executing SQL statement as database connection is not open.");
+      PreparedStatement stmt(bindingStatement, m_db, false, args...);
+      stmt.execAndThrowOnError();
     }
 
     void addSimulation(const openstudio::EpwFile& t_epwFile, const openstudio::DateTime& t_simulationTime, const openstudio::Calendar& t_calendar);

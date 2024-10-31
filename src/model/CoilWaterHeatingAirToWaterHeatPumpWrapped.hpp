@@ -30,7 +30,7 @@ namespace model {
 
     explicit CoilWaterHeatingAirToWaterHeatPumpWrapped(const Model& model);
 
-    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() = default;
+    virtual ~CoilWaterHeatingAirToWaterHeatPumpWrapped() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilWaterHeatingAirToWaterHeatPumpWrapped(const CoilWaterHeatingAirToWaterHeatPumpWrapped& other) = default;
     CoilWaterHeatingAirToWaterHeatPumpWrapped(CoilWaterHeatingAirToWaterHeatPumpWrapped&& other) = default;

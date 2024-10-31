@@ -27,7 +27,7 @@ namespace model {
 
     explicit RefrigerationDefrostCycleParameters(const Model& model);
 
-    virtual ~RefrigerationDefrostCycleParameters() = default;
+    virtual ~RefrigerationDefrostCycleParameters() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     RefrigerationDefrostCycleParameters(const RefrigerationDefrostCycleParameters& other) = default;
     RefrigerationDefrostCycleParameters(RefrigerationDefrostCycleParameters&& other) = default;

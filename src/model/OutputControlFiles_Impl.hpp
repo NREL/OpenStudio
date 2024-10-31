@@ -28,7 +28,7 @@ namespace model {
 
       OutputControlFiles_Impl(const OutputControlFiles_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputControlFiles_Impl() = default;
+      virtual ~OutputControlFiles_Impl() override = default;
 
       //@}
 

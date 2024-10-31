@@ -37,7 +37,7 @@ namespace detail {
      *  \param[in] prettyString optional string to use in place of standardString. */
     IPUnit_Impl(const std::string& scaleAbbreviation, const IPExpnt& exponents = IPExpnt(), const std::string& prettyString = "");
 
-    virtual ~IPUnit_Impl() = default;
+    virtual ~IPUnit_Impl() override = default;
 
     /** Deep copy constructor. */
     virtual Unit clone() const override;

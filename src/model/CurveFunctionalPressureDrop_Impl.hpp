@@ -28,7 +28,7 @@ namespace model {
 
       CurveFunctionalPressureDrop_Impl(const CurveFunctionalPressureDrop_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CurveFunctionalPressureDrop_Impl() = default;
+      virtual ~CurveFunctionalPressureDrop_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

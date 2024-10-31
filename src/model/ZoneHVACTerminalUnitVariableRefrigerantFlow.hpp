@@ -42,7 +42,7 @@ namespace model {
                                                          const CoilHeatingDXVariableRefrigerantFlowFluidTemperatureControl& heatingCoil,
                                                          const HVACComponent& fan);
 
-    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() = default;
+    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ZoneHVACTerminalUnitVariableRefrigerantFlow(const ZoneHVACTerminalUnitVariableRefrigerantFlow& other) = default;
     ZoneHVACTerminalUnitVariableRefrigerantFlow(ZoneHVACTerminalUnitVariableRefrigerantFlow&& other) = default;

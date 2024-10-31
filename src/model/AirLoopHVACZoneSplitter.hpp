@@ -33,7 +33,7 @@ namespace model {
     /** Constructs a new AirLoopHVACZoneSplitter object and places it inside the model. */
     explicit AirLoopHVACZoneSplitter(const Model& model);
 
-    virtual ~AirLoopHVACZoneSplitter() = default;
+    virtual ~AirLoopHVACZoneSplitter() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACZoneSplitter(const AirLoopHVACZoneSplitter& other) = default;
     AirLoopHVACZoneSplitter(AirLoopHVACZoneSplitter&& other) = default;
@@ -59,10 +59,6 @@ namespace model {
    *  to the splitter's outlets.
    */
     std::vector<ThermalZone> thermalZones();
-
-    std::vector<openstudio::IdfObject> remove();
-
-    void disconnect();
 
     AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 

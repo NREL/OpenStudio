@@ -36,7 +36,7 @@ namespace model {
 
     explicit WaterHeaterStratified(const Model& model);
 
-    virtual ~WaterHeaterStratified() = default;
+    virtual ~WaterHeaterStratified() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     WaterHeaterStratified(const WaterHeaterStratified& other) = default;
     WaterHeaterStratified(WaterHeaterStratified&& other) = default;

@@ -28,7 +28,7 @@ namespace model {
 
     explicit CoilCoolingCooledBeam(const Model& model);
 
-    virtual ~CoilCoolingCooledBeam() = default;
+    virtual ~CoilCoolingCooledBeam() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     CoilCoolingCooledBeam(const CoilCoolingCooledBeam& other) = default;
     CoilCoolingCooledBeam(CoilCoolingCooledBeam&& other) = default;

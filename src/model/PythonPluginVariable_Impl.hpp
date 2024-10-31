@@ -30,7 +30,7 @@ namespace model {
 
       PythonPluginVariable_Impl(const PythonPluginVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PythonPluginVariable_Impl() = default;
+      virtual ~PythonPluginVariable_Impl() override = default;
 
       /** Removes all PythonPluginTrendVariable and PythonPluginOutputVariable attached to it */
       virtual std::vector<IdfObject> remove() override;

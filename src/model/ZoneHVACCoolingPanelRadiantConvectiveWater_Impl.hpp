@@ -33,7 +33,7 @@ namespace model {
       ZoneHVACCoolingPanelRadiantConvectiveWater_Impl(const ZoneHVACCoolingPanelRadiantConvectiveWater_Impl& other, Model_Impl* model,
                                                       bool keepHandle);
 
-      virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater_Impl() = default;
+      virtual ~ZoneHVACCoolingPanelRadiantConvectiveWater_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */

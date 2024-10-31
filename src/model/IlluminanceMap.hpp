@@ -37,7 +37,7 @@ namespace model {
 
     explicit IlluminanceMap(const Model& model);
 
-    virtual ~IlluminanceMap() = default;
+    virtual ~IlluminanceMap() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     IlluminanceMap(const IlluminanceMap& other) = default;
     IlluminanceMap(IlluminanceMap&& other) = default;

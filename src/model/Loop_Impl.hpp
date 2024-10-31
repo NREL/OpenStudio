@@ -38,7 +38,7 @@ namespace model {
 
       Loop_Impl(const Loop_Impl& other, Model_Impl* model, bool keepHandles);
 
-      virtual ~Loop_Impl() = default;
+      virtual ~Loop_Impl() override = default;
 
       /** This pure virtual method is intended to be overriden by child classes (namely PlantLoop and AirLoopHVAC) to create the basic topology of the
      * loop, that is to create the supply/demand inlet/outlet nodes, splitters and mixers as appropriate */

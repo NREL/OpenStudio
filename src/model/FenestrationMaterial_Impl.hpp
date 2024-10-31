@@ -32,7 +32,7 @@ namespace model {
       // Clone copy constructor.
       FenestrationMaterial_Impl(const FenestrationMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~FenestrationMaterial_Impl() = default;
+      virtual ~FenestrationMaterial_Impl() override = default;
 
       //@}
 

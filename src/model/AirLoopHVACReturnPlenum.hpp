@@ -26,7 +26,7 @@ namespace model {
    public:
     explicit AirLoopHVACReturnPlenum(const Model& model);
 
-    virtual ~AirLoopHVACReturnPlenum() = default;
+    virtual ~AirLoopHVACReturnPlenum() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     AirLoopHVACReturnPlenum(const AirLoopHVACReturnPlenum& other) = default;
     AirLoopHVACReturnPlenum(AirLoopHVACReturnPlenum&& other) = default;

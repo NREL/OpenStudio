@@ -29,7 +29,7 @@ namespace model {
     /** Defaults design level to 0.0 W. */
     explicit ExteriorLightsDefinition(const Model& model);
 
-    virtual ~ExteriorLightsDefinition() = default;
+    virtual ~ExteriorLightsDefinition() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
     ExteriorLightsDefinition(const ExteriorLightsDefinition& other) = default;
     ExteriorLightsDefinition(ExteriorLightsDefinition&& other) = default;
