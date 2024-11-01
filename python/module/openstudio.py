@@ -28,7 +28,7 @@ if __package__ or "." in __name__:
     from . import openstudioosversion as osversion
     from . import openstudioradiance as radiance
     from . import openstudiosdd as sdd
-    from . import openstudioualfalfa as alfalfa
+    from . import openstudioalfalfa as alfalfa
     from .openstudioutilities import *
     from .openstudioutilitiesbcl import *
     from .openstudioutilitiescore import *
