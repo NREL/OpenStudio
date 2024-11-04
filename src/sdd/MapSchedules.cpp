@@ -368,7 +368,7 @@ namespace sdd {
         } else {
           MonthOfYear monthOfYear(endMonthElement.text().as_uint());
           unsigned dayOfMonth = endDayElement.text().as_uint();
-          Date untilDate(monthOfYear, dayOfMonth);
+          Date untilDate(monthOfYear, dayOfMonth, 2009);
           scheduleYear.addScheduleWeek(untilDate, *scheduleWeek);
         }
       }
