@@ -6,11 +6,11 @@ namespace alfalfa {
     return m_component->toJSON();
   }
 
-  ComponentCapability AlfalfaComponent::capability() const {
+  AlfalfaComponentCapability AlfalfaComponent::capability() const {
     return m_component->capability();
   }
 
-  ComponentType AlfalfaComponent::type() const {
+  AlfalfaComponentType AlfalfaComponent::type() const {
     return m_component->type();
   }
 

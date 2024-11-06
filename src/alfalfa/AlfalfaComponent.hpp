@@ -32,9 +32,9 @@ namespace alfalfa {
 
     Json::Value toJSON() const;
 
-    ComponentCapability capability() const;
+    AlfalfaComponentCapability capability() const;
 
-    ComponentType type() const;
+    AlfalfaComponentType type() const;
 
     std::string typeName() const;
 

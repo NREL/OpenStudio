@@ -27,12 +27,12 @@ namespace alfalfa {
 
     Json::Value toJSON() const override;
 
-    ComponentCapability capability() const override {
-      return ComponentCapability::Bidirectional;
+    AlfalfaComponentCapability capability() const override {
+      return AlfalfaComponentCapability::Bidirectional;
     }
 
-    ComponentType type() const override {
-      return ComponentType::GlobalVariable;
+    AlfalfaComponentType type() const override {
+      return AlfalfaComponentType::GlobalVariable;
     }
 
     std::unique_ptr<ComponentBase> clone() const override {

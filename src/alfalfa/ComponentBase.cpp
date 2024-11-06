@@ -4,11 +4,11 @@ namespace openstudio {
 namespace alfalfa {
 
   bool ComponentBase::canInput() const {
-    return capability() == ComponentCapability::Bidirectional || capability() == ComponentCapability::Input;
+    return capability() == AlfalfaComponentCapability::Bidirectional || capability() == AlfalfaComponentCapability::Input;
   }
 
   bool ComponentBase::canOutput() const {
-    return capability() == ComponentCapability::Bidirectional || capability() == ComponentCapability::Output;
+    return capability() == AlfalfaComponentCapability::Bidirectional || capability() == AlfalfaComponentCapability::Output;
   }
 
 }  // namespace alfalfa

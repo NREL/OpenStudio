@@ -201,7 +201,8 @@ TEST(AlfalfaJSON, json_serialization) {
 
 TEST(AlfalfaJSON, point_exceptions_logging) {
   const std::string ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
-  const std::string DISPLAY_NAME_VALID_CHARS_MSG = "Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.";
+  const std::string DISPLAY_NAME_VALID_CHARS_MSG =
+    "Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.";
   const std::string LOG_CHANNEL = "openstudio.AlfalfaPoint";
   StringStreamLogSink ss;
   ss.setLogLevel(Warn);
@@ -307,12 +308,12 @@ class InputComponent : public ComponentBase
 {
  public:
   InputComponent() = default;
-  ComponentCapability capability() const override {
-    return ComponentCapability::Input;
+  AlfalfaComponentCapability capability() const override {
+    return AlfalfaComponentCapability::Input;
   }
 
-  openstudio::alfalfa::ComponentType type() const override {
-    return openstudio::alfalfa::ComponentType::Constant;
+  openstudio::alfalfa::AlfalfaComponentType type() const override {
+    return openstudio::alfalfa::AlfalfaComponentType::Constant;
   }
 
   std::unique_ptr<ComponentBase> clone() const override {

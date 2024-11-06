@@ -10,9 +10,9 @@
 namespace openstudio {
 namespace alfalfa {
 
-  OPENSTUDIO_ENUM(ComponentCapability, ((Input))((Output))((Bidirectional)))
+  OPENSTUDIO_ENUM(AlfalfaComponentCapability, ((Input))((Output))((Bidirectional)))
 
-  OPENSTUDIO_ENUM(ComponentType, ((Actuator))((Constant))((Meter))((OutputVariable))((GlobalVariable)))
+  OPENSTUDIO_ENUM(AlfalfaComponentType, ((Actuator))((Constant))((Meter))((OutputVariable))((GlobalVariable)))
 
   class ALFALFA_API ComponentBase
   {
@@ -21,9 +21,9 @@ namespace alfalfa {
 
     virtual Json::Value toJSON() const = 0;
 
-    virtual ComponentCapability capability() const = 0;
+    virtual AlfalfaComponentCapability capability() const = 0;
 
-    virtual ComponentType type() const = 0;
+    virtual AlfalfaComponentType type() const = 0;
 
     virtual std::string typeName() const {
       return type().valueName();
