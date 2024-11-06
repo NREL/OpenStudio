@@ -78,9 +78,16 @@ jobs:
 
     - name: Set up Python ${{ matrix.python-version }}
       if: runner.os == 'macOS'
-      id: setup-python
+      id: setup-python-macos
       # 3.10 is the first one to have a prebuilt binary for macos-14 (arm64) on the actions/setup-python, so I forked it and actions/python-versions to add 3.8
-      uses: ${{ runner.os == 'macOS' && 'jmarrec/setup-python@v5' || 'actions/setup-python@v5' }}
+      uses: jmarrec/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set up Python ${{ matrix.python-version }}
+      if: runner.os != 'macOS'
+      id: setup-python
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -269,14 +276,18 @@ jobs:
         set -x
 
         begin_group "Conan install"
+        PYTHON_ARCH=x64
         if [ "$RUNNER_OS" == "macOS" ]; then
+          PYTHON_VERSION=${{ steps.setup-python-macos.outputs.python-version }}
           if [ "${{ matrix.name }}" == "macOS_arm64" ]; then
-          # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
+            PYTHON_ARCH=arm64
+            # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
             conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION -Wno-enum-constexpr-conversion']"
           else
             conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
           fi
         else
+          PYTHON_VERSION=${{ steps.setup-python.outputs.python-version }}
           conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False
         fi
         echo -e "::endgroup::"
@@ -284,8 +295,8 @@ jobs:
         begin_group "CMake Configure"
         cmake --preset conan-release \
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
-              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} \
-              -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
+              -DPYTHON_VERSION:STRING=$PYTHON_VERSION \
+              -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/$PYTHON_VERSION/$PYTHON_ARCH/ \
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }}
         echo -e "::endgroup::"
 
