@@ -33,7 +33,7 @@
   using namespace openstudio::alfalfa;
 %}
 
-%ignore openstudio::alfalfa::ComponentBase;
+%ignore openstudio::alfalfa::AlfalfaComponentBase;
 %ignore openstudio::alfalfa::AlfalfaActuator::clone;
 %ignore openstudio::alfalfa::AlfalfaConstant::clone;
 %ignore openstudio::alfalfa::AlfalfaMeter::clone;
@@ -41,7 +41,7 @@
 %ignore openstudio::alfalfa::AlfalfaOutputVariable::clone;
 
 %include <alfalfa/AlfalfaAPI.hpp>
-%include <alfalfa/ComponentBase.hpp>
+%include <alfalfa/AlfalfaComponentBase.hpp>
 %include <alfalfa/AlfalfaComponent.hpp>
 %include <alfalfa/AlfalfaActuator.hpp>
 %include <alfalfa/AlfalfaConstant.hpp>

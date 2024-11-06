@@ -304,7 +304,7 @@ TEST(AlfalfaJSON, point_exceptions_logging) {
   ASSERT_EQ(ss.logMessages().size(), 0);
 }
 
-class InputComponent : public ComponentBase
+class InputComponent : public AlfalfaComponentBase
 {
  public:
   InputComponent() = default;
@@ -316,7 +316,7 @@ class InputComponent : public ComponentBase
     return openstudio::alfalfa::AlfalfaComponentType::Constant;
   }
 
-  std::unique_ptr<ComponentBase> clone() const override {
+  std::unique_ptr<AlfalfaComponentBase> clone() const override {
     return std::make_unique<InputComponent>(*this);
   }
 

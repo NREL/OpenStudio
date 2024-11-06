@@ -1,13 +1,13 @@
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 namespace openstudio {
 namespace alfalfa {
 
-  bool ComponentBase::canInput() const {
+  bool AlfalfaComponentBase::canInput() const {
     return capability() == AlfalfaComponentCapability::Bidirectional || capability() == AlfalfaComponentCapability::Input;
   }
 
-  bool ComponentBase::canOutput() const {
+  bool AlfalfaComponentBase::canOutput() const {
     return capability() == AlfalfaComponentCapability::Bidirectional || capability() == AlfalfaComponentCapability::Output;
   }
 

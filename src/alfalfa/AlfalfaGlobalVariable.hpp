@@ -3,13 +3,13 @@
 
 #include "AlfalfaAPI.hpp"
 
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 #include "../utilities/idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaGlobalVariable : public ComponentBase
+  class ALFALFA_API AlfalfaGlobalVariable : public AlfalfaComponentBase
   {
    public:
     /**
@@ -35,7 +35,7 @@ namespace alfalfa {
       return AlfalfaComponentType::GlobalVariable;
     }
 
-    std::unique_ptr<ComponentBase> clone() const override {
+    std::unique_ptr<AlfalfaComponentBase> clone() const override {
       return std::make_unique<AlfalfaGlobalVariable>(*this);
     }
 

@@ -14,10 +14,10 @@ namespace alfalfa {
 
   OPENSTUDIO_ENUM(AlfalfaComponentType, ((Actuator))((Constant))((Meter))((OutputVariable))((GlobalVariable)))
 
-  class ALFALFA_API ComponentBase
+  class ALFALFA_API AlfalfaComponentBase
   {
    public:
-    virtual ~ComponentBase() = default;
+    virtual ~AlfalfaComponentBase() = default;
 
     virtual Json::Value toJSON() const = 0;
 
@@ -31,7 +31,7 @@ namespace alfalfa {
 
     virtual std::string deriveName() const = 0;
 
-    virtual std::unique_ptr<ComponentBase> clone() const = 0;
+    virtual std::unique_ptr<AlfalfaComponentBase> clone() const = 0;
 
     virtual bool canInput() const;
 

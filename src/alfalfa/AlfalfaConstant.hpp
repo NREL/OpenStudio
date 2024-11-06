@@ -3,11 +3,11 @@
 
 #include "AlfalfaAPI.hpp"
 
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaConstant : public ComponentBase
+  class ALFALFA_API AlfalfaConstant : public AlfalfaComponentBase
   {
    public:
     /**
@@ -27,7 +27,7 @@ namespace alfalfa {
       return AlfalfaComponentType::Constant;
     }
 
-    std::unique_ptr<ComponentBase> clone() const override {
+    std::unique_ptr<AlfalfaComponentBase> clone() const override {
       return std::make_unique<AlfalfaConstant>(*this);
     }
 

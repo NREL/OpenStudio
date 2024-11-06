@@ -5,8 +5,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/)
 
 set(${target_name}_src
   AlfalfaAPI.hpp
-  ComponentBase.cpp
-  ComponentBase.hpp
+  AlfalfaComponentBase.cpp
+  AlfalfaComponentBase.hpp
   AlfalfaComponent.hpp
   AlfalfaComponent.cpp
   AlfalfaConstant.hpp
