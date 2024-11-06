@@ -58,4 +58,4 @@ if(BUILD_TESTING)
 endif()
 
 
-MAKE_SWIG_TARGET(OpenStudioAlfalfa alfalfa "${CMAKE_CURRENT_SOURCE_DIR}/Alfalfa.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioAlfalfa alfalfa "${CMAKE_CURRENT_SOURCE_DIR}/Alfalfa.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
