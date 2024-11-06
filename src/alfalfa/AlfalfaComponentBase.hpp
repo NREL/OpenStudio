@@ -3,16 +3,12 @@
 
 #include "AlfalfaAPI.hpp"
 
-#include "../utilities/core/Enum.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <json/json.h>
 
 namespace openstudio {
 namespace alfalfa {
-
-  OPENSTUDIO_ENUM(AlfalfaComponentCapability, ((Input))((Output))((Bidirectional)))
-
-  OPENSTUDIO_ENUM(AlfalfaComponentType, ((Actuator))((Constant))((Meter))((OutputVariable))((GlobalVariable)))
 
   class ALFALFA_API AlfalfaComponentBase
   {
