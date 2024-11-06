@@ -65,7 +65,7 @@ jobs:
         - name: Windows_py312
           os: windows-2019
           python-version: '3.12'
-          allow_failure: true  # Possible this fails, don't care yet
+          allow_failure: false
         - name: Windows_py313
           os: windows-2019
           python-version: '3.13'
@@ -77,9 +77,17 @@ jobs:
       #   ref: develop
 
     - name: Set up Python ${{ matrix.python-version }}
+      if: runner.os == 'macOS'
       id: setup-python
       # 3.10 is the first one to have a prebuilt binary for macos-14 (arm64) on the actions/setup-python, so I forked it and actions/python-versions to add 3.8
       uses: jmarrec/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set up Python ${{ matrix.python-version }}
+      if: runner.os != 'macOS'
+      id: setup-python
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -269,8 +277,12 @@ jobs:
 
         begin_group "Conan install"
         if [ "$RUNNER_OS" == "macOS" ]; then
+          if [ "${{ matrix.name }}" == "macOS_arm64" ]; then
           # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION -Wno-enum-constexpr-conversion']"
+            conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION -Wno-enum-constexpr-conversion']"
+          else
+            conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+          fi
         else
           conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False
         fi
