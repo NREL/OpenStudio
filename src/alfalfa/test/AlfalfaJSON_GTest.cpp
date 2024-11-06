@@ -312,8 +312,8 @@ class InputComponent : public AlfalfaComponentBase
     return AlfalfaComponentCapability::Input;
   }
 
-  openstudio::alfalfa::AlfalfaComponentType type() const override {
-    return openstudio::alfalfa::AlfalfaComponentType::Constant;
+  AlfalfaComponentType type() const override {
+    return AlfalfaComponentType::Constant;
   }
 
   std::unique_ptr<AlfalfaComponentBase> clone() const override {
