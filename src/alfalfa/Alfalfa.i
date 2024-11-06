@@ -6,6 +6,8 @@
 #endif
 
 %include <utilities/UtilitiesAPI.hpp>
+#define ALFALFA_API
+
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>
 %import <utilities/Utilities.i>
@@ -13,7 +15,6 @@
 %ignore openstudio::alfalfa::detail;
 
 %{
-  #include <alfalfa/AlfalfaAPI.hpp>
   #include <alfalfa/AlfalfaComponent.hpp>
   #include <alfalfa/AlfalfaActuator.hpp>
   #include <alfalfa/AlfalfaConstant.hpp>
@@ -40,7 +41,6 @@
 %ignore openstudio::alfalfa::AlfalfaGlobalVariable::clone;
 %ignore openstudio::alfalfa::AlfalfaOutputVariable::clone;
 
-%include <alfalfa/AlfalfaAPI.hpp>
 %include <alfalfa/AlfalfaComponentBase.hpp>
 %include <alfalfa/AlfalfaComponent.hpp>
 %include <alfalfa/AlfalfaActuator.hpp>
