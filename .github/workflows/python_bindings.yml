@@ -80,14 +80,7 @@ jobs:
       if: runner.os == 'macOS'
       id: setup-python
       # 3.10 is the first one to have a prebuilt binary for macos-14 (arm64) on the actions/setup-python, so I forked it and actions/python-versions to add 3.8
-      uses: jmarrec/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Set up Python ${{ matrix.python-version }}
-      if: runner.os != 'macOS'
-      id: setup-python
-      uses: actions/setup-python@v5
+      uses: ${{ runner.os == 'macOS' && 'jmarrec/setup-python@v5' || 'actions/setup-python@v5' }}
       with:
         python-version: ${{ matrix.python-version }}
 
