@@ -27,11 +27,11 @@ jobs:
         name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           python-version: 3.8
           allow_failure: false
         - name: macOS
-          os: macos-11
+          os: macos-12
           python-version: 3.8
           allow_failure: false
           MACOSX_DEPLOYMENT_TARGET: 10.15
@@ -41,7 +41,7 @@ jobs:
           python-version: 3.8
           allow_failure: false
           MACOSX_DEPLOYMENT_TARGET: 12.1
-          SDKROOT: /Applications/Xcode_14.3.1.app
+          SDKROOT: /Applications/Xcode_15.2.app
         - name: Windows_py37
           os: windows-2019
           python-version: 3.7
@@ -66,6 +66,11 @@ jobs:
           os: windows-2019
           python-version: '3.12'
           allow_failure: true  # Possible this fails, don't care yet
+        - name: Windows_py313
+          os: windows-2019
+          python-version: '3.13'
+          allow_failure: true  # Possible this fails, don't care yet
+
     steps:
     - uses: actions/checkout@v4
       # with:
@@ -265,7 +270,7 @@ jobs:
         begin_group "Conan install"
         if [ "$RUNNER_OS" == "macOS" ]; then
           # Avoid "builtin __has_nothrow_assign is deprecated; use __is_nothrow_assignable instead" in boost/1.79 with recent clang
-          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION']"
+          conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False -c tools.build:cxxflags="['-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION -Wno-enum-constexpr-conversion']"
         else
           conan install . --output-folder=./build --build=missing -c tools.cmake.cmaketoolchain:generator=Ninja -s compiler.cppstd=20 -s build_type=Release -o with_testing=False -o with_benchmark=False
         fi
