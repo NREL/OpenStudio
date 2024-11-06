@@ -23,9 +23,9 @@ jobs:
         name: [Ubuntu, macOS, macOS_arm64, Windows64, Windows32]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-22.04
         - name: macOS
-          os: macos-11
+          os: macos-13
         - name: macOS_arm64
           os: macos-14
         - name: Windows64
