@@ -233,6 +233,9 @@ class UTILITIES_API WorkflowJSON
   /** Reset RunOptions for this workflow. */
   void resetRunOptions();
 
+  /** Checks that all measures in the Workflow can be found, and are in the correct order (ModelMeasure > EnergyPlusMeasure > ReportingMeasure) */
+  bool validateMeasures() const;
+
  protected:
   // get the impl
   template <typename T>
