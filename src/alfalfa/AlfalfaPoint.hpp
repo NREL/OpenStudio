@@ -69,7 +69,7 @@ namespace alfalfa {
     /**
      * Get id of point. By default this will be a version of the display name with spaces removed.
      */
-    boost::optional<std::string> id() const;
+    std::string id() const;
 
     /**
      * Set id of point. This is the component which will uniquely identify the point in the API.
