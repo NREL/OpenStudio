@@ -8,7 +8,7 @@
 			"arguments": {}
 		},
 		{
-			"measure_dir_name": "ModelMeasureRegistersError",
+			"measure_dir_name": "FakeModelMeasure",
 			"arguments": {}
 		}
 	]
