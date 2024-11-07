@@ -92,9 +92,6 @@ namespace alfalfa {
         throw std::runtime_error("Display name must have non-zero length");
       }
       m_display_name = display_name;
-      if (m_id.empty()) {
-        setId(toIdString(display_name));
-      }
     }
 
     std::string AlfalfaPoint_Impl::displayName() const {
