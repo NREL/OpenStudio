@@ -46,10 +46,12 @@ namespace detail {
     std::string formattedErrors;
     bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_value, &formattedErrors);
 
+    openstudio::path p;
+
     if (!parsingSuccessful) {
 
       // see if this is a path
-      openstudio::path p = toPath(s);
+      p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)) {
         // open file
         std::ifstream ifs(openstudio::toSystemFilename(p));
@@ -65,6 +67,10 @@ namespace detail {
 
     parseSteps();
     parseRunOptions();
+
+    if (!p.empty()) {
+      setOswPath(p, false);
+    }
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p) {
