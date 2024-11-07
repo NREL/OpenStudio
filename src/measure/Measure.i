@@ -7,10 +7,10 @@
 
 
 %include <utilities/UtilitiesAPI.hpp>
-%include <alfalfa/AlfalfaAPI.hpp>
 #define MODEL_API
 #define STANDARDSINTERFACE_API
 #define MEASURE_API
+#define ALFALFA_API
 
 %include <utilities/core/CommonInclude.i>
 %import <utilities/core/CommonImport.i>

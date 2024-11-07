@@ -3,27 +3,23 @@
 
 #include "AlfalfaAPI.hpp"
 
-#include "../utilities/core/Enum.hpp"
+#include "../utilities/data/DataEnums.hpp"
 
 #include <json/json.h>
 
 namespace openstudio {
 namespace alfalfa {
 
-  OPENSTUDIO_ENUM(ComponentCapability, ((Input))((Output))((Bidirectional)))
-
-  OPENSTUDIO_ENUM(ComponentType, ((Actuator))((Constant))((Meter))((OutputVariable))((GlobalVariable)))
-
-  class ALFALFA_API ComponentBase
+  class ALFALFA_API AlfalfaComponentBase
   {
    public:
-    virtual ~ComponentBase() = default;
+    virtual ~AlfalfaComponentBase() = default;
 
     virtual Json::Value toJSON() const = 0;
 
-    virtual ComponentCapability capability() const = 0;
+    virtual AlfalfaComponentCapability capability() const = 0;
 
-    virtual ComponentType type() const = 0;
+    virtual AlfalfaComponentType type() const = 0;
 
     virtual std::string typeName() const {
       return type().valueName();
@@ -31,7 +27,7 @@ namespace alfalfa {
 
     virtual std::string deriveName() const = 0;
 
-    virtual std::unique_ptr<ComponentBase> clone() const = 0;
+    virtual std::unique_ptr<AlfalfaComponentBase> clone() const = 0;
 
     virtual bool canInput() const;
 

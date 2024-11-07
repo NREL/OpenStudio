@@ -26,7 +26,7 @@
 
 #include <tiny_gltf.h>
 
-#include <map>
+#include <array>
 #include <string>
 #include <string_view>
 #include <iostream>

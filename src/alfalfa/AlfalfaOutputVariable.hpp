@@ -3,13 +3,13 @@
 
 #include "AlfalfaAPI.hpp"
 
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 #include "../utilities/idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaOutputVariable : public ComponentBase
+  class ALFALFA_API AlfalfaOutputVariable : public AlfalfaComponentBase
   {
    public:
     /**
@@ -27,15 +27,15 @@ namespace alfalfa {
 
     Json::Value toJSON() const override;
 
-    ComponentCapability capability() const override {
-      return ComponentCapability::Output;
+    AlfalfaComponentCapability capability() const override {
+      return AlfalfaComponentCapability::Output;
     }
 
-    ComponentType type() const override {
-      return ComponentType::OutputVariable;
+    AlfalfaComponentType type() const override {
+      return AlfalfaComponentType::OutputVariable;
     }
 
-    std::unique_ptr<ComponentBase> clone() const override {
+    std::unique_ptr<AlfalfaComponentBase> clone() const override {
       return std::make_unique<AlfalfaOutputVariable>(*this);
     }
 

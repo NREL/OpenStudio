@@ -5,14 +5,14 @@
 #include <type_traits>
 
 #include "AlfalfaAPI.hpp"
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 namespace openstudio {
 namespace alfalfa {
   class ALFALFA_API AlfalfaComponent
   {
    public:
-    template <typename T, std::enable_if_t<std::is_base_of<ComponentBase, T>::value, bool> = true>
+    template <typename T, std::enable_if_t<std::is_base_of<AlfalfaComponentBase, T>::value, bool> = true>
     AlfalfaComponent(T component) : m_component(std::make_unique<T>(std::move(component))) {}
 
     AlfalfaComponent(const AlfalfaComponent& other) : m_component(other.m_component->clone()) {}
@@ -32,9 +32,9 @@ namespace alfalfa {
 
     Json::Value toJSON() const;
 
-    ComponentCapability capability() const;
+    AlfalfaComponentCapability capability() const;
 
-    ComponentType type() const;
+    AlfalfaComponentType type() const;
 
     std::string typeName() const;
 
@@ -46,7 +46,7 @@ namespace alfalfa {
 
    private:
     AlfalfaComponent() = default;
-    std::unique_ptr<ComponentBase> m_component;
+    std::unique_ptr<AlfalfaComponentBase> m_component;
   };
 
   inline bool operator==(const AlfalfaComponent& lhs, const AlfalfaComponent& rhs) {

@@ -83,6 +83,7 @@ set(translator_wrappers
 
 set(model_wrappers
   csharp_OpenStudioMeasure_wrap.cxx
+  csharp_OpenStudioAlfalfa_wrap.cxx
   csharp_OpenStudioModel_wrap.cxx
   csharp_OpenStudioModelAirflow_wrap.cxx
   csharp_OpenStudioModelAvailabilityManager_wrap.cxx

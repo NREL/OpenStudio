@@ -8,7 +8,7 @@
 
 #include "GltfAPI.hpp"
 
-#include <array>
+#include <string>
 #include <string_view>
 #include <vector>
 

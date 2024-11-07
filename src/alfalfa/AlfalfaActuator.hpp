@@ -2,13 +2,13 @@
 #define ALFALFA_COMPONENT_ACTUATOR_HPP
 
 #include "AlfalfaAPI.hpp"
-#include "ComponentBase.hpp"
+#include "AlfalfaComponentBase.hpp"
 
 #include "../utilities/idf/IdfObject.hpp"
 
 namespace openstudio {
 namespace alfalfa {
-  class ALFALFA_API AlfalfaActuator : public ComponentBase
+  class ALFALFA_API AlfalfaActuator : public AlfalfaComponentBase
   {
    public:
     /**
@@ -26,15 +26,15 @@ namespace alfalfa {
 
     Json::Value toJSON() const override;
 
-    ComponentCapability capability() const override {
-      return ComponentCapability::Bidirectional;
+    AlfalfaComponentCapability capability() const override {
+      return AlfalfaComponentCapability::Bidirectional;
     }
 
-    ComponentType type() const override {
-      return ComponentType::Actuator;
+    AlfalfaComponentType type() const override {
+      return AlfalfaComponentType::Actuator;
     }
 
-    std::unique_ptr<ComponentBase> clone() const override {
+    std::unique_ptr<AlfalfaComponentBase> clone() const override {
       return std::make_unique<AlfalfaActuator>(*this);
     }
 

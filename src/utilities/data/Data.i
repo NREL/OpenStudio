@@ -37,6 +37,10 @@
 %template(OptionalAppGFuelType) boost::optional<openstudio::AppGFuelType>;
 %template(ComponentTypeVector) std::vector<openstudio::ComponentType>;
 %template(OptionalComponentType) boost::optional<openstudio::ComponentType>;
+%template(AlfalfaComponentTypeVector) std::vector<openstudio::AlfalfaComponentType>;
+%template(OptionalAlfalfaComponentType) boost::optional<openstudio::AlfalfaComponentType>;
+%template(AlfalfaComponentCapabilityVector) std::vector<openstudio::AlfalfaComponentCapability>;
+%template(OptionalAlfalfaComponentCapability) boost::optional<openstudio::AlfalfaComponentCapability>;
 
 %include <utilities/data/DataEnums.hpp>
 %include <utilities/data/Attribute.i>

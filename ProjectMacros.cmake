@@ -532,6 +532,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     set( model_names
       OpenStudioMeasure
+      OpenStudioAlfalfa
       OpenStudioModel
       OpenStudioModelAirflow
       OpenStudioModelAvailabilityManager

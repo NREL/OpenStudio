@@ -5,8 +5,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/)
 
 set(${target_name}_src
   AlfalfaAPI.hpp
-  ComponentBase.cpp
-  ComponentBase.hpp
+  AlfalfaComponentBase.cpp
+  AlfalfaComponentBase.hpp
   AlfalfaComponent.hpp
   AlfalfaComponent.cpp
   AlfalfaConstant.hpp
@@ -58,4 +58,4 @@ if(BUILD_TESTING)
 endif()
 
 
-MAKE_SWIG_TARGET(OpenStudioAlfalfa alfalfa "${CMAKE_CURRENT_SOURCE_DIR}/Alfalfa.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioAlfalfa alfalfa "${CMAKE_CURRENT_SOURCE_DIR}/Alfalfa.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)
