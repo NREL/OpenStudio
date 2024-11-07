@@ -372,7 +372,7 @@ jobs:
         done;
 
         ls -R
-        python -m twine upload --skip-existing --repository testpypi dist/*
+        python -m twine upload --verbose --skip-existing --repository testpypi dist/*
 
 
   test_python_bindings:
@@ -499,4 +499,4 @@ jobs:
         done;
 
         ls -R
-        python -m twine upload --skip-existing --repository pypi dist/*
+        python -m twine upload --verbose --skip-existing --repository pypi dist/*
