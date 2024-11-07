@@ -54,10 +54,17 @@ void OSWorkflow::runInitialization() {
     }
   });
 
-  // TODO: create the runner with our WorkflowJSON (workflow gem uses datapoint/analysis too?!)
-
   // TODO: Validate the OSW measures if the flag is set to true, (the default state)
-  // Note JM 2022-11-07: Is it better to try and load all measures once, instead of crashing later?
+  // There isn't a 'verify_osw' key in the RunOptions, so always do it for now. Maybe don't if `fast`?
+  {
+    LOG(Info, "Attempting to validate the measure workflow");
+
+    if (!workflowJSON.validateMeasures()) {
+      LOG_AND_THROW("Workflow is invalid");
+    }
+
+    LOG(Info, "Validated the measure workflow");
+  }
 
   LOG(Debug, "Finding and loading the seed file");
   auto seedPath_ = workflowJSON.seedFile();
