@@ -36,7 +36,7 @@ namespace gltf {
 
     /** Standard constructor */
     constexpr GltfMaterialData(std::string_view materialName, int r, int g, int b, double a, bool isDoubleSided = false)
-      : m_materialName(materialName), m_r(r), m_g(g), m_b(b), m_a(a), m_isDoubleSided(isDoubleSided) {};
+      : m_materialName(materialName), m_r(r), m_g(g), m_b(b), m_a(a), m_isDoubleSided(isDoubleSided){};
 
     static std::vector<GltfMaterialData> buildMaterials(const model::Model& model);
     //@}
