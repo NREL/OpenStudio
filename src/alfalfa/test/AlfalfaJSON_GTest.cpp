@@ -195,8 +195,7 @@ TEST(AlfalfaJSON, json_serialization) {
   const bool parsing_success = Json::parseFromStream(r_builder, ifs, &root, &formatted_errors);
   EXPECT_TRUE(parsing_success);
   EXPECT_EQ(alfalfa.toJSON(), root);
-  int i = 0;
-  for (const auto& point : alfalfa.points()) {
+  for (Json::ArrayIndex i = 0; const auto& point : alfalfa.points()) {
     EXPECT_EQ(root[i++], point.toJSON());
   }
 }
