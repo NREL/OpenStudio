@@ -83,9 +83,9 @@ namespace alfalfa {
 
     Json::Value AlfalfaJSON_Impl::toJSON() const {
       Json::Value root;
-      for (const auto& point : m_points) {
+      for (Json::ArrayIndex i = 0; const auto& point : points()) {
         // No guard here as the toJSON call will throw an exception if the id does not exist.
-        root[point.id().get()] = point.toJSON();
+        root[i++] = point.toJSON();
       }
       return root;
     }

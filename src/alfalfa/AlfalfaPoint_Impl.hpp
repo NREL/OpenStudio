@@ -32,7 +32,7 @@ namespace alfalfa {
 
       boost::optional<std::string> units() const;
 
-      boost::optional<std::string> id() const;
+      std::string id() const;
 
       void setId(const std::string& id);
 
@@ -47,13 +47,11 @@ namespace alfalfa {
      private:
       static std::string toIdString(const std::string& str);
 
-      static bool isValidId(const std::string& id);
-
       boost::optional<AlfalfaComponent> m_input;
       boost::optional<AlfalfaComponent> m_output;
       std::string m_display_name;
       boost::optional<std::string> m_units;
-      boost::optional<std::string> m_id;
+      std::string m_id;
       bool m_optional = true;
 
       // configure logging

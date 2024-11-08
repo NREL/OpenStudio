@@ -7,11 +7,10 @@
 
 #include <memory>
 #include <string_view>
+#include <algorithm>
 
 namespace openstudio {
 namespace alfalfa {
-
-  static constexpr std::string_view ID_VALID_CHARS_MSG = "IDs can only contain letters, numbers, and the following special characters _-[]():";
 
   namespace detail {
 
@@ -22,11 +21,7 @@ namespace alfalfa {
     Json::Value AlfalfaPoint_Impl::toJSON() const {
       Json::Value point;
 
-      if (auto id_ = id()) {
-        point["id"] = *id_;
-      } else {
-        throw std::runtime_error(fmt::format("Point requires a valid ID for export. {}", ID_VALID_CHARS_MSG));
-      }
+      point["id"] = id();
       point["name"] = displayName();
       if (auto input_ = input()) {
         point["input"]["type"] = input_->typeName();
@@ -80,24 +75,17 @@ namespace alfalfa {
     }
 
     void AlfalfaPoint_Impl::setId(const std::string& id) {
-      if (isValidId(id)) {
-        m_id = id;
-      } else {
-        throw std::runtime_error(ID_VALID_CHARS_MSG.data());
+      if (id.empty()) {
+        throw std::runtime_error("Id must have non-zero length");
       }
+      m_id = toIdString(id);
     }
 
-    boost::optional<std::string> AlfalfaPoint_Impl::id() const {
-      boost::optional<std::string> result = m_id;
-      if (!result.is_initialized()) {
-        std::string id = toIdString(displayName());
-        if (isValidId(id)) {
-          result = id;
-        } else {
-          LOG(Warn, fmt::format("Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.", displayName()));
-        }
+    std::string AlfalfaPoint_Impl::id() const {
+      if (m_id.empty()) {
+        return toIdString(displayName());
       }
-      return result;
+      return m_id;
     }
 
     void AlfalfaPoint_Impl::setDisplayName(const std::string& display_name) {
@@ -105,12 +93,6 @@ namespace alfalfa {
         throw std::runtime_error("Display name must have non-zero length");
       }
       m_display_name = display_name;
-      if (!m_id.is_initialized()) {
-        const std::string id = toIdString(display_name);
-        if (!isValidId(id)) {
-          LOG(Warn, fmt::format("Display name '{}' does not produce a valid point ID. Manually set a valid ID or export will fail.", display_name));
-        }
-      }
     }
 
     std::string AlfalfaPoint_Impl::displayName() const {
@@ -125,16 +107,12 @@ namespace alfalfa {
       return m_optional;
     }
 
-    bool AlfalfaPoint_Impl::isValidId(const std::string& id) {
-      return !id.empty() && boost::regex_match(id, boost::regex(R"(^[A-Za-z0-9_\-\[\]:()]*$)"));
-    }
-
     std::string AlfalfaPoint_Impl::toIdString(const std::string& str) {
-      return boost::regex_replace(str, boost::regex(" "), "_");
+      std::string id_string = str;
+      std::replace(id_string.begin(), id_string.end(), ' ', '_');
+      return id_string;
     }
   }  // namespace detail
-
-  // AlfalfaPoint::AlfalfaPoint(const AlfalfaPoint& point) : m_impl(point.m_impl) {}
 
   AlfalfaPoint::AlfalfaPoint(const std::string& display_name) : m_impl(std::make_shared<detail::AlfalfaPoint_Impl>(display_name)) {}
 
@@ -162,7 +140,7 @@ namespace alfalfa {
     return m_impl->units();
   }
 
-  boost::optional<std::string> AlfalfaPoint::id() const {
+  std::string AlfalfaPoint::id() const {
     return m_impl->id();
   }
 
