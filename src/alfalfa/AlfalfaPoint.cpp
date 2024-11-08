@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <string_view>
+#include <algorithm>
 
 namespace openstudio {
 namespace alfalfa {
@@ -107,7 +108,9 @@ namespace alfalfa {
     }
 
     std::string AlfalfaPoint_Impl::toIdString(const std::string& str) {
-      return boost::regex_replace(str, boost::regex(" "), "_");
+      std::string id_string = str;
+      std::replace( id_string.begin(), id_string.end(), ' ', '_');
+      return id_string;
     }
   }  // namespace detail
 
