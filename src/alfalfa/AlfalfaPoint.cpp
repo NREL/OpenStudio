@@ -109,7 +109,7 @@ namespace alfalfa {
 
     std::string AlfalfaPoint_Impl::toIdString(const std::string& str) {
       std::string id_string = str;
-      std::replace( id_string.begin(), id_string.end(), ' ', '_');
+      std::replace(id_string.begin(), id_string.end(), ' ', '_');
       return id_string;
     }
   }  // namespace detail
