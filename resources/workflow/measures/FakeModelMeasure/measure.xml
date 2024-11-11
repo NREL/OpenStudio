@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.1</schema_version>
+  <name>fake_model_measure</name>
+  <uid>677b8fd3-2627-4516-b090-f6e47dc99fea</uid>
+  <version_id>162465e5-b6f6-419f-ab5f-c2fc4bd549e0</version_id>
+  <version_modified>2024-11-07T11:55:10Z</version_modified>
+  <xml_checksum>82D8F881</xml_checksum>
+  <class_name>FakeModelMeasure</class_name>
+  <display_name>A dumb ModelMeasure</display_name>
+  <description>Does nothing</description>
+  <modeler_description>Just for testing</modeler_description>
+  <arguments />
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Form</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Ruby</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.9.0</identifier>
+        <min_compatible>3.9.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>DDA977B0</checksum>
+    </file>
+  </files>
+</measure>

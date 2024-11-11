@@ -1,0 +1,15 @@
+{
+	"weather_file": "../../Examples/compact_osw/files/srrl_2013_amy.epw",
+	"seed_file": "../example_model.osm",
+	"measure_paths": ["../measures/"],
+	"steps": [
+		{
+			"measure_dir_name": "FakeReport",
+			"arguments": {}
+		},
+		{
+			"measure_dir_name": "FakeModelMeasure",
+			"arguments": {}
+		}
+	]
+}

@@ -46,10 +46,12 @@ namespace detail {
     std::string formattedErrors;
     bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_value, &formattedErrors);
 
+    openstudio::path p;
+
     if (!parsingSuccessful) {
 
       // see if this is a path
-      openstudio::path p = toPath(s);
+      p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)) {
         // open file
         std::ifstream ifs(openstudio::toSystemFilename(p));
@@ -65,6 +67,10 @@ namespace detail {
 
     parseSteps();
     parseRunOptions();
+
+    if (!p.empty()) {
+      setOswPath(p, false);
+    }
   }
 
   WorkflowJSON_Impl::WorkflowJSON_Impl(const openstudio::path& p) {
@@ -851,6 +857,65 @@ namespace detail {
     }
   }
 
+  bool WorkflowJSON_Impl::validateMeasures() const {
+    // TODO: should we exit early, or return all problems found?
+
+    bool result = true;
+    MeasureType state = MeasureType::ModelMeasure;
+
+    for (size_t i = 0; const auto& step : m_steps) {
+      LOG(Debug, "Validating step " << i);
+      if (auto step_ = step.optionalCast<MeasureStep>()) {
+        // Not calling getBCLMeasure because I want to mimic workflow-gem and be as explicit as possible about what went wrong
+        const auto measureDirName = step_->measureDirName();
+        auto measurePath_ = findMeasure(measureDirName);
+        if (!measurePath_) {
+          LOG(Error, "Cannot find measure '" << measureDirName << "'");
+          result = false;
+          continue;
+        }
+        auto bclMeasure_ = BCLMeasure::load(*measurePath_);
+        if (!bclMeasure_) {
+          LOG(Error, "Cannot load measure '" << measureDirName << "' at '" << *measurePath_ << "'");
+          result = false;
+          continue;
+        }
+
+        // Ensure that measures are in order, i.e. no OS after E+, E+ or OS after Reporting
+        const auto measureType = bclMeasure_->measureType();
+
+        if (measureType == MeasureType::ModelMeasure) {
+          if (state == MeasureType::EnergyPlusMeasure) {
+            LOG(Error, "OpenStudio measure '" << measureDirName << "' called after transition to EnergyPlus.");
+            result = false;
+          }
+          if (state == MeasureType::ReportingMeasure) {
+            LOG(Error, "OpenStudio measure '" << measureDirName << "' called after Energyplus simulation.");
+            result = false;
+          }
+
+        } else if (measureType == MeasureType::EnergyPlusMeasure) {
+          if (state == MeasureType::ReportingMeasure) {
+            LOG(Error, "EnergyPlus measure '" << measureDirName << "' called after Energyplus simulation.");
+            result = false;
+          }
+          if (state == MeasureType::ModelMeasure) {
+            state = MeasureType::EnergyPlusMeasure;
+          }
+
+        } else if (measureType == MeasureType::ReportingMeasure) {
+          state = MeasureType::ReportingMeasure;
+
+        } else {
+          LOG(Error, "MeasureType " << measureType.valueName() << " of measure '" << measureDirName << "' is not supported");
+          result = false;
+        }
+      }
+      ++i;
+    }
+
+    return result;
+  }
 }  // namespace detail
 
 WorkflowJSON::WorkflowJSON() : m_impl(std::shared_ptr<detail::WorkflowJSON_Impl>(new detail::WorkflowJSON_Impl())) {}
@@ -1121,6 +1186,10 @@ bool WorkflowJSON::setRunOptions(const RunOptions& options) {
 
 void WorkflowJSON::resetRunOptions() {
   getImpl<detail::WorkflowJSON_Impl>()->resetRunOptions();
+}
+
+bool WorkflowJSON::validateMeasures() const {
+  return getImpl<detail::WorkflowJSON_Impl>()->validateMeasures();
 }
 
 std::ostream& operator<<(std::ostream& os, const WorkflowJSON& workflowJSON) {
