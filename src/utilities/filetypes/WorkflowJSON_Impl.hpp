@@ -153,6 +153,8 @@ namespace detail {
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
+    bool validateMeasures() const;
+
    private:
     REGISTER_LOGGER("openstudio.WorkflowJSON");
 
