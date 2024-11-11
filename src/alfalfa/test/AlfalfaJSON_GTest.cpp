@@ -391,6 +391,15 @@ TEST(AlfalfaJSON, expose_meter) {
   EXPECT_FALSE(str_point.input().is_initialized());
   EXPECT_TRUE(str_point.output().is_initialized());
   EXPECT_EQ(str_point.displayName(), display_name);
+
+  // Test Other Point Construction Methods
+  const AlfalfaPoint component_point = alfalfa.exposeFromComponent(str_component, display_name).get();
+  AlfalfaPoint custom_point(display_name);
+  EXPECT_THROW({ custom_point.setInput(str_component); }, std::runtime_error);
+  custom_point.setOutput(str_component);
+
+  EXPECT_EQ(str_point, custom_point);
+  EXPECT_EQ(str_point, component_point);
 }
 
 TEST(AlfalfaJSON, expose_output_variable) {
@@ -461,6 +470,15 @@ TEST(AlfalfaJSON, expose_output_variable) {
   EXPECT_TRUE(str_point.output().is_initialized());
   EXPECT_FALSE(str_point.input().is_initialized());
   EXPECT_EQ(str_point.displayName(), display_name);
+
+  // Test Other Point Construction Methods
+  const AlfalfaPoint component_point = alfalfa.exposeFromComponent(str_component, display_name).get();
+  AlfalfaPoint custom_point(display_name);
+  EXPECT_THROW({ custom_point.setInput(str_component); }, std::runtime_error);
+  custom_point.setOutput(str_component);
+
+  EXPECT_EQ(str_point, custom_point);
+  EXPECT_EQ(str_point, component_point);
 }
 
 TEST(AlfalfaJSON, expose_global_variable) {
@@ -501,6 +519,15 @@ TEST(AlfalfaJSON, expose_global_variable) {
   EXPECT_TRUE(str_point.input().is_initialized());
   EXPECT_TRUE(str_point.output().is_initialized());
   EXPECT_EQ(str_point.displayName(), display_name);
+
+  // Test Other Point Construction Methods
+  const AlfalfaPoint component_point = alfalfa.exposeFromComponent(str_component, display_name).get();
+  AlfalfaPoint custom_point(display_name);
+  custom_point.setInput(str_component);
+  custom_point.setOutput(str_component);
+
+  EXPECT_EQ(str_point, custom_point);
+  EXPECT_EQ(str_point, component_point);
 }
 
 TEST(AlfalfaJSON, expose_actuator) {
@@ -550,4 +577,13 @@ TEST(AlfalfaJSON, expose_actuator) {
   EXPECT_TRUE(str_point.input().is_initialized());
   EXPECT_TRUE(str_point.output().is_initialized());
   EXPECT_EQ(str_point.displayName(), display_name);
+
+  // Test Other Point Construction Methods
+  const AlfalfaPoint component_point = alfalfa.exposeFromComponent(str_component, display_name).get();
+  AlfalfaPoint custom_point(display_name);
+  custom_point.setInput(str_component);
+  custom_point.setOutput(str_component);
+
+  EXPECT_EQ(str_point, custom_point);
+  EXPECT_EQ(str_point, component_point);
 }

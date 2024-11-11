@@ -69,6 +69,17 @@ class AlfalfaEPlusPython(openstudio.measure.EnergyPlusMeasure):
         meter_object = openstudio.IdfObject.load("Output:Meter, Electricity:Facility;").get()
         alfalfa.exposeFromObject(meter_object, "Electricity Meter IDF:Eplus:Python")
 
+        # Test Composite Point
+        meter_component = openstudio.alfalfa.AlfalfaMeter("Electricity:Facility")
+        actuator_component = openstudio.alfalfa.AlfalfaActuator("component_name", "component_type", "control_type")
+        composite_point = openstudio.alfalfa.AlfalfaPoint("Compound Point:Ruby")
+        composite_point.setOutput(meter_component)
+        composite_point.setInput(actuator_component)
+        alfalfa.exposePoint(composite_point)
+
+        # Test Expose from Component
+        alfalfa.exposeFromComponent(actuator_component, "From Component Actuator")
+
         # Test Output Variables
         alfalfa.exposeOutputVariable("EMS", "my_var", "Output Variable String:EPlus:Python")
 

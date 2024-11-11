@@ -57,4 +57,26 @@
 %template(OptionalAlfalfaPoint) boost::optional<openstudio::alfalfa::AlfalfaPoint>;
 %template(OptionalAlfalfaComponent) boost::optional<openstudio::alfalfa::AlfalfaComponent>;
 
+namespace openstudio::alfalfa {
+  %extend AlfalfaPoint {
+    void setOutput(const AlfalfaComponentBase& component) {
+      AlfalfaComponent alfalfa_component(component);
+      $self->setOutput(alfalfa_component);
+    }
+
+    void setInput(const AlfalfaComponentBase& component) {
+      AlfalfaComponent alfalfa_component(component);
+      $self->setInput(alfalfa_component);
+    }
+  }
+
+  %extend AlfalfaJSON {
+    boost::optional<AlfalfaPoint> AlfalfaJSON::exposeFromComponent(const AlfalfaComponentBase& component, const std::string& display_name = std::string()) {
+      AlfalfaComponent alfalfa_component(component);
+      return $self->exposeFromComponent(alfalfa_component, display_name);
+    }
+  }
+}
+
+
 #endif
