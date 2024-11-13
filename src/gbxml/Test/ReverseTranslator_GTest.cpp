@@ -57,6 +57,9 @@
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
 #include <resources.hxx>
 
+#include <pugixml.hpp>
+#include <fmt/format.h>
+
 #include <sstream>
 #include <utility>
 
@@ -1000,3 +1003,97 @@ INSTANTIATE_TEST_SUITE_P(gbXMLFixture, RoundTripGbXMLParametrizedFixture,
                          [](const testing::TestParamInfo<RoundTripGbXMLParametrizedFixture::ParamType>& info) {
                            return info.param.stem().generic_string();
                          });
+
+/*****************************************************************************************************************************************************
+*                                                           E R R O R    H A N D L I N G                                                            *
+*****************************************************************************************************************************************************/
+
+// Protected member fixture
+class gbXMLRTFixture
+  : public openstudio::gbxml::ReverseTranslator
+  , public gbXMLFixture
+{
+ public:
+  // Empty - bridge to protected members for unit-testing
+  // The fixture already instantiates the RT, so you should call this->translateXXX directly
+
+  static pugi::xml_document load_and_wrap_in_gbxml(std::string_view s) {
+    std::string doc_string = fmt::format("{}{}</gbXML>", gbxmlHeader, s);
+    pugi::xml_document doc;
+    pugi::xml_parse_result result = doc.load_string(doc_string.c_str(), pugi::parse_default | pugi::parse_comments);
+    if (!result) {
+      throw;
+    }
+    return doc;
+  }
+
+  static constexpr std::string_view gbxmlHeader = R"xml(<gbXML
+    xmlns="http://www.gbxml.org/schema"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xsi:schemaLocation="http://www.gbxml.org/schema http://gbxml.org/schema/7-03/GreenBuildingXML_Ver7.03.xsd"
+    temperatureUnit="C"
+    lengthUnit="Meters"
+    areaUnit="SquareMeters"
+    volumeUnit="CubicMeters"
+    useSIUnitsForResults="true"
+    version="7.03"
+    SurfaceReferenceLocation="Centerline"
+>)xml";
+};
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Schedules_Valid) {
+  // Test for #5234
+  constexpr std::string_view schedule_string = R"xml(
+  <Schedule id="mins-1-YearSchedule">
+    <Name>OBC Residential (Advanced)</Name>
+    <YearSchedule id="mins-1-YearSchedule">
+      <BeginDate>2011-01-01</BeginDate>
+      <EndDate>2011-06-01</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-1-Week"/>
+
+      <BeginDate>2011-06-01</BeginDate>
+      <EndDate>2011-12-31</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-2-Week"/>
+    </YearSchedule>
+  </Schedule>
+)xml";
+  pugi::xml_document doc = load_and_wrap_in_gbxml(schedule_string);
+  auto root = doc.document_element();
+  auto element = root.child("Schedule");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  auto mo_ = this->translateSchedule(element, root, model);
+  EXPECT_EQ(0, this->errors().size());
+  ASSERT_TRUE(mo_);
+  ASSERT_TRUE(mo_->optionalCast<ScheduleYear>());
+}
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Schedules_BrokenDate) {
+  // Test for #5234
+  constexpr std::string_view schedule_string = R"xml(
+  <Schedule id="mins-1-YearSchedule">
+    <Name>OBC Residential (Advanced)</Name>
+    <YearSchedule id="mins-1-YearSchedule">
+      <BeginDate>01:00 Jan. 01</BeginDate>
+      <EndDate>24:00 Apr. 01</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-1-Week"/>
+
+      <BeginDate>01:00 Apr. 02</BeginDate>
+      <EndDate>24:00 Sep. 30</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-2-Week"/>
+    </YearSchedule>
+  </Schedule>
+)xml";
+  pugi::xml_document doc = load_and_wrap_in_gbxml(schedule_string);
+  auto root = doc.document_element();
+  auto element = root.child("Schedule");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  EXPECT_ANY_THROW(this->translateSchedule(element, root, model));
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Fatal, this->errors().front().logLevel());
+  EXPECT_EQ("For YearSchedule id='mins-1-YearSchedule', BeginDate='01:00 Jan. 01' does not appear to be a valid xsd:date in the format YYYY-MM-DD",
+            this->errors().front().logMessage());
+}
