@@ -24,7 +24,7 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312, Windows_py313]
         include:
         - name: Ubuntu
           os: ubuntu-22.04
@@ -330,7 +330,7 @@ jobs:
   upload_python_bindings_to_testpypi:
     needs: python_bindings
     name: Upload to TestPyPi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Set up Python
@@ -384,14 +384,14 @@ jobs:
       # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
       fail-fast: false
       matrix:
-        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312]
+        name: [Ubuntu, macOS, macOS_arm64, Windows_py37, Windows_py38, Windows_py39, Windows_py310, Windows_py311, Windows_py312, Windows_py313]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-22.04
           python-version: 3.11  # Voluntarily using a newer version than built with for Unix
           allow_failure: false
         - name: macOS
-          os: macos-11
+          os: macos-12
           python-version: 3.11
           allow_failure: false
         - name: macOS_arm64
@@ -421,8 +421,11 @@ jobs:
         - name: Windows_py312
           os: windows-2019
           python-version: '3.12'
+          allow_failure: false
+        - name: Windows_py313
+          os: windows-2019
+          python-version: '3.13'
           allow_failure: true  # Possible this fails, don't care yet
-
     steps:
     - uses: actions/checkout@v4
 
@@ -459,7 +462,7 @@ jobs:
     if: contains(github.ref, 'refs/tags')
     needs: test_python_bindings
     name: Upload to PyPi
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
 
     - name: Set up Python
