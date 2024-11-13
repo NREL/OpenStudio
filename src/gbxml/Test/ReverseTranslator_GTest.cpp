@@ -1262,3 +1262,125 @@ TEST_F(gbXMLRTFixture, ReverseTranslator_Surface_NotEnoughVertices) {
   EXPECT_EQ(Error, this->errors().front().logLevel());
   EXPECT_EQ("For Surface='E-1-U-W-1', the number of vertices (2) is < 3, it will not be translated", this->errors().front().logMessage());
 }
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_SubSurface_TooManyCoordinates) {
+
+  constexpr std::string_view xml_string = R"xml(
+      <Opening interiorShadeType="Operable" exteriorShadeType="Fixed" constructionIdRef="aim0026" openingType="NonSlidingDoor" id="aim0672">
+        <RectangularGeometry id="aim10278">
+          <Azimuth>0</Azimuth>
+          <CartesianPoint>
+            <Coordinate>-18.5875952</Coordinate>
+            <Coordinate>65.5251517</Coordinate>
+            <Coordinate>6.5</Coordinate>
+          </CartesianPoint>
+          <Tilt>90</Tilt>
+          <Width>3</Width>
+          <Height>7</Height>
+        </RectangularGeometry>
+        <PlanarGeometry>
+          <PolyLoop>
+            <CartesianPoint>
+              <Coordinate>-20.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>3</Coordinate>
+            </CartesianPoint>
+            <CartesianPoint>
+              <Coordinate>-20.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>10</Coordinate>
+            </CartesianPoint>
+
+            <CartesianPoint> <!-- This CartesianPoint has 4 Coordinates when only x,y,z is expected -->
+              <Coordinate>-19</Coordinate>
+              <Coordinate>-17.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>10</Coordinate>
+            </CartesianPoint>
+
+            <CartesianPoint>
+              <Coordinate>-17.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>3</Coordinate>
+            </CartesianPoint>
+          </PolyLoop>
+        </PlanarGeometry>
+        <CADObjectId>Single-Panel 1: 36" x 84" [415427]</CADObjectId>
+        <Name>N-1-E-W-30-D-1</Name>
+      </Opening>
+)xml";
+
+  pugi::xml_document doc = load_and_wrap_in_gbxml(xml_string);
+  auto root = doc.document_element();
+  auto element = root.child("Opening");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  std::vector<Point3d> points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
+  Surface surface(points, model);
+  auto subSurface_ = this->translateSubSurface(element, surface);
+  EXPECT_FALSE(subSurface_);
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Error, this->errors().front().logLevel());
+  EXPECT_EQ(
+    "CartesianPoint should have exactly 3 Coordinate sub elements (x, y, z), occurred for Opening='N-1-E-W-30-D-1', it will not be translated",
+    this->errors().front().logMessage());
+}
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_SubSurface_NotEnoughVertices) {
+
+  constexpr std::string_view xml_string = R"xml(
+      <Opening interiorShadeType="Operable" exteriorShadeType="Fixed" constructionIdRef="aim0026" openingType="NonSlidingDoor" id="aim0672">
+        <RectangularGeometry id="aim10278">
+          <Azimuth>0</Azimuth>
+          <CartesianPoint>
+            <Coordinate>-18.5875952</Coordinate>
+            <Coordinate>65.5251517</Coordinate>
+            <Coordinate>6.5</Coordinate>
+          </CartesianPoint>
+          <Tilt>90</Tilt>
+          <Width>3</Width>
+          <Height>7</Height>
+        </RectangularGeometry>
+        <PlanarGeometry>
+
+          <!-- This PolyLoop has less than 3 vertices (CartesianPoint) -->
+
+          <PolyLoop>
+            <CartesianPoint>
+              <Coordinate>-20.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>3</Coordinate>
+            </CartesianPoint>
+            <CartesianPoint>
+              <Coordinate>-20.0875952</Coordinate>
+              <Coordinate>65.5251517</Coordinate>
+              <Coordinate>10</Coordinate>
+            </CartesianPoint>
+          </PolyLoop>
+        </PlanarGeometry>
+        <CADObjectId>Single-Panel 1: 36" x 84" [415427]</CADObjectId>
+        <Name>N-1-E-W-30-D-1</Name>
+      </Opening>
+)xml";
+
+  pugi::xml_document doc = load_and_wrap_in_gbxml(xml_string);
+  auto root = doc.document_element();
+  auto element = root.child("Opening");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  std::vector<Point3d> points = {
+    {0, 2, 0},
+    {0, 0, 0},
+    {1, 0, 0},
+  };
+  Surface surface(points, model);
+  auto subSurface_ = this->translateSubSurface(element, surface);
+  EXPECT_FALSE(subSurface_);
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Error, this->errors().front().logLevel());
+  EXPECT_EQ("For Opening='N-1-E-W-30-D-1', the number of vertices (2) is < 3, it will not be translated", this->errors().front().logMessage());
+}
