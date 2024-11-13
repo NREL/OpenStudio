@@ -25,6 +25,17 @@
 #  pragma GCC diagnostic pop
 #endif
 
+// >= 3.13.0
+// #if PY_VERSION_HEX >= 0x30d0000
+#if PY_MAJOR_VERSION > 3 || (PY_MAJOR_VERSION == 3 && PY_MINOR_VERSION > 12)
+extern "C"
+{
+  // These functions was removed from Python 3.13 API but are still exported
+  // for the stable ABI. Until we upgrade to PyConfig, just keep using it
+  extern void Py_SetPath(const wchar_t* path);
+}
+#endif
+
 namespace openstudio {
 
 void addToPythonPath(const openstudio::path& includePath) {
