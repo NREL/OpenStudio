@@ -26,6 +26,7 @@ class xml_document;
 namespace openstudio {
 
 class ProgressBar;
+class Point3d;
 
 namespace model {
   class Model;
@@ -62,6 +63,10 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element, openstudio::model::Model& model);
+
+    // Helper to extract vertices for both translateSurface and translateSubSurface
+    std::vector<openstudio::Point3d> extractPlanarSufaceVertices(const pugi::xml_node& element) const;
+
     boost::optional<openstudio::model::ModelObject> translateSurface(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface);
 

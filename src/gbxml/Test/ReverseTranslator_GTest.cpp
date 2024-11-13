@@ -1097,3 +1097,168 @@ TEST_F(gbXMLRTFixture, ReverseTranslator_Schedules_BrokenDate) {
   EXPECT_EQ("For YearSchedule id='mins-1-YearSchedule', BeginDate='01:00 Jan. 01' does not appear to be a valid xsd:date in the format YYYY-MM-DD",
             this->errors().front().logMessage());
 }
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Schedules_DifferentYear) {
+  // Test for #5234
+  constexpr std::string_view schedule_string = R"xml(
+  <Schedule id="mins-1-YearSchedule">
+    <Name>OBC Residential (Advanced)</Name>
+    <YearSchedule id="mins-1-YearSchedule">
+      <BeginDate>2011-01-01</BeginDate>
+      <EndDate>2012-04-01</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-1-Week"/>
+    </YearSchedule>
+  </Schedule>
+)xml";
+  pugi::xml_document doc = load_and_wrap_in_gbxml(schedule_string);
+  auto root = doc.document_element();
+  auto element = root.child("Schedule");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  EXPECT_ANY_THROW(this->translateSchedule(element, root, model));
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Fatal, this->errors().front().logLevel());
+  EXPECT_EQ("For YearSchedule id='mins-1-YearSchedule', BeginDate='2011-01-01 and EndDate='2012-04-01' are not the same year which is not supported",
+            this->errors().front().logMessage());
+}
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Schedules_StartNotOnJanuary1) {
+  // Test for #5234
+  constexpr std::string_view schedule_string = R"xml(
+  <Schedule id="mins-1-YearSchedule">
+    <Name>OBC Residential (Advanced)</Name>
+    <YearSchedule id="mins-1-YearSchedule">
+      <BeginDate>2011-04-01</BeginDate>
+      <EndDate>2011-06-01</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-1-Week"/>
+
+      <BeginDate>2011-06-01</BeginDate>
+      <EndDate>2011-12-31</EndDate>
+      <WeekScheduleId weekScheduleIdRef="mins-2-Week"/>
+    </YearSchedule>
+  </Schedule>
+)xml";
+  pugi::xml_document doc = load_and_wrap_in_gbxml(schedule_string);
+  auto root = doc.document_element();
+  auto element = root.child("Schedule");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  EXPECT_ANY_THROW(this->translateSchedule(element, root, model));
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Fatal, this->errors().front().logLevel());
+  EXPECT_EQ("For YearSchedule id='mins-1-YearSchedule', BeginDate='2011-04-01' does start on January 1 which not supported",
+            this->errors().front().logMessage());
+}
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Surface_TooManyCoordinates) {
+
+  constexpr std::string_view xml_string = R"xml(
+    <Surface surfaceType="UndergroundWall" constructionIdRef="aim0676" id="aim0700">
+      <AdjacentSpaceId spaceIdRef="aim0046" />
+      <RectangularGeometry id="aim0701">
+        <Azimuth>90</Azimuth>
+        <CartesianPoint>
+          <Coordinate>1</Coordinate>
+          <Coordinate>-0.000000000000003248601</Coordinate>
+          <Coordinate>-1</Coordinate>
+        </CartesianPoint>
+        <Tilt>90</Tilt>
+        <Width>1</Width>
+        <Height>1</Height>
+      </RectangularGeometry>
+      <PlanarGeometry>
+        <PolyLoop>
+
+          <CartesianPoint> <!-- This CartesianPoint has 4 Coordinates when only x,y,z is expected -->
+            <Coordinate>1</Coordinate>
+            <Coordinate>1</Coordinate>
+            <Coordinate>0</Coordinate>
+            <Coordinate>-1</Coordinate>
+          </CartesianPoint>
+
+          <CartesianPoint>
+            <Coordinate>1</Coordinate>
+            <Coordinate>1</Coordinate>
+            <Coordinate>-1</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>1</Coordinate>
+            <Coordinate>1</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>1</Coordinate>
+            <Coordinate>0</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+      <CADObjectId>Basic Wall: Exterior [2511]</CADObjectId>
+      <Name>E-1-U-W-1</Name>
+    </Surface>
+)xml";
+
+  pugi::xml_document doc = load_and_wrap_in_gbxml(xml_string);
+  auto root = doc.document_element();
+  auto element = root.child("Surface");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  auto surface_ = this->translateSurface(element, model);
+  EXPECT_FALSE(surface_);
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Error, this->errors().front().logLevel());
+  EXPECT_EQ("CartesianPoint should have exactly 3 Coordinate sub elements (x, y, z), occurred for Surface='E-1-U-W-1', it will not be translated",
+            this->errors().front().logMessage());
+}
+
+TEST_F(gbXMLRTFixture, ReverseTranslator_Surface_NotEnoughVertices) {
+
+  constexpr std::string_view xml_string = R"xml(
+    <Surface surfaceType="UndergroundWall" constructionIdRef="aim0676" id="aim0700">
+      <AdjacentSpaceId spaceIdRef="aim0046" />
+      <RectangularGeometry id="aim0701">
+        <Azimuth>90</Azimuth>
+        <CartesianPoint>
+          <Coordinate>1</Coordinate>
+          <Coordinate>-0.000000000000003248601</Coordinate>
+          <Coordinate>-1</Coordinate>
+        </CartesianPoint>
+        <Tilt>90</Tilt>
+        <Width>1</Width>
+        <Height>1</Height>
+      </RectangularGeometry>
+      <PlanarGeometry>
+
+        <!-- This PolyLoop has less than 3 vertices (CartesianPoint) -->
+        <PolyLoop>
+
+          <CartesianPoint>
+            <Coordinate>1</Coordinate>
+            <Coordinate>0</Coordinate>
+            <Coordinate>-1</Coordinate>
+          </CartesianPoint>
+
+          <CartesianPoint>
+            <Coordinate>1</Coordinate>
+            <Coordinate>1</Coordinate>
+            <Coordinate>-1</Coordinate>
+          </CartesianPoint>
+
+        </PolyLoop>
+      </PlanarGeometry>
+      <CADObjectId>Basic Wall: Exterior [2511]</CADObjectId>
+      <Name>E-1-U-W-1</Name>
+    </Surface>
+)xml";
+
+  pugi::xml_document doc = load_and_wrap_in_gbxml(xml_string);
+  auto root = doc.document_element();
+  auto element = root.child("Surface");
+  ASSERT_TRUE(element);
+  openstudio::model::Model model;
+  auto surface_ = this->translateSurface(element, model);
+  EXPECT_FALSE(surface_);
+  ASSERT_EQ(1, this->errors().size());
+  EXPECT_EQ(Error, this->errors().front().logLevel());
+  EXPECT_EQ("For Surface='E-1-U-W-1', the number of vertices (2) is < 3, it will not be translated", this->errors().front().logMessage());
+}

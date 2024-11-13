@@ -175,23 +175,32 @@ namespace gbxml {
 
     auto first{true};
     for (auto& scheduleYearElement : element.children("YearSchedule")) {
+      const std::string ys_id = scheduleYearElement.attribute("id").value();
       std::string beginDateString = scheduleYearElement.child("BeginDate").text().as_string();
       auto beginDateParts = splitString(beginDateString, '-');  // 2011-01-01
-      OS_ASSERT(beginDateParts.size() == 3);
+      if (beginDateParts.size() != 3) {
+        LOG_AND_THROW("For YearSchedule id='" << ys_id << "', BeginDate='" << beginDateString
+                                              << "' does not appear to be a valid xsd:date in the format YYYY-MM-DD");
+      }
       yd.setCalendarYear(std::stoi(beginDateParts.at(0)));
       openstudio::Date beginDate = yd.makeDate(std::stoi(beginDateParts.at(1)), std::stoi(beginDateParts.at(2)));
 
       // handle case if schedule does not start on 1/1
       if (first && (beginDate != yd.makeDate(1, 1))) {
-        OS_ASSERT(false);
+        LOG_AND_THROW("For YearSchedule id='" << ys_id << "', BeginDate='" << beginDateString << "' does start on January 1 which not supported");
       }
       first = false;
 
       std::string endDateString = scheduleYearElement.child("EndDate").text().as_string();
       auto endDateParts = splitString(endDateString, '-');  // 2011-12-31
-      OS_ASSERT(endDateParts.size() == 3);
-      OS_ASSERT(yd.calendarYear());
-      OS_ASSERT(yd.calendarYear().get() == std::stoi(endDateParts.at(0)));
+      if (endDateParts.size() != 3) {
+        LOG_AND_THROW("For YearSchedule id='" << ys_id << "', EndDate='" << endDateString
+                                              << "' does not appear to be a valid xsd:date in the format YYYY-MM-DD");
+      }
+      if (yd.calendarYear().get() != std::stoi(endDateParts.at(0))) {
+        LOG_AND_THROW("For YearSchedule id='" << ys_id << "', BeginDate='" << beginDateString << " and EndDate='" << endDateString
+                                              << "' are not the same year which is not supported")
+      }
       openstudio::Date endDate = yd.makeDate(std::stoi(endDateParts.at(1)), std::stoi(endDateParts.at(2)));
 
       std::string weekScheduleId = scheduleYearElement.child("WeekScheduleId").attribute("weekScheduleIdRef").value();

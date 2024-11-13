@@ -301,7 +301,10 @@ namespace gbxml {
     }
 
     auto campusElement = root.child("Campus");
-    OS_ASSERT(campusElement.next_sibling("Campus").empty());
+    if (!campusElement.next_sibling("Campus").empty()) {
+      LOG(Error, "Campus element should be unique, will ignore all but the first found");
+    }
+
     boost::optional<model::ModelObject> facility = translateCampus(campusElement, model);
     OS_ASSERT(facility);  // Krishnan, what type of error handling do you want?
 
@@ -387,7 +390,9 @@ namespace gbxml {
     auto facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
-    OS_ASSERT(buildingElement.next_sibling("Building").empty());
+    if (!buildingElement.next_sibling("Building").empty()) {
+      LOG(Error, "Building element should be unique, will ignore all but the first found");
+    }
 
     boost::optional<model::ModelObject> building = translateBuilding(buildingElement, model);
     OS_ASSERT(building);
@@ -565,17 +570,24 @@ namespace gbxml {
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model) {
-    boost::optional<model::ModelObject> result;
-    std::vector<openstudio::Point3d> vertices;
+  std::vector<openstudio::Point3d> ReverseTranslator::extractPlanarSufaceVertices(const pugi::xml_node& element) const {
+
+    const std::string surfaceName = element.child("Name").text().as_string();
 
     auto planarGeometryElement = element.child("PlanarGeometry");
     auto polyLoopElement = planarGeometryElement.child("PolyLoop");
     auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
 
+    std::vector<openstudio::Point3d> vertices;
+    vertices.reserve(std::distance(cartesianPointElements.begin(), cartesianPointElements.end()));
+
     for (auto& cart_el : cartesianPointElements) {
       auto coordinateElements = cart_el.children("Coordinate");
-      OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
+      if (std::distance(coordinateElements.begin(), coordinateElements.end()) != 3) {
+        LOG(Error, "CartesianPoint should have exactly 3 Coordinate sub elements (x, y, z), occurred for " << element.name() << "='" << surfaceName
+                                                                                                           << "', it will not be translated");
+        return {};
+      }
 
       /* Calling these conversions every time is unnecessarily slow
 
@@ -600,6 +612,21 @@ namespace gbxml {
       }
 
       vertices.emplace_back(coords[0], coords[1], coords[2]);
+    }
+    if (vertices.size() < 3) {
+      LOG(Error, "For " << element.name() << "='" << surfaceName << "', the number of vertices (" << vertices.size()
+                        << ") is < 3, it will not be translated");
+      return {};
+    }
+    return vertices;
+  }
+
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model) {
+    boost::optional<model::ModelObject> result;
+
+    const std::vector<openstudio::Point3d> vertices = extractPlanarSufaceVertices(element);
+    if (vertices.empty()) {
+      return boost::none;
     }
 
     std::string surfaceType = element.attribute("surfaceType").value();
@@ -974,38 +1001,9 @@ namespace gbxml {
 
     boost::optional<model::ModelObject> result;
 
-    std::vector<openstudio::Point3d> vertices;
-
-    auto planarGeometryElement = element.child("PlanarGeometry");
-    auto polyLoopElement = planarGeometryElement.child("PolyLoop");
-    auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
-
-    for (auto& cart_el : cartesianPointElements) {
-      auto coordinateElements = cart_el.children("Coordinate");
-      OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
-
-      /* Calling these conversions every time is unnecessarily slow
-
-      Unit targetUnit = UnitFactory::instance().createUnit("m").get();
-      Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
-      Quantity yQuantity(coordinateElements.at(1).toElement().text().toDouble(), m_lengthUnit);
-      Quantity zQuantity(coordinateElements.at(2).toElement().text().toDouble(), m_lengthUnit);
-
-      double x = QuantityConverter::instance().convert(xQuantity, targetUnit)->value();
-      double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
-      double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
-      */
-      std::array<double, 3> coords{{0.0, 0.0, 0.0}};
-      size_t i{0};
-      for (auto& el : coordinateElements) {
-        coords[i] = m_lengthMultiplier * el.text().as_double();
-        ++i;
-        if (i == 3) {
-          break;
-        }
-      }
-
-      vertices.emplace_back(coords[0], coords[1], coords[2]);
+    const std::vector<openstudio::Point3d> vertices = extractPlanarSufaceVertices(element);
+    if (vertices.empty()) {
+      return boost::none;
     }
 
     openstudio::model::SubSurface subSurface(vertices, model);
