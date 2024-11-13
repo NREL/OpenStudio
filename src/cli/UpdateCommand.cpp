@@ -297,5 +297,17 @@ shell.interact()
     pythonEngine->exec(cmd);
   }
 
+  void executePipListCommand(ScriptEngineInstance& pythonEngine) {
+    // TODO: seems like the CLI is picking up your virtualenvironment, so we manipulate sys.path to keep only the E+ folder for now
+    const std::string cmd = R"python(
+import sys
+sys.path = [x for x in sys.path if "EnergyPlus" in x]
+import importlib.metadata
+mods = sorted([f"{x.name}=={x.version}" for x in importlib.metadata.distributions()])
+[print(x) for x in mods]
+    )python";
+    pythonEngine->exec(cmd);
+  }
+
 }  // namespace cli
 }  // namespace openstudio

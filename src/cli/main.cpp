@@ -270,9 +270,15 @@ int main(int argc, char* argv[]) {
     python_repl_command->callback([&pythonEngine] { openstudio::cli::executePythonRepl(pythonEngine); });
     // }
 
-    [[maybe_unused]] auto* gem_listCommand = app.add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine]() {
-      openstudio::cli::executeGemListCommand(rubyEngine);
-    });
+    [[maybe_unused]] auto* gem_listCommand =
+      app.add_subcommand("gem_list", "Lists the set of gems available to openstudio")->callback([&rubyEngine]() {
+        openstudio::cli::executeGemListCommand(rubyEngine);
+      });
+
+    [[maybe_unused]] auto* pip_listCommand =
+      app.add_subcommand("pip_list", "Lists the set of python modules available to openstudio")->callback([&pythonEngine]() {
+        openstudio::cli::executePipListCommand(pythonEngine);
+      });
 
     // Not hidding any commands right now
     // [[maybe_unused]] auto* list_commandsCommand = app.add_subcommand("list_commands", "Lists the entire set of available commands");

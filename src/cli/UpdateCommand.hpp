@@ -21,6 +21,7 @@ namespace cli {
   void executePythonScriptCommand(openstudio::path pythonScriptPath, ScriptEngineInstance& pythonEngine, const std::vector<std::string>& arguments);
 
   void executeGemListCommand(ScriptEngineInstance& rubyEngine);
+  void executePipListCommand(ScriptEngineInstance& pythonEngine);
 
   void executeRubyRepl(ScriptEngineInstance& rubyEngine);
   void executePythonRepl(ScriptEngineInstance& pythonEngine);
