@@ -129,6 +129,9 @@ class MeasureManagerServer
   void handle_get(web::http::http_request message);
   void handle_post(web::http::http_request message);
   static void handle_error(pplx::task<void>& t);
+
+  // Helper to return a 404 error
+  static void unknown_endpoint(web::http::http_request& message);
   MeasureManager m_measureManager;
   web::http::experimental::listener::http_listener m_listener;
   ThreadSafeDeque<std::packaged_task<ResponseType()>> tasks;

@@ -595,6 +595,11 @@ bool MeasureManagerServer::close() {
   return status == pplx::task_group_status::completed;
 }
 
+void MeasureManagerServer::unknown_endpoint(web::http::http_request& message) {
+  const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
+  message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Error, unknown path '{}'", uri)));
+}
+
 void MeasureManagerServer::handle_get(web::http::http_request message) {
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
 
@@ -612,7 +617,7 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
     return;
   }
 
-  message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Error, unknown path '{}'", uri)));
+  unknown_endpoint(message);
 }
 
 void MeasureManagerServer::handle_post(web::http::http_request message) {
@@ -670,7 +675,7 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
     return;
   }
 
-  message.reply(web::http::status_codes::NotFound, toWebJSON("404: Unknown Endpoint"));
+  unknown_endpoint(message);
 }
 MeasureManagerServer::ResponseType MeasureManagerServer::internal_state([[maybe_unused]] const web::json::value& body) {
   Json::Value result;
