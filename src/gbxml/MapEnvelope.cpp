@@ -36,9 +36,6 @@ namespace gbxml {
   boost::optional<openstudio::model::ModelObject>
     ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node>& layerElements,
                                              openstudio::model::Model& model) {
-    // Krishnan, this constructor should only be used for unique objects like Building and Site
-    //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
-
     openstudio::model::Construction construction(model);
 
     translateId(element, construction);
@@ -74,7 +71,7 @@ namespace gbxml {
           auto materialIt = m_idToObjectMap.find(materialId);
           if (materialIt != m_idToObjectMap.end()) {
             boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
-            OS_ASSERT(material);  // Krishnan, what type of error handling do you want?
+            OS_ASSERT(material);
             materials.push_back(*material);
           }
         }
@@ -114,7 +111,7 @@ namespace gbxml {
         test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
       }
 
-      OS_ASSERT(test);  // Krishnan, what type of error handling do you want?
+      OS_ASSERT(test);
     }
 
     return construction;
@@ -131,6 +128,22 @@ namespace gbxml {
     boost::optional<double> shgc;
     boost::optional<double> tVis;
 
+    /**
+  <WindowType windowTypeIsSchematic="true" id="aim0153">
+    <Name>Large double-glazed windows (reflective coating) - industry</Name>
+    <Description>Large double-glazed windows (reflective coating) - industry</Description>
+    <U-value unit="WPerSquareMeterK">2.9214</U-value>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="0">0.13</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="40">0.12</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="50">0.12</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="60">0.11</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="70">0.1</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction" solarIncidentAngle="80">0.06</SolarHeatGainCoeff>
+    <SolarHeatGainCoeff unit="Fraction">0.11</SolarHeatGainCoeff>
+    <Transmittance unit="Fraction" type="Visible" surfaceType="1">0.07</Transmittance>
+  </WindowType>
+  */
+
     for (auto& uValueElement : element.children("U-value")) {
       if (uValueElement.attribute("unit").value() == std::string("WPerSquareMeterK")) {
         uValue = uValueElement.text().as_double();
@@ -138,6 +151,7 @@ namespace gbxml {
       }
     }
 
+    // TODO: Shouldn't we grab specifically one without solarIncidentAngle or a specific (or lower) one if there?
     for (auto& shgcElement : element.children("SolarHeatGainCoeff")) {
       if (shgcElement.attribute("unit").value() == std::string("Fraction")) {
         shgc = shgcElement.text().as_double();
@@ -162,6 +176,7 @@ namespace gbxml {
       layers.push_back(glazing);
       construction.setLayers(layers);
     }
+    // TODO: should we actually return a construction if we didn't instantiate any Material for the construction?
 
     return construction;
   }
@@ -226,9 +241,6 @@ namespace gbxml {
         material.setVisibleAbsorptance(*extvisible);
       }
     } else if (!rvalueElement.empty()) {  //Material no mass that has only R-value
-
-      // Krishnan, this constructor should only be used for unique objects like Building and Site
-      //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
 
       double rvalue = rvalueElement.text().as_double();
 

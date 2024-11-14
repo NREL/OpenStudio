@@ -60,9 +60,12 @@ namespace gbxml {
     boost::optional<openstudio::model::Model> translateGBXML(const pugi::xml_node& root);
     boost::optional<openstudio::model::ModelObject> translateCampus(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model);
-    boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element, openstudio::model::Model& model);
+    [[maybe_unused]] boost::optional<openstudio::model::ModelObject> translateBuildingStory(const pugi::xml_node& element,
+                                                                                            openstudio::model::Model& model) noexcept;
+    [[maybe_unused]] boost::optional<openstudio::model::ModelObject> translateThermalZone(const pugi::xml_node& element,
+                                                                                          openstudio::model::Model& model) noexcept;
+    [[maybe_unused]] boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element,
+                                                                                    openstudio::model::Model& model) noexcept;
 
     // Helper to extract vertices for both translateSurface and translateSubSurface
     std::vector<openstudio::Point3d> extractPlanarSufaceVertices(const pugi::xml_node& element) const;

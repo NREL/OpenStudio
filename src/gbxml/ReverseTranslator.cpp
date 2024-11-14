@@ -50,7 +50,9 @@
 
 #include <thread>
 
+#include <fmt/format.h>
 #include <pugixml.hpp>
+
 #include <algorithm>
 #include <locale>
 
@@ -203,23 +205,30 @@ namespace gbxml {
       m_useSIUnitsForResults = false;
     }
 
-    // do materials before constructions
-    auto materialElements = root.children("Material");
-    if (m_progressBar) {
-      m_progressBar->setWindowTitle(toString("Translating Materials"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)std::distance(materialElements.begin(), materialElements.end()));
-      m_progressBar->setValue(0);
-    }
-
-    for (auto& materialElement : materialElements) {
-      boost::optional<model::ModelObject> material = translateMaterial(materialElement, model);
-      OS_ASSERT(material);  // Krishnan, what type of error handling do you want?
-
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
+    auto translateNoExcept = [this, &root]<class... Args>(const char* xmlType, auto translateFunPtr, bool warn_if_empty, Args&&... trailing_args) {
+      auto childElements = root.children(xmlType);
+      if (childElements.empty() && warn_if_empty) {
+        LOG(Warn, "Could not find a single '" << xmlType << "' Element");
       }
-    }
+      if (m_progressBar) {
+        m_progressBar->setWindowTitle(fmt::format("Translating {}s", xmlType));
+        m_progressBar->setMinimum(0);
+        m_progressBar->setMaximum(static_cast<int>(std::distance(childElements.begin(), childElements.end())));
+        m_progressBar->setValue(0);
+      }
+
+      for (auto& childElement : childElements) {
+        auto result_ = (this->*translateFunPtr)(childElement, std::forward<Args>(trailing_args)...);
+        OS_ASSERT(result_);
+
+        if (m_progressBar) {
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
+      }
+    };
+
+    // do materials before constructions
+    translateNoExcept("Material", &ReverseTranslator::translateMaterial, true, model);
 
     // do constructions before surfaces
     std::unordered_map<std::string, pugi::xml_node> layerElements;
@@ -229,40 +238,9 @@ namespace gbxml {
       layerElements[layerId] = layerEl;
     }
 
-    auto constructionElements = root.children("Construction");
-    if (m_progressBar) {
-      m_progressBar->setWindowTitle(toString("Translating Constructions"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)std::distance(constructionElements.begin(), constructionElements.end()));
-      m_progressBar->setValue(0);
-    }
+    translateNoExcept("Construction", &ReverseTranslator::translateConstruction, true, layerElements, model);
 
-    for (auto& constructionElement : constructionElements) {
-      boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, model);
-      OS_ASSERT(construction);  // Krishnan, what type of error handling do you want?
-
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
-      }
-    }
-
-    // do window type before sub surfaces
-    auto windowTypeElements = root.children("WindowType");
-    if (m_progressBar) {
-      m_progressBar->setWindowTitle(toString("Translating Window Types"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)std::distance(windowTypeElements.begin(), windowTypeElements.end()));
-      m_progressBar->setValue(0);
-    }
-
-    for (auto& windowTypeElement : windowTypeElements) {
-      boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, model);
-      OS_ASSERT(construction);  // Krishnan, what type of error handling do you want?
-
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
-      }
-    }
+    translateNoExcept("WindowType", &ReverseTranslator::translateWindowType, false, model);
 
     // do schedules before loads
     auto scheduleElements = root.children("Schedule");
@@ -283,24 +261,12 @@ namespace gbxml {
     }
 
     // do thermal zones before spaces
-    auto zoneElements = root.children("Zone");
-    if (m_progressBar) {
-      m_progressBar->setWindowTitle(toString("Translating Zones"));
-      m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum((int)std::distance(zoneElements.begin(), zoneElements.end()));
-      m_progressBar->setValue(0);
-    }
-
-    for (auto& zoneElement : zoneElements) {
-      boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, model);
-      OS_ASSERT(zone);  // Krishnan, what type of error handling do you want?
-
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
-      }
-    }
+    translateNoExcept("Zone", &ReverseTranslator::translateThermalZone, true, model);
 
     auto campusElement = root.child("Campus");
+    if (!campusElement) {
+      LOG_AND_THROW("Missing the Campus element directly under the gbXML");
+    }
     if (!campusElement.next_sibling("Campus").empty()) {
       LOG(Error, "Campus element should be unique, will ignore all but the first found");
     }
@@ -390,6 +356,9 @@ namespace gbxml {
     auto facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
+    if (!buildingElement) {
+      LOG_AND_THROW("Missing the Building element directly under the Campus one");
+    }
     if (!buildingElement.next_sibling("Building").empty()) {
       LOG(Error, "Building element should be unique, will ignore all but the first found");
     }
@@ -464,7 +433,8 @@ namespace gbxml {
     return building;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element,
+                                                                                openstudio::model::Model& model) noexcept {
     openstudio::model::BuildingStory story(model);
 
     translateId(element, story);
@@ -477,7 +447,8 @@ namespace gbxml {
     return story;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element,
+                                                                              openstudio::model::Model& model) noexcept {
     openstudio::model::ThermalZone zone(model);
 
     translateId(element, zone);
@@ -496,34 +467,32 @@ namespace gbxml {
     return zone;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) noexcept {
     openstudio::model::Space space(model);
 
     translateId(element, space);
     translateName(element, space);
 
-    //DLM: we should be using a map of id to model object to get this, not relying on name
-    std::string storyId = element.attribute("buildingStoreyIdRef").value();
-    auto storyIt = m_idToObjectMap.find(storyId);
-    if (storyIt != m_idToObjectMap.end()) {
-      boost::optional<model::BuildingStory> story = storyIt->second.optionalCast<model::BuildingStory>();
-      if (story) {
-        space.setBuildingStory(*story);
+    auto lookupLinkedObject = [this, &element]<class T>(const char* id_attribute_name) -> boost::optional<T> {
+      std::string id = element.attribute(id_attribute_name).value();
+      if (id.empty()) {
+        return {};
       }
-    }
+      auto foundIt = m_idToObjectMap.find(id);
+      if (foundIt == m_idToObjectMap.end()) {
+        return {};
+      }
+      return foundIt->second.optionalCast<T>();
+    };
 
+    if (auto story_ = lookupLinkedObject.template operator()<model::BuildingStory>("buildingStoreyIdRef")) {
+      space.setBuildingStory(*story_);
+    }
     // if space doesn't have story assigned should we warn the user?
 
-    std::string zoneId = element.attribute("zoneIdRef").value();
-    auto zoneIt = m_idToObjectMap.find(zoneId);
-    if (zoneIt != m_idToObjectMap.end()) {
-      boost::optional<model::ThermalZone> thermalZone = zoneIt->second.optionalCast<model::ThermalZone>();
-      if (thermalZone) {
-        space.setThermalZone(*thermalZone);
-      }
-    }
-
-    if (!space.thermalZone()) {
+    if (auto thermalZone_ = lookupLinkedObject.template operator()<model::ThermalZone>("zoneIdRef")) {
+      space.setThermalZone(*thermalZone_);
+    } else {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
@@ -532,6 +501,8 @@ namespace gbxml {
       thermalZone.setName(id + " ThermalZone");
       thermalZone.additionalProperties().setFeature("gbXMLId", id + " Thermal Zone");
       thermalZone.additionalProperties().setFeature("displayName", name + " Thermal Zone");
+      LOG(Warn,
+          "Space '" << name << "' did not have a valid zoneIdRef, a ThermalZone named '" << thermalZone.nameString() << "' was automatically created")
       space.setThermalZone(thermalZone);
     }
 
