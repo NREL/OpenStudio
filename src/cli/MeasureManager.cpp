@@ -604,10 +604,7 @@ void MeasureManagerServer::handle_get(web::http::http_request message) {
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
 
   if (uri == "/") {
-    Json::Value result;
-    result["status"] = "running";
-    result["my_measures_dir"] = my_measures_dir.generic_string();
-    message.reply(web::http::status_codes::OK, toWebJSON(result));
+    handle_request(message, web::json::value(), &MeasureManagerServer::status);
     return;
   }
 
@@ -677,6 +674,14 @@ void MeasureManagerServer::handle_post(web::http::http_request message) {
 
   unknown_endpoint(message);
 }
+
+MeasureManagerServer::ResponseType MeasureManagerServer::status([[maybe_unused]] const web::json::value& body) {
+  Json::Value result;
+  result["status"] = "running";
+  result["my_measures_dir"] = my_measures_dir.generic_string();
+  return {web::http::status_codes::OK, toWebJSON(result)};
+}
+
 MeasureManagerServer::ResponseType MeasureManagerServer::internal_state([[maybe_unused]] const web::json::value& body) {
   Json::Value result;
   result["status"] = "running";
