@@ -140,7 +140,7 @@ Json::Value MeasureManager::internalState() const {
     osmInfo["checksum"] = v.checksum;
     osms.append(std::move(osmInfo));
   }
-  result["osm"] = std::move(osms);
+  result["osms"] = std::move(osms);
 
   Json::Value idfs(Json::arrayValue);
   for (const auto& [k, v] : m_idfs) {
@@ -149,15 +149,18 @@ Json::Value MeasureManager::internalState() const {
     idfInfo["checksum"] = v.checksum;
     idfs.append(std::move(idfInfo));
   }
-  result["idf"] = std::move(idfs);
+  result["idfs"] = std::move(idfs);
 
+  // Json::Value measures(Json::arrayValue);
   auto& measures = result["measures"];
+  measures = Json::arrayValue;
   for (const auto& [measureDirPath, bclMeasureInfo] : m_measures) {
     Json::Value mInfo(Json::objectValue);
     measures.append(bclMeasureInfo.measure.toJSON());
   }
 
   auto& measureInfos = result["measure_info"];
+  measureInfos = Json::arrayValue;
   // Json::Value measureInfos(Json::arrayValue);
   for (const auto& [measureDirPath, bclMeasureInfo] : m_measures) {
     for (const auto& [osmOrIdfPath, measureInfo] : bclMeasureInfo.measureInfos) {
