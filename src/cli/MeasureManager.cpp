@@ -5,6 +5,7 @@
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/time/DateTime.hpp"
 #include "../osversion/VersionTranslator.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
@@ -598,6 +599,7 @@ bool MeasureManagerServer::close() {
 void MeasureManagerServer::unknown_endpoint(web::http::http_request& message) {
   const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
   message.reply(web::http::status_codes::BadRequest, toWebJSON(fmt::format("Error, unknown path '{}'", uri)));
+  print_feedback(message, web::http::status_codes::NotFound);
 }
 
 void MeasureManagerServer::handle_get(web::http::http_request message) {
@@ -997,6 +999,15 @@ MeasureManagerServer::ResponseType MeasureManagerServer::duplicate_measure(const
   }
 }
 
+void MeasureManagerServer::print_feedback(const web::http::http_request& message, web::http::status_code status_code) {
+  const std::string uri = toString(web::http::uri::decode(message.relative_uri().path()));
+  const std::string method = toString(message.method());
+  const std::string http_version = message.http_version().to_utf8string();
+  const std::string timestamp = openstudio::DateTime::now().toXsdDateTime();
+  fmt::print(status_code == web::http::status_codes::OK ? stdout : stderr, "[{}] \"{} {} {}\" {}\n", openstudio::DateTime::now().toXsdDateTime(),
+             method, uri, http_version, status_code);
+}
+
 void MeasureManagerServer::handle_request(const web::http::http_request& message, const web::json::value& body,
                                           memRequestHandlerFunPtr request_handler) {
 
@@ -1004,23 +1015,28 @@ void MeasureManagerServer::handle_request(const web::http::http_request& message
 
   auto future_result = task.get_future();  // The task hasn't been started yet
   tasks.push_back(std::move(task));        // It gets queued, the **main** thread will process it
+  web::http::status_code status_code = web::http::status_codes::Created;
   try {
     auto result = future_result.get();  // This block until it's been processed
-    message.reply(result.status_code, result.body);
+    status_code = result.status_code;
+    message.reply(status_code, result.body);
   } catch (const std::exception& e) {
     constexpr auto msg = "MeasureManager Server encountered an error:\n\"{}\"\n";
     fmt::print(msg, e.what());
+    status_code = web::http::status_codes::InternalError;
     message.reply(web::http::status_codes::InternalError, fmt::format(msg, e.what()));
   }
+  print_feedback(message, status_code);
 }
 
 void MeasureManagerServer::do_tasks_forever() {
-  fmt::print("MeasureManager Ready");
+  fmt::print("MeasureManager Ready\n");
   fmt::print("Accepting requests on: {}\n", m_url);
   std::fflush(stdout);
   while (true) {
     auto task = tasks.wait_for_one();
     task();
+    std::fflush(stdout);
   }
 }
 

@@ -133,6 +133,12 @@ class MeasureManagerServer
 
   // Helper to return a 404 error
   static void unknown_endpoint(web::http::http_request& message);
+
+  // Print the request to the console (stdout if Ok, stderr otherwise)
+  // [2024-11-14T10:21:46+01:00] "POST /reset HTTP/1.1" 200
+  // [2024-11-14T10:22:09+01:00] "GET /dsd HTTP/1.1" 400
+  static void print_feedback(const web::http::http_request& message, web::http::status_code status_code);
+
   MeasureManager m_measureManager;
   web::http::experimental::listener::http_listener m_listener;
   ThreadSafeDeque<std::packaged_task<ResponseType()>> tasks;
