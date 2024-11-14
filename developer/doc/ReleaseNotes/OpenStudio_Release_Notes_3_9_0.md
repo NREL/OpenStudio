@@ -1,6 +1,6 @@
 # OpenStudio Version 3.9.0
 
-_Release Notes_ -  _TDB_
+_Release Notes_ - 2024-11-13
 
 These release notes describe version 3.9.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -82,9 +82,6 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * `ControllerOutdoorAir` has two API-breaking changes for `High Humidity Outdoor Air Flow Ratio` and `Control High Indoor Humidity Based on Outdoor Humidity Ratio`. These fields are now-required, so the getters no longer return an optional
         * `getHighHumidityOutdoorAirFlowRatio` (`boost::optional<double>` to `double`)
         * `getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio` (`boost::optional<bool>` to `bool`)
-
-* [#5236](https://github.com/NREL/OpenStudio/pull/5236) - Add Utility for Generating Alfalfa Metadata to OpenStudio
-    * This PR moves the mechanisms for creating "Alfalfa Points" into the OpenStudio runner so that they may be accessed during the measure workflow.
 
 ## Minor changes and bug fixes
 
