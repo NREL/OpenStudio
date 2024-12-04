@@ -30,6 +30,7 @@
 #include "PythonPluginSearchPaths.hpp"
 #include "PythonPluginSearchPaths_Impl.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
@@ -79,6 +80,16 @@ namespace model {
       return getBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath);
     }
 
+    std::vector<std::string> PythonPluginSearchPaths_Impl::searchPaths() const {
+      std::vector<std::string> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _s = eg.getString(OS_PythonPlugin_SearchPathsExtensibleFields::SearchPath);
+        OS_ASSERT(_s);
+        result.push_back(_s.get());
+      }
+      return result;
+    }
+
     bool PythonPluginSearchPaths_Impl::setAddCurrentWorkingDirectorytoSearchPath(bool addCurrentWorkingDirectorytoSearchPath) {
       const bool result = setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, addCurrentWorkingDirectorytoSearchPath);
       OS_ASSERT(result);
@@ -95,6 +106,44 @@ namespace model {
       const bool result = setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, addepinEnvironmentVariabletoSearchPath);
       OS_ASSERT(result);
       return result;
+    }
+
+    bool PythonPluginSearchPaths_Impl::addSearchPath(const std::string& searchPath) {
+      std::vector<std::string> existingSearchPaths = this->searchPaths();
+      if (std::find_if(existingSearchPaths.begin(), existingSearchPaths.end(), [&searchPath](const std::string& s) { return openstudio::istringEqual(s, searchPath); })
+          != existingSearchPaths.end()) {
+        LOG(Info, "Not adding search path '" << searchPath << "' to PythonPlugin:SearchPaths since it is already present");
+        // Return true anyways, it's a success
+        return true;
+      }
+
+      auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool result = eg.setString(OS_PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath);
+      if (!result) {
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      }
+
+      return result;
+    }
+
+    bool PythonPluginSearchPaths_Impl::setSearchPaths(const std::vector<std::string>& searchPaths) {
+      bool result = true;
+
+      clearSearchPaths();
+
+      for (const auto& s : searchPaths) {
+        bool thisResult = addSearchPath(s);
+        if (!thisResult) {
+          LOG(Warn, "Couldn't add search path " << s << " to PythonPlugin:SearchPaths, skipping and continuing.");
+          result = false;
+        }
+      }
+
+      return result;
+    }
+
+    void PythonPluginSearchPaths_Impl::clearSearchPaths() {
+      clearExtensibleGroups();
     }
 
   }  // namespace detail
@@ -115,6 +164,10 @@ namespace model {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->addepinEnvironmentVariabletoSearchPath();
   }
 
+  std::vector<std::string> PythonPluginSearchPaths::searchPaths() const {
+    return getImpl<detail::PythonPluginSearchPaths_Impl>()->searchPaths();
+  }
+
   bool PythonPluginSearchPaths::setAddCurrentWorkingDirectorytoSearchPath(bool addCurrentWorkingDirectorytoSearchPath) {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->setAddCurrentWorkingDirectorytoSearchPath(addCurrentWorkingDirectorytoSearchPath);
   }
@@ -125,6 +178,18 @@ namespace model {
 
   bool PythonPluginSearchPaths::setAddepinEnvironmentVariabletoSearchPath(bool addepinEnvironmentVariabletoSearchPath) {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->setAddepinEnvironmentVariabletoSearchPath(addepinEnvironmentVariabletoSearchPath);
+  }
+
+  bool PythonPluginSearchPaths::addSearchPath(const std::string& searchPath) {
+    return getImpl<detail::PythonPluginSearchPaths_Impl>()->addSearchPath(searchPath);
+  }
+
+  bool PythonPluginSearchPaths::setSearchPaths(const std::vector<std::string>& searchPaths) {
+    return getImpl<detail::PythonPluginSearchPaths_Impl>()->setSearchPaths(searchPaths);
+  }
+
+  void PythonPluginSearchPaths::clearSearchPaths() {
+    getImpl<detail::PythonPluginSearchPaths_Impl>()->clearSearchPaths();
   }
 
   /// @cond

@@ -69,7 +69,7 @@ namespace model {
 
     bool addepinEnvironmentVariabletoSearchPath() const;
 
-    // TODO: Handle this object's extensible fields.
+    std::vector<std::string> searchPaths() const;
   
     //@}
     /** @name Setters */
@@ -81,7 +81,11 @@ namespace model {
 
     bool setAddepinEnvironmentVariabletoSearchPath(bool addepinEnvironmentVariabletoSearchPath);
 
-    // TODO: Handle this object's extensible fields.
+    bool addSearchPath(const std::string& searchPath);
+    
+    bool setSearchPaths(const std::vector<std::string>& searchPaths);
+
+    void clearSearchPaths();
 
     //@}
     /** @name Other */
