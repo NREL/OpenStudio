@@ -59,9 +59,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
 
   pythonPluginSearchPaths.setName("My PythonPluginSearchPaths");
   EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
-  EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));  // Opposite from IDD default
+  EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
   EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
-
 
   // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
@@ -70,7 +69,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
-  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
+  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
+  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
+  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
 }
 TEST_F(EnergyPlusFixture, ReverseTranslator_PythonPluginSearchPaths) {
 
@@ -82,14 +83,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PythonPluginSearchPaths) {
 
   woPPSP.setName("My PythonPluginSearchPaths");
   EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, "No"));  // Opposite from IDD default
-  EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "No"));  // Opposite from IDD default
+  EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "No"));       // Opposite from IDD default
   EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "No"));  // Opposite from IDD default
-
 
   const Model m = rt.translateWorkspace(w);
   const auto modelObjects = m.getConcreteModelObjects<PythonPluginSearchPaths>();
   ASSERT_EQ(1u, modelObjects.size());
 
   const auto& modelObject = modelObjects.front();
-  EXPECT_FALSE(modelObject.addCurrentWorkingDirectorytoSearchPath());  EXPECT_FALSE(modelObject.addInputFileDirectorytoSearchPath());  EXPECT_FALSE(modelObject.addepinEnvironmentVariabletoSearchPath());
+  EXPECT_FALSE(modelObject.addCurrentWorkingDirectorytoSearchPath());
+  EXPECT_FALSE(modelObject.addInputFileDirectorytoSearchPath());
+  EXPECT_FALSE(modelObject.addepinEnvironmentVariabletoSearchPath());
 }

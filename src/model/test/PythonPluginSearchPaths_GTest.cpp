@@ -59,5 +59,4 @@ TEST_F(ModelFixture, PythonPluginSearchPaths_GettersSetters) {
   EXPECT_TRUE(pythonPluginSearchPaths.addepinEnvironmentVariabletoSearchPath());
   EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));
   EXPECT_FALSE(pythonPluginSearchPaths.addepinEnvironmentVariabletoSearchPath());
-
 }

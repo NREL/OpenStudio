@@ -41,25 +41,23 @@ namespace model {
 
   namespace detail {
 
-    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model, bool keepHandle)
+    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == PythonPluginSearchPaths::iddObjectType());
     }
 
-    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                               Model_Impl* model, bool keepHandle)
+    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                               bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == PythonPluginSearchPaths::iddObjectType());
     }
 
-    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other,
-                                                               Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(other, model, keepHandle) {}
+    PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& PythonPluginSearchPaths_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()){
+      if (result.empty()) {
       }
       return result;
     }
@@ -91,26 +89,30 @@ namespace model {
     }
 
     bool PythonPluginSearchPaths_Impl::setAddCurrentWorkingDirectorytoSearchPath(bool addCurrentWorkingDirectorytoSearchPath) {
-      const bool result = setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, addCurrentWorkingDirectorytoSearchPath);
+      const bool result =
+        setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, addCurrentWorkingDirectorytoSearchPath);
       OS_ASSERT(result);
       return result;
     }
 
     bool PythonPluginSearchPaths_Impl::setAddInputFileDirectorytoSearchPath(bool addInputFileDirectorytoSearchPath) {
-      const bool result = setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, addInputFileDirectorytoSearchPath);
+      const bool result =
+        setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, addInputFileDirectorytoSearchPath);
       OS_ASSERT(result);
       return result;
     }
 
     bool PythonPluginSearchPaths_Impl::setAddepinEnvironmentVariabletoSearchPath(bool addepinEnvironmentVariabletoSearchPath) {
-      const bool result = setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, addepinEnvironmentVariabletoSearchPath);
+      const bool result =
+        setBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, addepinEnvironmentVariabletoSearchPath);
       OS_ASSERT(result);
       return result;
     }
 
     bool PythonPluginSearchPaths_Impl::addSearchPath(const std::string& searchPath) {
       std::vector<std::string> existingSearchPaths = this->searchPaths();
-      if (std::find_if(existingSearchPaths.begin(), existingSearchPaths.end(), [&searchPath](const std::string& s) { return openstudio::istringEqual(s, searchPath); })
+      if (std::find_if(existingSearchPaths.begin(), existingSearchPaths.end(),
+                       [&searchPath](const std::string& s) { return openstudio::istringEqual(s, searchPath); })
           != existingSearchPaths.end()) {
         LOG(Info, "Not adding search path '" << searchPath << "' to PythonPlugin:SearchPaths since it is already present");
         // Return true anyways, it's a success
@@ -193,11 +195,8 @@ namespace model {
   }
 
   /// @cond
-  PythonPluginSearchPaths::PythonPluginSearchPaths(
-    std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl)
-    : ParentObject(std::move(impl)) {}
-  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model)
-    : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {}
+  PythonPluginSearchPaths::PythonPluginSearchPaths(std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl) : ParentObject(std::move(impl)) {}
+  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {}
   /// @endcond
 
 }  // namespace model

@@ -40,7 +40,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<ModelObject> ReverseTranslator::translatePythonPluginSearchPaths(const WorkspaceObject & workspaceObject) {
+  boost::optional<ModelObject> ReverseTranslator::translatePythonPluginSearchPaths(const WorkspaceObject& workspaceObject) {
 
     // Instantiate an object of the class to store the values,
     // but we don't return it until we know it's ok
@@ -57,8 +57,9 @@ namespace energyplus {
     }
 
     // Add Current Working Directory to Search Path: Optional Boolean
-    if (boost::optional<bool> addCurrentWorkingDirectorytoSearchPath_ = getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, true)) {
-      if(istringEqual("Yes", addCurrentWorkingDirectorytoSearchPath_.get())) {
+    if (boost::optional<bool> addCurrentWorkingDirectorytoSearchPath_ =
+          getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, true)) {
+      if (istringEqual("Yes", addCurrentWorkingDirectorytoSearchPath_.get())) {
         modelObject.setAddCurrentWorkingDirectorytoSearchPath(true);
       } else {
         modelObject.setAddCurrentWorkingDirectorytoSearchPath(false);
@@ -66,8 +67,9 @@ namespace energyplus {
     }
 
     // Add Input File Directory to Search Path: Optional Boolean
-    if (boost::optional<bool> addInputFileDirectorytoSearchPath_ = getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, true)) {
-      if(istringEqual("Yes", addInputFileDirectorytoSearchPath_.get())) {
+    if (boost::optional<bool> addInputFileDirectorytoSearchPath_ =
+          getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, true)) {
+      if (istringEqual("Yes", addInputFileDirectorytoSearchPath_.get())) {
         modelObject.setAddInputFileDirectorytoSearchPath(true);
       } else {
         modelObject.setAddInputFileDirectorytoSearchPath(false);
@@ -75,8 +77,9 @@ namespace energyplus {
     }
 
     // Add epin Environment Variable to Search Path: Optional Boolean
-    if (boost::optional<bool> addepinEnvironmentVariabletoSearchPath_ = getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, true)) {
-      if(istringEqual("Yes", addepinEnvironmentVariabletoSearchPath_.get())) {
+    if (boost::optional<bool> addepinEnvironmentVariabletoSearchPath_ =
+          getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, true)) {
+      if (istringEqual("Yes", addepinEnvironmentVariabletoSearchPath_.get())) {
         modelObject.setAddepinEnvironmentVariabletoSearchPath(true);
       } else {
         modelObject.setAddepinEnvironmentVariabletoSearchPath(false);

@@ -38,24 +38,18 @@ namespace model {
 
   namespace detail {
 
-  /** PythonPluginSearchPaths_Impl is a ParentObject_Impl that is the implementation class for PythonPluginSearchPaths.*/
+    /** PythonPluginSearchPaths_Impl is a ParentObject_Impl that is the implementation class for PythonPluginSearchPaths.*/
     class MODEL_API PythonPluginSearchPaths_Impl : public ParentObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      PythonPluginSearchPaths_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      PythonPluginSearchPaths_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      PythonPluginSearchPaths_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      PythonPluginSearchPaths_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~PythonPluginSearchPaths_Impl() = default;
 
@@ -78,7 +72,7 @@ namespace model {
       bool addepinEnvironmentVariabletoSearchPath() const;
 
       std::vector<std::string> searchPaths() const;
-  
+
       //@}
       /** @name Setters */
       //@{
@@ -90,7 +84,7 @@ namespace model {
       bool setAddepinEnvironmentVariabletoSearchPath(bool addepinEnvironmentVariabletoSearchPath);
 
       bool addSearchPath(const std::string& searchPath);
-      
+
       bool setSearchPaths(const std::vector<std::string>& searchPaths);
 
       void clearSearchPaths();

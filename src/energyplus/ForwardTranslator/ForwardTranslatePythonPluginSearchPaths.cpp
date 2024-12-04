@@ -41,7 +41,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginSearchPaths( model::PythonPluginSearchPaths& modelObject ) {
+  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginSearchPaths(model::PythonPluginSearchPaths& modelObject) {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PythonPlugin_SearchPaths, modelObject);
