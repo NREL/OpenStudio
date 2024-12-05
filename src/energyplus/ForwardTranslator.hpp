@@ -337,6 +337,7 @@ namespace model {
   class PythonPluginVariable;
   class PythonPluginTrendVariable;
   class PythonPluginOutputVariable;
+  class PythonPluginSearchPaths;
   class RefractionExtinctionGlazing;
   class RefrigerationAirChiller;
   class RefrigerationCase;
@@ -1255,6 +1256,8 @@ namespace energyplus {
     boost::optional<IdfObject> translatePythonPluginTrendVariable(model::PythonPluginTrendVariable& modelObject);
 
     boost::optional<IdfObject> translatePythonPluginOutputVariable(model::PythonPluginOutputVariable& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginSearchPaths(model::PythonPluginSearchPaths& modelObject);
 
     boost::optional<IdfObject> translateRefractionExtinctionGlazing(model::RefractionExtinctionGlazing& modelObject);
 

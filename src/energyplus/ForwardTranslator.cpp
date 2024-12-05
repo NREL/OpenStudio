@@ -2433,6 +2433,11 @@ namespace energyplus {
         retVal = translatePythonPluginOutputVariable(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_PythonPlugin_SearchPaths: {
+        auto obj = modelObject.cast<PythonPluginSearchPaths>();
+        retVal = translatePythonPluginSearchPaths(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_RadianceParameters: {
         // no-op
         break;
@@ -3606,6 +3611,7 @@ namespace energyplus {
       IddObjectType::OS_PythonPlugin_Variable,
       IddObjectType::OS_PythonPlugin_TrendVariable,
       IddObjectType::OS_PythonPlugin_OutputVariable,
+      IddObjectType::OS_PythonPlugin_SearchPaths,
     };
 
     return result;
