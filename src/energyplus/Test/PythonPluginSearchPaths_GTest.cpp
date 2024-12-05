@@ -31,14 +31,16 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
+#include "../../model/Model.hpp"
 #include "../../model/PythonPluginSearchPaths.hpp"
 #include "../../model/PythonPluginSearchPaths_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 // E+ FieldEnums
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -52,46 +54,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   ForwardTranslator ft;
 
   Model m;
-  // TODO: Check regular Ctor arguments
-  PythonPluginSearchPaths pythonPluginSearchPaths(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // PythonPluginSearchPaths pythonPluginSearchPaths = m.getUniqueModelObject<PythonPluginSearchPaths>();
+  PythonPluginSearchPaths pythonPluginSearchPaths = m.getUniqueModelObject<PythonPluginSearchPaths>();
 
   pythonPluginSearchPaths.setName("My PythonPluginSearchPaths");
   EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
   EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
   EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
 
-  // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
+  EXPECT_TRUE(pythonPluginSearchPaths.searchPaths().empty());
+  // No search paths; not translated
+  {
+    const Workspace w = ft.translateModel(m);
 
-  const Workspace w = ft.translateModel(m);
-  const auto idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
-  ASSERT_EQ(1u, idfObjs.size());
+    const auto idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
+    ASSERT_EQ(0u, idfObjs.size());
+  }
 
-  const auto& idfObject = idfObjs.front();
-  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
-  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
-  EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
-}
-TEST_F(EnergyPlusFixture, ReverseTranslator_PythonPluginSearchPaths) {
+  {
+    std::vector<std::string> searchPaths({"/path/to/lib1", "/path/to/lib2"});
+    EXPECT_TRUE(pythonPluginSearchPaths.setSearchPaths(searchPaths));
+    EXPECT_EQ(2u, pythonPluginSearchPaths.searchPaths().size());
 
-  ReverseTranslator rt;
+    const Workspace w = ft.translateModel(m);
 
-  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+    const auto idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
+    ASSERT_EQ(1u, idfObjs.size());
 
-  auto woPPSP = w.addObject(IdfObject(IddObjectType::PythonPlugin_SearchPaths)).get();
+    const auto& idfObject = idfObjs.front();
+    EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
+    EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
+    EXPECT_EQ("No", idfObject.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
 
-  woPPSP.setName("My PythonPluginSearchPaths");
-  EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, "No"));  // Opposite from IDD default
-  EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "No"));       // Opposite from IDD default
-  EXPECT_TRUE(woPPSP.setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "No"));  // Opposite from IDD default
-
-  const Model m = rt.translateWorkspace(w);
-  const auto modelObjects = m.getConcreteModelObjects<PythonPluginSearchPaths>();
-  ASSERT_EQ(1u, modelObjects.size());
-
-  const auto& modelObject = modelObjects.front();
-  EXPECT_FALSE(modelObject.addCurrentWorkingDirectorytoSearchPath());
-  EXPECT_FALSE(modelObject.addInputFileDirectorytoSearchPath());
-  EXPECT_FALSE(modelObject.addepinEnvironmentVariabletoSearchPath());
+    ASSERT_EQ(2u, idfObject.extensibleGroups().size());
+    for (int i = 0; i < 2; ++i) {
+      EXPECT_EQ(searchPaths[i], idfObject.extensibleGroups()[i].getString(PythonPlugin_SearchPathsExtensibleFields::SearchPath).get());
+    }
+  }
 }
