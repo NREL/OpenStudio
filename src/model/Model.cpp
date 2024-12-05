@@ -936,6 +936,22 @@ namespace model {
       return m_cachedExternalInterface;
     }
 
+    boost::optional<PythonPluginSearchPaths> Model_Impl::pythonPluginSearchPaths() const {
+      if (m_cachedPythonPluginSearchPaths) {
+        return m_cachedPythonPluginSearchPaths;
+      }
+
+      boost::optional<PythonPluginSearchPaths> result = this->model().getOptionalUniqueModelObject<PythonPluginSearchPaths>();
+      if (result) {
+        m_cachedPythonPluginSearchPaths = result;
+        result->getImpl<PythonPluginSearchPaths_Impl>()
+          ->PythonPluginSearchPaths_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedPythonPluginSearchPaths>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedPythonPluginSearchPaths;
+    }
+
     boost::optional<int> Model_Impl::calendarYear() const {
       if (!m_cachedYearDescription) {
         m_cachedYearDescription = this->model().getUniqueModelObject<YearDescription>();
@@ -1544,6 +1560,7 @@ namespace model {
       clearCachedClimateZones(dummy);
       clearCachedEnvironmentalImpactFactors(dummy);
       clearCachedExternalInterface(dummy);
+      clearCachedPythonPluginSearchPaths(dummy);
     }
 
     void Model_Impl::clearCachedBuilding(const Handle&) {
@@ -1728,6 +1745,10 @@ namespace model {
 
     void Model_Impl::clearCachedExternalInterface(const Handle&) {
       m_cachedExternalInterface.reset();
+    }
+
+    void Model_Impl::clearCachedPythonPluginSearchPaths(const Handle&) {
+      m_cachedPythonPluginSearchPaths.reset();
     }
 
     void Model_Impl::autosize() {
@@ -2062,6 +2083,10 @@ namespace model {
 
   boost::optional<ExternalInterface> Model::externalInterface() const {
     return getImpl<detail::Model_Impl>()->externalInterface();
+  }
+
+  boost::optional<PythonPluginSearchPaths> Model::pythonPluginSearchPaths() const {
+    return getImpl<detail::Model_Impl>()->pythonPluginSearchPaths();
   }
 
   boost::optional<int> Model::calendarYear() const {
@@ -3808,6 +3833,15 @@ namespace model {
     }
   }
 
+  template <>
+  PythonPluginSearchPaths Model::getUniqueModelObject<PythonPluginSearchPaths>() {
+    if (boost::optional<PythonPluginSearchPaths> _b = pythonPluginSearchPaths()) {
+      return _b.get();
+    } else {
+      return PythonPluginSearchPaths(*this);
+    }
+  }
+
   std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(Model_Impl* model, const IdfObject& obj,
                                                                                                            bool keepHandle) const {
     auto typeToCreate = obj.iddObject().type();
@@ -4204,6 +4238,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(PythonPluginVariable);
     REGISTER_CONSTRUCTOR(PythonPluginTrendVariable);
     REGISTER_CONSTRUCTOR(PythonPluginOutputVariable);
+    REGISTER_CONSTRUCTOR(PythonPluginSearchPaths);
     REGISTER_CONSTRUCTOR(RadianceParameters);
     REGISTER_CONSTRUCTOR(RefractionExtinctionGlazing);
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
@@ -4777,6 +4812,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(PythonPluginVariable);
     REGISTER_COPYCONSTRUCTORS(PythonPluginTrendVariable);
     REGISTER_COPYCONSTRUCTORS(PythonPluginOutputVariable);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginSearchPaths);
     REGISTER_COPYCONSTRUCTORS(RadianceParameters);
     REGISTER_COPYCONSTRUCTORS(RefractionExtinctionGlazing);
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);

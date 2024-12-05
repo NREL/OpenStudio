@@ -175,7 +175,6 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
           return model.runPeriod();
         }
 
-
         boost::optional<ClimateZones> climateZones(const openstudio::model::Model& model) {
           return model.climateZones();
         }

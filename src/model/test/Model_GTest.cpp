@@ -128,6 +128,8 @@
 #include "../EnvironmentalImpactFactors_Impl.hpp"
 #include "../ExternalInterface.hpp"
 #include "../ExternalInterface_Impl.hpp"
+#include "../PythonPluginSearchPaths.hpp"
+#include "../PythonPluginSearchPaths_Impl.hpp"
 
 #include "../../utilities/core/PathHelpers.hpp"
 #include "../../utilities/data/TimeSeries.hpp"
@@ -1160,6 +1162,12 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
   auto externalInterface = m.getUniqueModelObject<ExternalInterface>();
   EXPECT_TRUE(m.getOptionalUniqueModelObject<ExternalInterface>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto pythonPluginSearchPaths = m.getUniqueModelObject<PythonPluginSearchPaths>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
   EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
 }
 
