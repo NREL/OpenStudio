@@ -197,6 +197,7 @@ namespace model {
   /// @cond
   PythonPluginSearchPaths::PythonPluginSearchPaths(std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl) : ParentObject(std::move(impl)) {}
   PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {}
+
   /// @endcond
 
 }  // namespace model
