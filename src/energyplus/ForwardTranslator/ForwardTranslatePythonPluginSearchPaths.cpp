@@ -32,8 +32,12 @@
 
 #include "../../model/PythonPluginSearchPaths.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/PythonPlugin_SearchPaths_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+
+constexpr static auto pythonSearchPathsName = "Python Plugin Search Paths";
 
 using namespace openstudio::model;
 
@@ -43,20 +47,14 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginSearchPaths(model::PythonPluginSearchPaths& modelObject) {
 
-    // Instantiate an IdfObject of the class to store the values
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PythonPlugin_SearchPaths, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject(openstudio::IddObjectType::PythonPlugin_SearchPaths);
-    // m_idfObjects.push_back(idfObject);
+    auto searchPaths = modelObject.searchPaths();
+    if (searchPaths.empty()) {
+      return boost::none;
+    }
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::PythonPlugin_SearchPaths, modelObject);
 
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    idfObject.setName(modelObject.nameString());
+    idfObject.setName(pythonSearchPathsName);
 
     // Add Current Working Directory to Search Path: Optional Boolean
     if (modelObject.addCurrentWorkingDirectorytoSearchPath()) {
@@ -77,6 +75,12 @@ namespace energyplus {
       idfObject.setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "Yes");
     } else {
       idfObject.setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "No");
+    }
+
+    // Search Path
+    for (const std::string& searchPath : modelObject.searchPaths()) {
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath);
     }
 
     return idfObject;
