@@ -3607,11 +3607,12 @@ namespace energyplus {
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule,
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable,
 
+      IddObjectType::
+        OS_PythonPlugin_SearchPaths,  // this FT intentionally happens before PythonPlugin_Instance so that we can't end up with two PythonPlugin_SearchPaths objects
       IddObjectType::OS_PythonPlugin_Instance,
       IddObjectType::OS_PythonPlugin_Variable,
       IddObjectType::OS_PythonPlugin_TrendVariable,
       IddObjectType::OS_PythonPlugin_OutputVariable,
-      IddObjectType::OS_PythonPlugin_SearchPaths,
     };
 
     return result;
