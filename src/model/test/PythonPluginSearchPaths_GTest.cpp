@@ -73,13 +73,12 @@ TEST_F(ModelFixture, PythonPluginSearchPaths_GettersSetters) {
   EXPECT_EQ("/example/search/path/1", pythonPluginSearchPaths.searchPaths()[0]);
   EXPECT_EQ("/example/search/path/2", pythonPluginSearchPaths.searchPaths()[1]);
 
-  std::vector<std::string> searchPaths({"path/3", "path/4"});
+  std::vector<std::string> searchPaths({"path/3", "path/4", "path/5", "path/5"});
   EXPECT_TRUE(pythonPluginSearchPaths.setSearchPaths(searchPaths));
-  ASSERT_EQ(4u, pythonPluginSearchPaths.searchPaths().size());
-  EXPECT_EQ("/example/search/path/1", pythonPluginSearchPaths.searchPaths()[0]);
-  EXPECT_EQ("/example/search/path/2", pythonPluginSearchPaths.searchPaths()[1]);
-  EXPECT_EQ("path/3", pythonPluginSearchPaths.searchPaths()[2]);
-  EXPECT_EQ("path/4", pythonPluginSearchPaths.searchPaths()[3]);
+  ASSERT_EQ(3u, pythonPluginSearchPaths.searchPaths().size());
+  EXPECT_EQ("path/3", pythonPluginSearchPaths.searchPaths()[0]);
+  EXPECT_EQ("path/4", pythonPluginSearchPaths.searchPaths()[1]);
+  EXPECT_EQ("path/5", pythonPluginSearchPaths.searchPaths()[2]);
 
   pythonPluginSearchPaths.clearSearchPaths();
   EXPECT_EQ(0u, pythonPluginSearchPaths.searchPaths().size());
