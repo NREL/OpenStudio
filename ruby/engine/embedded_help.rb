@@ -64,7 +64,7 @@ BINDING = Kernel::binding()
 # Windows it will call File::flock (file lock) to protect access, but StringIO
 # does not have this method
 class FakeFileAsStringIO < StringIO
-  def flock
+  def flock(operation)
     return 0
   end
 end
