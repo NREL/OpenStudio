@@ -65,13 +65,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   PythonPluginSearchPaths pythonPluginSearchPaths = m.getUniqueModelObject<PythonPluginSearchPaths>();
 
   pythonPluginSearchPaths.setName("My PythonPluginSearchPaths");
-  EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
-  EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
-  EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
 
   EXPECT_TRUE(pythonPluginSearchPaths.searchPaths().empty());
   // No search paths; not translated
   {
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
+
     const Workspace w = ft.translateModel(m);
 
     const auto idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
@@ -79,6 +80,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   }
 
   {
+    std::vector<std::string> searchPaths({"/path/to/lib1", "/path/to/lib2"});
+    EXPECT_TRUE(pythonPluginSearchPaths.setSearchPaths(searchPaths));
+    EXPECT_EQ(2u, pythonPluginSearchPaths.searchPaths().size());
+
+    const Workspace w = ft.translateModel(m);
+
+    const auto idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
+    ASSERT_EQ(1u, idfObjs.size());
+
+    const auto& idfObject = idfObjs.front();
+    EXPECT_EQ("Yes", idfObject.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
+    EXPECT_EQ("Yes", idfObject.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
+    EXPECT_EQ("Yes", idfObject.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
+
+    ASSERT_EQ(2u, idfObject.extensibleGroups().size());
+    for (int i = 0; i < 2; ++i) {
+      EXPECT_EQ(searchPaths[i], idfObject.extensibleGroups()[i].getString(PythonPlugin_SearchPathsExtensibleFields::SearchPath).get());
+    }
+  }
+
+  {
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
+
     std::vector<std::string> searchPaths({"/path/to/lib1", "/path/to/lib2"});
     EXPECT_TRUE(pythonPluginSearchPaths.setSearchPaths(searchPaths));
     EXPECT_EQ(2u, pythonPluginSearchPaths.searchPaths().size());
@@ -100,6 +126,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   }
 
   {
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(false));  // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(false));       // Opposite from IDD default
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(false));  // Opposite from IDD default
+
     openstudio::path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
     ASSERT_TRUE(exists(p));
 

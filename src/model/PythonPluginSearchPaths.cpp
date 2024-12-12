@@ -196,7 +196,11 @@ namespace model {
 
   /// @cond
   PythonPluginSearchPaths::PythonPluginSearchPaths(std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl) : ParentObject(std::move(impl)) {}
-  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {}
+  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {
+    setAddCurrentWorkingDirectorytoSearchPath(true);
+    setAddInputFileDirectorytoSearchPath(true);
+    setAddepinEnvironmentVariabletoSearchPath(true);
+  }
 
   /// @endcond
 
