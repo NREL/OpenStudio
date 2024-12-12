@@ -51,7 +51,7 @@ namespace model {
 
       PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~PythonPluginSearchPaths_Impl() = default;
+      virtual ~PythonPluginSearchPaths_Impl() override = default;
 
       //@}
       /** @name Virtual Methods */
