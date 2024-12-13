@@ -773,7 +773,7 @@ if(UNIX)
     set(RADIANCE_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
     # DLM: note that the installer expects the extracted directory to be named radiance-5.0.a.12-Linux
-    set(RADIANCE_EXPECTED_HASH f75898bbfd238a740c1902d385c42b92)
+    set(RADIANCE_EXPECTED_HASH 1e0ef7909c99cd353191d63b085dc6a9)
     set(RADIANCE_PLATFORM "Redhat")
   else()
     set(RADIANCE_EXPECTED_HASH 7b9e4df2b6050fe51c6e138e4c0e6a5a)
