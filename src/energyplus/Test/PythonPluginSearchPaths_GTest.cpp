@@ -80,6 +80,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginSearchPaths) {
   }
 
   {
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddCurrentWorkingDirectorytoSearchPath(true));
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddInputFileDirectorytoSearchPath(true));
+    EXPECT_TRUE(pythonPluginSearchPaths.setAddepinEnvironmentVariabletoSearchPath(true));
+
     std::vector<std::string> searchPaths({"/path/to/lib1", "/path/to/lib2"});
     EXPECT_TRUE(pythonPluginSearchPaths.setSearchPaths(searchPaths));
     EXPECT_EQ(2u, pythonPluginSearchPaths.searchPaths().size());
