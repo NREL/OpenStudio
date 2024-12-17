@@ -240,6 +240,82 @@ TEST(Filetypes, EpwFile_Design) {
   }
 }
 
+TEST(Filetypes, EpwFile_Ground) {
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    EXPECT_EQ("BDF687C1", epwFile.checksum());
+    EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
+    EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+    EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+    EXPECT_EQ("USA", epwFile.country());
+    EXPECT_EQ("TMY3", epwFile.dataSource());
+    EXPECT_EQ("724666", epwFile.wmoNumber());
+    EXPECT_EQ(39.74, epwFile.latitude());
+    EXPECT_EQ(-105.18, epwFile.longitude());
+    EXPECT_EQ(-7, epwFile.timeZone());
+    EXPECT_EQ(1829, epwFile.elevation());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
+    EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
+    EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
+    EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
+    // Up to here, everything should be the same as the first test. Now ask for the design conditions
+    std::vector<EpwGroundTemperatureDepth> depths = epwFile.groundTemperatureDepths();
+    EXPECT_EQ(3, depths.size());
+    EXPECT_EQ(0.5, depths[0].groundTemperatureDepth());
+    EXPECT_EQ(0, depths[0].soilConductivity());
+    EXPECT_EQ(0, depths[0].soilDensity());
+    EXPECT_EQ(0, depths[0].soilSpecificHeat());
+    EXPECT_EQ(0, depths[0].janGroundTemperature());
+    EXPECT_EQ(0, depths[0].febGroundTemperature());
+    EXPECT_EQ(0, depths[0].marGroundTemperature());
+    EXPECT_EQ(0, depths[0].aprGroundTemperature());
+    EXPECT_EQ(0, depths[0].mayGroundTemperature());
+    EXPECT_EQ(0, depths[0].junGroundTemperature());
+    EXPECT_EQ(0, depths[0].julGroundTemperature());
+    EXPECT_EQ(0, depths[0].augGroundTemperature());
+    EXPECT_EQ(0, depths[0].sepGroundTemperature());
+    EXPECT_EQ(0, depths[0].octGroundTemperature());
+    EXPECT_EQ(0, depths[0].novGroundTemperature());
+    EXPECT_EQ(0, depths[0].decGroundTemperature());
+    EXPECT_EQ(2, depths[1].groundTemperatureDepth());
+    EXPECT_EQ(0, depths[1].soilConductivity());
+    EXPECT_EQ(0, depths[1].soilDensity());
+    EXPECT_EQ(0, depths[1].soilSpecificHeat());
+    EXPECT_EQ(0, depths[1].janGroundTemperature());
+    EXPECT_EQ(0, depths[1].febGroundTemperature());
+    EXPECT_EQ(0, depths[1].marGroundTemperature());
+    EXPECT_EQ(0, depths[1].aprGroundTemperature());
+    EXPECT_EQ(0, depths[1].mayGroundTemperature());
+    EXPECT_EQ(0, depths[1].junGroundTemperature());
+    EXPECT_EQ(0, depths[1].julGroundTemperature());
+    EXPECT_EQ(0, depths[1].augGroundTemperature());
+    EXPECT_EQ(0, depths[1].sepGroundTemperature());
+    EXPECT_EQ(0, depths[1].octGroundTemperature());
+    EXPECT_EQ(0, depths[1].novGroundTemperature());
+    EXPECT_EQ(0, depths[1].decGroundTemperature());
+    EXPECT_EQ(4, depths[2].groundTemperatureDepth());
+    EXPECT_EQ(0, depths[2].soilConductivity());
+    EXPECT_EQ(0, depths[2].soilDensity());
+    EXPECT_EQ(0, depths[2].soilSpecificHeat());
+    EXPECT_EQ(0, depths[2].janGroundTemperature());
+    EXPECT_EQ(0, depths[2].febGroundTemperature());
+    EXPECT_EQ(0, depths[2].marGroundTemperature());
+    EXPECT_EQ(0, depths[2].aprGroundTemperature());
+    EXPECT_EQ(0, depths[2].mayGroundTemperature());
+    EXPECT_EQ(0, depths[2].junGroundTemperature());
+    EXPECT_EQ(0, depths[2].julGroundTemperature());
+    EXPECT_EQ(0, depths[2].augGroundTemperature());
+    EXPECT_EQ(0, depths[2].sepGroundTemperature());
+    EXPECT_EQ(0, depths[2].octGroundTemperature());
+    EXPECT_EQ(0, depths[2].novGroundTemperature());
+    EXPECT_EQ(0, depths[2].decGroundTemperature());
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_Design_DoubleRead) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");

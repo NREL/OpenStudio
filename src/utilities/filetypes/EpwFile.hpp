@@ -862,7 +862,6 @@ class UTILITIES_API EpwDesignCondition
   double m_extremeN50YearsMaxDryBulb;
 };
 
-
 /** EpwGroundTemperatureDepth is one line from the EPW file. All floating point numbers are stored as strings,
 * but are checked as numbers.
 */
@@ -872,9 +871,9 @@ class UTILITIES_API EpwGroundTemperatureDepth
   /** Create an empty EpwGroundTemperatureDepth object */
   EpwGroundTemperatureDepth();
   /** Create an EpwGroundTemperatureDepth object with specified properties */
-  EpwGroundTemperatureDepth(
-    double groundTemperatureDepth, double soilConductivity, double soilDensity, double soilSpecificHeat,
-    double jan, double feb, double mar, double apr, double may, double jun, double jul, double aug, double sep, double oct, double nov, double dec);
+  EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity, double soilSpecificHeat, double jan,
+                            double feb, double mar, double apr, double may, double jun, double jul, double aug, double sep, double oct, double nov,
+                            double dec);
   // Static
   /** Returns the units of the named field */
   static boost::optional<std::string> getUnitsByName(const std::string& name);
