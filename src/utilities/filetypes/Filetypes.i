@@ -71,6 +71,7 @@
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
 %template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
 %template(OptionalEpwDesignCondition) boost::optional<openstudio::EpwDesignCondition>;
+%template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
 
 %ignore std::vector<openstudio::EpwHoliday>::vector(size_type);
 %ignore std::vector<openstudio::EpwHoliday>::resize(size_type);

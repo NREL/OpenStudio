@@ -197,6 +197,25 @@ OPENSTUDIO_ENUM(EpwDesignField,
   ((ExtremeN50YearsMinDryBulb)(Extreme N50 Years Min Dry Bulb))
   ((ExtremeN50YearsMaxDryBulb)(Extreme N50 Years Max Dry Bulb))
 );
+// cppcheck-suppress [unknownMacro, syntaxError]
+OPENSTUDIO_ENUM(EpwDepthField,
+  ((GroundTemperatureDepth)(Ground Temperature Depth)(0))
+  ((SoilConductivity)(Soil Conductivity))
+  ((SoilDensity)(Soil Density))
+  ((SoilSpecificHeat)(Soil Specific Heat))
+  ((Jan)(Jan))
+  ((Feb)(Feb))
+  ((Mar)(Mar))
+  ((Apr)(Apr))
+  ((May)(May))
+  ((Jun)(Jun))
+  ((Jul)(Jul))
+  ((Aug)(Aug))
+  ((Sep)(Sep))
+  ((Oct)(Oct))
+  ((Nov)(Nov))
+  ((Dec)(Dec))
+);
 
 // clang-format on
 
@@ -843,6 +862,121 @@ class UTILITIES_API EpwDesignCondition
   double m_extremeN50YearsMaxDryBulb;
 };
 
+
+/** EpwGroundTemperatureDepth is one line from the EPW file. All floating point numbers are stored as strings,
+* but are checked as numbers.
+*/
+class UTILITIES_API EpwGroundTemperatureDepth
+{
+ public:
+  /** Create an empty EpwGroundTemperatureDepth object */
+  EpwGroundTemperatureDepth();
+  /** Create an EpwGroundTemperatureDepth object with specified properties */
+  EpwGroundTemperatureDepth(
+    double groundTemperatureDepth, double soilConductivity, double soilDensity, double soilSpecificHeat,
+    double jan, double feb, double mar, double apr, double may, double jun, double jul, double aug, double sep, double oct, double nov, double dec);
+  // Static
+  /** Returns the units of the named field */
+  static boost::optional<std::string> getUnitsByName(const std::string& name);
+  /** Returns the units of the field specified by enumeration value */
+  static std::string getUnits(EpwDepthField field);
+  // Data retrieval
+  /** Returns the double value of the named field if possible */
+  boost::optional<double> getFieldByName(const std::string& name);
+  /** Returns the dobule value of the field specified by enumeration value */
+  boost::optional<double> getField(EpwDepthField id);
+  // Conversion
+  /** Create an EpwGroundTemperatureDepth from an EPW-formatted string */
+  static boost::optional<EpwGroundTemperatureDepth> fromGroundTemperatureDepthsString(const std::string& line);
+  /** Create an EpwGroundTemperatureDepth from a list of EPW depths as strings */
+  static boost::optional<EpwGroundTemperatureDepth> fromGroundTemperatureDepthsString(const std::vector<std::string>& list);
+  // Getters
+  /** Returns the depth of ground temperature in m*/
+  double groundTemperatureDepth() const;
+  /** Returns the soil conductivity in W/m-K*/
+  double soilConductivity() const;
+  /** Returns the soil density in kg/m3*/
+  double soilDensity() const;
+  /** Returns the soil specific heat in J/kg-K*/
+  double soilSpecificHeat() const;
+  /** Returns the Jan undisturbed ground temperature in degrees C*/
+  double janGroundTemperature() const;
+  /** Returns the Feb undisturbed ground temperature in degrees C*/
+  double febGroundTemperature() const;
+  /** Returns the Mar undisturbed ground temperature in degrees C*/
+  double marGroundTemperature() const;
+  /** Returns the Apr undisturbed ground temperature in degrees C*/
+  double aprGroundTemperature() const;
+  /** Returns the May undisturbed ground temperature in degrees C*/
+  double mayGroundTemperature() const;
+  /** Returns the Jun undisturbed ground temperature in degrees C*/
+  double junGroundTemperature() const;
+  /** Returns the Jul undisturbed ground temperature in degrees C*/
+  double julGroundTemperature() const;
+  /** Returns the Aug undisturbed ground temperature in degrees C*/
+  double augGroundTemperature() const;
+  /** Returns the Sep undisturbed ground temperature in degrees C*/
+  double sepGroundTemperature() const;
+  /** Returns the Oct undisturbed ground temperature in degrees C*/
+  double octGroundTemperature() const;
+  /** Returns the Nov undisturbed ground temperature in degrees C*/
+  double novGroundTemperature() const;
+  /** Returns the Dec undisturbed ground temperature in degrees C*/
+  double decGroundTemperature() const;
+
+ private:
+  // Setters
+  void setGroundTemperatureDepth(double groundTemperatureDepth);
+  void setSoilConductivity(double soilConductivity);
+  void setSoilDensity(double soilDensity);
+  void setSoilSpecificHeat(double soilSpecificHeat);
+  void setJanGroundTemperature(double janGroundTemperature);
+  void setFebGroundTemperature(double febGroundTemperature);
+  void setMarGroundTemperature(double marGroundTemperature);
+  void setAprGroundTemperature(double aprGroundTemperature);
+  void setMayGroundTemperature(double mayGroundTemperature);
+  void setJunGroundTemperature(double junGroundTemperature);
+  void setJulGroundTemperature(double julGroundTemperature);
+  void setAugGroundTemperature(double augGroundTemperature);
+  void setSepGroundTemperature(double sepGroundTemperature);
+  void setOctGroundTemperature(double octGroundTemperature);
+  void setNovGroundTemperature(double novGroundTemperature);
+  void setDecGroundTemperature(double decGroundTemperature);
+  bool setGroundTemperatureDepth(const std::string& groundTemperatureDepth);
+  bool setSoilConductivity(const std::string& soilConductivity);
+  bool setSoilDensity(const std::string& soilDensity);
+  bool setSoilSpecificHeat(const std::string& soilSpecificHeat);
+  bool setJanGroundTemperature(const std::string& janGroundTemperature);
+  bool setFebGroundTemperature(const std::string& febGroundTemperature);
+  bool setMarGroundTemperature(const std::string& marGroundTemperature);
+  bool setAprGroundTemperature(const std::string& aprGroundTemperature);
+  bool setMayGroundTemperature(const std::string& mayGroundTemperature);
+  bool setJunGroundTemperature(const std::string& junGroundTemperature);
+  bool setJulGroundTemperature(const std::string& julGroundTemperature);
+  bool setAugGroundTemperature(const std::string& augGroundTemperature);
+  bool setSepGroundTemperature(const std::string& sepGroundTemperature);
+  bool setOctGroundTemperature(const std::string& octGroundTemperature);
+  bool setNovGroundTemperature(const std::string& novGroundTemperature);
+  bool setDecGroundTemperature(const std::string& decGroundTemperature);
+
+  double m_groundTemperatureDepth;
+  double m_soilConductivity;
+  double m_soilDensity;
+  double m_soilSpecificHeat;
+  double m_janGroundTemperature;
+  double m_febGroundTemperature;
+  double m_marGroundTemperature;
+  double m_aprGroundTemperature;
+  double m_mayGroundTemperature;
+  double m_junGroundTemperature;
+  double m_julGroundTemperature;
+  double m_augGroundTemperature;
+  double m_sepGroundTemperature;
+  double m_octGroundTemperature;
+  double m_novGroundTemperature;
+  double m_decGroundTemperature;
+};
+
 /** EpwFile parses a weather file in EPW format.  Later it may provide
  *   methods for writing and converting other weather files to EPW format.
  */
@@ -919,6 +1053,9 @@ class UTILITIES_API EpwFile
   /// get the design conditions
   std::vector<EpwDesignCondition> designConditions();
 
+  /// get the ground temperature depths
+  std::vector<EpwGroundTemperatureDepth> groundTemperatureDepths();
+
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
   boost::optional<TimeSeries> getTimeSeries(const std::string& field);
@@ -945,6 +1082,7 @@ class UTILITIES_API EpwFile
   bool parseDesignConditions(const std::string& line);
   bool parseDataPeriod(const std::string& line);
   bool parseHolidaysDaylightSavings(const std::string& line);
+  bool parseGroundTemperatures(const std::string& line);
 
   // configure logging
   REGISTER_LOGGER("openstudio.EpwFile");
@@ -968,6 +1106,7 @@ class UTILITIES_API EpwFile
   boost::optional<int> m_endDateActualYear;
   std::vector<EpwDataPoint> m_data;
   std::vector<EpwDesignCondition> m_designs;
+  std::vector<EpwGroundTemperatureDepth> m_depths;
 
   bool m_leapYearObserved;
   boost::optional<Date> m_daylightSavingStartDate;
