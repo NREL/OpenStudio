@@ -203,18 +203,18 @@ OPENSTUDIO_ENUM(EpwDepthField,
   ((SoilConductivity)(Soil Conductivity))
   ((SoilDensity)(Soil Density))
   ((SoilSpecificHeat)(Soil Specific Heat))
-  ((Jan)(Jan))
-  ((Feb)(Feb))
-  ((Mar)(Mar))
-  ((Apr)(Apr))
-  ((May)(May))
-  ((Jun)(Jun))
-  ((Jul)(Jul))
-  ((Aug)(Aug))
-  ((Sep)(Sep))
-  ((Oct)(Oct))
-  ((Nov)(Nov))
-  ((Dec)(Dec))
+  ((JanGroundTemperature)(January Ground Temperature))
+  ((FebGroundTemperature)(February Ground Temperature))
+  ((MarGroundTemperature)(March Ground Temperature))
+  ((AprGroundTemperature)(April Ground Temperature))
+  ((MayGroundTemperature)(May Ground Temperature))
+  ((JunGroundTemperature)(June Ground Temperature))
+  ((JulGroundTemperature)(July Ground Temperature))
+  ((AugGroundTemperature)(August Ground Temperature))
+  ((SepGroundTemperature)(September Ground Temperature))
+  ((OctGroundTemperature)(October Ground Temperature))
+  ((NovGroundTemperature)(November Ground Temperature))
+  ((DecGroundTemperature)(December Ground Temperature))
 );
 
 // clang-format on
@@ -869,11 +869,12 @@ class UTILITIES_API EpwGroundTemperatureDepth
 {
  public:
   /** Create an empty EpwGroundTemperatureDepth object */
-  EpwGroundTemperatureDepth();
+  EpwGroundTemperatureDepth() = default;
   /** Create an EpwGroundTemperatureDepth object with specified properties */
-  EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity, double soilSpecificHeat, double jan,
-                            double feb, double mar, double apr, double may, double jun, double jul, double aug, double sep, double oct, double nov,
-                            double dec);
+  EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity, double soilSpecificHeat,
+                            double janGroundTemperature, double febGroundTemperature, double marGroundTemperature, double aprGroundTemperature,
+                            double mayGroundTemperature, double junGroundTemperature, double julGroundTemperature, double augGroundTemperature,
+                            double sepGroundTemperature, double octGroundTemperature, double novGroundTemperature, double decGroundTemperature);
   // Static
   /** Returns the units of the named field */
   static boost::optional<std::string> getUnitsByName(const std::string& name);
@@ -888,7 +889,7 @@ class UTILITIES_API EpwGroundTemperatureDepth
   /** Create an EpwGroundTemperatureDepth from an EPW-formatted string */
   static boost::optional<EpwGroundTemperatureDepth> fromGroundTemperatureDepthsString(const std::string& line);
   /** Create an EpwGroundTemperatureDepth from a list of EPW depths as strings */
-  static boost::optional<EpwGroundTemperatureDepth> fromGroundTemperatureDepthsString(const std::vector<std::string>& list);
+  static boost::optional<EpwGroundTemperatureDepth> fromGroundTemperatureDepthsStrings(const std::vector<std::string>& strings);
   // Getters
   /** Returns the depth of ground temperature in m*/
   double groundTemperatureDepth() const;
@@ -958,22 +959,22 @@ class UTILITIES_API EpwGroundTemperatureDepth
   bool setNovGroundTemperature(const std::string& novGroundTemperature);
   bool setDecGroundTemperature(const std::string& decGroundTemperature);
 
-  double m_groundTemperatureDepth;
-  double m_soilConductivity;
-  double m_soilDensity;
-  double m_soilSpecificHeat;
-  double m_janGroundTemperature;
-  double m_febGroundTemperature;
-  double m_marGroundTemperature;
-  double m_aprGroundTemperature;
-  double m_mayGroundTemperature;
-  double m_junGroundTemperature;
-  double m_julGroundTemperature;
-  double m_augGroundTemperature;
-  double m_sepGroundTemperature;
-  double m_octGroundTemperature;
-  double m_novGroundTemperature;
-  double m_decGroundTemperature;
+  double m_groundTemperatureDepth = -9999;
+  double m_soilConductivity = -9999;
+  double m_soilDensity = -9999;
+  double m_soilSpecificHeat = -9999;
+  double m_janGroundTemperature = -9999;
+  double m_febGroundTemperature = -9999;
+  double m_marGroundTemperature = -9999;
+  double m_aprGroundTemperature = -9999;
+  double m_mayGroundTemperature = -9999;
+  double m_junGroundTemperature = -9999;
+  double m_julGroundTemperature = -9999;
+  double m_augGroundTemperature = -9999;
+  double m_sepGroundTemperature = -9999;
+  double m_octGroundTemperature = -9999;
+  double m_novGroundTemperature = -9999;
+  double m_decGroundTemperature = -9999;
 };
 
 /** EpwFile parses a weather file in EPW format.  Later it may provide
