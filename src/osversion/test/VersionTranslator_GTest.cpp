@@ -1216,8 +1216,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
   EXPECT_EQ("Outdoors", wh.getString(17, false, true).get());
 
   // Last Field: Control Sensor Location In Stratified Tank
-  ASSERT_TRUE(wh.getString(25, false, true));
-  EXPECT_EQ("Heater2", wh.getString(25, false, true).get());
+  ASSERT_TRUE(wh.getString(26, false, true));
+  EXPECT_EQ("Heater2", wh.getString(26, false, true).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
