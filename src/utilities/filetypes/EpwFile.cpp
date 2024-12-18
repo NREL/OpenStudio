@@ -4702,6 +4702,9 @@ bool EpwFile::parseGroundTemperatures(const std::string& line) {
       return false;
     }
   }
+  // Ensure sorted by lower to higher depths
+  std::sort(m_depths.begin(), m_depths.end(),
+            [](const auto& lhs, const auto& rhs) { return lhs.groundTemperatureDepth() < rhs.groundTemperatureDepth(); });
   return true;
 }
 
