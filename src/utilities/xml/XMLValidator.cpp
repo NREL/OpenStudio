@@ -472,14 +472,18 @@ std::vector<LogMessage> XMLValidator::logMessages() const {
   return m_logMessages;
 }
 
-XMLValidator XMLValidator::gbxmlValidator() {
+XMLValidator XMLValidator::gbxmlValidator(const VersionString& schemaVersion) {
   const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
   if (tmpDir.empty()) {
     LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
   }
+  if (schemaVersion != VersionString(7, 3)) {
+    LOG_AND_THROW("Unexpected gbXML Schema Version: accepted = [7.03]");
+  }
   const bool quiet = true;
-  ::openstudio::embedded_files::extractFile(":/xml/resources/GreenBuildingXML_Ver7.03.xsd", openstudio::toString(tmpDir), quiet);
-  auto validator = XMLValidator(tmpDir / "GreenBuildingXML_Ver7.03.xsd");
+  std::string schemaName = fmt::format("GreenBuildingXML_Ver{}.{:02}.xsd", schemaVersion.major(), schemaVersion.minor());
+  ::openstudio::embedded_files::extractFile(fmt::format(":/xml/resources/{}", schemaName), openstudio::toString(tmpDir), quiet);
+  auto validator = XMLValidator(tmpDir / schemaName);
   validator.m_tempDir = tmpDir;
   return validator;
 }

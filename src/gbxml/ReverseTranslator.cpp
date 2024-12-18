@@ -37,6 +37,7 @@
 #include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/UnitFactory.hpp"
@@ -97,13 +98,19 @@ namespace gbxml {
           }
           // Scan version of gbxml schema
           std::string version = root.attribute("version").value();
+          VersionString schemaVersion(7, 3);
           if (version.empty()) {
             LOG(Warn, "gbXML has no `version` attribute for the schema version, assuming 7.03.");
-            version = "7.03";
+          } else {
+            try {
+              schemaVersion = VersionString(version);
+            } catch (...) {
+              LOG(Warn, "gbXML has `version` '" << version << "' which was not understood, assuming 7.03.");
+            }
           }
-          if (version == "7.03") {
+          if (schemaVersion == VersionString(7, 3)) {
             // validate the gbxml prior to reverse translation
-            auto gbxmlValidator = XMLValidator::gbxmlValidator();
+            auto gbxmlValidator = XMLValidator::gbxmlValidator(VersionString(7, 3));
             gbxmlValidator.validate(path);
           } else {
             LOG(Error,
