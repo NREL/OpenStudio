@@ -115,8 +115,11 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_addToNode) {
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
-  supplyOutletNode = airLoop.supplyOutletNode();
+  // Clone should reset the inlet/outlet nodes
+  ASSERT_FALSE(testObjectClone.inletModelObject());
+  ASSERT_FALSE(testObjectClone.outletModelObject());
 
+  supplyOutletNode = airLoop.supplyOutletNode();
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
 }
@@ -208,4 +211,20 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_CoilSystemIntegratedHeat
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatPumpAirToAir_Ctor_WrongChildType) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume supplyFan(m, s);
+
+  CoilCoolingDXVariableSpeed cc(m);
+  CoilHeatingDXVariableSpeed hc(m);
+
+  // Wrong supplemental heating coil type, I expect a graceful failure, not a segfault
+  CoilHeatingDXVariableSpeed suppHC(m);
+
+  // The segfault is caught here, but if graceful, the remove() was called!
+  EXPECT_THROW(AirLoopHVACUnitaryHeatPumpAirToAir(m, s, supplyFan, hc, cc, suppHC), openstudio::Exception);
+  EXPECT_EQ(0, m.getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>().size());
 }
