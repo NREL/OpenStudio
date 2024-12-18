@@ -249,6 +249,7 @@ namespace model {
       boost::optional<HVACComponent> optionalSupplyAirFan() const;
       boost::optional<HVACComponent> optionalHeatingCoil() const;
       boost::optional<HVACComponent> optionalCoolingCoil() const;
+      boost::optional<HVACComponent> optionalSupplementalHeatingCoil() const;
     };
 
   }  // namespace detail
