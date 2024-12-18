@@ -100,12 +100,17 @@ namespace gbxml {
           if (version.empty()) {
             LOG(Warn, "gbXML has no `version` attribute for the schema version, assuming 7.03.");
             version = "7.03";
-          } else if (version != "7.03") {
-            LOG(Error, "Version of schema specified: " << version << ", expected 7.03. Validation will still assume 7.03, expect errors.");
           }
-          // validate the gbxml prior to reverse translation
-          auto gbxmlValidator = XMLValidator::gbxmlValidator();
-          gbxmlValidator.validate(path);
+          if (version == "7.03") {
+            // validate the gbxml prior to reverse translation
+            auto gbxmlValidator = XMLValidator::gbxmlValidator();
+            gbxmlValidator.validate(path);
+          } else {
+            LOG(Error,
+                "Version of schema specified: " << version
+                                                << ", expected 7.03. gbXML Schema Validation skipped. Note that ReverseTranslator rules are built "
+                                                   "for 7.03 and older versions are not officially supported, check resulting model with care.");
+          };
 
           result = this->convert(root);
         }
