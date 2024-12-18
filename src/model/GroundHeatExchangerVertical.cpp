@@ -57,6 +57,10 @@ namespace model {
       return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles, true);
     }
 
+    boost::optional<double> GroundHeatExchangerVertical_Impl::boreHoleTopDepth() const {
+      return getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, true);
+    }
+
     boost::optional<double> GroundHeatExchangerVertical_Impl::boreHoleLength() const {
       return getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleLength, true);
     }
@@ -136,6 +140,22 @@ namespace model {
 
     void GroundHeatExchangerVertical_Impl::resetNumberofBoreHoles() {
       bool result = setString(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles, "");
+      OS_ASSERT(result);
+    }
+
+    bool GroundHeatExchangerVertical_Impl::setBoreHoleTopDepth(boost::optional<double> boreHoleTopDepth) {
+      bool result(false);
+      if (boreHoleTopDepth) {
+        result = setDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, boreHoleTopDepth.get());
+      } else {
+        resetBoreHoleTopDepth();
+        result = true;
+      }
+      return result;
+    }
+
+    void GroundHeatExchangerVertical_Impl::resetBoreHoleTopDepth() {
+      bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, "");
       OS_ASSERT(result);
     }
 
@@ -443,6 +463,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::GroundHeatExchangerVertical_Impl>());
 
     setNumberofBoreHoles(120);
+    setBoreHoleTopDepth(1);
     setBoreHoleLength(76.2);
     setBoreHoleRadius(0.635080E-01);
     setGroundThermalConductivity(0.692626);
@@ -513,6 +534,7 @@ namespace model {
                                      << undisturbedGroundTemperatureModel.briefDescription() << ".");
     }
     setNumberofBoreHoles(120);
+    setBoreHoleTopDepth(1);
     setBoreHoleLength(76.2);
     setBoreHoleRadius(0.635080E-01);
     setGroundThermalConductivity(0.692626);
@@ -596,6 +618,10 @@ namespace model {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofBoreHoles();
   }
 
+  boost::optional<double> GroundHeatExchangerVertical::boreHoleTopDepth() const {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->boreHoleTopDepth();
+  }
+
   boost::optional<double> GroundHeatExchangerVertical::boreHoleLength() const {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->boreHoleLength();
   }
@@ -662,6 +688,14 @@ namespace model {
 
   void GroundHeatExchangerVertical::resetNumberofBoreHoles() {
     getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetNumberofBoreHoles();
+  }
+
+  bool GroundHeatExchangerVertical::setBoreHoleTopDepth(double boreHoleTopDepth) {
+    return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleTopDepth(boreHoleTopDepth);
+  }
+
+  void GroundHeatExchangerVertical::resetBoreHoleTopDepth() {
+    getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetBoreHoleTopDepth();
   }
 
   bool GroundHeatExchangerVertical::setBoreHoleLength(double boreHoleLength) {
