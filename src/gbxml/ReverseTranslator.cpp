@@ -85,16 +85,29 @@ namespace gbxml {
 
     if (openstudio::filesystem::exists(path)) {
 
-      // validate the gbxml prior to reverse translation
-      auto gbxmlValidator = XMLValidator::gbxmlValidator();
-      gbxmlValidator.validate(path);
-
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
         pugi::xml_document doc;
         auto load_result = doc.load(file);
         if (load_result) {
-          result = this->convert(doc.document_element());
+          auto root = doc.document_element();
+          if (std::string_view{root.name()} != "gbXML") {
+            LOG(Error, "Expected the root element to be <gbXML>");
+            return boost::none;
+          }
+          // Scan version of gbxml schema
+          std::string version = root.attribute("version").value();
+          if (version.empty()) {
+            LOG(Warn, "gbXML has no `version` attribute for the schema version, assuming 7.03.");
+            version = "7.03";
+          } else if (version != "7.03") {
+            LOG(Error, "Version of schema specified: " << version << ", expected 7.03. Validation will still assume 7.03, expect errors.");
+          }
+          // validate the gbxml prior to reverse translation
+          auto gbxmlValidator = XMLValidator::gbxmlValidator();
+          gbxmlValidator.validate(path);
+
+          result = this->convert(root);
         }
         file.close();
       }
