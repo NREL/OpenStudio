@@ -17112,8 +17112,8 @@ OS:DistrictHeating:Steam,
 
 OS:GroundHeatExchanger:Vertical,
         \extensible:2
-        \min-fields 22
-        \max-fields 220
+        \min-fields 23
+        \max-fields 221
         \memo Variable short time step vertical ground heat exchanger model based on
         \memo Yavuztruk, C., J.D.Spitler. 1999. A Short Time Step response Factor Model for
         \memo Vertical Ground Loop Heat Exchangers
@@ -17143,67 +17143,71 @@ OS:GroundHeatExchanger:Vertical,
   N2,   \field Number of Bore Holes
         \type integer
         \minimum> 0.0
-  N3,   \field Bore Hole Length
+  N3,   \field Bore Hole Top Depth
+        \type real
+        \units m
+        \minimum 0.0
+  N4,   \field Bore Hole Length
         \type real
         \units m
         \minimum> 0.0
-  N4,   \field Bore Hole Radius
+  N5,   \field Bore Hole Radius
         \type real
         \units m
         \minimum> 0.0
-  N5,   \field Ground Thermal Conductivity
+  N6,   \field Ground Thermal Conductivity
         \type real
         \units W/m-K
         \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
-  N6,   \field Ground Thermal Heat Capacity
+  N7,   \field Ground Thermal Heat Capacity
         \type real
         \units J/m3-K
         \minimum> 0.0
-  N7,   \field Ground Temperature
+  N8,   \field Ground Temperature
         \type real
         \units C
         \minimum> 0.0
-  N8,   \field Grout Thermal Conductivity
+  N9,   \field Grout Thermal Conductivity
         \type real
         \units W/m-K
         \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
-  N9,   \field Pipe Thermal Conductivity
+  N10,  \field Pipe Thermal Conductivity
         \type real
         \units W/m-K
         \ip-units Btu-in/hr-ft2-R
         \minimum> 0.0
-  N10,  \field Pipe Out Diameter
+  N11,  \field Pipe Out Diameter
         \type real
         \units m
         \minimum> 0.0
         \ip-units in
-  N11,  \field U-Tube Distance
+  N12,  \field U-Tube Distance
         \type real
         \units m
         \minimum> 0.0
-  N12,  \field Pipe Thickness
+  N13,  \field Pipe Thickness
         \type real
         \units m
         \minimum> 0.0
         \ip-units in
-  N13,  \field Maximum Length of Simulation
+  N14,  \field Maximum Length of Simulation
         \type real
         \minimum> 0.0
   A5,   \field Undisturbed Ground Temperature Model
         \required-field
         \type object-list
         \object-list UndisturbedGroundTempModels
-  N14,  \field G-Function Reference Ratio
+  N15,  \field G-Function Reference Ratio
         \type real
         \units dimensionless
         \minimum> 0.0
         \default 0.0005
-  N15,  \field G-Function Ln(T/Ts) Value
+  N16,  \field G-Function Ln(T/Ts) Value
         \type real
         \begin-extensible
-  N16;  \field G-Function G Value
+  N17;  \field G-Function G Value
         \type real
 
 OS:GroundHeatExchanger:HorizontalTrench,
