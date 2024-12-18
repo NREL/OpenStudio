@@ -5138,7 +5138,6 @@ OS:Building,
        \type alpha
        \required-field
        \reference BuildingNames
-       \reference SpaceAndSpaceGroupNames
   A3, \field Building Sector Type
        \deprecated
        \type choice
