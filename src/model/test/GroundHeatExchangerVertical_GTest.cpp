@@ -40,6 +40,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GroundHeatExchangerVertical) {
     EXPECT_EQ(0.0033, gh.designFlowRate().get());
     ASSERT_TRUE(gh.numberofBoreHoles());
     EXPECT_EQ(120, gh.numberofBoreHoles().get());
+    ASSERT_TRUE(gh.boreHoleTopDepth());
+    EXPECT_EQ(1.0, gh.boreHoleTopDepth().get());
     ASSERT_TRUE(gh.boreHoleLength());
     EXPECT_EQ(76.2, gh.boreHoleLength().get());
     ASSERT_TRUE(gh.boreHoleRadius());
@@ -79,6 +81,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_GroundHeatExchangerVertical) {
     EXPECT_EQ(0.0033, gh.designFlowRate().get());
     ASSERT_TRUE(gh.numberofBoreHoles());
     EXPECT_EQ(120, gh.numberofBoreHoles().get());
+    ASSERT_TRUE(gh.boreHoleTopDepth());
+    EXPECT_EQ(1.0, gh.boreHoleTopDepth().get());
     ASSERT_TRUE(gh.boreHoleLength());
     EXPECT_EQ(76.2, gh.boreHoleLength().get());
     ASSERT_TRUE(gh.boreHoleRadius());
@@ -117,6 +121,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
 
   EXPECT_TRUE(gh.setDesignFlowRate(0.004));
   EXPECT_TRUE(gh.setNumberofBoreHoles(100));
+  EXPECT_TRUE(gh.setBoreHoleTopDepth(1.25));
   EXPECT_TRUE(gh.setBoreHoleLength(80.0));
   EXPECT_TRUE(gh.setBoreHoleRadius(0.7E-01));
   EXPECT_TRUE(gh.setGroundThermalConductivity(0.7));
@@ -137,6 +142,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   EXPECT_EQ(0.004, gh.designFlowRate().get());
   ASSERT_TRUE(gh.numberofBoreHoles());
   EXPECT_EQ(100, gh.numberofBoreHoles().get());
+  ASSERT_TRUE(gh.boreHoleTopDepth());
+  EXPECT_EQ(1.25, gh.boreHoleTopDepth().get());
   ASSERT_TRUE(gh.boreHoleLength());
   EXPECT_EQ(80.0, gh.boreHoleLength().get());
   ASSERT_TRUE(gh.boreHoleRadius());
@@ -174,6 +181,8 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   EXPECT_EQ(0.004, gh.designFlowRate().get());
   ASSERT_TRUE(gh.numberofBoreHoles());
   EXPECT_EQ(100, gh.numberofBoreHoles().get());
+  ASSERT_TRUE(gh.boreHoleTopDepth());
+  EXPECT_EQ(1.25 gh.boreHoleTopDepth().get());
   ASSERT_TRUE(gh.boreHoleLength());
   EXPECT_EQ(80.0, gh.boreHoleLength().get());
   ASSERT_TRUE(gh.boreHoleRadius());
