@@ -55,6 +55,8 @@ namespace model {
 
     static std::vector<std::string> parasiticHeatRejectionLocationValues();
 
+    static std::vector<std::string> tankElementControlLogicValues();
+
     static std::vector<std::string> controlSensorLocationInStratifiedTankValues();
 
     /** @name Getters */
@@ -103,6 +105,8 @@ namespace model {
     std::string parasiticHeatRejectionLocation() const;
 
     Schedule inletAirMixerSchedule() const;
+
+    std::string tankElementControlLogic() const;
 
     std::string controlSensorLocationInStratifiedTank() const;
 
@@ -165,6 +169,8 @@ namespace model {
     bool setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation);
 
     bool setInletAirMixerSchedule(Schedule& schedule);
+
+    bool setTankElementControlLogic(const std::string& tankElementControlLogic);
 
     bool setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank);
 
