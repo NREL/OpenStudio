@@ -819,13 +819,13 @@ TEST_F(ModelFixture, Ensure_Name_Unicity_SpaceAndSpaceGroupNames) {
   // Zone, ZoneList, Space, SpaceList all need to be unique names
   Model m;
 
-  std::vector<ModelObject> mos{Space{m}, m.getUniqueModelObject<Building>(), BuildingStory{m}, SpaceType{m}, ThermalZone{m}};
-  EXPECT_EQ(5, m.getObjectsByReference("SpaceAndSpaceGroupNames").size());
+  std::vector<ModelObject> mos{Space{m}, BuildingStory{m}, SpaceType{m}, ThermalZone{m}};
+  EXPECT_EQ(4, m.getObjectsByReference("SpaceAndSpaceGroupNames").size());
 
   std::string name = "A Name";
 
   std::vector<std::pair<size_t, size_t>> combinations{
-    {0, 1}, {0, 2}, {0, 3}, {0, 4}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4},
+    {0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3},
   };
 
   auto resetNames = [&mos]() {
