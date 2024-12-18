@@ -4524,3 +4524,21 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_SizingZone) {
 
   EXPECT_EQ("Coincident", sizing_zone.getString(39).get());  // Sizing Option
 }
+
+TEST_F(OSVersionFixture, update_3_9_0_to_3_9_1_GroundHeatExchangerVertical) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_0/test_vt_GroundHeatExchangerVertical.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_0/test_vt_GroundHeatExchangerVertical_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ghe_verts = model->getObjectsByType("OS:GroundHeatExchanger:Vertical");
+  ASSERT_EQ(1u, ghe_verts.size());
+  WorkspaceObject ghe_vert = ghe_verts[0];
+
+  EXPECT_EQ(120, ghe_vert.getInt(5).get());  // Number of Bore Holes
+  EXPECT_EQ(1.0, ghe_vert.getDouble(6).get());  // Bore Hole Top Depth
+  EXPECT_EQ(76.2, ghe_vert.getDouble(7).get());  // Bore Hole Length
+}

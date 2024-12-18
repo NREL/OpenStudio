@@ -9640,5 +9640,50 @@ namespace osversion {
 
   }  // end update_3_8_0_to_3_9_0
 
+  std::string VersionTranslator::update_3_9_0_to_3_9_1(const IdfFile& idf_3_9_0, const IddFileAndFactoryWrapper& idd_3_9_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_9_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_9_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idd_3_9_1.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // 1 Field has been inserted from 3.9.0 to 3.9.1:
+        // ----------------------------------------------
+        // * Bore Hole Top Depth * 6
+
+        auto iddObject = idd_3_9_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(6, 1.0);  // this value of 1 is what we previously had hardcoded in FT
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_9_0_to_3_9_1
+
 }  // namespace osversion
 }  // namespace openstudio
