@@ -4538,7 +4538,7 @@ TEST_F(OSVersionFixture, update_3_9_0_to_3_9_1_GroundHeatExchangerVertical) {
   ASSERT_EQ(1u, ghe_verts.size());
   WorkspaceObject ghe_vert = ghe_verts[0];
 
-  EXPECT_EQ(120, ghe_vert.getInt(5).get());  // Number of Bore Holes
-  EXPECT_EQ(1.0, ghe_vert.getDouble(6).get());  // Bore Hole Top Depth
+  EXPECT_EQ(120, ghe_vert.getInt(5).get());      // Number of Bore Holes
+  EXPECT_EQ(1.0, ghe_vert.getDouble(6).get());   // Bore Hole Top Depth
   EXPECT_EQ(76.2, ghe_vert.getDouble(7).get());  // Bore Hole Length
 }
