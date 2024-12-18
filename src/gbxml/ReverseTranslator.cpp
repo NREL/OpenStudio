@@ -110,7 +110,7 @@ namespace gbxml {
           }
           if (schemaVersion == VersionString(7, 3)) {
             // validate the gbxml prior to reverse translation
-            auto gbxmlValidator = XMLValidator::gbxmlValidator(VersionString(7, 3));
+            auto gbxmlValidator = XMLValidator::gbxmlValidator(schemaVersion);
             gbxmlValidator.validate(path);
           } else {
             LOG(Error,
