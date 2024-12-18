@@ -11569,6 +11569,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list HeatingCoilsGasElec
+       \object-list HeatingCoilsWater
   N4, \field Maximum Supply Air Temperature from Supplemental Heater
        \type real
        \required-field

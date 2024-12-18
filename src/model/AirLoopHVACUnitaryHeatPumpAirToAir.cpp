@@ -437,6 +437,8 @@ namespace model {
         isTypeOK = true;
       } else if (hvacComponent.optionalCast<CoilHeatingElectric>()) {
         isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilHeatingWater>()) {
+        isTypeOK = true;
       }
 
       if (isTypeOK) {
