@@ -145,7 +145,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.7.0")] = &VersionTranslator::update_3_6_1_to_3_7_0;
     m_updateMethods[VersionString("3.8.0")] = &VersionTranslator::update_3_7_0_to_3_8_0;
     m_updateMethods[VersionString("3.9.0")] = &VersionTranslator::update_3_8_0_to_3_9_0;
-    m_updateMethods[VersionString("3.9.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.9.1")] = &VersionTranslator::update_3_9_0_to_3_9_1;
     // m_updateMethods[VersionString("3.10.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -9635,6 +9635,50 @@ namespace osversion {
     return ss.str();
 
   }  // end update_3_8_0_to_3_9_0
+
+  std::string VersionTranslator::update_3_9_0_to_3_9_1(const IdfFile& idf_3_9_0, const IddFileAndFactoryWrapper& idd_3_9_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_9_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_9_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_9_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:WaterHeater:HeatPump") {
+
+        // 1 Field has been inserted from 3.9.0 to 3.9.1:
+        // ----------------------------------------------
+        // * Tank Element Control Logic * 25
+        auto iddObject = idd_3_9_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 25) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setString(25, "Simultaneous");
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_9_0_to_3_9_1
 
 }  // namespace osversion
 }  // namespace openstudio
