@@ -7,12 +7,14 @@
 #include "Model_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "Node.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -595,8 +597,18 @@ namespace model {
       return OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AirOutletNode;
     }
 
+    bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::addToNode(Node& node) {
+      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+        if (airLoop->supplyComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::clone(Model model) const {
-      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyAirFan()) {
         modelObjectClone.setSupplyAirFan(supplyFan->clone(model).cast<HVACComponent>());
