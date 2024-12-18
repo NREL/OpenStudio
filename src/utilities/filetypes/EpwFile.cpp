@@ -541,45 +541,6 @@ EpwDesignCondition::EpwDesignCondition(
   setExtremeN50YearsMaxDryBulb(extremeN50YearsMaxDryBulb);
 }
 
-EpwGroundTemperatureDepth::EpwGroundTemperatureDepth()
-  : m_groundTemperatureDepth(),
-    m_soilConductivity(),
-    m_soilDensity(),
-    m_soilSpecificHeat(),
-    m_janGroundTemperature(),
-    m_febGroundTemperature(),
-    m_marGroundTemperature(),
-    m_aprGroundTemperature(),
-    m_mayGroundTemperature(),
-    m_junGroundTemperature(),
-    m_julGroundTemperature(),
-    m_augGroundTemperature(),
-    m_sepGroundTemperature(),
-    m_octGroundTemperature(),
-    m_novGroundTemperature(),
-    m_decGroundTemperature() {}
-
-EpwGroundTemperatureDepth::EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity,
-                                                     double soilSpecificHeat, double jan, double feb, double mar, double apr, double may, double jun,
-                                                     double jul, double aug, double sep, double oct, double nov, double dec) {
-  setGroundTemperatureDepth(groundTemperatureDepth);
-  setSoilConductivity(soilConductivity);
-  setSoilDensity(soilDensity);
-  setSoilSpecificHeat(soilSpecificHeat);
-  setJanGroundTemperature(janGroundTemperature);
-  setFebGroundTemperature(febGroundTemperature);
-  setMarGroundTemperature(marGroundTemperature);
-  setAprGroundTemperature(aprGroundTemperature);
-  setMayGroundTemperature(mayGroundTemperature);
-  setJunGroundTemperature(junGroundTemperature);
-  setJulGroundTemperature(julGroundTemperature);
-  setAugGroundTemperature(augGroundTemperature);
-  setSepGroundTemperature(sepGroundTemperature);
-  setOctGroundTemperature(octGroundTemperature);
-  setNovGroundTemperature(novGroundTemperature);
-  setDecGroundTemperature(decGroundTemperature);
-}
-
 boost::optional<EpwDataPoint> EpwDataPoint::fromEpwString(const std::string& line) {
   std::vector<std::string> list = splitString(line, ',');
   return fromEpwStrings(list);
@@ -790,38 +751,6 @@ boost::optional<EpwDesignCondition> EpwDesignCondition::fromDesignConditionsStri
   dc.setExtremeN50YearsMinDryBulb(list[EpwDesignField::ExtremeN50YearsMinDryBulb]);
   dc.setExtremeN50YearsMaxDryBulb(list[EpwDesignField::ExtremeN50YearsMaxDryBulb]);
   return boost::optional<EpwDesignCondition>(dc);
-}
-
-boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsString(const std::string& line) {
-  std::vector<std::string> list = splitString(line, ',');
-  return fromGroundTemperatureDepthsStrings(list);
-}
-
-boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsStrings(const std::vector<std::string>& list) {
-  EpwGroundTemperatureDepth gtd;
-  // Expect 48 items in the list
-  if (list.size() < 48) {
-    LOG_FREE(Error, "openstudio.EpwFile", "Expected 48 fields in EPW ground temperature depth instead of the " << list.size() << " received");
-    return boost::none;
-  }
-  // Use the appropriate setter on each field
-  gtd.setGroundTemperatureDepth(list[EpwDepthField::GroundTemperatureDepth]);
-  gtd.setSoilConductivity(list[EpwDepthField::SoilConductivity]);
-  gtd.setSoilDensity(list[EpwDepthField::SoilDensity]);
-  gtd.setSoilSpecificHeat(list[EpwDepthField::SoilSpecificHeat]);
-  gtd.setJanGroundTemperature(list[EpwDepthField::JanGroundTemperature]);
-  gtd.setFebGroundTemperature(list[EpwDepthField::FebGroundTemperature]);
-  gtd.setMarGroundTemperature(list[EpwDepthField::MarGroundTemperature]);
-  gtd.setAprGroundTemperature(list[EpwDepthField::AprGroundTemperature]);
-  gtd.setMarGroundTemperature(list[EpwDepthField::MayGroundTemperature]);
-  gtd.setJunGroundTemperature(list[EpwDepthField::JunGroundTemperature]);
-  gtd.setJulGroundTemperature(list[EpwDepthField::JulGroundTemperature]);
-  gtd.setAugGroundTemperature(list[EpwDepthField::AugGroundTemperature]);
-  gtd.setSepGroundTemperature(list[EpwDepthField::SepGroundTemperature]);
-  gtd.setOctGroundTemperature(list[EpwDepthField::OctGroundTemperature]);
-  gtd.setNovGroundTemperature(list[EpwDepthField::NovGroundTemperature]);
-  gtd.setDecGroundTemperature(list[EpwDepthField::DecGroundTemperature]);
-  return boost::optional<EpwGroundTemperatureDepth>(gtd);
 }
 
 std::vector<std::string> EpwDataPoint::toEpwStrings() const {
@@ -1204,75 +1133,6 @@ std::string EpwDesignCondition::getUnits(EpwDesignField field) {
   return string;
 }
 
-boost::optional<std::string> EpwGroundTemperatureDepth::getUnitsByName(const std::string& name) {
-  EpwDepthField id;
-  try {
-    id = EpwDepthField(name);
-  } catch (...) {
-    // Could do a warning message here
-    return boost::none;
-  }
-  return getUnits(id);
-}
-
-std::string EpwGroundTemperatureDepth::getUnits(EpwDepthField field) {
-  std::string string;
-  switch (field.value()) {
-    case EpwDepthField::GroundTemperatureDepth:
-      string = "m";
-      break;
-    case EpwDepthField::SoilConductivity:
-      string = "W/m-K";
-      break;
-    case EpwDepthField::SoilDensity:
-      string = "kg/m3";
-      break;
-    case EpwDepthField::SoilSpecificHeat:
-      string = "J/kg-K";
-      break;
-    case EpwDepthField::JanGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::FebGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::MarGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::AprGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::MayGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::JunGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::JulGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::AugGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::SepGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::OctGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::NovGroundTemperature:
-      string = "C";
-      break;
-    case EpwDepthField::DecGroundTemperature:
-      string = "C";
-      break;
-    default:
-      //string = "None";
-      break;
-  }
-  return string;
-}
-
 std::string EpwDataPoint::getUnits(EpwComputedField field) {
   std::string string;
   switch (field.value()) {
@@ -1622,17 +1482,6 @@ boost::optional<double> EpwDesignCondition::getField(EpwDesignField id) {
       break;
   }
   return boost::none;
-}
-
-boost::optional<double> EpwGroundTemperatureDepth::getFieldByName(const std::string& name) {
-  EpwDepthField id;
-  try {
-    id = EpwDepthField(name);
-  } catch (...) {
-    // Could do a warning message here
-    return boost::none;
-  }
-  return getField(id);
 }
 
 boost::optional<double> EpwDesignCondition::getField(EpwDepthField id) {
@@ -3837,6 +3686,160 @@ std::vector<EpwDesignCondition> EpwFile::designConditions() {
     }
   }
   return m_designs;
+}
+
+/*****************************************************************************************************************************************************
+*                                           E P W     G R O U N D     T E M P E R A T U R E    D E P T H                                            *
+*****************************************************************************************************************************************************/
+EpwGroundTemperatureDepth::EpwGroundTemperatureDepth()
+  : m_groundTemperatureDepth(),
+    m_soilConductivity(),
+    m_soilDensity(),
+    m_soilSpecificHeat(),
+    m_janGroundTemperature(),
+    m_febGroundTemperature(),
+    m_marGroundTemperature(),
+    m_aprGroundTemperature(),
+    m_mayGroundTemperature(),
+    m_junGroundTemperature(),
+    m_julGroundTemperature(),
+    m_augGroundTemperature(),
+    m_sepGroundTemperature(),
+    m_octGroundTemperature(),
+    m_novGroundTemperature(),
+    m_decGroundTemperature() {}
+
+EpwGroundTemperatureDepth::EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity,
+                                                     double soilSpecificHeat, double jan, double feb, double mar, double apr, double may, double jun,
+                                                     double jul, double aug, double sep, double oct, double nov, double dec) {
+  setGroundTemperatureDepth(groundTemperatureDepth);
+  setSoilConductivity(soilConductivity);
+  setSoilDensity(soilDensity);
+  setSoilSpecificHeat(soilSpecificHeat);
+  setJanGroundTemperature(janGroundTemperature);
+  setFebGroundTemperature(febGroundTemperature);
+  setMarGroundTemperature(marGroundTemperature);
+  setAprGroundTemperature(aprGroundTemperature);
+  setMayGroundTemperature(mayGroundTemperature);
+  setJunGroundTemperature(junGroundTemperature);
+  setJulGroundTemperature(julGroundTemperature);
+  setAugGroundTemperature(augGroundTemperature);
+  setSepGroundTemperature(sepGroundTemperature);
+  setOctGroundTemperature(octGroundTemperature);
+  setNovGroundTemperature(novGroundTemperature);
+  setDecGroundTemperature(decGroundTemperature);
+}
+
+boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsString(const std::string& line) {
+  std::vector<std::string> list = splitString(line, ',');
+  return fromGroundTemperatureDepthsStrings(list);
+}
+
+boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsStrings(const std::vector<std::string>& list) {
+  EpwGroundTemperatureDepth gtd;
+  // Expect 48 items in the list
+  if (list.size() < 48) {
+    LOG_FREE(Error, "openstudio.EpwFile", "Expected 48 fields in EPW ground temperature depth instead of the " << list.size() << " received");
+    return boost::none;
+  }
+  // Use the appropriate setter on each field
+  gtd.setGroundTemperatureDepth(list[EpwDepthField::GroundTemperatureDepth]);
+  gtd.setSoilConductivity(list[EpwDepthField::SoilConductivity]);
+  gtd.setSoilDensity(list[EpwDepthField::SoilDensity]);
+  gtd.setSoilSpecificHeat(list[EpwDepthField::SoilSpecificHeat]);
+  gtd.setJanGroundTemperature(list[EpwDepthField::JanGroundTemperature]);
+  gtd.setFebGroundTemperature(list[EpwDepthField::FebGroundTemperature]);
+  gtd.setMarGroundTemperature(list[EpwDepthField::MarGroundTemperature]);
+  gtd.setAprGroundTemperature(list[EpwDepthField::AprGroundTemperature]);
+  gtd.setMarGroundTemperature(list[EpwDepthField::MayGroundTemperature]);
+  gtd.setJunGroundTemperature(list[EpwDepthField::JunGroundTemperature]);
+  gtd.setJulGroundTemperature(list[EpwDepthField::JulGroundTemperature]);
+  gtd.setAugGroundTemperature(list[EpwDepthField::AugGroundTemperature]);
+  gtd.setSepGroundTemperature(list[EpwDepthField::SepGroundTemperature]);
+  gtd.setOctGroundTemperature(list[EpwDepthField::OctGroundTemperature]);
+  gtd.setNovGroundTemperature(list[EpwDepthField::NovGroundTemperature]);
+  gtd.setDecGroundTemperature(list[EpwDepthField::DecGroundTemperature]);
+  return boost::optional<EpwGroundTemperatureDepth>(gtd);
+}
+
+boost::optional<std::string> EpwGroundTemperatureDepth::getUnitsByName(const std::string& name) {
+  EpwDepthField id;
+  try {
+    id = EpwDepthField(name);
+  } catch (...) {
+    // Could do a warning message here
+    return boost::none;
+  }
+  return getUnits(id);
+}
+
+std::string EpwGroundTemperatureDepth::getUnits(EpwDepthField field) {
+  std::string string;
+  switch (field.value()) {
+    case EpwDepthField::GroundTemperatureDepth:
+      string = "m";
+      break;
+    case EpwDepthField::SoilConductivity:
+      string = "W/m-K";
+      break;
+    case EpwDepthField::SoilDensity:
+      string = "kg/m3";
+      break;
+    case EpwDepthField::SoilSpecificHeat:
+      string = "J/kg-K";
+      break;
+    case EpwDepthField::JanGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::FebGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::MarGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::AprGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::MayGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::JunGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::JulGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::AugGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::SepGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::OctGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::NovGroundTemperature:
+      string = "C";
+      break;
+    case EpwDepthField::DecGroundTemperature:
+      string = "C";
+      break;
+    default:
+      //string = "None";
+      break;
+  }
+  return string;
+}
+
+boost::optional<double> EpwGroundTemperatureDepth::getFieldByName(const std::string& name) {
+  EpwDepthField id;
+  try {
+    id = EpwDepthField(name);
+  } catch (...) {
+    // Could do a warning message here
+    return boost::none;
+  }
+  return getField(id);
 }
 
 double EpwGroundTemperatureDepth::groundTemperatureDepth() const {
