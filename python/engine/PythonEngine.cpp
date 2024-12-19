@@ -403,7 +403,7 @@ int PythonEngine::numberOfArguments(ScriptObject& methodObject, std::string_view
     }
   } else if (PyFunction_Check(method)) {
     // Shouldn't enter this block here
-    if (auto * code = PyFunction_GetCode(method)) {
+    if (auto* code = PyFunction_GetCode(method)) {
       // cppcheck-suppress cstyleCast
       const auto* co = (PyCodeObject*)code;
       numberOfArguments = co->co_argcount;
