@@ -3630,6 +3630,514 @@ std::vector<EpwDesignCondition> EpwFile::designConditions() {
   return m_designs;
 }
 
+/*****************************************************************************************************************************************************
+*                                           E P W     G R O U N D     T E M P E R A T U R E    D E P T H                                            *
+*****************************************************************************************************************************************************/
+static constexpr size_t NUMBER_GROUND_TEMP_STRINGS = 16;
+
+EpwGroundTemperatureDepth::EpwGroundTemperatureDepth(double groundTemperatureDepth, double soilConductivity, double soilDensity,
+                                                     double soilSpecificHeat, double janGroundTemperature, double febGroundTemperature,
+                                                     double marGroundTemperature, double aprGroundTemperature, double mayGroundTemperature,
+                                                     double junGroundTemperature, double julGroundTemperature, double augGroundTemperature,
+                                                     double sepGroundTemperature, double octGroundTemperature, double novGroundTemperature,
+                                                     double decGroundTemperature) {
+  setGroundTemperatureDepth(groundTemperatureDepth);
+  setSoilConductivity(soilConductivity);
+  setSoilDensity(soilDensity);
+  setSoilSpecificHeat(soilSpecificHeat);
+  setJanGroundTemperature(janGroundTemperature);
+  setFebGroundTemperature(febGroundTemperature);
+  setMarGroundTemperature(marGroundTemperature);
+  setAprGroundTemperature(aprGroundTemperature);
+  setMayGroundTemperature(mayGroundTemperature);
+  setJunGroundTemperature(junGroundTemperature);
+  setJulGroundTemperature(julGroundTemperature);
+  setAugGroundTemperature(augGroundTemperature);
+  setSepGroundTemperature(sepGroundTemperature);
+  setOctGroundTemperature(octGroundTemperature);
+  setNovGroundTemperature(novGroundTemperature);
+  setDecGroundTemperature(decGroundTemperature);
+}
+
+boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsString(const std::string& line) {
+  std::vector<std::string> strings = splitString(line, ',');
+  return fromGroundTemperatureDepthsStrings(strings);
+}
+
+boost::optional<EpwGroundTemperatureDepth> EpwGroundTemperatureDepth::fromGroundTemperatureDepthsStrings(const std::vector<std::string>& strings) {
+  EpwGroundTemperatureDepth gtd;
+  if (strings.size() != NUMBER_GROUND_TEMP_STRINGS) {
+    LOG_FREE(Error, "openstudio.EpwFile",
+             "Expected " << NUMBER_GROUND_TEMP_STRINGS << " fields in EPW ground temperature depth instead of the " << strings.size() << " received");
+    return boost::none;
+  }
+  // Use the appropriate setter on each field
+  gtd.setGroundTemperatureDepth(strings[EpwDepthField::GroundTemperatureDepth]);
+  gtd.setSoilConductivity(strings[EpwDepthField::SoilConductivity]);
+  gtd.setSoilDensity(strings[EpwDepthField::SoilDensity]);
+  gtd.setSoilSpecificHeat(strings[EpwDepthField::SoilSpecificHeat]);
+  gtd.setJanGroundTemperature(strings[EpwDepthField::JanGroundTemperature]);
+  gtd.setFebGroundTemperature(strings[EpwDepthField::FebGroundTemperature]);
+  gtd.setMarGroundTemperature(strings[EpwDepthField::MarGroundTemperature]);
+  gtd.setAprGroundTemperature(strings[EpwDepthField::AprGroundTemperature]);
+  gtd.setMayGroundTemperature(strings[EpwDepthField::MayGroundTemperature]);
+  gtd.setJunGroundTemperature(strings[EpwDepthField::JunGroundTemperature]);
+  gtd.setJulGroundTemperature(strings[EpwDepthField::JulGroundTemperature]);
+  gtd.setAugGroundTemperature(strings[EpwDepthField::AugGroundTemperature]);
+  gtd.setSepGroundTemperature(strings[EpwDepthField::SepGroundTemperature]);
+  gtd.setOctGroundTemperature(strings[EpwDepthField::OctGroundTemperature]);
+  gtd.setNovGroundTemperature(strings[EpwDepthField::NovGroundTemperature]);
+  gtd.setDecGroundTemperature(strings[EpwDepthField::DecGroundTemperature]);
+  return std::move(gtd);
+}
+
+boost::optional<std::string> EpwGroundTemperatureDepth::getUnitsByName(const std::string& name) {
+  EpwDepthField id;
+  try {
+    id = EpwDepthField(name);
+  } catch (...) {
+    // Could do a warning message here
+    return boost::none;
+  }
+  return getUnits(id);
+}
+
+std::string EpwGroundTemperatureDepth::getUnits(EpwDepthField field) {
+  switch (field.value()) {
+    case EpwDepthField::GroundTemperatureDepth:
+      return "m";
+      break;
+    case EpwDepthField::SoilConductivity:
+      return "W/m-K";
+      break;
+    case EpwDepthField::SoilDensity:
+      return "kg/m3";
+      break;
+    case EpwDepthField::SoilSpecificHeat:
+      return "J/kg-K";
+      break;
+    case EpwDepthField::JanGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::FebGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::MarGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::AprGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::MayGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::JunGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::JulGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::AugGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::SepGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::OctGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::NovGroundTemperature:
+      return "C";
+      break;
+    case EpwDepthField::DecGroundTemperature:
+      return "C";
+      break;
+    default:
+      //return "None";
+      break;
+  }
+  return "";
+}
+
+boost::optional<double> EpwGroundTemperatureDepth::getFieldByName(const std::string& name) {
+  EpwDepthField id;
+  try {
+    id = EpwDepthField(name);
+  } catch (...) {
+    // Could do a warning message here
+    return boost::none;
+  }
+  return getField(id);
+}
+
+boost::optional<double> EpwGroundTemperatureDepth::getField(EpwDepthField id) {
+  switch (id.value()) {
+    case EpwDepthField::GroundTemperatureDepth:
+      return groundTemperatureDepth();
+      break;
+    case EpwDepthField::SoilConductivity:
+      return soilConductivity();
+      break;
+    case EpwDepthField::SoilDensity:
+      return soilDensity();
+      break;
+    case EpwDepthField::SoilSpecificHeat:
+      return soilSpecificHeat();
+      break;
+    case EpwDepthField::JanGroundTemperature:
+      return janGroundTemperature();
+      break;
+    case EpwDepthField::FebGroundTemperature:
+      return febGroundTemperature();
+      break;
+    case EpwDepthField::MarGroundTemperature:
+      return marGroundTemperature();
+      break;
+    case EpwDepthField::AprGroundTemperature:
+      return aprGroundTemperature();
+      break;
+    case EpwDepthField::MayGroundTemperature:
+      return mayGroundTemperature();
+      break;
+    case EpwDepthField::JunGroundTemperature:
+      return junGroundTemperature();
+      break;
+    case EpwDepthField::JulGroundTemperature:
+      return julGroundTemperature();
+      break;
+    case EpwDepthField::AugGroundTemperature:
+      return augGroundTemperature();
+      break;
+    case EpwDepthField::SepGroundTemperature:
+      return sepGroundTemperature();
+      break;
+    case EpwDepthField::OctGroundTemperature:
+      return octGroundTemperature();
+      break;
+    case EpwDepthField::NovGroundTemperature:
+      return novGroundTemperature();
+      break;
+    case EpwDepthField::DecGroundTemperature:
+      return decGroundTemperature();
+      break;
+    default:
+      // Could do a warning message here
+      return boost::none;
+      break;
+  }
+  return boost::none;
+}
+
+double EpwGroundTemperatureDepth::groundTemperatureDepth() const {
+  return m_groundTemperatureDepth;
+}
+
+double EpwGroundTemperatureDepth::soilConductivity() const {
+  return m_soilConductivity;
+}
+
+double EpwGroundTemperatureDepth::soilDensity() const {
+  return m_soilDensity;
+}
+
+double EpwGroundTemperatureDepth::soilSpecificHeat() const {
+  return m_soilSpecificHeat;
+}
+
+double EpwGroundTemperatureDepth::janGroundTemperature() const {
+  return m_janGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::febGroundTemperature() const {
+  return m_febGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::marGroundTemperature() const {
+  return m_marGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::aprGroundTemperature() const {
+  return m_aprGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::mayGroundTemperature() const {
+  return m_mayGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::junGroundTemperature() const {
+  return m_junGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::julGroundTemperature() const {
+  return m_julGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::augGroundTemperature() const {
+  return m_augGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::sepGroundTemperature() const {
+  return m_sepGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::octGroundTemperature() const {
+  return m_octGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::novGroundTemperature() const {
+  return m_novGroundTemperature;
+}
+
+double EpwGroundTemperatureDepth::decGroundTemperature() const {
+  return m_decGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setGroundTemperatureDepth(const std::string& groundTemperatureDepth) {
+  bool ok;
+  double value = stringToDouble(groundTemperatureDepth, &ok);
+  if (!ok) {
+    return false;
+  }
+  setGroundTemperatureDepth(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setGroundTemperatureDepth(double groundTemperatureDepth) {
+  m_groundTemperatureDepth = groundTemperatureDepth;
+}
+
+bool EpwGroundTemperatureDepth::setSoilConductivity(const std::string& soilConductivity) {
+  bool ok;
+  double value = stringToDouble(soilConductivity, &ok);
+  if (!ok) {
+    return false;
+  }
+  setSoilConductivity(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setSoilConductivity(double soilConductivity) {
+  m_soilConductivity = soilConductivity;
+}
+
+bool EpwGroundTemperatureDepth::setSoilDensity(const std::string& soilDensity) {
+  bool ok;
+  double value = stringToDouble(soilDensity, &ok);
+  if (!ok) {
+    return false;
+  }
+  setSoilDensity(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setSoilDensity(double soilDensity) {
+  m_soilDensity = soilDensity;
+}
+
+bool EpwGroundTemperatureDepth::setSoilSpecificHeat(const std::string& soilSpecificHeat) {
+  bool ok;
+  double value = stringToDouble(soilSpecificHeat, &ok);
+  if (!ok) {
+    return false;
+  }
+  setSoilSpecificHeat(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setSoilSpecificHeat(double soilSpecificHeat) {
+  m_soilSpecificHeat = soilSpecificHeat;
+}
+
+bool EpwGroundTemperatureDepth::setJanGroundTemperature(const std::string& janGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(janGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setJanGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setJanGroundTemperature(double janGroundTemperature) {
+  m_janGroundTemperature = janGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setFebGroundTemperature(const std::string& febGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(febGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setFebGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setFebGroundTemperature(double febGroundTemperature) {
+  m_febGroundTemperature = febGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setMarGroundTemperature(const std::string& marGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(marGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setMarGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setMarGroundTemperature(double marGroundTemperature) {
+  m_marGroundTemperature = marGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setAprGroundTemperature(const std::string& aprGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(aprGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setAprGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setAprGroundTemperature(double aprGroundTemperature) {
+  m_aprGroundTemperature = aprGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setMayGroundTemperature(const std::string& mayGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(mayGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setMayGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setMayGroundTemperature(double mayGroundTemperature) {
+  m_mayGroundTemperature = mayGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setJunGroundTemperature(const std::string& junGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(junGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setJunGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setJunGroundTemperature(double junGroundTemperature) {
+  m_junGroundTemperature = junGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setJulGroundTemperature(const std::string& julGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(julGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setJulGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setJulGroundTemperature(double julGroundTemperature) {
+  m_julGroundTemperature = julGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setAugGroundTemperature(const std::string& augGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(augGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setAugGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setAugGroundTemperature(double augGroundTemperature) {
+  m_augGroundTemperature = augGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setSepGroundTemperature(const std::string& sepGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(sepGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setSepGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setSepGroundTemperature(double sepGroundTemperature) {
+  m_sepGroundTemperature = sepGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setOctGroundTemperature(const std::string& octGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(octGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setOctGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setOctGroundTemperature(double octGroundTemperature) {
+  m_octGroundTemperature = octGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setNovGroundTemperature(const std::string& novGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(novGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setNovGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setNovGroundTemperature(double novGroundTemperature) {
+  m_novGroundTemperature = novGroundTemperature;
+}
+
+bool EpwGroundTemperatureDepth::setDecGroundTemperature(const std::string& decGroundTemperature) {
+  bool ok;
+  double value = stringToDouble(decGroundTemperature, &ok);
+  if (!ok) {
+    return false;
+  }
+  setDecGroundTemperature(value);
+  return ok;
+}
+
+void EpwGroundTemperatureDepth::setDecGroundTemperature(double decGroundTemperature) {
+  m_decGroundTemperature = decGroundTemperature;
+}
+
+std::vector<EpwGroundTemperatureDepth> EpwFile::groundTemperatureDepths() {
+  if (m_depths.empty()) {
+    if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
+      LOG_AND_THROW("Path '" << m_path << "' is not an EPW file");
+    }
+
+    // set checksum
+    m_checksum = openstudio::checksum(m_path);
+
+    // open file
+    std::ifstream ifs(openstudio::toSystemFilename(m_path));
+
+    if (!parse(ifs)) {
+      ifs.close();
+      LOG(Error, "EpwFile '" << toString(m_path) << "' cannot be processed");
+    } else {
+      ifs.close();
+    }
+  }
+  return m_depths;
+}
+
 boost::optional<TimeSeries> EpwFile::getTimeSeries(const std::string& name) {
   if (m_data.empty()) {
     if (!openstudio::filesystem::exists(m_path) || !openstudio::filesystem::is_regular_file(m_path)) {
@@ -3867,6 +4375,7 @@ bool EpwFile::parse(std::istream& ifs, bool storeData) {
       case 2:  // TYPICAL/EXTREME PERIODS
         break;
       case 3:  // GROUND TEMPERATURES
+        result = result && parseGroundTemperatures(line);
         break;
       case 4:  // HOLIDAYS/DAYLIGHT SAVINGS
         result = result && parseHolidaysDaylightSavings(line);
@@ -4151,6 +4660,51 @@ bool EpwFile::parseDesignConditions(const std::string& line) {
       return false;
     }
   }
+  return true;
+}
+
+bool EpwFile::parseGroundTemperatures(const std::string& line) {
+  // GROUND TEMPERATURES,3,.5,,,,-0.60,1.34,5.12,8.69,15.46,19.02,20.00,18.20,14.02,8.83,3.71,0.32,2,,,,2.08,2.55,4.70,7.10,12.30,15.62,17.28,16.91,14.53,10.94,6.90,3.72,4,,,,4.84,4.51,5.45,6.81,10.25,12.82,14.49,14.90,13.86,11.74,9.00,6.53
+  // Number of Ground Temperature Depths,Ground Temperature Depth {m},Soil Conductivity {W/m-K},Soil Density {kg/m3},Soil Specific Heat {J/kg-K},Jan {C},Feb{C},Mar {C},Apr {C},May {C},Jun {C},Jul {C},Aug {C},Sep {C},Oct {C},Nov {C},Dec {C},<repeat to Number of temperature depths>
+  // Bail out if the ground temperature depths array already has contents
+  if (!m_depths.empty()) {
+    return true;
+  }
+
+  std::vector<std::string> split = splitString(line, ',');
+
+  if (split[0] != "GROUND TEMPERATURES") {
+    LOG(Error, "Missing GROUND TEMPERATURES specifier in EPW file '" << m_path << "'");
+    return false;
+  } else if (split[1] == "0") {
+    LOG(Warn, "Appears there are no ground temperature depth fields in the EPW file '" << m_path << "'");
+    return true;
+  }
+
+  size_t nGroundTemperatureDepths = std::stoi(split[1]);
+  size_t expected_split_size = 2 + (nGroundTemperatureDepths * NUMBER_GROUND_TEMP_STRINGS);
+
+  if (split.size() != expected_split_size) {
+    LOG(Error, "Expected " << expected_split_size << " ground temperature depth fields rather than the " << split.size()
+                           << " fields in the EPW file '" << m_path << "'. Ground temperature depths will not be parsed.");
+    return false;
+  }
+  LOG(Info, "Found " << nGroundTemperatureDepths << " ground temperature depths in the EPW file '" << m_path << "'");
+
+  for (size_t i = 0; i < nGroundTemperatureDepths; ++i) {
+    std::vector<std::string> ground_temperature_depth(std::next(split.begin(), 2 + NUMBER_GROUND_TEMP_STRINGS * i),
+                                                      std::next(split.begin(), 2 + NUMBER_GROUND_TEMP_STRINGS * (i + 1)));
+    boost::optional<EpwGroundTemperatureDepth> gtd = EpwGroundTemperatureDepth::fromGroundTemperatureDepthsStrings(ground_temperature_depth);
+    if (gtd) {
+      m_depths.push_back(std::move(*gtd));
+    } else {
+      LOG(Error, "Failed to parse ground temperature depth group " << i + 1 << " of EPW file '" << m_path << "'");
+      return false;
+    }
+  }
+  // Ensure sorted by lower to higher depths
+  std::sort(m_depths.begin(), m_depths.end(),
+            [](const auto& lhs, const auto& rhs) { return lhs.groundTemperatureDepth() < rhs.groundTemperatureDepth(); });
   return true;
 }
 

@@ -68,9 +68,18 @@
 %template(CSVFileVector) std::vector<openstudio::CSVFile>;
 %template(OptionalCSVFile) boost::optional<openstudio::CSVFile>;
 
+%ignore std::vector<openstudio::EpwDataPoint>::vector(size_type);
+%ignore std::vector<openstudio::EpwDataPoint>::resize(size_type);
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
+
+%ignore std::vector<openstudio::EpwDesignCondition>::vector(size_type);
+%ignore std::vector<openstudio::EpwDesignCondition>::resize(size_type);
 %template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
 %template(OptionalEpwDesignCondition) boost::optional<openstudio::EpwDesignCondition>;
+
+%ignore std::vector<openstudio::EpwGroundTemperatureDepth>::vector(size_type);
+%ignore std::vector<openstudio::EpwGroundTemperatureDepth>::resize(size_type);
+%template(EpwGroundTemperatureDepthVector) std::vector<openstudio::EpwGroundTemperatureDepth>;
 
 %ignore std::vector<openstudio::EpwHoliday>::vector(size_type);
 %ignore std::vector<openstudio::EpwHoliday>::resize(size_type);
