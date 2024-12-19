@@ -60,8 +60,6 @@ namespace model {
 
     const std::vector<std::string>& PythonPluginSearchPaths_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 
@@ -189,10 +187,6 @@ namespace model {
 
   bool PythonPluginSearchPaths::setSearchPaths(const std::vector<openstudio::path>& searchPaths) {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->setSearchPaths(searchPaths);
-  }
-
-  bool PythonPluginSearchPaths::addSearchPath(const std::string& searchPath) {
-    return getImpl<detail::PythonPluginSearchPaths_Impl>()->addSearchPath(openstudio::toPath(searchPath));
   }
 
   bool PythonPluginSearchPaths::setSearchPaths(const std::vector<std::string>& searchPaths) {

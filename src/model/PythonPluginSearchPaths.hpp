@@ -87,7 +87,6 @@ namespace model {
     bool setSearchPaths(const std::vector<openstudio::path>& searchPaths);
 
     // Convenience, forwards to the openstudio::path equivalent
-    bool addSearchPath(const std::string& searchPath);
     bool setSearchPaths(const std::vector<std::string>& searchPaths);
 
     void clearSearchPaths();
