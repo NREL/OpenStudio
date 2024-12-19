@@ -28,7 +28,7 @@ namespace detail {
 WorkspaceObjectDiff::WorkspaceObjectDiff(unsigned index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue,
                                          boost::optional<UUID> oldHandle, boost::optional<UUID> newHandle)
   : IdfObjectDiff(
-    std::shared_ptr<detail::WorkspaceObjectDiff_Impl>(new detail::WorkspaceObjectDiff_Impl(index, oldValue, newValue, oldHandle, newHandle))) {
+      std::shared_ptr<detail::WorkspaceObjectDiff_Impl>(new detail::WorkspaceObjectDiff_Impl(index, oldValue, newValue, oldHandle, newHandle))) {
   OS_ASSERT(getImpl<detail::WorkspaceObjectDiff_Impl>());
 }
 

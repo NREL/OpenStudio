@@ -25,9 +25,8 @@ namespace detail {
   Unit_Impl::Unit_Impl(int scaleExponent, const std::string& prettyString)
     : m_units(), m_scale(ScaleFactory::instance().createScale(scaleExponent)), m_prettyString(prettyString), m_system(UnitSystem::Mixed) {
     if (scale().value == 0.0) {
-      LOG_AND_THROW("Unit constructed with invalid scale exponent. "
-                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-                    << "to see what is available.");
+      LOG_AND_THROW("Unit constructed with invalid scale exponent. " << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                                                                     << "to see what is available.");
     }
   }
 
@@ -35,17 +34,15 @@ namespace detail {
     : m_units(), m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)), m_prettyString(prettyString), m_system(UnitSystem::Mixed) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scaleAbbreviation. "
-                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-                    << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() " << "to see what is available.");
     }
   }
 
   Unit_Impl::Unit_Impl(int scaleExponent, const std::string& prettyString, int numBaseUnits, UnitSystem system)
     : m_units(numBaseUnits), m_scale(ScaleFactory::instance().createScale(scaleExponent)), m_prettyString(prettyString), m_system(system) {
     if (scale().value == 0.0) {
-      LOG_AND_THROW("Unit constructed with invalid scale exponent. "
-                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-                    << "to see what is available.");
+      LOG_AND_THROW("Unit constructed with invalid scale exponent. " << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
+                                                                     << "to see what is available.");
     }
   }
 
@@ -53,8 +50,7 @@ namespace detail {
     : m_units(numBaseUnits), m_scale(ScaleFactory::instance().createScale(scaleAbbreviation)), m_prettyString(prettyString), m_system(system) {
     if (scale().value == 0.0) {
       LOG_AND_THROW("Unit constructed with invalid scaleAbbreviation. "
-                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() "
-                    << "to see what is available.");
+                    << "ScaleFactory::instance().registeredScales(), or << ScaleFactory::instance() " << "to see what is available.");
     }
   }
 
@@ -258,7 +254,7 @@ namespace detail {
           result << "^" << -exp;
         }
       }  // if
-    }    // for
+    }  // for
 
     if (parentheses) {
       result << ")";
@@ -375,7 +371,7 @@ namespace detail {
             setBaseUnitExponent(rUnitsIter->first, rUnitsIter->second);
           }
         }  // if
-      }    // for
+      }  // for
     }
 
     ScaleOpReturnType resultScale = scale() * rUnit.scale();

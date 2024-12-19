@@ -733,8 +733,8 @@ namespace model {
     bool test = setAvailabilitySchedule(availabilitySchedule);
     if (!test) {
       remove();
-      LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its "
-                                           << "availability schedule to " << availabilitySchedule.briefDescription() << ".");
+      LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its " << "availability schedule to "
+                                           << availabilitySchedule.briefDescription() << ".");
     }
 
     setReheatCoil(coil);

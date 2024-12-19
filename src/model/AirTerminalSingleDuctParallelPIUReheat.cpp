@@ -790,8 +790,8 @@ namespace model {
     bool test = setAvailabilitySchedule(schedule);
     if (!test) {
       remove();
-      LOG_AND_THROW("Could not construct " << briefDescription() << ", because could not set its "
-                                           << "availability schedule to " << schedule.briefDescription() << ".");
+      LOG_AND_THROW("Could not construct " << briefDescription() << ", because could not set its " << "availability schedule to "
+                                           << schedule.briefDescription() << ".");
     }
 
     test = setFan(fan);

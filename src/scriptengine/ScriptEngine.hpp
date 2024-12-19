@@ -67,9 +67,9 @@ class ScriptEngine
   // TODO: this is totally the wrong place to put it, but I'm trying to see if it works
   virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
                                  const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
-                                 const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups){};
+                                 const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups) {};
 
-  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs){};
+  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs) {};
 
   virtual std::string inferMeasureClassName(const openstudio::path& measureScriptPath) = 0;
 

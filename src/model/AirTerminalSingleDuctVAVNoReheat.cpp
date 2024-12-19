@@ -505,8 +505,8 @@ namespace model {
     bool test = setAvailabilitySchedule(schedule);
     if (!test) {
       remove();
-      LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its "
-                                           << "availability schedule to " << schedule.briefDescription() << ".");
+      LOG_AND_THROW("Unable to construct " << briefDescription() << ", because cannot set its " << "availability schedule to "
+                                           << schedule.briefDescription() << ".");
     }
 
     autosizeMaximumAirFlowRate();

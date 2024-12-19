@@ -71,8 +71,7 @@ namespace alfalfa {
           }
         }
       }
-      LOG(Error, "Unable to write file to path '" << toString(m_JSONPath) << "', because parent directory "
-                                                  << "could not be created.");
+      LOG(Error, "Unable to write file to path '" << toString(m_JSONPath) << "', because parent directory " << "could not be created.");
 
       return false;
     }

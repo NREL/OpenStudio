@@ -230,9 +230,9 @@ namespace energyplus {
 
             break;
           }  // End if zoneControlThermostatFound
-        }    // End if ZoneorZoneListName exists on ZoneControl:Thermostat object
-      }      // End Loop on each ZoneControlThermostats
-    }        // End if _idfZoneName
+        }  // End if ZoneorZoneListName exists on ZoneControl:Thermostat object
+      }  // End Loop on each ZoneControlThermostats
+    }  // End if _idfZoneName
 
     // Zone Equipment
     /*

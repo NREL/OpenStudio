@@ -63,8 +63,7 @@ namespace model {
   }
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::GroundSurfaceGroup& groundSurfaceGroup) {
-    out << "(Surface = '" << groundSurfaceGroup.groundSurfaceName() << "', "
-        << "View Factor = " << groundSurfaceGroup.viewFactor() << ", ";
+    out << "(Surface = '" << groundSurfaceGroup.groundSurfaceName() << "', " << "View Factor = " << groundSurfaceGroup.viewFactor() << ", ";
     if (groundSurfaceGroup.temperatureSchedule()) {
       out << "Temperature Schedule = '" << groundSurfaceGroup.temperatureSchedule()->nameString() << "', ";
     } else {

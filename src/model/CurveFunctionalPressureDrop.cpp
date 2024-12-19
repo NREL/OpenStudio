@@ -56,14 +56,12 @@ namespace model {
 
     int CurveFunctionalPressureDrop_Impl::numVariables() const {
       LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-                    << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
-                    << "for this curve type.");
+                    << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " << "for this curve type.");
     }
 
     double CurveFunctionalPressureDrop_Impl::evaluate(const std::vector<double>& /*independentVariables*/) const {
       LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
-                    << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
-                    << "for this curve type.");
+                    << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable " << "for this curve type.");
     }
 
     double CurveFunctionalPressureDrop_Impl::diameter() const {

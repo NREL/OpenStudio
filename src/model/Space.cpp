@@ -3055,9 +3055,8 @@ namespace model {
     // Enforce the same z
     std::vector<Point3d> reorderedFloorPrint;
     reorderedFloorPrint.reserve(floorPrint.size());
-    std::transform(floorPrint.cbegin(), floorPrint.cend(), std::back_inserter(reorderedFloorPrint), [&z](const auto& pt) {
-      return Point3d{pt.x(), pt.y(), z};
-    });
+    std::transform(floorPrint.cbegin(), floorPrint.cend(), std::back_inserter(reorderedFloorPrint),
+                   [&z](const auto& pt) { return Point3d{pt.x(), pt.y(), z}; });
 
     boost::optional<Vector3d> outwardNormal = getOutwardNormal(reorderedFloorPrint);
     if (!outwardNormal) {
@@ -3107,9 +3106,8 @@ namespace model {
     // create the roofCeiling
     std::vector<Point3d> ceilingPoints;
     ceilingPoints.reserve(reorderedFloorPrint.size());
-    std::transform(reorderedFloorPrint.crbegin(), reorderedFloorPrint.crend(), std::back_inserter(ceilingPoints), [zCeiling](const auto& pt) {
-      return Point3d{pt.x(), pt.y(), zCeiling};
-    });
+    std::transform(reorderedFloorPrint.crbegin(), reorderedFloorPrint.crend(), std::back_inserter(ceilingPoints),
+                   [zCeiling](const auto& pt) { return Point3d{pt.x(), pt.y(), zCeiling}; });
     Surface roofCeiling(ceilingPoints, model);
     if (!spaceName.empty()) {
       roofCeiling.setName(fmt::format("{} RoofCeiling", space.nameString()));

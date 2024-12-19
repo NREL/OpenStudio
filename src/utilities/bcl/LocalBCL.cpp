@@ -1012,9 +1012,9 @@ bool LocalBCL::addComponent(BCLComponent& component) {
 
     {
       std::stringstream ss;
-      ss << "INSERT INTO Components (uid, version_id, name, description, date_added, date_modified) "
-         << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(component.name()) << "', '"
-         << escape(component.description()) << "', datetime('now','localtime'), datetime('now','localtime'));";
+      ss << "INSERT INTO Components (uid, version_id, name, description, date_added, date_modified) " << "VALUES('" << escape(uid) << "', '"
+         << escape(versionId) << "', '" << escape(component.name()) << "', '" << escape(component.description())
+         << "', datetime('now','localtime'), datetime('now','localtime'));";
 
       statement = ss.str();
 
@@ -1039,9 +1039,8 @@ bool LocalBCL::addComponent(BCLComponent& component) {
       for (int i = 0; i < (int)component.files().size(); i++) {
 
         std::stringstream ss;
-        ss << "INSERT INTO Files (uid, version_id, filename, filetype) "
-           << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(component.files()[i]) << "', '"
-           << escape(component.filetypes()[i]) << "');";
+        ss << "INSERT INTO Files (uid, version_id, filename, filetype) " << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '"
+           << escape(component.files()[i]) << "', '" << escape(component.filetypes()[i]) << "');";
 
         statement = ss.str();
 
@@ -1081,9 +1080,9 @@ bool LocalBCL::addComponent(BCLComponent& component) {
       }
 
       std::stringstream ss;
-      ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) "
-         << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(attribute.name()) << "', '" << escape(dataValue) << "', '"
-         << escape(attribute.units() ? attribute.units().get() : "") << "', '" << escape(dataType) << "');";
+      ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) " << "VALUES('" << escape(uid) << "', '" << escape(versionId)
+         << "', '" << escape(attribute.name()) << "', '" << escape(dataValue) << "', '" << escape(attribute.units() ? attribute.units().get() : "")
+         << "', '" << escape(dataType) << "');";
 
       statement = ss.str();
 
@@ -1201,10 +1200,9 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
 
   {
     std::stringstream ss;
-    ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) "
-       << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(measure.name()) << "', '" << escape(measure.description())
-       << "', '" << escape(measure.description()) << "'"
-       << ", datetime('now','localtime'), datetime('now','localtime'));";
+    ss << "INSERT INTO Measures (uid, version_id, name, description, modeler_description, date_added, date_modified) " << "VALUES('" << escape(uid)
+       << "', '" << escape(versionId) << "', '" << escape(measure.name()) << "', '" << escape(measure.description()) << "', '"
+       << escape(measure.description()) << "'" << ", datetime('now','localtime'), datetime('now','localtime'));";
 
     statement = ss.str();
 
@@ -1227,9 +1225,9 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
   for (const BCLFileReference& file : measure.files()) {
 
     std::stringstream ss;
-    ss << "INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) "
-       << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(file.fileName()) << "', '" << escape(file.fileType()) << "', '"
-       << escape(file.usageType()) << "', '" << escape(file.checksum()) << "');";
+    ss << "INSERT INTO Files (uid, version_id, filename, filetype, usage_type, checksum) " << "VALUES('" << escape(uid) << "', '" << escape(versionId)
+       << "', '" << escape(file.fileName()) << "', '" << escape(file.fileType()) << "', '" << escape(file.usageType()) << "', '"
+       << escape(file.checksum()) << "');";
 
     statement = ss.str();
 
@@ -1268,9 +1266,9 @@ bool LocalBCL::addMeasure(BCLMeasure& measure) {
     }
 
     std::stringstream ss;
-    ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) "
-       << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '" << escape(attribute.name()) << "', '" << escape(dataValue) << "', '"
-       << escape(attribute.units() ? attribute.units().get() : "") << "', '" << escape(dataType) << "');";
+    ss << "INSERT INTO Attributes (uid, version_id, name, value, units, type) " << "VALUES('" << escape(uid) << "', '" << escape(versionId) << "', '"
+       << escape(attribute.name()) << "', '" << escape(dataValue) << "', '" << escape(attribute.units() ? attribute.units().get() : "") << "', '"
+       << escape(dataType) << "');";
 
     statement = ss.str();
 

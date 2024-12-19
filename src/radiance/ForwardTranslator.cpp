@@ -315,16 +315,13 @@ namespace radiance {
       OFSTREAM vmxopt(vmxoptpath);
       if (vmxopt.is_open()) {
         outfiles.push_back(vmxoptpath);
-        vmxopt << "-ab " << (int)radianceParameters.ambientBouncesVMX() << " "
-               << "-ad " << (int)radianceParameters.ambientDivisionsVMX() << " "
+        vmxopt << "-ab " << (int)radianceParameters.ambientBouncesVMX() << " " << "-ad " << (int)radianceParameters.ambientDivisionsVMX() << " "
                << "-as " << (int)radianceParameters.ambientSupersamples()
                << " "
                // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
-               << "-dj " << radianceParameters.directJitter() << " "
-               << "-dp " << radianceParameters.directPretest() << " "
-               << "-dt " << radianceParameters.directThreshold() << " "
-               << "-dc " << radianceParameters.directCertainty() << " "
-               << "-lw " << radianceParameters.limitWeightVMX() << " ";
+               << "-dj " << radianceParameters.directJitter() << " " << "-dp " << radianceParameters.directPretest() << " " << "-dt "
+               << radianceParameters.directThreshold() << " " << "-dc " << radianceParameters.directCertainty() << " " << "-lw "
+               << radianceParameters.limitWeightVMX() << " ";
       } else {
 
         LOG(Error, "Cannot open file '" << toString(vmxoptpath) << "' for writing");
@@ -336,16 +333,13 @@ namespace radiance {
       OFSTREAM dmxopt(dmxoptpath);
       if (dmxopt.is_open()) {
         outfiles.push_back(dmxoptpath);
-        dmxopt << "-ab " << (int)radianceParameters.ambientBouncesDMX() << " "
-               << "-ad " << (int)radianceParameters.ambientDivisionsDMX() << " "
+        dmxopt << "-ab " << (int)radianceParameters.ambientBouncesDMX() << " " << "-ad " << (int)radianceParameters.ambientDivisionsDMX() << " "
                << "-as " << (int)radianceParameters.ambientSupersamples()
                << " "
                // << "-c " << (int)radianceParameters.accumulatedRaysperRecord() << " "
-               << "-dj " << radianceParameters.directJitter() << " "
-               << "-dp " << radianceParameters.directPretest() << " "
-               << "-dt " << radianceParameters.directThreshold() << " "
-               << "-dc " << radianceParameters.directCertainty() << " "
-               << "-lw " << radianceParameters.limitWeightDMX() << " ";
+               << "-dj " << radianceParameters.directJitter() << " " << "-dp " << radianceParameters.directPretest() << " " << "-dt "
+               << radianceParameters.directThreshold() << " " << "-dc " << radianceParameters.directCertainty() << " " << "-lw "
+               << radianceParameters.limitWeightDMX() << " ";
       } else {
 
         LOG(Error, "Cannot open file '" << toString(dmxoptpath) << "' for writing");

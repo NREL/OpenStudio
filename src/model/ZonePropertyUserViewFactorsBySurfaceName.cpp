@@ -80,8 +80,8 @@ namespace model {
   }
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::ViewFactor& viewFactor) {
-    out << "(from " << viewFactor.fromSurface().iddObject().name() << "='" << viewFactor.fromSurface().nameString() << "', "
-        << "to " << viewFactor.toSurface().iddObject().name() << "='" << viewFactor.toSurface().nameString() << "', "
+    out << "(from " << viewFactor.fromSurface().iddObject().name() << "='" << viewFactor.fromSurface().nameString() << "', " << "to "
+        << viewFactor.toSurface().iddObject().name() << "='" << viewFactor.toSurface().nameString() << "', "
         << "view factor=" << viewFactor.viewFactor() << ")";
     return out;
   }

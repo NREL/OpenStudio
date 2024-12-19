@@ -50,8 +50,7 @@ namespace isomodel {
 #ifdef DEBUG_ISO_MODEL_SIMULATION
     std::stringstream ss;
 
-    ss << matName << "(" << mat.size1() << ", " << mat.size2() << "): "
-       << "\t";
+    ss << matName << "(" << mat.size1() << ", " << mat.size2() << "): " << "\t";
     for (unsigned int j = 0; j < mat.size2(); j++) {
       ss << "," << j;
     }

@@ -32,8 +32,7 @@ OSQuantityVector::OSQuantityVector(const std::vector<Quantity>& values) : m_unit
   const Scale& myScale = scale();
   for (unsigned i = 0, n = size(); i < n; ++i) {
     if (!(values[i].units() == m_units)) {
-      LOG_AND_THROW("Quantity " << values[i] << " has units inconsistent with the first "
-                                << "Quantity in vector values, " << values[0] << ".");
+      LOG_AND_THROW("Quantity " << values[i] << " has units inconsistent with the first " << "Quantity in vector values, " << values[0] << ".");
     }
     if (values[i].scale() != myScale) {
       Quantity working = values[i];

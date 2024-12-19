@@ -1869,8 +1869,7 @@ namespace sdd {
           spm.setSetpointatOutdoorLowTemperature(rstSupHi.get());
         }
       } else {
-        LOG(Warn, nameElement.text().as_string() << " requests OA reset control, but does not define setpoints."
-                                                 << "  Using OpenStudio defaults.");
+        LOG(Warn, nameElement.text().as_string() << " requests OA reset control, but does not define setpoints." << "  Using OpenStudio defaults.");
 
         spm.setOutdoorLowTemperature(10.0);
         spm.setSetpointatOutdoorLowTemperature(22.0);
@@ -5443,8 +5442,7 @@ namespace sdd {
           spm.setSetpointatOutdoorLowTemperature(rstSupHi.get());
         }
       } else {
-        LOG(Warn, plantName << " requests OA reset control, but does not define setpoints."
-                            << "  Using OpenStudio defaults.");
+        LOG(Warn, plantName << " requests OA reset control, but does not define setpoints." << "  Using OpenStudio defaults.");
       }
     } else if (istringEqual(tempCtrlElement.text().as_string(), "LoadReset")) {
       pugi::xml_node dsgnSupWtrTempElement = fluidSysElement.child("DsgnSupWtrTemp");

@@ -410,8 +410,7 @@ namespace gltf {
   // Exports a gltf against a Model
   // returns : exports a GLTF file against a Model
   bool GltfForwardTranslator::modelToGLTF(const model::Model& model, const path& outputPath) {
-    return modelToGLTF(
-      model, [](double percentage) {}, outputPath);
+    return modelToGLTF(model, [](double percentage) {}, outputPath);
   }
 
   bool GltfForwardTranslator::modelToGLTF(const model::Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {

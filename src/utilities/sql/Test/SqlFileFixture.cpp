@@ -46,8 +46,7 @@ void SqlFileFixture::TearDownTestSuite() {
   } else {
     // Google Test seems to be ingoring the fixed && precision iomanips
     return ::testing::AssertionFailure() << "Value isn't within the required tolerance of " << std::fixed << std::setprecision(2) << (tolerance * 100)
-                                         << "%. "
-                                         << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue
+                                         << "%. " << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue
                                          << ", Difference = " << (100 * percentageDifference) << "%.";
   }
 }

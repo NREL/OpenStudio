@@ -241,8 +241,8 @@ namespace model {
 
     bool GasMixture_Impl::setFractions(const std::vector<double>& fractions) {
       if (fractions.size() != numGases()) {
-        LOG(Info, "Cannot set GasMixture " << briefDescription() << " fractions using vector "
-                                           << "of length " << fractions.size() << ", because the object currently lists " << numGases() << " gases.");
+        LOG(Info, "Cannot set GasMixture " << briefDescription() << " fractions using vector " << "of length " << fractions.size()
+                                           << ", because the object currently lists " << numGases() << " gases.");
         return false;
       }
       bool result = true;
@@ -264,8 +264,7 @@ namespace model {
         }
         if ((i == n - 1) && (!openstudio::equal(fullSum, 1.0))) {
           LOG(Warn, "The sum of the fractions entered for GasMixture " << briefDescription() << " equal " << fullSum
-                                                                       << ", rather than 1.0, so the last entry will be adjusted "
-                                                                       << "accordingly.");
+                                                                       << ", rather than 1.0, so the last entry will be adjusted " << "accordingly.");
           value = 1.0 - minusOneSum;
         }
         result = setDouble(index, value);
@@ -321,8 +320,8 @@ namespace model {
           result = OS_WindowMaterial_GasMixtureFields::Gas4Type;
           break;
         default:
-          LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot "
-                        << "return the gas type at index " << gasIndex << ".");
+          LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot " << "return the gas type at index " << gasIndex
+                                                                                                       << ".");
       };
       OS_ASSERT(result > 0);
       return result;
@@ -344,8 +343,8 @@ namespace model {
           result = OS_WindowMaterial_GasMixtureFields::Gas4Fraction;
           break;
         default:
-          LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot "
-                        << "return the gas fraction at index " << gasIndex << ".");
+          LOG_AND_THROW("GasMixture only supports four gases, and is indexed starting with 0. Cannot " << "return the gas fraction at index "
+                                                                                                       << gasIndex << ".");
       };
       OS_ASSERT(result > 0);
       return result;
