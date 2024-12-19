@@ -70,8 +70,8 @@ path toPath(const std::string& s) {
       wstr.push_back(s[i] & 0xFF);
     }
     LOG_FREE(Debug, "Path",
-             "An error occurred trying to convert the input to a wide string."
-               << "\n  Reason: " << e.what() << "\n  Input =" << s << "\n  Result=" << wstr);
+             "An error occurred trying to convert the input to a wide string." << "\n  Reason: " << e.what() << "\n  Input =" << s
+                                                                               << "\n  Result=" << wstr);
     return path(wstr);
   }
 #endif

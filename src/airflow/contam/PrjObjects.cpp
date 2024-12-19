@@ -410,12 +410,12 @@ namespace contam {
   Species::Species(int nr, int sflag, int ntflag, std::string molwt, std::string mdiam, std::string edens, std::string decay, std::string Dm,
                    std::string ccdef, std::string Cp, int ucc, int umd, int ued, int udm, int ucp, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(
-      new detail::SpeciesImpl(nr, sflag, ntflag, molwt, mdiam, edens, decay, Dm, ccdef, Cp, ucc, umd, ued, udm, ucp, name, desc))) {}
+        new detail::SpeciesImpl(nr, sflag, ntflag, molwt, mdiam, edens, decay, Dm, ccdef, Cp, ucc, umd, ued, udm, ucp, name, desc))) {}
 
   Species::Species(int nr, int sflag, int ntflag, double molwt, double mdiam, double edens, double decay, double Dm, double ccdef, double Cp, int ucc,
                    int umd, int ued, int udm, int ucp, std::string name, std::string desc)
     : m_impl(std::shared_ptr<detail::SpeciesImpl>(
-      new detail::SpeciesImpl(nr, sflag, ntflag, molwt, mdiam, edens, decay, Dm, ccdef, Cp, ucc, umd, ued, udm, ucp, name, desc))) {}
+        new detail::SpeciesImpl(nr, sflag, ntflag, molwt, mdiam, edens, decay, Dm, ccdef, Cp, ucc, umd, ued, udm, ucp, name, desc))) {}
 
   Species::Species(const Species& other) = default;
 

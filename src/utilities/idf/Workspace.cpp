@@ -845,7 +845,7 @@ namespace detail {
               }
             }
           }  // if (target does not have an equivalent) else
-        }    // for each target of an object that has an equivalent
+        }  // for each target of an object that has an equivalent
         ++equivIt;
       }  // if (object does not have an equivalent) else
       ++i;
@@ -1049,8 +1049,7 @@ namespace detail {
     working.order().setDirectOrder(HandleVector());         // maintain order in vector
     WorkspaceObjectVector wsObjects = working.addObjects(allObjects, false);
     if (wsObjects.size() != allObjects.size()) {
-      LOG(Error, "Unable to add objectsToAdd and objectsToInsert to their own Workspace as an "
-                   << "intermediate step.");
+      LOG(Error, "Unable to add objectsToAdd and objectsToInsert to their own Workspace as an " << "intermediate step.");
       return result;
     }
     resolvePotentialNameConflicts(working, foundObjectIndices);
@@ -1149,7 +1148,7 @@ namespace detail {
               }
             }
           }  // if (target does not have an equivalent) else
-        }    // for each target of an object that has an equivalent
+        }  // for each target of an object that has an equivalent
         ++equivIt;
       }  // if (object does not have an equivalent) else
       ++i;
@@ -1205,8 +1204,7 @@ namespace detail {
       // make sure there is some overlap in references
       StringVector intersection = intersectReferenceLists(curRefs, newRefs);
       if (intersection.empty()) {
-        LOG(Info, "Unable to swap objects because the two objects' reference lists have an empty "
-                    << "intersection. " << ss.str());
+        LOG(Info, "Unable to swap objects because the two objects' reference lists have an empty " << "intersection. " << ss.str());
         return false;
       }
     }
@@ -1229,8 +1227,7 @@ namespace detail {
         if (potentialNameConflict(*newObjectName, newObjectInWS->iddObject())) {
           OptionalString ok = newObjectInWS->setName(nextName(newObjectInWS->iddObject().type(), false));
           OS_ASSERT(ok);
-          LOG(Info, "Renaming " << newObject.briefDescription() << " during swap operation to "
-                                << "avoid name conflict.");
+          LOG(Info, "Renaming " << newObject.briefDescription() << " during swap operation to " << "avoid name conflict.");
         }
       }
     }
@@ -1244,8 +1241,7 @@ namespace detail {
       for (unsigned index : indices) {
         if (!source.canBeSource(index, newRefs)) {
           LOG(Info, "Unable to swap objects because one of the WorkspaceObject's sources, which is "
-                      << "of type " << source.iddObject().name() << ", cannot point to the IdfObject from "
-                      << "field " << index << ". " << ss.str());
+                      << "of type " << source.iddObject().name() << ", cannot point to the IdfObject from " << "field " << index << ". " << ss.str());
           return false;
         }
         sources.push_back(HUPointer(source.handle(), index, 0));
@@ -1292,14 +1288,13 @@ namespace detail {
           if (!found) {
             LOG(Info, "Unable to swap objects because the IdfObject cannot be made to point to one of "
                         << "the WorkspaceObject's targets, which is of type " << target.iddObject().name() << " and named '" << *targetName << "'. "
-                        << ss.str() << " The IdfObject in question "
-                        << "is:" << '\n'
+                        << ss.str() << " The IdfObject in question " << "is:" << '\n'
                         << newObject);
             return false;
           }
         }  // if non-null target
-      }    // for each currentObject.objectListFields()
-    }      // if keepTargets
+      }  // for each currentObject.objectListFields()
+    }  // if keepTargets
 
     for (unsigned i : newObject.objectListFields()) {
       // if not spoken for ...
@@ -1693,7 +1688,7 @@ namespace detail {
           }
         }
       }  // for objectsRepeatedNames
-    }    // StrictnessLevel ::Draft
+    }  // StrictnessLevel ::Draft
 
     // StrictnessLevel::Final
     if (level > StrictnessLevel::Draft) {
@@ -2431,8 +2426,7 @@ void Workspace::swap(Workspace& other) {
   auto& o2 = *(other.m_impl);
 
   if ((typeid(o1)) != typeid(o2)) {
-    LOG_AND_THROW("Workspaces can only be swapped if they are both of the same type "
-                  << "(both Workspaces, both Models, or both Components).");
+    LOG_AND_THROW("Workspaces can only be swapped if they are both of the same type " << "(both Workspaces, both Models, or both Components).");
   }
   m_impl->swap(other);
 }

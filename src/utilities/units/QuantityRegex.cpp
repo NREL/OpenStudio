@@ -204,18 +204,15 @@ const boost::regex& regexDirectScaledUnit() {
   std::stringstream tempComposer;
   // place atomicUnit*atomicUnit*... in tempComposer
   tempComposer << regexAtomicUnit().str() << "(?:\\*" << regexAtomicUnit().str() << ")*";
-  regexComposer << "((?:" << tempComposer.str() << "|1)/)"
-                << " ?(10+)(?:(?: *|\\*)(" << tempComposer.str() << "))?";
+  regexComposer << "((?:" << tempComposer.str() << "|1)/)" << " ?(10+)(?:(?: *|\\*)(" << tempComposer.str() << "))?";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
 
 const boost::regex& regexEmbeddedDirectScaledUnit() {
   std::stringstream regexComposer;
-  regexComposer << "(?:(?:^| )(" << regexDirectScaledUnit().str() << ")(?:$| |\\.$|\\. |,|;)|"
-                << "\\((" << regexDirectScaledUnit().str() << ")\\)|"
-                << "\\{(" << regexDirectScaledUnit().str() << ")\\}|"
-                << "\\[(" << regexDirectScaledUnit().str() << ")\\])";
+  regexComposer << "(?:(?:^| )(" << regexDirectScaledUnit().str() << ")(?:$| |\\.$|\\. |,|;)|" << "\\((" << regexDirectScaledUnit().str() << ")\\)|"
+                << "\\{(" << regexDirectScaledUnit().str() << ")\\}|" << "\\[(" << regexDirectScaledUnit().str() << ")\\])";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
@@ -254,10 +251,8 @@ const boost::regex& regexUnit() {
 
 const boost::regex& regexEmbeddedUnit() {
   std::stringstream regexComposer;
-  regexComposer << "(?:(?:^| )" << regexUnit().str() << "(?:$| |\\.$|\\. |,|;)|"
-                << "\\(" << regexUnit().str() << "\\)|"
-                << "\\{" << regexUnit().str() << "\\}|"
-                << "\\[" << regexUnit().str() << "\\])";
+  regexComposer << "(?:(?:^| )" << regexUnit().str() << "(?:$| |\\.$|\\. |,|;)|" << "\\(" << regexUnit().str() << "\\)|" << "\\{" << regexUnit().str()
+                << "\\}|" << "\\[" << regexUnit().str() << "\\])";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }

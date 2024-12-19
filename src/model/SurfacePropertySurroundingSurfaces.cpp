@@ -56,9 +56,8 @@ namespace model {
   }
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::SurroundingSurfaceGroup& surroundingSurfaceGroup) {
-    out << "(Surface = '" << surroundingSurfaceGroup.surroundingSurfaceName() << "', "
-        << "View Factor = " << surroundingSurfaceGroup.viewFactor() << ", "
-        << "Schedule = '" << surroundingSurfaceGroup.temperatureSchedule().nameString() << "')";
+    out << "(Surface = '" << surroundingSurfaceGroup.surroundingSurfaceName() << "', " << "View Factor = " << surroundingSurfaceGroup.viewFactor()
+        << ", " << "Schedule = '" << surroundingSurfaceGroup.temperatureSchedule().nameString() << "')";
     return out;
   }
 

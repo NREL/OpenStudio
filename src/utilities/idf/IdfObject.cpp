@@ -1414,8 +1414,7 @@ namespace detail {
         if (candidate) {
           m_iddObject = *candidate;
         } else {
-          LOG(Warn, "IddObject type '" << objectType << "' not found in IddFactory. "
-                                       << "Reverting to default Catchall object.");
+          LOG(Warn, "IddObject type '" << objectType << "' not found in IddFactory. " << "Reverting to default Catchall object.");
           OS_ASSERT(m_iddObject.name() == "Catchall");
           m_fields.push_back(objectType);
           objectType = "Catchall";
@@ -1527,10 +1526,8 @@ namespace detail {
         }
 
       } else {
-        LOG(Error, "IdfObject of type '" << m_iddObject.name() << "' "
-                                         << "cannot have field index of " << iddFieldIndex << ". "
-                                         << "Cutting off IdfObject field parsing here, with the following text "
-                                         << "remaining: " << '\n'
+        LOG(Error, "IdfObject of type '" << m_iddObject.name() << "' " << "cannot have field index of " << iddFieldIndex << ". "
+                                         << "Cutting off IdfObject field parsing here, with the following text " << "remaining: " << '\n'
                                          << fieldText << '\n'
                                          << std::string(start, stop));
         return;
@@ -1856,9 +1853,7 @@ namespace detail {
     }
 
     if (!units) {
-      LOG_AND_THROW("Unable to construct a unit for field " << index << " for IdfObject with "
-                                                            << "Idd:\n"
-                                                            << m_iddObject);
+      LOG_AND_THROW("Unable to construct a unit for field " << index << " for IdfObject with " << "Idd:\n" << m_iddObject);
     }
     OS_ASSERT(siUnit);
 

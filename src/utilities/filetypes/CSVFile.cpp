@@ -115,8 +115,7 @@ namespace detail {
       }
     }
 
-    LOG(Error, "Unable to write file to path '" << toString(*p) << "', because parent directory "
-                                                << "could not be created.");
+    LOG(Error, "Unable to write file to path '" << toString(*p) << "', because parent directory " << "could not be created.");
 
     return false;
   }

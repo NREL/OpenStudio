@@ -2268,4 +2268,4 @@ namespace isomodel {
 }  // namespace isomodel
 // isomodel
 }  // namespace openstudio
-   // openstudio
+// openstudio

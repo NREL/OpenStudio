@@ -51,7 +51,7 @@ void EnergyPlusFixture::SetUpTestSuite() {
         }
       }
     }  // for iterator over directory
-  }    // foreach component
+  }  // foreach component
 }
 
 void EnergyPlusFixture::TearDownTestSuite() {

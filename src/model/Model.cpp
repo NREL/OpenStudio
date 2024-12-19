@@ -2229,9 +2229,9 @@ namespace model {
     if (!openstudio::equal(inputResult, outputResult, tol)) {
       LOG_FREE(logLevel, "openstudio.model.Model",
                "The " << attributeName << " values determined for " << object.briefDescription()
-                      << " using input and output data differ by a (relative) error "
-                      << "greater than " << tol << ". The value calculated from input data was " << inputResult
-                      << ", whereas the value calculated from output data was " << outputResult << ".");
+                      << " using input and output data differ by a (relative) error " << "greater than " << tol
+                      << ". The value calculated from input data was " << inputResult << ", whereas the value calculated from output data was "
+                      << outputResult << ".");
       return false;
     }
     return true;

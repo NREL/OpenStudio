@@ -81,9 +81,7 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
   boost::replace_all(fieldName, "__", "_");
   boost::replace_all(fieldName, ":", "_");
 
-  const auto cache_value = [&](const auto& input, const auto& value) -> const auto& {
-    return fieldNames.emplace(input, value).first->second;
-  };
+  const auto cache_value = [&](const auto& input, const auto& value) -> const auto& { return fieldNames.emplace(input, value).first->second; };
 
   using namespace std::literals::string_view_literals;
 
@@ -453,15 +451,14 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       const auto& [group_name, is_array_group] =
         openstudio::epJSON::getGroupName(group_names, field_names, schema, type_description, obj.iddObject().extensibleGroup()[0].name());
 
-      auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group ]() -> auto& {
+      auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group]() -> auto& {
         if (is_array_group) {
           auto& array_obj = json_object[group_name];
           return array_obj.append(Json::Value{Json::objectValue});
         } else {
           return json_object;
         }
-      }
-      ();
+      }();
 
       for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
         const auto& iddField = obj.iddObject().extensibleGroup()[idx];

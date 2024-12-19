@@ -251,8 +251,7 @@ namespace model {
     ScheduleDay ScheduleRuleset_Impl::defaultDaySchedule() const {
       OptionalScheduleDay result = optionalDefaultDaySchedule();
       if (!result) {
-        LOG_AND_THROW(briefDescription() << " has been corrupted. It no longer points to a default "
-                                         << "OS:Schedule:Day object.");
+        LOG_AND_THROW(briefDescription() << " has been corrupted. It no longer points to a default " << "OS:Schedule:Day object.");
       }
       return *result;
     }

@@ -831,8 +831,7 @@ RowName = '";
       }
       // Rule 2
       if (opaqueMaterials[i].optionalCast<RoofVegetation>() && (i > 0)) {
-        LOG(Info, "Proposed OpaqueMaterials are invalid because RoofVegetation must be at layer 0, "
-                    << "not layer " << i << ".");
+        LOG(Info, "Proposed OpaqueMaterials are invalid because RoofVegetation must be at layer 0, " << "not layer " << i << ".");
         return false;
       }
     }

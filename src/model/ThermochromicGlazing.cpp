@@ -47,8 +47,7 @@ namespace model {
         } else {
           // keep running average
           if (!warned && !equal(glazingThickness, result)) {
-            LOG(Warn, "Thermochromic group '" << name().get() << "' contains glazings of different "
-                                              << "thicknesses.");
+            LOG(Warn, "Thermochromic group '" << name().get() << "' contains glazings of different " << "thicknesses.");
             warned = true;
           }
           result = (result * static_cast<double>(n) + glazingThickness) / static_cast<double>(n + 1);

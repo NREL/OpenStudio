@@ -78,14 +78,12 @@ int main(int argc, const char* argv[]) {
       openstudio::filesystem::path mongoPath = appDir.parent_path() / "pat\\mongo\\bin\\mongod.exe";
 
       std::ostringstream oss;
-      oss << "netsh advfirewall firewall add rule name=\"Allow OpenStudio CLI\" dir=in program="
-          << "\"" << cliPath.string() << "\" "
+      oss << "netsh advfirewall firewall add rule name=\"Allow OpenStudio CLI\" dir=in program=" << "\"" << cliPath.string() << "\" "
           << "action=allow";
       std::system(oss.str().c_str());
 
       std::ostringstream oss2;
-      oss2 << "netsh advfirewall firewall add rule name=\"Allow OpenStudio Mongo\" dir=in program="
-           << "\"" << mongoPath.string() << "\" "
+      oss2 << "netsh advfirewall firewall add rule name=\"Allow OpenStudio Mongo\" dir=in program=" << "\"" << mongoPath.string() << "\" "
            << "action=allow";
       std::system(oss2.str().c_str());
 

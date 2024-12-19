@@ -325,12 +325,12 @@ namespace contam {
   PlrLeak::PlrLeak(int nr, int icon, std::string name, std::string desc, double lam, double turb, double expt, double coef, double pres, double area1,
                    double area2, double area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : m_impl(std::shared_ptr<detail::PlrLeakImpl>(
-      new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
+        new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
 
   PlrLeak::PlrLeak(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string coef,
                    std::string pres, std::string area1, std::string area2, std::string area3, int u_A1, int u_A2, int u_A3, int u_dP)
     : m_impl(std::shared_ptr<detail::PlrLeakImpl>(
-      new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
+        new detail::PlrLeakImpl(nr, icon, name, desc, lam, turb, expt, coef, pres, area1, area2, area3, u_A1, u_A2, u_A3, u_dP))) {}
 
   PlrLeak::PlrLeak(const PlrLeak& other) : m_impl(other.m_impl) {}
 
@@ -990,12 +990,12 @@ namespace contam {
   PlrTest2::PlrTest2(int nr, int icon, std::string name, std::string desc, double lam, double turb, double expt, double dP1, double F1, double dP2,
                      double F2, int u_P1, int u_F1, int u_P2, int u_F2)
     : m_impl(std::shared_ptr<detail::PlrTest2Impl>(
-      new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
+        new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   PlrTest2::PlrTest2(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string dP1,
                      std::string F1, std::string dP2, std::string F2, int u_P1, int u_F1, int u_P2, int u_F2)
     : m_impl(std::shared_ptr<detail::PlrTest2Impl>(
-      new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
+        new detail::PlrTest2Impl(nr, icon, name, desc, lam, turb, expt, dP1, F1, dP2, F2, u_P1, u_F1, u_P2, u_F2))) {}
 
   PlrTest2::PlrTest2(const PlrTest2& other) : m_impl(other.m_impl) {}
 
@@ -1498,12 +1498,12 @@ namespace contam {
   PlrShaft::PlrShaft(int nr, int icon, std::string name, std::string desc, double lam, double turb, double expt, double Ht, double area, double perim,
                      double rough, int u_A, int u_D, int u_P, int u_R)
     : m_impl(std::shared_ptr<detail::PlrShaftImpl>(
-      new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
+        new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
 
   PlrShaft::PlrShaft(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string Ht,
                      std::string area, std::string perim, std::string rough, int u_A, int u_D, int u_P, int u_R)
     : m_impl(std::shared_ptr<detail::PlrShaftImpl>(
-      new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
+        new detail::PlrShaftImpl(nr, icon, name, desc, lam, turb, expt, Ht, area, perim, rough, u_A, u_D, u_P, u_R))) {}
 
   PlrShaft::PlrShaft(const PlrShaft& other) : m_impl(other.m_impl) {}
 
@@ -2749,13 +2749,13 @@ namespace contam {
   AfeFan::AfeFan(int nr, int icon, std::string name, std::string desc, double lam, double turb, double expt, double rdens, double fdf, double sop,
                  double off, std::vector<double> fpc, double Sarea, int u_Sa, std::vector<FanDataPoint> data)
     : m_impl(std::shared_ptr<detail::AfeFanImpl>(
-      new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
+        new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
 
   AfeFan::AfeFan(int nr, int icon, std::string name, std::string desc, std::string lam, std::string turb, std::string expt, std::string rdens,
                  std::string fdf, std::string sop, std::string off, std::vector<std::string> fpc, std::string Sarea, int u_Sa,
                  std::vector<FanDataPoint> data)
     : m_impl(std::shared_ptr<detail::AfeFanImpl>(
-      new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
+        new detail::AfeFanImpl(nr, icon, name, desc, lam, turb, expt, rdens, fdf, sop, off, fpc, Sarea, u_Sa, data))) {}
 
   AfeFan::AfeFan(const AfeFan& other) : m_impl(other.m_impl) {}
 

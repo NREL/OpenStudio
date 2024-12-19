@@ -43,8 +43,7 @@ namespace model {
 
     Workspace Component_Impl::cloneSubset(const std::vector<Handle>& handles, bool keepHandles, StrictnessLevel level) const {
       if (!handles.empty()) {
-        LOG_AND_THROW("Components::cloneSubset is not supported. A workaround may be to clone() and "
-                      << "then remove the unwanted objects.");
+        LOG_AND_THROW("Components::cloneSubset is not supported. A workaround may be to clone() and " << "then remove the unwanted objects.");
       }
       // create Model with same characteristics as this Component
       return Model_Impl::cloneSubset(handles, keepHandles, level);
@@ -127,8 +126,7 @@ namespace model {
       Model_Impl::obsoleteComponentWatcher(watcher);
       LOG_AND_THROW("The ComponentData object or primaryComponentObject has been removed. "
                     << "This Component is no longer valid. (The ComponentData object may have been removed "
-                    << "because a relationship change called into question whether the Component was still "
-                    << "valid.)");
+                    << "because a relationship change called into question whether the Component was still " << "valid.)");
     }
 
     bool Component_Impl::save(const openstudio::path& p, bool overwrite) {
@@ -166,8 +164,7 @@ namespace model {
 
     // All other objects are Component contents
     if (componentData.numComponentObjects() == 0) {
-      LOG_AND_THROW("Cannot construct Component from IdfFile because there are no objects listed "
-                    << "in the contents.");
+      LOG_AND_THROW("Cannot construct Component from IdfFile because there are no objects listed " << "in the contents.");
     }
     int nNonTrivialObjects = numObjects() - getObjectsByType(IddObjectType::CommentOnly).size();
     if (nNonTrivialObjects != static_cast<int>(componentData.numComponentObjects()) + 1) {
@@ -179,8 +176,7 @@ namespace model {
     try {
       ModelObjectVector componentContents = componentData.componentObjects();
     } catch (...) {
-      LOG_AND_THROW("Cannot construct Component from IdfFile because at least one of the "
-                    << "comprising objects cannot be located.");
+      LOG_AND_THROW("Cannot construct Component from IdfFile because at least one of the " << "comprising objects cannot be located.");
     }
 
     getImpl<detail::Model_Impl>()->createComponentWatchers();
@@ -216,7 +212,7 @@ namespace model {
 
   Component::Component(const std::vector<ModelObject>& contents)
     : Model(std::shared_ptr<detail::Component_Impl>(
-      new detail::Component_Impl(*(contents[0].model().getImpl<detail::Model_Impl>()), getHandles<ModelObject>(contents)))) {
+        new detail::Component_Impl(*(contents[0].model().getImpl<detail::Model_Impl>()), getHandles<ModelObject>(contents)))) {
     // create Version object
     this->addVersionObject();
 

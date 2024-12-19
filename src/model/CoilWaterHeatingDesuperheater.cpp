@@ -392,18 +392,16 @@ namespace model {
             || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled)
             || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_WaterCooled)) {
           if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.9) {
-            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
-                                          << " <= 0.9 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription()
-                                          << ". Resetting it to the default of 0.8.");
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be" << " <= 0.9 when Heating Source Object Type = "
+                                          << heatingSourceIddObjectType.valueDescription() << ". Resetting it to the default of 0.8.");
             // setDouble to avoid a double check
             // setRatedHeatReclaimRecoveryEfficiency(0.8);
             setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, 0.8);
           }
         } else {
           if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.3) {
-            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
-                                          << " <= 0.3 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription()
-                                          << ". Resetting it to the default of 0.25.");
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be" << " <= 0.3 when Heating Source Object Type = "
+                                          << heatingSourceIddObjectType.valueDescription() << ". Resetting it to the default of 0.25.");
             // setRatedHeatReclaimRecoveryEfficiency(0.25);
             setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, 0.25);
           }

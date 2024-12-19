@@ -67,8 +67,7 @@ namespace model {
     }
 
     double MasslessOpaqueMaterial_Impl::thermalConductivity() const {
-      LOG_AND_THROW("Unable to convert thermal resistance to thermal conductivity for "
-                    << "MasslessOpaqueMaterial " << briefDescription() << ".");
+      LOG_AND_THROW("Unable to convert thermal resistance to thermal conductivity for " << "MasslessOpaqueMaterial " << briefDescription() << ".");
       return 0.0;
     }
 
@@ -77,8 +76,7 @@ namespace model {
     }
 
     double MasslessOpaqueMaterial_Impl::thermalResistivity() const {
-      LOG_AND_THROW("Unable to convert thermal resistance to thermal resistivity for "
-                    << "MasslessOpaqueMaterial " << briefDescription() << ".");
+      LOG_AND_THROW("Unable to convert thermal resistance to thermal resistivity for " << "MasslessOpaqueMaterial " << briefDescription() << ".");
       return 0.0;
     }
 

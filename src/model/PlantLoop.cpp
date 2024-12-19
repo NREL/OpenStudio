@@ -191,8 +191,7 @@ namespace model {
             LOG(Debug, "i=" << i << ", nodeClone=" << nodeClones[i].name().get());
           }
         } else {
-          LOG(Trace, "When cloning with (isSupplySide, isInlet) = (" << isSupplySide << ", " << isInlet << "),"
-                                                                     << "nodes.size()=" << nodes.size()
+          LOG(Trace, "When cloning with (isSupplySide, isInlet) = (" << isSupplySide << ", " << isInlet << ")," << "nodes.size()=" << nodes.size()
                                                                      << ", nodeClones.size()=" << nodeClones.size());
 
           for (size_t i = 0; i < nodes.size(); ++i) {
@@ -412,7 +411,7 @@ namespace model {
               }
             }
           }  // End of loop on all branchComponents
-        }    // End of loop splitterOutletModelObjects
+        }  // End of loop splitterOutletModelObjects
       }
 
       // Add the new cloned nodes

@@ -151,8 +151,7 @@ namespace energyplus {
         }
       }
     } else {
-      LOG(Error, workspaceObject.briefDescription() << ": Missing supply branch list, "
-                                                    << "Supply equipment will be incomplete");
+      LOG(Error, workspaceObject.briefDescription() << ": Missing supply branch list, " << "Supply equipment will be incomplete");
     }
 
     // March through the zone on the demand side and add branches for them.

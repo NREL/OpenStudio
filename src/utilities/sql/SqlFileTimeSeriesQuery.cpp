@@ -46,8 +46,7 @@ KeyValueIdentifier::KeyValueIdentifier(const std::string& name) : m_names(1, nam
 
 KeyValueIdentifier::KeyValueIdentifier(const std::vector<std::string>& names) : m_names(names) {
   if (m_names.empty()) {
-    LOG_AND_THROW("KeyValueIdentifier cannot be constructed from an empty string vector. "
-                  << "Please use an OptionalKeyValueIdentifier instead.");
+    LOG_AND_THROW("KeyValueIdentifier cannot be constructed from an empty string vector. " << "Please use an OptionalKeyValueIdentifier instead.");
   }
 }
 
