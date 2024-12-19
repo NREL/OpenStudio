@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to push a commit
+
     steps:
     - uses: actions/checkout@v4
 
