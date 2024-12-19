@@ -262,7 +262,7 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
     LOG_AND_THROW(logMessage);
   }
 
-  if (xmlPath.extension() == ".xml") {
+  if (xmlPath.extension() == ".xml" || xmlPath.extension() == ".sch" || xmlPath.extension() == ".xsd") {
     auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
     m_xmlPath = t_xmlPath;
   } else {
