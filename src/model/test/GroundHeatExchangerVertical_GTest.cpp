@@ -182,7 +182,7 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_SetGetFields) {
   ASSERT_TRUE(gh.numberofBoreHoles());
   EXPECT_EQ(100, gh.numberofBoreHoles().get());
   ASSERT_TRUE(gh.boreHoleTopDepth());
-  EXPECT_EQ(1.25 gh.boreHoleTopDepth().get());
+  EXPECT_EQ(1.25, gh.boreHoleTopDepth().get());
   ASSERT_TRUE(gh.boreHoleLength());
   EXPECT_EQ(80.0, gh.boreHoleLength().get());
   ASSERT_TRUE(gh.boreHoleRadius());
