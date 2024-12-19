@@ -146,9 +146,7 @@ namespace energyplus {
     auto propertiesObjectName = modelObject.nameString() + " Properties";
     propertiesIdfObject.setName(propertiesObjectName);
 
-    if ((value = modelObject.boreHoleTopDepth())) {
-      propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole, value.get());
-    }
+    propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole, modelObject.boreHoleTopDepth());
 
     if ((value = modelObject.boreHoleLength())) {
       propertiesIdfObject.setDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeLength, value.get());

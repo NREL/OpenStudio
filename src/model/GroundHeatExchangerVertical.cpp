@@ -57,8 +57,10 @@ namespace model {
       return getInt(OS_GroundHeatExchanger_VerticalFields::NumberofBoreHoles, true);
     }
 
-    boost::optional<double> GroundHeatExchangerVertical_Impl::boreHoleTopDepth() const {
-      return getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, true);
+    double GroundHeatExchangerVertical_Impl::boreHoleTopDepth() const {
+      boost::optional<double> value = getDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> GroundHeatExchangerVertical_Impl::boreHoleLength() const {
@@ -143,20 +145,9 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool GroundHeatExchangerVertical_Impl::setBoreHoleTopDepth(boost::optional<double> boreHoleTopDepth) {
-      bool result(false);
-      if (boreHoleTopDepth) {
-        result = setDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, boreHoleTopDepth.get());
-      } else {
-        resetBoreHoleTopDepth();
-        result = true;
-      }
+    bool GroundHeatExchangerVertical_Impl::setBoreHoleTopDepth(double boreHoleTopDepth) {
+      bool result = setDouble(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, boreHoleTopDepth);
       return result;
-    }
-
-    void GroundHeatExchangerVertical_Impl::resetBoreHoleTopDepth() {
-      bool result = setString(OS_GroundHeatExchanger_VerticalFields::BoreHoleTopDepth, "");
-      OS_ASSERT(result);
     }
 
     bool GroundHeatExchangerVertical_Impl::setBoreHoleLength(boost::optional<double> boreHoleLength) {
@@ -618,7 +609,7 @@ namespace model {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->numberofBoreHoles();
   }
 
-  boost::optional<double> GroundHeatExchangerVertical::boreHoleTopDepth() const {
+  double GroundHeatExchangerVertical::boreHoleTopDepth() const {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->boreHoleTopDepth();
   }
 
@@ -692,10 +683,6 @@ namespace model {
 
   bool GroundHeatExchangerVertical::setBoreHoleTopDepth(double boreHoleTopDepth) {
     return getImpl<detail::GroundHeatExchangerVertical_Impl>()->setBoreHoleTopDepth(boreHoleTopDepth);
-  }
-
-  void GroundHeatExchangerVertical::resetBoreHoleTopDepth() {
-    getImpl<detail::GroundHeatExchangerVertical_Impl>()->resetBoreHoleTopDepth();
   }
 
   bool GroundHeatExchangerVertical::setBoreHoleLength(double boreHoleLength) {

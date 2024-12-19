@@ -17144,6 +17144,7 @@ OS:GroundHeatExchanger:Vertical,
         \type integer
         \minimum> 0.0
   N3,   \field Bore Hole Top Depth
+        \required-field
         \type real
         \units m
         \minimum 0.0

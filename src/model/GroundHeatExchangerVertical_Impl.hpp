@@ -56,7 +56,7 @@ namespace model {
 
       boost::optional<int> numberofBoreHoles() const;
 
-      boost::optional<double> boreHoleTopDepth() const;
+      double boreHoleTopDepth() const;
 
       boost::optional<double> boreHoleLength() const;
 
@@ -96,9 +96,7 @@ namespace model {
 
       void resetNumberofBoreHoles();
 
-      bool setBoreHoleTopDepth(boost::optional<double> boreHoleTopDepth);
-
-      void resetBoreHoleTopDepth();
+      bool setBoreHoleTopDepth(double boreHoleTopDepth);
 
       bool setBoreHoleLength(boost::optional<double> boreHoleLength);
 
