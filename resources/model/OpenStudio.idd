@@ -31208,6 +31208,7 @@ OS:ZoneHVAC:EvaporativeCoolerUnit,
   A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
+       \required-field
        \type object-list
        \object-list ScheduleNames
   A4,  \field Availability Manager List Name
@@ -31260,7 +31261,7 @@ OS:ZoneHVAC:EvaporativeCoolerUnit,
        \required-field
        \note Sign convention is that positive values indicate a cooling load
        \minimum> 0.0
-  A11, \field First Evaporative Cooler Object Name
+  A11, \field First Evaporative Cooler
        \required-field
        \type object-list
        \object-list EvapCoolerNames
@@ -31268,12 +31269,13 @@ OS:ZoneHVAC:EvaporativeCoolerUnit,
        \note optional, used for direct/indirect configurations
        \type object-list
        \object-list EvapCoolerNames
-  A13, \field Design Specification ZoneHVAC Sizing Object Name
+  A13, \field Design Specification ZoneHVAC Sizing
        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
        \type object-list
        \object-list DesignSpecificationZoneHVACSizingName
   N4;  \field Shut Off Relative Humidity
        \note Zone relative humidity above which the evap cooler is shut off.
+       \required-field
        \type real
        \minimum 0.00
        \maximum 100.00
