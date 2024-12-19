@@ -73,7 +73,7 @@ openstudio::path XMLValidator::schematronToXslt(const openstudio::path& schemaPa
 
   // This replicates what happens when you do:
   // from lxml.isoschematron import Schematron;
-  // s = Schematron(file='schematron.sct', store_xslt=True)
+  // s = Schematron(file='schematron.sch', store_xslt=True)
   // with open('schematron.xslt', 'w') as f:
   //     f.write(str(s._validator_xslt))
 
@@ -170,7 +170,7 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
   } else if (schemaPath.extension() == ".xslt") {
     m_validatorType = XMLValidatorType::XSLTSchematron;
     logAndStore(Trace, "Treating schema as a XLST StyleSheet that derives from a Schematron.");
-  } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
+  } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sch")) {
     m_validatorType = XMLValidatorType::Schematron;
     logAndStore(Trace, "Treating schema as a Schematron, converting to an XSLT StyleSheet.");
     // Let's use a temporary directory for this, so we avoid having two instances trying to write to the same file and we avoid issues where the
