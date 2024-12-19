@@ -33,6 +33,8 @@
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Filesystem.hpp"
+
 namespace openstudio {
 namespace model {
 
@@ -69,7 +71,7 @@ namespace model {
 
     bool addepinEnvironmentVariabletoSearchPath() const;
 
-    std::vector<std::string> searchPaths() const;
+    std::vector<openstudio::path> searchPaths() const;
 
     //@}
     /** @name Setters */
@@ -81,8 +83,11 @@ namespace model {
 
     bool setAddepinEnvironmentVariabletoSearchPath(bool addepinEnvironmentVariabletoSearchPath);
 
-    bool addSearchPath(const std::string& searchPath);
+    bool addSearchPath(const openstudio::path& searchPath);
+    bool setSearchPaths(const std::vector<openstudio::path>& searchPaths);
 
+    // Convenience, forwards to the openstudio::path equivalent
+    bool addSearchPath(const std::string& searchPath);
     bool setSearchPaths(const std::vector<std::string>& searchPaths);
 
     void clearSearchPaths();

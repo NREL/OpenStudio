@@ -32,9 +32,12 @@
 
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Path.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PythonPlugin_SearchPaths_FieldEnums.hxx>
+
+#include <iterator>
 
 namespace openstudio {
 namespace model {
@@ -78,12 +81,12 @@ namespace model {
       return getBooleanFieldValue(OS_PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath);
     }
 
-    std::vector<std::string> PythonPluginSearchPaths_Impl::searchPaths() const {
-      std::vector<std::string> result;
+    std::vector<openstudio::path> PythonPluginSearchPaths_Impl::searchPaths() const {
+      std::vector<openstudio::path> result;
       for (const auto& eg : extensibleGroups()) {
         auto _s = eg.getString(OS_PythonPlugin_SearchPathsExtensibleFields::SearchPath);
         OS_ASSERT(_s);
-        result.push_back(_s.get());
+        result.push_back(openstudio::toPath(_s.get()));
       }
       return result;
     }
@@ -109,18 +112,16 @@ namespace model {
       return result;
     }
 
-    bool PythonPluginSearchPaths_Impl::addSearchPath(const std::string& searchPath) {
-      std::vector<std::string> existingSearchPaths = this->searchPaths();
-      if (std::find_if(existingSearchPaths.begin(), existingSearchPaths.end(),
-                       [&searchPath](const std::string& s) { return openstudio::istringEqual(s, searchPath); })
-          != existingSearchPaths.end()) {
+    bool PythonPluginSearchPaths_Impl::addSearchPath(const openstudio::path& searchPath) {
+      std::vector<openstudio::path> existingSearchPaths = this->searchPaths();
+      if (std::find(existingSearchPaths.begin(), existingSearchPaths.end(), searchPath) != existingSearchPaths.end()) {
         LOG(Info, "Not adding search path '" << searchPath << "' to PythonPlugin:SearchPaths since it is already present");
         // Return true anyways, it's a success
         return true;
       }
 
       auto eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool result = eg.setString(OS_PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath);
+      bool result = eg.setString(OS_PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath.generic_string());
       if (!result) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
       }
@@ -128,7 +129,7 @@ namespace model {
       return result;
     }
 
-    bool PythonPluginSearchPaths_Impl::setSearchPaths(const std::vector<std::string>& searchPaths) {
+    bool PythonPluginSearchPaths_Impl::setSearchPaths(const std::vector<openstudio::path>& searchPaths) {
       bool result = true;
 
       clearSearchPaths();
@@ -166,7 +167,7 @@ namespace model {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->addepinEnvironmentVariabletoSearchPath();
   }
 
-  std::vector<std::string> PythonPluginSearchPaths::searchPaths() const {
+  std::vector<openstudio::path> PythonPluginSearchPaths::searchPaths() const {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->searchPaths();
   }
 
@@ -182,12 +183,23 @@ namespace model {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->setAddepinEnvironmentVariabletoSearchPath(addepinEnvironmentVariabletoSearchPath);
   }
 
-  bool PythonPluginSearchPaths::addSearchPath(const std::string& searchPath) {
+  bool PythonPluginSearchPaths::addSearchPath(const openstudio::path& searchPath) {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->addSearchPath(searchPath);
   }
 
-  bool PythonPluginSearchPaths::setSearchPaths(const std::vector<std::string>& searchPaths) {
+  bool PythonPluginSearchPaths::setSearchPaths(const std::vector<openstudio::path>& searchPaths) {
     return getImpl<detail::PythonPluginSearchPaths_Impl>()->setSearchPaths(searchPaths);
+  }
+
+  bool PythonPluginSearchPaths::addSearchPath(const std::string& searchPath) {
+    return getImpl<detail::PythonPluginSearchPaths_Impl>()->addSearchPath(openstudio::toPath(searchPath));
+  }
+
+  bool PythonPluginSearchPaths::setSearchPaths(const std::vector<std::string>& searchPaths) {
+    std::vector<openstudio::path> paths;
+    paths.reserve(searchPaths.size());
+    std::transform(searchPaths.cbegin(), searchPaths.cend(), std::back_inserter(paths), [](const std::string& s) { return openstudio::toPath(s); });
+    return getImpl<detail::PythonPluginSearchPaths_Impl>()->setSearchPaths(paths);
   }
 
   void PythonPluginSearchPaths::clearSearchPaths() {

@@ -78,9 +78,9 @@ namespace energyplus {
     }
 
     // Search Path
-    for (const std::string& searchPath : modelObject.searchPaths()) {
+    for (const openstudio::path& searchPath : modelObject.searchPaths()) {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-      eg.setString(PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath);
+      eg.setString(PythonPlugin_SearchPathsExtensibleFields::SearchPath, searchPath.generic_string());
     }
 
     return idfObject;
