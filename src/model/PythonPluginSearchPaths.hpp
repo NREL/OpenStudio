@@ -31,7 +31,7 @@
 #define MODEL_PYTHONPLUGINSEARCHPATHS_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ParentObject.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
@@ -42,8 +42,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** PythonPluginSearchPaths is a ParentObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:SearchPaths'. */
-  class MODEL_API PythonPluginSearchPaths : public ParentObject
+  /** PythonPluginSearchPaths is a ModelObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:SearchPaths'. */
+  class MODEL_API PythonPluginSearchPaths : public ModelObject
   {
    public:
     /** @name Constructors and Destructors */

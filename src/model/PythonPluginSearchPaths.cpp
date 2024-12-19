@@ -42,18 +42,18 @@ namespace model {
   namespace detail {
 
     PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle) {
+      : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == PythonPluginSearchPaths::iddObjectType());
     }
 
     PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
                                                                bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {
+      : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == PythonPluginSearchPaths::iddObjectType());
     }
 
     PythonPluginSearchPaths_Impl::PythonPluginSearchPaths_Impl(const PythonPluginSearchPaths_Impl& other, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {}
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& PythonPluginSearchPaths_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
@@ -195,8 +195,8 @@ namespace model {
   }
 
   /// @cond
-  PythonPluginSearchPaths::PythonPluginSearchPaths(std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl) : ParentObject(std::move(impl)) {}
-  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ParentObject(PythonPluginSearchPaths::iddObjectType(), model) {
+  PythonPluginSearchPaths::PythonPluginSearchPaths(std::shared_ptr<detail::PythonPluginSearchPaths_Impl> impl) : ModelObject(std::move(impl)) {}
+  PythonPluginSearchPaths::PythonPluginSearchPaths(Model& model) : ModelObject(PythonPluginSearchPaths::iddObjectType(), model) {
     setAddCurrentWorkingDirectorytoSearchPath(true);
     setAddInputFileDirectorytoSearchPath(true);
     setAddepinEnvironmentVariabletoSearchPath(true);

@@ -31,15 +31,15 @@
 #define MODEL_PYTHONPLUGINSEARCHPATHS_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ParentObject_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
   namespace detail {
 
-    /** PythonPluginSearchPaths_Impl is a ParentObject_Impl that is the implementation class for PythonPluginSearchPaths.*/
-    class MODEL_API PythonPluginSearchPaths_Impl : public ParentObject_Impl
+    /** PythonPluginSearchPaths_Impl is a ModelObject_Impl that is the implementation class for PythonPluginSearchPaths.*/
+    class MODEL_API PythonPluginSearchPaths_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
