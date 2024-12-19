@@ -2433,6 +2433,11 @@ namespace energyplus {
         retVal = translatePythonPluginOutputVariable(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_PythonPlugin_SearchPaths: {
+        auto obj = modelObject.cast<PythonPluginSearchPaths>();
+        retVal = translatePythonPluginSearchPaths(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_RadianceParameters: {
         // no-op
         break;
@@ -3602,6 +3607,8 @@ namespace energyplus {
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule,
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable,
 
+      IddObjectType::
+        OS_PythonPlugin_SearchPaths,  // this FT intentionally happens before PythonPlugin_Instance so that we can't end up with two PythonPlugin_SearchPaths objects
       IddObjectType::OS_PythonPlugin_Instance,
       IddObjectType::OS_PythonPlugin_Variable,
       IddObjectType::OS_PythonPlugin_TrendVariable,

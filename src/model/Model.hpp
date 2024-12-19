@@ -76,6 +76,7 @@ namespace model {
   class Schedule;
   class Node;
   class SpaceType;
+  class PythonPluginSearchPaths;
 
   namespace detail {
     class Model_Impl;
@@ -315,6 +316,10 @@ namespace model {
     /** Get the ExternalInterface object if there is one, this implementation uses a cached reference to the ExternalInterface
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<ExternalInterface>(). */
     boost::optional<ExternalInterface> externalInterface() const;
+
+    /** Get the PythonPluginSearchPaths object if there is one, this implementation uses a cached reference to the PythonPluginSearchPaths
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<PythonPluginSearchPaths>(). */
+    boost::optional<PythonPluginSearchPaths> pythonPluginSearchPaths() const;
 
     /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
     // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
@@ -828,6 +833,9 @@ namespace model {
 
   template <>
   MODEL_API ExternalInterface Model::getUniqueModelObject<ExternalInterface>();
+
+  template <>
+  MODEL_API PythonPluginSearchPaths Model::getUniqueModelObject<PythonPluginSearchPaths>();
 
 }  // namespace model
 }  // namespace openstudio

@@ -1228,6 +1228,9 @@ set(${target_name}_src
   PythonPluginOutputVariable.hpp
   PythonPluginOutputVariable_Impl.hpp
   PythonPluginOutputVariable.cpp
+  PythonPluginSearchPaths.hpp
+  PythonPluginSearchPaths_Impl.hpp
+  PythonPluginSearchPaths.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
@@ -2221,6 +2224,7 @@ set(${target_name}_test_src
   test/PythonPluginVariable_GTest.cpp
   test/PythonPluginTrendVariable_GTest.cpp
   test/PythonPluginOutputVariable_GTest.cpp
+  test/PythonPluginSearchPaths_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp
