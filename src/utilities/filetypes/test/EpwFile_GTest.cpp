@@ -11,6 +11,8 @@
 
 #include <resources.hxx>
 
+#include <array>
+
 using namespace openstudio;
 
 TEST(Filetypes, EpwFile) {
@@ -237,6 +239,58 @@ TEST(Filetypes, EpwFile_Design) {
     EXPECT_EQ(39.2, designs[0].extremeN50YearsMaxDryBulb());
   } catch (...) {
     ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_Ground) {
+  path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+  EpwFile epwFile(p);
+  EXPECT_EQ(p, epwFile.path());
+  EXPECT_EQ("BDF687C1", epwFile.checksum());
+  EXPECT_EQ(openstudio::checksum(epwFile.path()), epwFile.checksum());
+  EXPECT_EQ("Denver Centennial  Golden   Nr", epwFile.city());
+  EXPECT_EQ("CO", epwFile.stateProvinceRegion());
+  EXPECT_EQ("USA", epwFile.country());
+  EXPECT_EQ("TMY3", epwFile.dataSource());
+  EXPECT_EQ("724666", epwFile.wmoNumber());
+  EXPECT_EQ(39.74, epwFile.latitude());
+  EXPECT_EQ(-105.18, epwFile.longitude());
+  EXPECT_EQ(-7, epwFile.timeZone());
+  EXPECT_EQ(1829, epwFile.elevation());
+  EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
+  EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
+  EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
+  EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
+  // Up to here, everything should be the same as the first test. Now ask for the design conditions
+
+  constexpr std::array<std::array<double, 16>, 3> expected_depth_values{{
+    {0.5, -9999, -9999, -9999, -0.6, 1.34, 5.12, 8.69, 15.46, 19.02, 20.0, 18.2, 14.02, 8.83, 3.71, 0.32},
+    {2.0, -9999, -9999, -9999, 2.08, 2.55, 4.7, 7.1, 12.3, 15.62, 17.28, 16.91, 14.53, 10.94, 6.9, 3.72},
+    {4.0, -9999, -9999, -9999, 4.84, 4.51, 5.45, 6.81, 10.25, 12.82, 14.49, 14.9, 13.86, 11.74, 9.0, 6.53},
+  }};
+
+  std::vector<EpwGroundTemperatureDepth> depths = epwFile.groundTemperatureDepths();
+  ASSERT_EQ(3, depths.size());
+  for (size_t i = 0; i < depths.size(); ++i) {
+    const auto& depth = depths.at(i);
+    const auto& expected_values = expected_depth_values.at(i);
+
+    EXPECT_DOUBLE_EQ(expected_values.at(0), depth.groundTemperatureDepth());
+    EXPECT_DOUBLE_EQ(expected_values.at(1), depth.soilConductivity());
+    EXPECT_DOUBLE_EQ(expected_values.at(2), depth.soilDensity());
+    EXPECT_DOUBLE_EQ(expected_values.at(3), depth.soilSpecificHeat());
+    EXPECT_DOUBLE_EQ(expected_values.at(4), depth.janGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(5), depth.febGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(6), depth.marGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(7), depth.aprGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(8), depth.mayGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(9), depth.junGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(10), depth.julGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(11), depth.augGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(12), depth.sepGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(13), depth.octGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(14), depth.novGroundTemperature());
+    EXPECT_DOUBLE_EQ(expected_values.at(15), depth.decGroundTemperature());
   }
 }
 

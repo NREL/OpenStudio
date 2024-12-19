@@ -96,7 +96,7 @@ namespace model {
 
       void resetNumberofBoreHoles();
 
-      bool setBoreHoleTopDepth(double boreHoleTopDepth);
+      bool setBoreHoleTopDepth(boost::optional<double> boreHoleTopDepth);
 
       void resetBoreHoleTopDepth();
 

@@ -9645,10 +9645,10 @@ namespace osversion {
     boost::optional<std::string> value;
 
     ss << idf_3_9_0.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_9_0.iddFile());
+    IdfFile targetIdf(idd_3_9_1.iddFile());
     ss << targetIdf.versionObject().get();
 
-    for (const IdfObject& object : idd_3_9_1.objects()) {
+    for (const IdfObject& object : idf_3_9_0.objects()) {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:GroundHeatExchanger:Vertical") {
@@ -9657,7 +9657,7 @@ namespace osversion {
         // ----------------------------------------------
         // * Bore Hole Top Depth * 6
 
-        auto iddObject = idd_3_9_0.getObject(iddname);
+        auto iddObject = idd_3_9_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
