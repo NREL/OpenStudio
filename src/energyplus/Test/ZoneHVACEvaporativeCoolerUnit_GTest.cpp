@@ -101,7 +101,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setDesignSpecificationZoneHVACSizingObject(designSpecificationZoneHVACSizingObject));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setShutOffRelativeHumidity(95.0));
 
-
   // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
   const Workspace w = ft.translateModel(m);
@@ -109,14 +108,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
- EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName).get());
- EXPECT_EQ(availabilityManagerList.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName).get());
- EXPECT_EQ(outdoorAirInletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
- EXPECT_EQ(coolerOutletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
- EXPECT_EQ(zoneReliefAirNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
-  EXPECT_EQ("Fan:SystemModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get()); EXPECT_EQ(supplyAirFan.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get());
+  EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName).get());
+  EXPECT_EQ(availabilityManagerList.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName).get());
+  EXPECT_EQ(outdoorAirInletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
+  EXPECT_EQ(coolerOutletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
+  EXPECT_EQ(zoneReliefAirNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
+  EXPECT_EQ("Fan:SystemModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get());
+  EXPECT_EQ(supplyAirFan.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get());
   // EXPECT_EQ("Autosize", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());  EXPECT_EQ(0.9, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());  EXPECT_EQ("BlowThrough", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FanPlacement).get());  EXPECT_EQ("ZoneTemperatureDeadbandOnOffCycling", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerUnitControlMethod).get());  EXPECT_EQ(1.2, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ThrottlingRangeTemperatureDifference).get());  EXPECT_EQ(1.3, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::CoolingLoadControlThresholdHeatTransferRate).get());  EXPECT_EQ("EvaporativeCooler:Direct:CelDekPad", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType).get()); EXPECT_EQ(firstEvaporativeCoolerObject.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName).get());
-  EXPECT_EQ("EvaporativeCooler:Direct:CelDekPad", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType).get()); EXPECT_EQ(secondEvaporativeCooler.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get());
- EXPECT_EQ(designSpecificationZoneHVACSizingObject.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName).get());
+  EXPECT_EQ("EvaporativeCooler:Direct:CelDekPad", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType).get());
+  EXPECT_EQ(secondEvaporativeCooler.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get());
+  EXPECT_EQ(designSpecificationZoneHVACSizingObject.nameString(),
+            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName).get());
   EXPECT_EQ(95.0, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ShutOffRelativeHumidity).get());
 }

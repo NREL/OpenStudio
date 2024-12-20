@@ -4410,6 +4410,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
+    REGISTER_CONSTRUCTOR(ZoneHVACEvaporativeCoolerUnit);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
@@ -4984,6 +4985,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEvaporativeCoolerUnit);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);

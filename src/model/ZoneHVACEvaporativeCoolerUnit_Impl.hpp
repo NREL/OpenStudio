@@ -46,24 +46,18 @@ namespace model {
 
   namespace detail {
 
-  /** ZoneHVACEvaporativeCoolerUnit_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACEvaporativeCoolerUnit.*/
+    /** ZoneHVACEvaporativeCoolerUnit_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACEvaporativeCoolerUnit.*/
     class MODEL_API ZoneHVACEvaporativeCoolerUnit_Impl : public ZoneHVACComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ZoneHVACEvaporativeCoolerUnit_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ZoneHVACEvaporativeCoolerUnit_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACEvaporativeCoolerUnit_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ZoneHVACEvaporativeCoolerUnit_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACEvaporativeCoolerUnit_Impl(const ZoneHVACEvaporativeCoolerUnit_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle);
+      ZoneHVACEvaporativeCoolerUnit_Impl(const ZoneHVACEvaporativeCoolerUnit_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~ZoneHVACEvaporativeCoolerUnit_Impl() = default;
 
@@ -108,7 +102,7 @@ namespace model {
 
       bool isDesignSupplyAirFlowRateAutosized() const;
 
-      boost::optional <double> autosizedDesignSupplyAirFlowRate();
+      boost::optional<double> autosizedDesignSupplyAirFlowRate();
 
       std::string fanPlacement() const;
 
@@ -134,7 +128,7 @@ namespace model {
       //@{
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
       // TODO: Check argument type. From object lists, some candidates are: SystemAvailabilityManagerLists.
@@ -195,7 +189,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.ZoneHVACEvaporativeCoolerUnit");
-  
+
       // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required

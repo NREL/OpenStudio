@@ -444,6 +444,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilatorController.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACEvaporativeCoolerUnit.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp
   ForwardTranslator/ForwardTranslateZoneHVACHighTemperatureRadiant.cpp
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
@@ -840,6 +841,7 @@ set(${target_name}_test_src
   Test/WaterUseConnections_GTest.cpp
   Test/ZoneAirHeatBalanceAlgorithm_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  Test/ZoneHVACEvaporativeCoolerUnit_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

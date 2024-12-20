@@ -60,7 +60,8 @@ namespace model {
 
     explicit ZoneHVACEvaporativeCoolerUnit(const Model& model);
 
-    explicit ZoneHVACEvaporativeCoolerUnit(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan, HVACComponent& firstEvaporativeCooler);
+    explicit ZoneHVACEvaporativeCoolerUnit(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
+                                           HVACComponent& firstEvaporativeCooler);
 
     virtual ~ZoneHVACEvaporativeCoolerUnit() = default;
     // Default the copy and move operators because the virtual dtor is explicit
@@ -102,7 +103,7 @@ namespace model {
 
     bool isDesignSupplyAirFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignSupplyAirFlowRate();
+    boost::optional<double> autosizedDesignSupplyAirFlowRate();
 
     std::string fanPlacement() const;
 

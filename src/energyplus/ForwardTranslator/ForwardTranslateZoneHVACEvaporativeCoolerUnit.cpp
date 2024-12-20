@@ -60,40 +60,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEvaporativeCoolerUnit( model::ZoneHVACEvaporativeCoolerUnit& modelObject ) {
+  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEvaporativeCoolerUnit(model::ZoneHVACEvaporativeCoolerUnit& modelObject) {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EvaporativeCoolerUnit, modelObject);
 
     // Availability Schedule Name: Optional Object
     if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
         idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName, wo_->nameString());
       }
     }
 
     // Availability Manager List Name: Optional Object
     if (boost::optional<SystemAvailabilityManagerLists> availabilityManagerList_ = modelObject.availabilityManagerList()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilityManagerList_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilityManagerList_.get())) {
         idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName, wo_->nameString());
       }
     }
 
     // Outdoor Air Inlet Node Name: Required Node
     Node outdoorAirInletNodeName = modelObject.inletNode();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(outdoorAirInletNodeName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(outdoorAirInletNodeName)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName, wo_->nameString());
     }
 
     // Cooler Outlet Node Name: Required Node
     Node coolerOutletNodeName = modelObject.outletNode();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolerOutletNodeName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(coolerOutletNodeName)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName, wo_->nameString());
     }
 
     // Zone Relief Air Node Name: Optional Node
     Node zoneReliefAirNodeName = modelObject.zoneReliefAirNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zoneReliefAirNodeName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zoneReliefAirNodeName)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName, wo_->nameString());
     }
 
@@ -101,10 +101,9 @@ namespace energyplus {
     const std::string supplyAirFanObjectType = modelObject.supplyAirFanObjectType();
     idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, supplyAirFanObjectType);
 
-
     // Supply Air Fan Name: Required Object
     Fans supplyAirFan = modelObject.supplyAirFan();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyAirFan))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyAirFan)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, wo_->nameString());
     }
 
@@ -115,36 +114,32 @@ namespace energyplus {
       if (boost::optional<double> designSupplyAirFlowRate_ = modelObject.designSupplyAirFlowRate()) {
         idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate, designSupplyAirFlowRate_.get());
       }
-  }
+    }
 
     // Fan Placement: Required String
     const std::string fanPlacement = modelObject.fanPlacement();
     idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FanPlacement, fanPlacement);
 
-
     // Cooler Unit Control Method: Required String
     const std::string coolerUnitControlMethod = modelObject.coolerUnitControlMethod();
     idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerUnitControlMethod, coolerUnitControlMethod);
-
 
     // Throttling Range Temperature Difference: Optional Double
     const double throttlingRangeTemperatureDifference = modelObject.throttlingRangeTemperatureDifference();
     idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ThrottlingRangeTemperatureDifference, throttlingRangeTemperatureDifference);
 
-
     // Cooling Load Control Threshold Heat Transfer Rate: Optional Double
     const double coolingLoadControlThresholdHeatTransferRate = modelObject.coolingLoadControlThresholdHeatTransferRate();
-    idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::CoolingLoadControlThresholdHeatTransferRate, coolingLoadControlThresholdHeatTransferRate);
-
+    idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::CoolingLoadControlThresholdHeatTransferRate,
+                        coolingLoadControlThresholdHeatTransferRate);
 
     // First Evaporative Cooler Object Type: Required String
     const std::string firstEvaporativeCoolerObjectType = modelObject.firstEvaporativeCoolerObjectType();
     idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType, firstEvaporativeCoolerObjectType);
 
-
     // First Evaporative Cooler Object Name: Required Object
     EvapCooler firstEvaporativeCoolerObject = modelObject.firstEvaporativeCoolerObject();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(firstEvaporativeCoolerObject))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(firstEvaporativeCoolerObject)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName, wo_->nameString());
     }
 
@@ -155,14 +150,15 @@ namespace energyplus {
 
     // Second Evaporative Cooler Name: Optional Object
     if (boost::optional<EvapCooler> secondEvaporativeCooler_ = modelObject.secondEvaporativeCooler()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(secondEvaporativeCooler_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(secondEvaporativeCooler_.get())) {
         idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName, wo_->nameString());
       }
     }
 
     // Design Specification ZoneHVAC Sizing Object Name: Optional Object
-    if (boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizingObject_ = modelObject.designSpecificationZoneHVACSizingObject()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(designSpecificationZoneHVACSizingObject_.get()))  {
+    if (boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizingObject_ =
+          modelObject.designSpecificationZoneHVACSizingObject()) {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(designSpecificationZoneHVACSizingObject_.get())) {
         idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName, wo_->nameString());
       }
     }

@@ -160,7 +160,6 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_GettersSetters) {
   // Bad Value
   EXPECT_FALSE(zoneHVACEvaporativeCoolerUnit.setShutOffRelativeHumidity(-10.0));
   EXPECT_EQ(94.444, zoneHVACEvaporativeCoolerUnit.shutOffRelativeHumidity());
-
 }
 TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_HeatCoolFuelTypes) {
   Model m;
