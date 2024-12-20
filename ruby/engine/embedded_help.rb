@@ -146,6 +146,7 @@ module Kernel
   end
 
   def require path
+    puts "\nrequire, path=#{path}"
     result = false
     original_directory = Dir.pwd
     path_with_extension = path
@@ -158,13 +159,17 @@ module Kernel
       if extname.empty? or ! RUBY_FILE_EXTS.include? extname
         path_with_extension = path + '.rb'
       end
+      puts "path_with_extension=#{path_with_extension}"
 
       if path.include? 'openstudio/energyplus/find_energyplus'
+        puts "ladder1"
         return false
       elsif path_with_extension.to_s.chars.first == ':'
+        puts "ladder2"
         # Give absolute embedded paths first priority
         if $LOADED.include?(path_with_extension)
-           return true
+          puts "ladder2 - already loaded"
+          return true
         else
           return require_embedded_absolute(path_with_extension)
         end
@@ -172,6 +177,7 @@ module Kernel
         # OpenStudio is loaded by default and does not need to be required
         return true
       elsif require_embedded(path_with_extension, $LOAD_PATH)
+          puts "ladder3"
         # Load embedded files that are no required using full paths now
         # This does not included the openstudio-gems set of default, baked in gems
         # because we want to give anything provided by --bundle the first chance
@@ -182,6 +188,7 @@ module Kernel
         result = original_require path
       end
     rescue Exception => e
+      puts "exception - embedded gems"
       # This picks up the embedded gems
       # Important to do this now, so that --bundle has first chance
       # using rescue in normal program flow, might have poor performance
@@ -211,6 +218,7 @@ module Kernel
   end
 
   def require_embedded(path, search_paths)
+    puts "require_embedded, path=#{path}, search_paths=#{search_paths}"
     search_paths = [] if not search_paths
     search_paths.each do |p|
       if p.to_s.chars.first == ':'
@@ -227,11 +235,15 @@ module Kernel
   end
 
   def require_embedded_absolute path
+    puts "require_embedded_absolute path=#{path}"
     original_directory = Dir.pwd
 
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
     s = OpenStudio::preprocess_ruby_script(s)
+
+    puts $LOADED
+    STDOUT.flush
 
     result = Kernel::eval(s,BINDING,path)
 
@@ -247,8 +259,10 @@ module Kernel
 
   def require_relative path
     absolute_path = File.dirname(caller_locations(1,1)[0].path) + '/' + path
+    puts "\n\nrequire_relative, path=#{path}, absolute_path=#{absolute_path}"
     if absolute_path.to_s.chars.first == ':'
       absolute_path = OpenStudio.get_absolute_path(absolute_path)
+      puts "get_absolute_path=#{absolute_path}"
     end
     return require absolute_path
   end
