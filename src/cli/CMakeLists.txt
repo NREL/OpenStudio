@@ -203,6 +203,11 @@ if(BUILD_TESTING)
     PASS_REGULAR_EXPRESSION "Hello from -x, at National Renewable Energy Laboratory"
   )
 
+  # Test for 5315
+  add_test(NAME OpenStudioCLI.EmbeddedScripting.uuid
+    COMMAND $<TARGET_FILE:openstudio> ${CMAKE_CURRENT_SOURCE_DIR}/test/ensure_uuid_can_be_loaded.rb
+  )
+
   add_test(NAME OpenStudioCLI.Classic.Run_RubyOnly
     COMMAND $<TARGET_FILE:openstudio> classic run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"

@@ -3,6 +3,8 @@
 #  See also https://openstudio.net/license
 ########################################################################################################################
 
+require 'stringio'
+
 module EmbeddedScripting
   @@fileNames = EmbeddedScripting::allFileNamesAsString.split(';')
 
@@ -55,6 +57,17 @@ BINDING = Kernel::binding()
 
 # DLM: ignore for now
 #Encoding.default_external = Encoding::ASCII
+
+# We patch Kernel.open, and IO.open
+# to read embedded files as a StringIO, not as a FileIO
+# But Gem.open_file for eg expects it to be a File, not a StringIO, and on
+# Windows it will call File::flock (file lock) to protect access, but StringIO
+# does not have this method
+class FakeFileAsStringIO < StringIO
+  def flock(operation)
+    return 0
+  end
+end
 
 module Kernel
   # ":" is our root path to the embedded file system
@@ -329,7 +342,7 @@ module Kernel
         #puts "string = #{string}"
         if block_given?
           # if a block is given, then a new IO is created and closed
-          io = StringIO.open(string)
+          io = FakeFileAsStringIO.open(string)
           begin
             result = yield(io)
           ensure
@@ -337,13 +350,13 @@ module Kernel
           end
           return result
         else
-          return StringIO.open(string)
+          return FakeFileAsStringIO.open(string)
         end
       else
         #puts "IO.open cannot find embedded file '#{absolute_path}' for '#{name}'"
         if block_given?
           # if a block is given, then a new IO is created and closed
-          io = StringIO.open("")
+          io = FakeFileAsStringIO.open("")
           begin
             result = yield(io)
           ensure
@@ -459,7 +472,7 @@ class IO
         #puts "string = #{string}"
         if block_given?
           # if a block is given, then a new IO is created and closed
-          io = StringIO.open(string)
+          io = FakeFileAsStringIO.open(string)
           begin
             result = yield(io)
           ensure
@@ -467,13 +480,13 @@ class IO
           end
           return result
         else
-          return StringIO.open(string)
+          return FakeFileAsStringIO.open(string)
         end
       else
         puts "IO.open cannot find embedded file '#{absolute_path}' for '#{name}'"
         if block_given?
           # if a block is given, then a new IO is created and closed
-          io = StringIO.open("")
+          io = FakeFileAsStringIO.open("")
           begin
             result = yield(io)
           ensure
