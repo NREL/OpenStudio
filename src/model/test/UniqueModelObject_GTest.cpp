@@ -54,6 +54,8 @@
 #include "../OutputConstructions_Impl.hpp"
 #include "../PerformancePrecisionTradeoffs.hpp"
 #include "../PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../PythonPluginSearchPaths.hpp"
+#include "../PythonPluginSearchPaths_Impl.hpp"
 #include "../RadianceParameters.hpp"
 #include "../RadianceParameters_Impl.hpp"
 #include "../RunPeriod.hpp"
@@ -623,6 +625,31 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {
   auto performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
   EXPECT_EQ("! Custom Object", performancePrecisionTradeoffsClone2.comment());
+}
+
+TEST_F(ModelFixture, PythonPluginSearchPaths_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
+  auto pythonPluginSearchPaths = model.getUniqueModelObject<PythonPluginSearchPaths>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
+  // We use a comment to see if cloning to another model works
+  pythonPluginSearchPaths.setComment("Custom Object");
+
+  // clone it into the same model
+  auto pythonPluginSearchPathsClone = pythonPluginSearchPaths.clone(model).cast<PythonPluginSearchPaths>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(pythonPluginSearchPaths, pythonPluginSearchPathsClone);
+  EXPECT_EQ("! Custom Object", pythonPluginSearchPathsClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
+  auto pythonPluginSearchPathsClone2 = pythonPluginSearchPaths.clone(model2).cast<PythonPluginSearchPaths>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<PythonPluginSearchPaths>());
+  EXPECT_EQ("! Custom Object", pythonPluginSearchPathsClone2.comment());
 }
 
 TEST_F(ModelFixture, RadianceParameters_UniqueModelObject_Clone) {

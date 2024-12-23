@@ -302,8 +302,8 @@ namespace model {
         openstudio::path workingPath(*currentPath);
         if (!currentPath->is_complete()) {
           newPath = openstudio::filesystem::system_complete(workingPath);
-          LOG(Debug, "Current path '" << toString(*currentPath) << "' not complete. "
-                                      << "After calling system_complete have '" << toString(newPath) << "'.");
+          LOG(Debug, "Current path '" << toString(*currentPath) << "' not complete. " << "After calling system_complete have '" << toString(newPath)
+                                      << "'.");
         }
         if (newPath.empty() || !openstudio::filesystem::exists(newPath)) {
           newPath = searchDirectory / *currentPath;

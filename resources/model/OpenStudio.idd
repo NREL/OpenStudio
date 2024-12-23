@@ -31706,7 +31706,16 @@ OS:WaterHeater:HeatPump,
        \note A schedule value of 1 denotes inlet air is drawn only from outdoors.
        \note Schedule values between 0 and 1 denote a mixture of zone and outdoor air
        \note proportional to the schedule value.
-  A19; \field Control Sensor Location In Stratified Tank
+  A19, \field Tank Element Control Logic
+       \type choice
+       \key MutuallyExclusive
+       \key Simultaneous
+       \required-field
+       \note MutuallyExclusive means that once the tank heating element is active the
+       \note heat pump is shut down until setpoint is reached.
+       \note Simultaneous (default) means that both the tank heating element and
+       \note heat pump are used at the same time recover the tank temperature.
+  A20; \field Control Sensor Location In Stratified Tank
        \note Used to indicate height of control sensor if Tank Object Type is WaterHeater:Stratified
        \type choice
        \key Heater1
@@ -38664,6 +38673,53 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \required-field
 
 \group Python Plugin System
+
+OS:PythonPlugin:SearchPaths,
+       \memo Add directories to the search path for Python plugin modules
+       \memo The directory containing the EnergyPlus executable file is
+       \memo automatically added so that the Python interpreter can find the
+       \memo packaged up pyenergyplus Python package.
+       \memo By default, the current working directory and input file directory
+       \memo are also added to the search path. However, this object allows
+       \memo modifying this behavior. With this object, searching these directories
+       \memo can be disabled, and users can add supplemental search paths
+       \memo that point to libraries of plugin scripts.
+       \unique-object
+       \min-fields 3
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Add Current Working Directory to Search Path
+       \note Adding the current working directory allows Python to find
+       \note plugin scripts in the current directory.
+       \note required-field disabled as it has a default
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A3,  \field Add Input File Directory to Search Path
+       \note Enabling this will allow Python to find plugin scripts in the
+       \note same directory as the running input file, even if that is not
+       \note the current working directory.
+       \note required-field disabled as it has a default
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A4,  \field Add epin Environment Variable to Search Path
+       \note The "epin" environment variable is set by some EnergyPlus interfaces
+       \note in order to let EnergyPlus find external files in special locations.
+       \note If this is enabled, and that variable is set, the value of the variable
+       \note will be added to the Python search path.
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A5;  \field Search Path 1
+       \type alpha
+       \begin-extensible
+       \retaincase
 
 OS:PythonPlugin:Instance,
        \memo A single plugin to be executed during the simulation, which can contain multiple calling points

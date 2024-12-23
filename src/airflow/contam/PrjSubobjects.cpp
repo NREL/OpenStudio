@@ -16,12 +16,14 @@ namespace contam {
   WeatherData::WeatherData(std::string Tambt, std::string barpres, std::string windspd, std::string winddir, std::string relhum, int daytyp, int uTa,
                            int ubP, int uws, int uwd)
     : m_impl(
-      std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt, barpres, windspd, winddir, relhum, daytyp, uTa, ubP, uws, uwd))) {}
+        std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt, barpres, windspd, winddir, relhum, daytyp, uTa, ubP, uws, uwd))) {
+  }
 
   WeatherData::WeatherData(double Tambt, double barpres, double windspd, double winddir, double relhum, int daytyp, int uTa, int ubP, int uws,
                            int uwd)
     : m_impl(
-      std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt, barpres, windspd, winddir, relhum, daytyp, uTa, ubP, uws, uwd))) {}
+        std::shared_ptr<detail::WeatherDataImpl>(new detail::WeatherDataImpl(Tambt, barpres, windspd, winddir, relhum, daytyp, uTa, ubP, uws, uwd))) {
+  }
 
   WeatherData::WeatherData(const WeatherData& other) = default;
 

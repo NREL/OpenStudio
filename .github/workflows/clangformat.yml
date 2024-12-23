@@ -1,16 +1,22 @@
 name: Clang Format
 
 on:
+  push:
+    branches: [ master, develop, clang-format ]
   pull_request:
     branches: [ master, develop ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed to push a commit
+
     steps:
     - uses: actions/checkout@v4
 
     - name: Run clang-format against C++ files touched by the PR
+      if: ${{ github.event_name == 'pull_request' }}
       shell: bash
       run: |
           echo "GITHUB_REF=$GITHUB_REF GITHUB_BASE_REF=$GITHUB_BASE_REF GITHUB_HEAD_REF=$GITHUB_HEAD_REF"
@@ -18,9 +24,48 @@ jobs:
           clang-format --version
           ./ci/clang-format.sh remotes/origin/$GITHUB_HEAD_REF remotes/origin/$GITHUB_BASE_REF
 
+    - name: Run clang-format for entire codebase
+      if: ${{ github.event_name == 'push' }}
+      shell: bash
+      run: |
+          clang-format --version
+          find . \( -name "*.hpp" -o -name "*.h" -o -name "*.hh" -o -name "*.cc" -o -name "*.cpp" -o -name "*.c" \) | xargs -P $(nproc) -I '{}' clang-format -style=file -i -fallback-style=none "{}"
+          # clang-format will auto correct files so prepare the diff and use this as artifact
+          git diff > clang_format.patch
+
+          # Delete if nothing otherwise exit 1 to indicate a failed job
+          if [ ! -s clang_format.patch ]; then
+            rm clang_format.patch
+            exit 0
+          else
+            echo "clang-format auto corrected files:"
+            git diff --name-only
+            echo -e "\nPlease correct these files. You can run ci/clang-format.sh locally and commit changes"
+            exit 1
+          fi
+
     - name: Upload clang-format patch as artifact
       if: ${{ failure() }}
       uses: actions/upload-artifact@v4
       with:
           name: OpenStudio-${{ github.sha }}-clang_format.patch
           path: clang_format.patch
+
+    - name: Commit Auto-corrections
+      shell: bash
+      if: ${{ always() && github.event_name == 'push' }}
+      run: |
+        git add -u
+        if [[ $(git diff --cached --exit-code) ]]; then
+          echo "Commiting Lint Autocorrects"
+          git config --global user.email 'github-lint-actions[bot]@users.noreply.github.com'
+          git config --global user.name 'github-lint-actions[bot]'
+          git commit -m "[chore] Commit clang-format autocorrects"
+          echo '' >> .git-blame-ignore-revs
+          git log -n1 --pretty='format:# %C(auto)%s [%an, %as]%n%H%n' >> .git-blame-ignore-revs
+          git add .git-blame-ignore-revs
+          git commit -m "Add clang-format autocorrects to git-blame-ignore-revs"
+          git push
+        else
+          echo "No Autocorrect needed"
+        fi

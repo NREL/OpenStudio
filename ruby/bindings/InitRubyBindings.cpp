@@ -76,133 +76,133 @@ extern "C"
 namespace openstudio {
 namespace ruby {
 
-void initBasicRubyBindings() {
-  rb_provide("openstudio");
-  rb_provide("openstudio.so");
+  void initBasicRubyBindings() {
+    rb_provide("openstudio");
+    rb_provide("openstudio.so");
 
-  Init_openstudioutilitiescore();
-  rb_provide("openstudioutilitiescore");
-  rb_provide("openstudioutilitiescore.so");
-  Init_openstudioutilitiestime();
-  rb_provide("openstudioutilitiestime");
-  rb_provide("openstudioutilitiestime.so");
-  Init_openstudioutilitiesdata();
-  rb_provide("openstudioutilitiesdata");
-  rb_provide("openstudioutilitiesdata.so");
-  Init_openstudioutilitiesplot();
-  rb_provide("openstudioutilitiesplot");
-  rb_provide("openstudioutilitiesplot.so");
-  Init_openstudioutilitiesgeometry();
-  rb_provide("openstudioutilitiesgeometry");
-  rb_provide("openstudioutilitiesgeometry.so");
-  Init_openstudioutilitiessql();
-  rb_provide("openstudioutilitiessql");
-  rb_provide("openstudioutilitiessql.so");
-  Init_openstudioutilitiesbcl();
-  rb_provide("openstudioutilitiesbcl");
-  rb_provide("openstudioutilitiesbcl.so");
-  Init_openstudioutilitiesunits();
-  rb_provide("openstudioutilitiesunits");
-  rb_provide("openstudioutilitiesunits.so");
-  Init_openstudioutilitiesidd();
-  rb_provide("openstudioutilitiesidd");
-  rb_provide("openstudioutilitiesidd.so");
-  Init_openstudioutilitiesidf();
-  rb_provide("openstudioutilitiesidf");
-  rb_provide("openstudioutilitiesidf.so");
-  Init_openstudioutilitiesfiletypes();
-  rb_provide("openstudioutilitiesfiletypes");
-  rb_provide("openstudioutilitiesfiletypes.so");
-  Init_openstudioutilitiesxml();
-  rb_provide("openstudioutilitiesxml");
-  rb_provide("openstudioutilitiesxml.so");
-  Init_openstudioalfalfa();
-  rb_provide("openstudioalfalfa");
-  rb_provide("openstudioalfalfa.so");
-  Init_openstudioutilities();
-  rb_provide("openstudioutilities");
-  rb_provide("openstudioutilities.so");
-}
+    Init_openstudioutilitiescore();
+    rb_provide("openstudioutilitiescore");
+    rb_provide("openstudioutilitiescore.so");
+    Init_openstudioutilitiestime();
+    rb_provide("openstudioutilitiestime");
+    rb_provide("openstudioutilitiestime.so");
+    Init_openstudioutilitiesdata();
+    rb_provide("openstudioutilitiesdata");
+    rb_provide("openstudioutilitiesdata.so");
+    Init_openstudioutilitiesplot();
+    rb_provide("openstudioutilitiesplot");
+    rb_provide("openstudioutilitiesplot.so");
+    Init_openstudioutilitiesgeometry();
+    rb_provide("openstudioutilitiesgeometry");
+    rb_provide("openstudioutilitiesgeometry.so");
+    Init_openstudioutilitiessql();
+    rb_provide("openstudioutilitiessql");
+    rb_provide("openstudioutilitiessql.so");
+    Init_openstudioutilitiesbcl();
+    rb_provide("openstudioutilitiesbcl");
+    rb_provide("openstudioutilitiesbcl.so");
+    Init_openstudioutilitiesunits();
+    rb_provide("openstudioutilitiesunits");
+    rb_provide("openstudioutilitiesunits.so");
+    Init_openstudioutilitiesidd();
+    rb_provide("openstudioutilitiesidd");
+    rb_provide("openstudioutilitiesidd.so");
+    Init_openstudioutilitiesidf();
+    rb_provide("openstudioutilitiesidf");
+    rb_provide("openstudioutilitiesidf.so");
+    Init_openstudioutilitiesfiletypes();
+    rb_provide("openstudioutilitiesfiletypes");
+    rb_provide("openstudioutilitiesfiletypes.so");
+    Init_openstudioutilitiesxml();
+    rb_provide("openstudioutilitiesxml");
+    rb_provide("openstudioutilitiesxml.so");
+    Init_openstudioalfalfa();
+    rb_provide("openstudioalfalfa");
+    rb_provide("openstudioalfalfa.so");
+    Init_openstudioutilities();
+    rb_provide("openstudioutilities");
+    rb_provide("openstudioutilities.so");
+  }
 
-void initExtendedRubyBindings() {
-  Init_openstudiomodel();
-  rb_provide("openstudiomodel");
-  rb_provide("openstudiomodel.so");
-  Init_openstudiomodelcore();
-  rb_provide("openstudiomodelcore");
-  rb_provide("openstudiomodelcore.so");
-  Init_openstudiomodelsimulation();
-  rb_provide("openstudiomodelsimulation");
-  rb_provide("openstudiomodelsimulation.so");
-  Init_openstudiomodelresources();
-  rb_provide("openstudiomodelresources");
-  rb_provide("openstudiomodelresources.so");
-  Init_openstudiomodelgeometry();
-  rb_provide("openstudiomodelgeometry");
-  rb_provide("openstudiomodelgeometry.so");
-  Init_openstudiomodelhvac();
-  rb_provide("openstudiomodelhvac");
-  rb_provide("openstudiomodelhvac.so");
-  Init_openstudiomodelzonehvac();
-  rb_provide("openstudiomodelzonehvac");
-  rb_provide("openstudiomodelzonehvac.so");
-  Init_openstudiomodelavailabilitymanager();
-  rb_provide("openstudiomodelavailabilitymanager");
-  rb_provide("openstudiomodelavailabilitymanager.so");
-  Init_openstudiomodelplantequipmentoperationscheme();
-  rb_provide("openstudiomodelplantequipmentoperationscheme");
-  rb_provide("openstudiomodelplantequipmentoperationscheme.so");
-  Init_openstudiomodelstraightcomponent();
-  rb_provide("openstudiomodelstraightcomponent");
-  rb_provide("openstudiomodelstraightcomponent.so");
-  Init_openstudiomodelairflow();
-  rb_provide("openstudiomodelairflow");
-  rb_provide("openstudiomodelairflow.so");
-  Init_openstudiomodelrefrigeration();
-  rb_provide("openstudiomodelrefrigeration");
-  rb_provide("openstudiomodelrefrigeration.so");
-  Init_openstudiomodelgenerators();
-  rb_provide("openstudiomodelgenerators");
-  rb_provide("openstudiomodelgenerators.so");
+  void initExtendedRubyBindings() {
+    Init_openstudiomodel();
+    rb_provide("openstudiomodel");
+    rb_provide("openstudiomodel.so");
+    Init_openstudiomodelcore();
+    rb_provide("openstudiomodelcore");
+    rb_provide("openstudiomodelcore.so");
+    Init_openstudiomodelsimulation();
+    rb_provide("openstudiomodelsimulation");
+    rb_provide("openstudiomodelsimulation.so");
+    Init_openstudiomodelresources();
+    rb_provide("openstudiomodelresources");
+    rb_provide("openstudiomodelresources.so");
+    Init_openstudiomodelgeometry();
+    rb_provide("openstudiomodelgeometry");
+    rb_provide("openstudiomodelgeometry.so");
+    Init_openstudiomodelhvac();
+    rb_provide("openstudiomodelhvac");
+    rb_provide("openstudiomodelhvac.so");
+    Init_openstudiomodelzonehvac();
+    rb_provide("openstudiomodelzonehvac");
+    rb_provide("openstudiomodelzonehvac.so");
+    Init_openstudiomodelavailabilitymanager();
+    rb_provide("openstudiomodelavailabilitymanager");
+    rb_provide("openstudiomodelavailabilitymanager.so");
+    Init_openstudiomodelplantequipmentoperationscheme();
+    rb_provide("openstudiomodelplantequipmentoperationscheme");
+    rb_provide("openstudiomodelplantequipmentoperationscheme.so");
+    Init_openstudiomodelstraightcomponent();
+    rb_provide("openstudiomodelstraightcomponent");
+    rb_provide("openstudiomodelstraightcomponent.so");
+    Init_openstudiomodelairflow();
+    rb_provide("openstudiomodelairflow");
+    rb_provide("openstudiomodelairflow.so");
+    Init_openstudiomodelrefrigeration();
+    rb_provide("openstudiomodelrefrigeration");
+    rb_provide("openstudiomodelrefrigeration.so");
+    Init_openstudiomodelgenerators();
+    rb_provide("openstudiomodelgenerators");
+    rb_provide("openstudiomodelgenerators.so");
 
-  Init_openstudioenergyplus();
-  rb_provide("openstudioenergyplus");
-  rb_provide("openstudioenergyplus.so");
-  Init_openstudioepjson();
-  rb_provide("openstudioepjson");
-  rb_provide("openstudioepjson.so");
-  Init_openstudioradiance();
-  rb_provide("openstudioradiance");
-  rb_provide("openstudioradiance.so");
-  Init_openstudiogbxml();
-  rb_provide("openstudiogbxml");
-  rb_provide("openstudiogbxml.so");
-  Init_openstudiogltf();
-  rb_provide("openstudiogltf");
-  rb_provide("openstudiogltf.so");
-  Init_openstudioairflow();
-  rb_provide("openstudioairflow");
-  rb_provide("openstudioairflow.so");
-  Init_openstudioosversion();
-  rb_provide("openstudioversion");
-  rb_provide("openstudioversion.so");
-  Init_openstudiomeasure();
-  rb_provide("openstudiomeasure");
-  rb_provide("openstudiomeasure.so");
-  Init_openstudioisomodel();
-  rb_provide("openstudioisomodel");
-  rb_provide("openstudioisomodel.so");
-  Init_openstudiosdd();
-  rb_provide("openstudiosdd");
-  rb_provide("openstudiosdd.so");
+    Init_openstudioenergyplus();
+    rb_provide("openstudioenergyplus");
+    rb_provide("openstudioenergyplus.so");
+    Init_openstudioepjson();
+    rb_provide("openstudioepjson");
+    rb_provide("openstudioepjson.so");
+    Init_openstudioradiance();
+    rb_provide("openstudioradiance");
+    rb_provide("openstudioradiance.so");
+    Init_openstudiogbxml();
+    rb_provide("openstudiogbxml");
+    rb_provide("openstudiogbxml.so");
+    Init_openstudiogltf();
+    rb_provide("openstudiogltf");
+    rb_provide("openstudiogltf.so");
+    Init_openstudioairflow();
+    rb_provide("openstudioairflow");
+    rb_provide("openstudioairflow.so");
+    Init_openstudioosversion();
+    rb_provide("openstudioversion");
+    rb_provide("openstudioversion.so");
+    Init_openstudiomeasure();
+    rb_provide("openstudiomeasure");
+    rb_provide("openstudiomeasure.so");
+    Init_openstudioisomodel();
+    rb_provide("openstudioisomodel");
+    rb_provide("openstudioisomodel.so");
+    Init_openstudiosdd();
+    rb_provide("openstudiosdd");
+    rb_provide("openstudiosdd.so");
 
-  //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
-  //rb_provide("openstudiomodeleditor");
-  //rb_provide("openstudiomodeleditor.so");
+    //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
+    //rb_provide("openstudiomodeleditor");
+    //rb_provide("openstudiomodeleditor.so");
 
-  // "typedefs" for backwards compatibility
-  // keep synchronized with \openstudiocore\src\utilities\core\RubyInterpreter.hpp
-  std::string ruby_typedef_script = R"ruby(
+    // "typedefs" for backwards compatibility
+    // keep synchronized with \openstudiocore\src\utilities\core\RubyInterpreter.hpp
+    std::string ruby_typedef_script = R"ruby(
 module OpenStudio
 module Ruleset
 
@@ -445,16 +445,16 @@ end # module OpenStudio
 
 )ruby";
 
-  openstudio::evalString(ruby_typedef_script);
-}
+    openstudio::evalString(ruby_typedef_script);
+  }
 
-void initEmbeddedGems() {
+  void initEmbeddedGems() {
 
-  // Note: We instantiate a global $logger here
-  // It used to be a ruby Logger (require 'logger'), and we would have needed to set the log level based on the CLI parameters passed
-  // Instead, I mimic it by providing a convenience class that forwards to the OpenStudio logger, which takes care of the log level
+    // Note: We instantiate a global $logger here
+    // It used to be a ruby Logger (require 'logger'), and we would have needed to set the log level based on the CLI parameters passed
+    // Instead, I mimic it by providing a convenience class that forwards to the OpenStudio logger, which takes care of the log level
 
-  std::string initScript = R"ruby(
+    std::string initScript = R"ruby(
 # This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
 # @param [String] message Message to output
@@ -543,9 +543,9 @@ if original_arch
 end
   )ruby";
 
-  openstudio::evalString(initScript);
+    openstudio::evalString(initScript);
 
-  const std::string irbPatch = R"ruby(if $logger.trace?
+    const std::string irbPatch = R"ruby(if $logger.trace?
 require 'irb'
 require 'irb/lc/error'
 
@@ -654,93 +654,93 @@ module IRB # :nodoc:
 end
 end)ruby";
 
-  openstudio::evalString(irbPatch);
-}
+    openstudio::evalString(irbPatch);
+  }
 
-void setupEmbeddedGemsClearEnvVars() {
+  void setupEmbeddedGemsClearEnvVars() {
 
-  // in hash.c there's lot of env-related functions, but all private, aside from rb_env_clear();
-  const std::string clearEnvs = R"ruby(
+    // in hash.c there's lot of env-related functions, but all private, aside from rb_env_clear();
+    const std::string clearEnvs = R"ruby(
 ENV.reject! { |k, _| ['GEM', 'BUNDLE'].any? { |x| k.start_with?(x) } }
   )ruby";
 
-  openstudio::evalString(clearEnvs);
-};
+    openstudio::evalString(clearEnvs);
+  };
 
-void addIncludeDirsToLoadPaths(const std::vector<openstudio::path>& includeDirs) {
-  if (includeDirs.empty()) {
-    return;
+  void addIncludeDirsToLoadPaths(const std::vector<openstudio::path>& includeDirs) {
+    if (includeDirs.empty()) {
+      return;
+    }
+
+    VALUE load_path = rb_gv_get("$LOAD_PATH");
+
+    // Apparently this isn't exposed: `ary_resize_capa(rb_array_len(load_path) + includeDirs.size())``
+
+    // Can't use ranges! starts at clang 15.0, damn.
+    // for (const auto& dirPath : includeDirs | std::views::reverse) {
+    for (const auto& dirPath : includeDirs | boost::adaptors::reversed) {
+      // Insert at 0, in reverse order. Same a includeDirs.concat($LOAD_PATH) in ruby
+      rb_ary_unshift(load_path, rb_str_new2(dirPath.generic_string().c_str()));
+    }
   }
 
-  VALUE load_path = rb_gv_get("$LOAD_PATH");
+  void setRubyEnvVarStr(std::string_view name, std::string_view val) {
 
-  // Apparently this isn't exposed: `ary_resize_capa(rb_array_len(load_path) + includeDirs.size())``
+    if (val.empty()) {
+      return;
+    }
 
-  // Can't use ranges! starts at clang 15.0, damn.
-  // for (const auto& dirPath : includeDirs | std::views::reverse) {
-  for (const auto& dirPath : includeDirs | boost::adaptors::reversed) {
-    // Insert at 0, in reverse order. Same a includeDirs.concat($LOAD_PATH) in ruby
-    rb_ary_unshift(load_path, rb_str_new2(dirPath.generic_string().c_str()));
-  }
-}
+    //   const auto envVarCmd = fmt::format(
+    //     R"ruby(
+    // $logger.info "Setting {0} to {1}"
+    // ENV['{0}'] = '{1}'
+    // )ruby",
+    //     name, val);
 
-void setRubyEnvVarStr(std::string_view name, std::string_view val) {
-
-  if (val.empty()) {
-    return;
-  }
-
-  //   const auto envVarCmd = fmt::format(
-  //     R"ruby(
-  // $logger.info "Setting {0} to {1}"
-  // ENV['{0}'] = '{1}'
-  // )ruby",
-  //     name, val);
-
-  std::stringstream ss;
-  ss << "$logger.info \"Setting " << name << " to " << val << "\"\n"
-     << "ENV['" << name << "'] = '" << val << "'\n";
-  openstudio::evalString(ss.str());
-}
-
-void setRubyEnvVarPath(std::string_view name, const openstudio::path& p) {
-
-  if (p.empty()) {
-    return;
+    std::stringstream ss;
+    ss << "$logger.info \"Setting " << name << " to " << val << "\"\n"
+       << "ENV['" << name << "'] = '" << val << "'\n";
+    openstudio::evalString(ss.str());
   }
 
-  setRubyEnvVarStr(name, p.generic_string());
-}
+  void setRubyEnvVarPath(std::string_view name, const openstudio::path& p) {
 
-void setGemPathDir(const std::vector<openstudio::path>& gemPathDirs) {
-  if (gemPathDirs.empty()) {
-    return;
+    if (p.empty()) {
+      return;
+    }
+
+    setRubyEnvVarStr(name, p.generic_string());
   }
 
-  std::string result;
-  for (const auto& gemDirPath : gemPathDirs) {
-    const auto& s = gemDirPath.generic_string();
-    result += result.empty() ? s : std::string{openstudio::path::preferred_separator} + s;
+  void setGemPathDir(const std::vector<openstudio::path>& gemPathDirs) {
+    if (gemPathDirs.empty()) {
+      return;
+    }
+
+    std::string result;
+    for (const auto& gemDirPath : gemPathDirs) {
+      const auto& s = gemDirPath.generic_string();
+      result += result.empty() ? s : std::string{openstudio::path::preferred_separator} + s;
+    }
+    setRubyEnvVarStr("GEM_PATH", result);
   }
-  setRubyEnvVarStr("GEM_PATH", result);
-}
 
-void locateEmbeddedGems(bool use_bundler) {
-  // It is important to find, eval, and call add_spec for all of the gemspecs
-  // that are in the embedded file system. The rubgems find/load mechanims will
-  // attempt to use a number of Ruby file, directory, and path operations that
-  // are not compaitable with the embdded file system. By doing the find, eval,
-  // add_spec routine up front, rubygems will avoid trying to load things off of
-  // the embedded file system itself.
-  //
-  // A previous version of this routine added embedded file paths to the gem
-  // path, such as Gem.paths.path << ':/ruby/3.2.0/gems/'. This is not
-  // sustainable because it requires shims for many of the Ruby file operations
-  // so that they work with embedded files. The solution here avoids File
-  // operations on embdded file system with the exception of our own
-  // EmbeddedScripting::getFileAsString
+  void locateEmbeddedGems(bool use_bundler) {
+    // It is important to find, eval, and call add_spec for all of the gemspecs
+    // that are in the embedded file system. The rubgems find/load mechanims will
+    // attempt to use a number of Ruby file, directory, and path operations that
+    // are not compaitable with the embdded file system. By doing the find, eval,
+    // add_spec routine up front, rubygems will avoid trying to load things off of
+    // the embedded file system itself.
+    //
+    // A previous version of this routine added embedded file paths to the gem
+    // path, such as Gem.paths.path << ':/ruby/3.2.0/gems/'. This is not
+    // sustainable because it requires shims for many of the Ruby file operations
+    // so that they work with embedded files. The solution here avoids File
+    // operations on embdded file system with the exception of our own
+    // EmbeddedScripting::getFileAsString
 
-  std::string initCmd = R"ruby(
+    std::string initCmd = R"ruby(
 
   # This prevents default system paths from creeping in
   class Gem::PathSupport
@@ -849,8 +849,8 @@ void locateEmbeddedGems(bool use_bundler) {
   end
 )ruby";
 
-  if (use_bundler) {
-    initCmd += R"ruby(
+    if (use_bundler) {
+      initCmd += R"ruby(
   # Load the bundle before activating any embedded gems
   embedded_gems_to_activate.each do |spec|
     if spec.name == "bundler"
@@ -1009,9 +1009,9 @@ void locateEmbeddedGems(bool use_bundler) {
     $ignore_native_gem_names = nil
   end
   )ruby";
-  }
+    }
 
-  initCmd += R"ruby(
+    initCmd += R"ruby(
 
   original_load_path = $LOAD_PATH.clone
 
@@ -1037,46 +1037,46 @@ void locateEmbeddedGems(bool use_bundler) {
   $LOAD_PATH.reject! {|p| not original_load_path.any? p}
   )ruby";
 
-  openstudio::evalString(initCmd);
-}
-
-void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
-                       const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath, const openstudio::path& bundleGemDirPath,
-                       const std::string& bundleWithoutGroups) {
-
-  setupEmbeddedGemsClearEnvVars();
-  initEmbeddedGems();
-
-  addIncludeDirsToLoadPaths(includeDirs);
-  setGemPathDir(gemPathDirs);
-  setRubyEnvVarPath("GEM_HOME", gemHomeDir);
-  bool use_bundler = false;
-  if (!bundleGemFilePath.empty()) {
-    setRubyEnvVarPath("BUNDLE_GEMFILE", bundleGemFilePath);
-    use_bundler = true;
-  }
-  if (!bundleGemDirPath.empty()) {
-    setRubyEnvVarPath("BUNDLE_PATH", bundleGemDirPath);
-  } else if (use_bundler) {
-    // bundle was requested but bundle_path was not provided
-    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/3.2.0/'" << std::endl;
+    openstudio::evalString(initCmd);
   }
 
-  if (!bundleWithoutGroups.empty()) {
-    setRubyEnvVarPath("BUNDLE_WITHOUT", bundleWithoutGroups);
-  } else if (use_bundler) {
-    // bundle was requested but bundle_path was not provided
-    std::cout << "Warn: Bundle activated but ENV['BUNDLE_WITHOUT'] is not set" << '\n' << "Info: Setting BUNDLE_WITHOUT to 'test'" << std::endl;
-    setRubyEnvVarPath("BUNDLE_WITHOUT", "test");
+  void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
+                         const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath, const openstudio::path& bundleGemDirPath,
+                         const std::string& bundleWithoutGroups) {
+
+    setupEmbeddedGemsClearEnvVars();
+    initEmbeddedGems();
+
+    addIncludeDirsToLoadPaths(includeDirs);
+    setGemPathDir(gemPathDirs);
+    setRubyEnvVarPath("GEM_HOME", gemHomeDir);
+    bool use_bundler = false;
+    if (!bundleGemFilePath.empty()) {
+      setRubyEnvVarPath("BUNDLE_GEMFILE", bundleGemFilePath);
+      use_bundler = true;
+    }
+    if (!bundleGemDirPath.empty()) {
+      setRubyEnvVarPath("BUNDLE_PATH", bundleGemDirPath);
+    } else if (use_bundler) {
+      // bundle was requested but bundle_path was not provided
+      std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/3.2.0/'" << std::endl;
+    }
+
+    if (!bundleWithoutGroups.empty()) {
+      setRubyEnvVarPath("BUNDLE_WITHOUT", bundleWithoutGroups);
+    } else if (use_bundler) {
+      // bundle was requested but bundle_path was not provided
+      std::cout << "Warn: Bundle activated but ENV['BUNDLE_WITHOUT'] is not set" << '\n' << "Info: Setting BUNDLE_WITHOUT to 'test'" << std::endl;
+      setRubyEnvVarPath("BUNDLE_WITHOUT", "test");
+    }
+
+    locateEmbeddedGems(use_bundler);
   }
 
-  locateEmbeddedGems(use_bundler);
-}
-
-void initRubyBindings() {
-  initBasicRubyBindings();
-  initExtendedRubyBindings();
-}
+  void initRubyBindings() {
+    initBasicRubyBindings();
+    initExtendedRubyBindings();
+  }
 
 }  // namespace ruby
 }  // namespace openstudio

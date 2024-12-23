@@ -585,8 +585,8 @@ namespace measure {
             case OSArgumentType::String:
             case OSArgumentType::Choice:
             case OSArgumentType::Path:
-              LOG(Info, "OSDomainType " << domainType.valueName() << " does not make sense for "
-                                        << "arguments of type " << m_type.valueName() << ", such as " << name() << ".");
+              LOG(Info, "OSDomainType " << domainType.valueName() << " does not make sense for " << "arguments of type " << m_type.valueName()
+                                        << ", such as " << name() << ".");
               return false;
             default:
               break;

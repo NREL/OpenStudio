@@ -74,8 +74,11 @@
   // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
 
-  // Ignore hvac objects for now, add back in with partial classes in ModelAirflow.i
+  // Ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
   %ignore openstudio::model::Model::airflowNetworkSimulationControl;
+
+  // Ignore resources objects for now, add back in with partial classes in ModelResources.i
+  %ignore openstudio::model::Model::pythonPluginSearchPaths;
 
   // EnergyManagementSystemActuator: depends on Space (ModelGeometry.i),
   %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,

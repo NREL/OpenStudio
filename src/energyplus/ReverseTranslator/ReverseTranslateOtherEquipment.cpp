@@ -34,8 +34,8 @@ namespace energyplus {
       return boost::none;
     }
 
-    LOG(Info, "OtherEquipment is an internal load separate from any other system, and not "
-                << "associated with an end use subcategory. Use with caution.");
+    LOG(Info,
+        "OtherEquipment is an internal load separate from any other system, and not " << "associated with an end use subcategory. Use with caution.");
 
     // create the definition
     openstudio::model::OtherEquipmentDefinition definition(m_model);

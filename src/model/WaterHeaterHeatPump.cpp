@@ -229,6 +229,12 @@ namespace model {
       return value.get();
     }
 
+    std::string WaterHeaterHeatPump_Impl::tankElementControlLogic() const {
+      boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::TankElementControlLogic, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     std::string WaterHeaterHeatPump_Impl::controlSensorLocationInStratifiedTank() const {
       boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank, true);
       OS_ASSERT(value);
@@ -390,6 +396,11 @@ namespace model {
 
     bool WaterHeaterHeatPump_Impl::setInletAirMixerSchedule(Schedule& schedule) {
       bool result = setSchedule(OS_WaterHeater_HeatPumpFields::InletAirMixerSchedule, "WaterHeaterHeatPump", "Inlet Air Mixer Schedule", schedule);
+      return result;
+    }
+
+    bool WaterHeaterHeatPump_Impl::setTankElementControlLogic(const std::string& tankElementControlLogic) {
+      bool result = setString(OS_WaterHeater_HeatPumpFields::TankElementControlLogic, tankElementControlLogic);
       return result;
     }
 
@@ -565,6 +576,7 @@ namespace model {
     setOnCycleParasiticElectricLoad(0.0);
     setOffCycleParasiticElectricLoad(0.0);
     setParasiticHeatRejectionLocation("Outdoors");
+    setTankElementControlLogic("Simultaneous");
     setControlSensorLocationInStratifiedTank("Heater1");
   }
 
@@ -621,6 +633,7 @@ namespace model {
     setOnCycleParasiticElectricLoad(0.0);
     setOffCycleParasiticElectricLoad(0.0);
     setParasiticHeatRejectionLocation("Outdoors");
+    setTankElementControlLogic("Simultaneous");
     setControlSensorLocationInStratifiedTank("Heater1");
   }
 
@@ -647,6 +660,10 @@ namespace model {
   std::vector<std::string> WaterHeaterHeatPump::controlSensorLocationInStratifiedTankValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_WaterHeater_HeatPumpFields::ControlSensorLocationInStratifiedTank);
+  }
+
+  std::vector<std::string> WaterHeaterHeatPump::tankElementControlLogicValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_WaterHeater_HeatPumpFields::TankElementControlLogic);
   }
 
   boost::optional<Schedule> WaterHeaterHeatPump::availabilitySchedule() const {
@@ -735,6 +752,10 @@ namespace model {
 
   Schedule WaterHeaterHeatPump::inletAirMixerSchedule() const {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->inletAirMixerSchedule();
+  }
+
+  std::string WaterHeaterHeatPump::tankElementControlLogic() const {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->tankElementControlLogic();
   }
 
   std::string WaterHeaterHeatPump::controlSensorLocationInStratifiedTank() const {
@@ -853,6 +874,10 @@ namespace model {
 
   bool WaterHeaterHeatPump::setInletAirMixerSchedule(Schedule& schedule) {
     return getImpl<detail::WaterHeaterHeatPump_Impl>()->setInletAirMixerSchedule(schedule);
+  }
+
+  bool WaterHeaterHeatPump::setTankElementControlLogic(const std::string& tankElementControlLogic) {
+    return getImpl<detail::WaterHeaterHeatPump_Impl>()->setTankElementControlLogic(tankElementControlLogic);
   }
 
   bool WaterHeaterHeatPump::setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank) {

@@ -81,8 +81,7 @@ namespace detail {
         if (!workspace().isMember(targetHandle)) {
           if (!expectToLosePointers) {
             LOG(Trace, "Field " << index << " of '" << iddObject().name() << "' object points to an object with handle " << toString(targetHandle)
-                                << ", but there is not object with that handle in the Workspace. Will try to "
-                                << "interpret as a name.");
+                                << ", but there is not object with that handle in the Workspace. Will try to " << "interpret as a name.");
           }
           targetHandle = Handle();
         }
@@ -1090,7 +1089,7 @@ namespace detail {
         result = fpIt->targetHandle;
         if (fpIt->targetHandle == targetHandle) {
           return result;
-        }                       // nothing to do
+        }  // nothing to do
         nullifyPointer(index);  // takes care of reverse pointer
       }
     }

@@ -220,8 +220,8 @@ namespace detail {
       try {
         m_value = boost::lexical_cast<double>(valueElement.text().as_string());
       } catch (const boost::bad_lexical_cast&) {
-        LOG_AND_THROW("Please double check your XML, you have an Attribute with a ValueType of 'Double' "
-                      << "but the Value isn't a double: [" << valueElement.text().as_string() << "].");
+        LOG_AND_THROW("Please double check your XML, you have an Attribute with a ValueType of 'Double' " << "but the Value isn't a double: ["
+                                                                                                          << valueElement.text().as_string() << "].");
       }
     } else if (m_valueType.value() == AttributeValueType::String) {
       // Note JM 2018-12-14: Carefull not to end up with const char,
@@ -881,7 +881,7 @@ Attribute::Attribute(const openstudio::UUID& uuid, const openstudio::UUID& versi
                      const boost::optional<std::string>& displayName, const char* value, const boost::optional<std::string>& units,
                      const std::string& source)
   : m_impl(
-    std::shared_ptr<detail::Attribute_Impl>(new detail::Attribute_Impl(uuid, versionUUID, name, displayName, std::string(value), units, source))) {
+      std::shared_ptr<detail::Attribute_Impl>(new detail::Attribute_Impl(uuid, versionUUID, name, displayName, std::string(value), units, source))) {
   OS_ASSERT(m_impl);
 }
 

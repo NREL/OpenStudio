@@ -113,8 +113,8 @@ namespace sdd {
     pugi::xml_node result = element.root().first_child().child("Proj");
     if (!result) {
       LOG_FREE(Error, "openstudio.sdd.Helpers",
-               "Couldn't find the 'Proj' element in the tree from the supplied element "
-                 << "(name()='" << element.name() << "', text()='" << element.text().as_string() << "').");
+               "Couldn't find the 'Proj' element in the tree from the supplied element " << "(name()='" << element.name() << "', text()='"
+                                                                                         << element.text().as_string() << "').");
       OS_ASSERT(false);
     }
     return result;

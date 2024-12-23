@@ -54,8 +54,8 @@ namespace detail {
       Logger::instance().addTimeStampToLogger();
       if (include_channel) {
         m_formatter = expr::stream << "[" << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%H:%M:%S.%f") << " "
-                                   << boost::phoenix::bind(&formatter_severity_upcase, expr::attr<LogLevel>("Severity")) << "] "
-                                   << "[" << expr::attr<LogChannel>("Channel") << "] " << expr::smessage;
+                                   << boost::phoenix::bind(&formatter_severity_upcase, expr::attr<LogLevel>("Severity")) << "] " << "["
+                                   << expr::attr<LogChannel>("Channel") << "] " << expr::smessage;
       } else {
         m_formatter = expr::stream << "[" << expr::format_date_time<boost::posix_time::ptime>("TimeStamp", "%H:%M:%S.%f") << " "
                                    << boost::phoenix::bind(&formatter_severity_upcase, expr::attr<LogLevel>("Severity")) << "] " << expr::smessage;

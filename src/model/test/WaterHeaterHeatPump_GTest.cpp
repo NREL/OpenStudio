@@ -254,6 +254,14 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
     EXPECT_EQ(obj, hpwh.inletAirMixerSchedule());
   }
 
+  // Tank Element Control Logic: Required String
+  EXPECT_EQ("Simultaneous", hpwh.tankElementControlLogic());
+  EXPECT_TRUE(hpwh.setTankElementControlLogic("MutuallyExclusive"));
+  EXPECT_EQ("MutuallyExclusive", hpwh.tankElementControlLogic());
+  // Bad Value
+  EXPECT_FALSE(hpwh.setTankElementControlLogic("BADENUM"));
+  EXPECT_EQ("MutuallyExclusive", hpwh.tankElementControlLogic());
+
   // Control Sensor Location In Stratified Tank: Required String
   EXPECT_TRUE(hpwh.setControlSensorLocationInStratifiedTank("Heater1"));
   EXPECT_EQ("Heater1", hpwh.controlSensorLocationInStratifiedTank());

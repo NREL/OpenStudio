@@ -111,8 +111,7 @@ namespace model {
     ScheduleDay ScheduleRule_Impl::daySchedule() const {
       OptionalScheduleDay result = optionalDaySchedule();
       if (!result) {
-        LOG_AND_THROW(briefDescription() << " has been corrupted. It no longer points to an "
-                                         << "OS:Schedule:Day object.");
+        LOG_AND_THROW(briefDescription() << " has been corrupted. It no longer points to an " << "OS:Schedule:Day object.");
       }
       return *result;
     }

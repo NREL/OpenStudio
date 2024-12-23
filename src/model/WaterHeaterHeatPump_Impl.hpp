@@ -95,6 +95,8 @@ namespace model {
 
       Schedule inletAirMixerSchedule() const;
 
+      std::string tankElementControlLogic() const;
+
       std::string controlSensorLocationInStratifiedTank() const;
 
       boost::optional<double> autosizedCondenserWaterFlowRate() const;
@@ -164,6 +166,8 @@ namespace model {
       bool setParasiticHeatRejectionLocation(const std::string& parasiticHeatRejectionLocation);
 
       bool setInletAirMixerSchedule(Schedule& schedule);
+
+      bool setTankElementControlLogic(const std::string& tankElementControlLogic);
 
       bool setControlSensorLocationInStratifiedTank(const std::string& controlSensorLocationInStratifiedTank);
 

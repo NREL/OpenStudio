@@ -488,8 +488,7 @@ bool IdfFile::save(const openstudio::path& p, bool overwrite) {
     }
   }
 
-  LOG(Error, "Unable to write file to path '" << toString(wp) << "', because parent directory "
-                                              << "could not be created.");
+  LOG(Error, "Unable to write file to path '" << toString(wp) << "', because parent directory " << "could not be created.");
   return false;
 }
 
@@ -692,8 +691,7 @@ void IdfFile::addVersionObject() {
       printWarn = false;
     }
     if (printWarn) {
-      LOG(Warn, "Unable to add Version Idf object, because could not identify a Version "
-                  << "Idd object.");
+      LOG(Warn, "Unable to add Version Idf object, because could not identify a Version " << "Idd object.");
     }
     return;
   }

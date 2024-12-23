@@ -268,8 +268,7 @@ boost::optional<Quantity> QuantityConverterSingleton::m_convertToSI(const Quanti
     // apply conversion factor
     auto mapItr = m_toSImap.find(*it);
     if (mapItr == m_toSImap.end()) {
-      LOG(Error, "Cannot convert base unit '" << *it << "' to SI because it is not "
-                                              << "registered with the QuantityConverter.");
+      LOG(Error, "Cannot convert base unit '" << *it << "' to SI because it is not " << "registered with the QuantityConverter.");
       return boost::none;
     }
     baseUnitConversionFactor factor = mapItr->second;

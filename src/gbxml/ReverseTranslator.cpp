@@ -37,6 +37,7 @@
 #include "../model/AdditionalProperties.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/UnitFactory.hpp"
@@ -85,16 +86,40 @@ namespace gbxml {
 
     if (openstudio::filesystem::exists(path)) {
 
-      // validate the gbxml prior to reverse translation
-      auto gbxmlValidator = XMLValidator::gbxmlValidator();
-      gbxmlValidator.validate(path);
-
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
         pugi::xml_document doc;
         auto load_result = doc.load(file);
         if (load_result) {
-          result = this->convert(doc.document_element());
+          auto root = doc.document_element();
+          if (std::string_view{root.name()} != "gbXML") {
+            LOG(Error, "Expected the root element to be <gbXML>");
+            return boost::none;
+          }
+          // Scan version of gbxml schema
+          std::string version = root.attribute("version").value();
+          VersionString schemaVersion(7, 3);
+          if (version.empty()) {
+            LOG(Warn, "gbXML has no `version` attribute for the schema version, assuming 7.03.");
+          } else {
+            try {
+              schemaVersion = VersionString(version);
+            } catch (...) {
+              LOG(Warn, "gbXML has `version` '" << version << "' which was not understood, assuming 7.03.");
+            }
+          }
+          if (schemaVersion == VersionString(7, 3)) {
+            // validate the gbxml prior to reverse translation
+            auto gbxmlValidator = XMLValidator::gbxmlValidator(schemaVersion);
+            gbxmlValidator.validate(path);
+          } else {
+            LOG(Error,
+                "Version of schema specified: " << version
+                                                << ", expected 7.03. gbXML Schema Validation skipped. Note that ReverseTranslator rules are built "
+                                                   "for 7.03 and older versions are not officially supported, check resulting model with care.");
+          };
+
+          result = this->convert(root);
         }
         file.close();
       }

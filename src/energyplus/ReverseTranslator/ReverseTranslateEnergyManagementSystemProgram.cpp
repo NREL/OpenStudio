@@ -120,7 +120,7 @@ namespace energyplus {
         }  // end loop on all results in line
         emsProgram.addLine(newline);
       }  // end if(line)
-    }    // End loop on each line of the program
+    }  // End loop on each line of the program
 
     return emsProgram;
   }

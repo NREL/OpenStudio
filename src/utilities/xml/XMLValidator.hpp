@@ -52,7 +52,7 @@ class UTILITIES_API XMLValidator
   XMLValidator& operator=(const XMLValidator& other) = default;
   XMLValidator& operator=(XMLValidator&& other) noexcept = default;
 
-  static XMLValidator gbxmlValidator();
+  static XMLValidator gbxmlValidator(const VersionString& schemaVersion = VersionString(7, 3));
 
   static XMLValidator bclXMLValidator(openstudio::BCLXMLType bclXMLType = openstudio::BCLXMLType::MeasureXML,
                                       const VersionString& schemaVersion = VersionString(3, 1));

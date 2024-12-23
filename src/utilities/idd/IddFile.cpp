@@ -101,8 +101,7 @@ namespace detail {
     if (objectType == IddObjectType::UserCustom) {
       LOG(Info, "Asked to return IddObject of type IddObjectType::UserCustom. Since "
                   << "UserCustom object types are generally not unique, returning false rather than "
-                  << "an IddObject. Please specify a different IddObjectType, or use "
-                  << "getObject(const std::string&).");
+                  << "an IddObject. Please specify a different IddObjectType, or use " << "getObject(const std::string&).");
       return result;
     }
 

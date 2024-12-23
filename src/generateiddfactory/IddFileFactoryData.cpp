@@ -55,8 +55,7 @@ IddFileFactoryData::IddFileFactoryData(const std::string& fileNameAndPathPair) {
   re = boost::regex("[a-zA-Z]\\w*");
   ok = boost::regex_match(m_fileName, match, re);
   if (!ok) {
-    ss << "'" << m_fileName << "' is an invalid Idd file name. "
-       << "Please use Perl regex word characters, and start the name with a letter.";
+    ss << "'" << m_fileName << "' is an invalid Idd file name. " << "Please use Perl regex word characters, and start the name with a letter.";
     throw std::runtime_error(ss.str().c_str());
   }
 

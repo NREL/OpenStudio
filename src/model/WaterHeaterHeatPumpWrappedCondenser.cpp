@@ -610,7 +610,7 @@ namespace model {
     setOnCycleParasiticElectricLoad(0.0);
     setOffCycleParasiticElectricLoad(0.0);
     setParasiticHeatRejectionLocation("Outdoors");
-    setTankElementControlLogic("MutuallyExclusive");
+    setTankElementControlLogic("MutuallyExclusive");  // TODO: The E+ default is Simultaneous!
     setControlSensor1HeightInStratifiedTank(1.262);
     setControlSensor1Weight(0.75);
     setControlSensor2HeightInStratifiedTank(0.464);
@@ -640,7 +640,7 @@ namespace model {
     setOnCycleParasiticElectricLoad(0.0);
     setOffCycleParasiticElectricLoad(0.0);
     setParasiticHeatRejectionLocation("Outdoors");
-    setTankElementControlLogic("MutuallyExclusive");
+    setTankElementControlLogic("MutuallyExclusive");  // TODO: The E+ default is Simultaneous!
     setControlSensor1HeightInStratifiedTank(1.262);
     setControlSensor1Weight(0.75);
     setControlSensor2HeightInStratifiedTank(0.464);
