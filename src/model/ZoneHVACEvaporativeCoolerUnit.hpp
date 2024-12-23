@@ -37,13 +37,8 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class SystemAvailabilityManagerLists;
-  class Connection;
-  class Fans;
-  class EvapCooler;
-  class DesignSpecificationZoneHVACSizingName;
+  class HVACComponent;
 
   namespace detail {
 
@@ -81,23 +76,9 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: SystemAvailabilityManagerLists.
-    boost::optional<SystemAvailabilityManagerLists> availabilityManagerList() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection outdoorAirInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection coolerOutletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> zoneReliefAirNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Fans.
-    Fans supplyAirFan() const;
+    HVACComponent supplyAirFan() const;
 
     boost::optional<double> designSupplyAirFlowRate() const;
 
@@ -113,14 +94,9 @@ namespace model {
 
     double coolingLoadControlThresholdHeatTransferRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: EvapCooler.
-    EvapCooler firstEvaporativeCooler() const;
+    HVACComponent firstEvaporativeCooler() const;
 
-    // TODO: Check return type. From object lists, some candidates are: EvapCooler.
-    boost::optional<EvapCooler> secondEvaporativeCooler() const;
-
-    // TODO: Check return type. From object lists, some candidates are: DesignSpecificationZoneHVACSizingName.
-    boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizing() const;
+    boost::optional<HVACComponent> secondEvaporativeCooler() const;
 
     double shutOffRelativeHumidity() const;
 
@@ -128,28 +104,9 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    // TODO: Check argument type. From object lists, some candidates are: SystemAvailabilityManagerLists.
-    bool setAvailabilityManagerList(const SystemAvailabilityManagerLists& systemAvailabilityManagerLists);
-
-    void resetAvailabilityManagerList();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutdoorAirInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCoolerOutletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setZoneReliefAirNode(const Connection& connection);
-
-    void resetZoneReliefAirNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Fans.
-    bool setSupplyAirFan(const Fans& fans);
+    bool setSupplyAirFan(const HVACComponent& hvacComponent);
 
     bool setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
 
@@ -163,18 +120,11 @@ namespace model {
 
     bool setCoolingLoadControlThresholdHeatTransferRate(double coolingLoadControlThresholdHeatTransferRate);
 
-    // TODO: Check argument type. From object lists, some candidates are: EvapCooler.
-    bool setFirstEvaporativeCooler(const EvapCooler& evapCooler);
+    bool setFirstEvaporativeCooler(const HVACComponent& hvacComponent);
 
-    // TODO: Check argument type. From object lists, some candidates are: EvapCooler.
-    bool setSecondEvaporativeCooler(const EvapCooler& evapCooler);
+    bool setSecondEvaporativeCooler(const HVACComponent& hvacComponent);
 
     void resetSecondEvaporativeCooler();
-
-    // TODO: Check argument type. From object lists, some candidates are: DesignSpecificationZoneHVACSizingName.
-    bool setDesignSpecificationZoneHVACSizing(const DesignSpecificationZoneHVACSizingName& designSpecificationZoneHVACSizingName);
-
-    void resetDesignSpecificationZoneHVACSizing();
 
     bool setShutOffRelativeHumidity(double shutOffRelativeHumidity);
 

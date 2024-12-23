@@ -31,67 +31,32 @@
 
 #include "../ZoneHVACEvaporativeCoolerUnit.hpp"
 #include "../ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
-
-#include "../SystemAvailabilityManagerLists.hpp"
-#include "../SystemAvailabilityManagerLists_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Fans.hpp"
-#include "../Fans_Impl.hpp"
-
-#include "../EvapCooler.hpp"
-#include "../EvapCooler_Impl.hpp"
-
-#include "../DesignSpecificationZoneHVACSizingName.hpp"
-#include "../DesignSpecificationZoneHVACSizingName_Impl.hpp"
+#include "../FanComponentModel.hpp"
+#include "../FanComponentModel_Impl.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
+#include "../EvaporativeCoolerIndirectResearchSpecial.hpp"
+#include "../EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit = m.getUniqueModelObject<ZoneHVACEvaporativeCoolerUnit>();
 
   zoneHVACEvaporativeCoolerUnit.setName("My ZoneHVACEvaporativeCoolerUnit");
 
   // Availability Schedule Name: Required Object
-  Schedule availabilitySchedule(m);
+  Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setAvailabilitySchedule(availabilitySchedule));
   EXPECT_EQ(availabilitySchedule, zoneHVACEvaporativeCoolerUnit.availabilitySchedule());
 
-  // Availability Manager List Name: Optional Object
-  boost::optional<SystemAvailabilityManagerLists> availabilityManagerList(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setAvailabilityManagerList(availabilityManagerList));
-  ASSERT_TRUE(zoneHVACEvaporativeCoolerUnit.availabilityManagerList());
-  EXPECT_EQ(availabilityManagerList, zoneHVACEvaporativeCoolerUnit.availabilityManagerList().get());
-
-  // Outdoor Air Inlet Node Name: Required Object
-  Connection outdoorAirInletNode(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setOutdoorAirInletNode(outdoorAirInletNode));
-  EXPECT_EQ(outdoorAirInletNode, zoneHVACEvaporativeCoolerUnit.outdoorAirInletNode());
-
-  // Cooler Outlet Node Name: Required Object
-  Connection coolerOutletNode(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setCoolerOutletNode(coolerOutletNode));
-  EXPECT_EQ(coolerOutletNode, zoneHVACEvaporativeCoolerUnit.coolerOutletNode());
-
-  // Zone Relief Air Node Name: Optional Object
-  boost::optional<Connection> zoneReliefAirNode(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setZoneReliefAirNode(zoneReliefAirNode));
-  ASSERT_TRUE(zoneHVACEvaporativeCoolerUnit.zoneReliefAirNode());
-  EXPECT_EQ(zoneReliefAirNode, zoneHVACEvaporativeCoolerUnit.zoneReliefAirNode().get());
-
   // Supply Air Fan Name: Required Object
-  Fans supplyAirFan(m);
+  FanComponentModel supplyAirFan(m);
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSupplyAirFan(supplyAirFan));
   EXPECT_EQ(supplyAirFan, zoneHVACEvaporativeCoolerUnit.supplyAirFan());
 
@@ -138,21 +103,16 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_GettersSetters) {
   EXPECT_EQ(1.3, zoneHVACEvaporativeCoolerUnit.coolingLoadControlThresholdHeatTransferRate());
 
   // First Evaporative Cooler: Required Object
-  EvapCooler firstEvaporativeCooler(m);
+  EvaporativeCoolerDirectResearchSpecial firstEvaporativeCooler(m, availabilitySchedule);
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setFirstEvaporativeCooler(firstEvaporativeCooler));
   EXPECT_EQ(firstEvaporativeCooler, zoneHVACEvaporativeCoolerUnit.firstEvaporativeCooler());
 
   // Second Evaporative Cooler Name: Optional Object
-  boost::optional<EvapCooler> secondEvaporativeCooler(m);
+  EXPECT_FALSE(zoneHVACEvaporativeCoolerUnit.secondEvaporativeCooler());
+  EvaporativeCoolerIndirectResearchSpecial secondEvaporativeCooler(m);
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSecondEvaporativeCooler(secondEvaporativeCooler));
   ASSERT_TRUE(zoneHVACEvaporativeCoolerUnit.secondEvaporativeCooler());
   EXPECT_EQ(secondEvaporativeCooler, zoneHVACEvaporativeCoolerUnit.secondEvaporativeCooler().get());
-
-  // Design Specification ZoneHVAC Sizing: Optional Object
-  boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizing(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setDesignSpecificationZoneHVACSizing(designSpecificationZoneHVACSizing));
-  ASSERT_TRUE(zoneHVACEvaporativeCoolerUnit.designSpecificationZoneHVACSizing());
-  EXPECT_EQ(designSpecificationZoneHVACSizing, zoneHVACEvaporativeCoolerUnit.designSpecificationZoneHVACSizing().get());
 
   // Shut Off Relative Humidity: Required Double
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setShutOffRelativeHumidity(94.444));
@@ -161,12 +121,11 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_GettersSetters) {
   EXPECT_FALSE(zoneHVACEvaporativeCoolerUnit.setShutOffRelativeHumidity(-10.0));
   EXPECT_EQ(94.444, zoneHVACEvaporativeCoolerUnit.shutOffRelativeHumidity());
 }
+
 TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_HeatCoolFuelTypes) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit = m.getUniqueModelObject<ZoneHVACEvaporativeCoolerUnit>();
 
   EXPECT_EQ(ComponentType(ComponentType::Both), zoneHVACEvaporativeCoolerUnit.componentType());
   testFuelTypeEquality({FuelType::Electricity}, zoneHVACEvaporativeCoolerUnit.coolingFuelTypes());

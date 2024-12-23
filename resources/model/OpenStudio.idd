@@ -31197,7 +31197,7 @@ OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
 OS:ZoneHVAC:EvaporativeCoolerUnit,
        \memo Zone evaporative cooler. Forced-convection cooling-only unit with supply fan,
        \memo 100% outdoor air supply. Optional relief exhaust node
-       \min-fields 16
+       \min-fields 17
   A1,  \field Handle
        \type handle
        \required-field
@@ -31265,7 +31265,7 @@ OS:ZoneHVAC:EvaporativeCoolerUnit,
        \required-field
        \type object-list
        \object-list EvapCoolerNames
-  A12, \field Second Evaporative Cooler Name
+  A12, \field Second Evaporative Cooler
        \note optional, used for direct/indirect configurations
        \type object-list
        \object-list EvapCoolerNames

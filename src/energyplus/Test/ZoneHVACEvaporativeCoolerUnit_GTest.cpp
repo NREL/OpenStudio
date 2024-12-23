@@ -31,23 +31,19 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
 #include "../../model/ZoneHVACEvaporativeCoolerUnit.hpp"
 #include "../../model/ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include "../../model/SystemAvailabilityManagerLists.hpp"
-#include "../../model/SystemAvailabilityManagerLists_Impl.hpp"
-#include "../../model/Fans.hpp"
-#include "../../model/Fans_Impl.hpp"
-#include "../../model/EvapCooler.hpp"
-#include "../../model/EvapCooler_Impl.hpp"
-#include "../../model/EvapCooler.hpp"
-#include "../../model/EvapCooler_Impl.hpp"
-#include "../../model/DesignSpecificationZoneHVACSizingName.hpp"
-#include "../../model/DesignSpecificationZoneHVACSizingName_Impl.hpp"
+#include "../../model/FanComponentModel.hpp"
+#include "../../model/FanComponentModel_Impl.hpp"
+#include "../../model/EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "../../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
+#include "../../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
+#include "../../model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -56,6 +52,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/ZoneHVAC_EvaporativeCoolerUnit_FieldEnums.hxx>
+
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
@@ -65,60 +62,55 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   ForwardTranslator ft;
 
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit = m.getUniqueModelObject<ZoneHVACEvaporativeCoolerUnit>();
 
   zoneHVACEvaporativeCoolerUnit.setName("My ZoneHVACEvaporativeCoolerUnit");
-  boost::optional<Schedule> availabilitySchedule(m);
+  Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setAvailabilitySchedule(availabilitySchedule));
-  boost::optional<SystemAvailabilityManagerLists> availabilityManagerList(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setAvailabilityManagerList(availabilityManagerList));
-  Node outdoorAirInletNodeName(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setOutdoorAirInletNodeName(outdoorAirInletNodeName));
-  Node coolerOutletNodeName(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setCoolerOutletNodeName(coolerOutletNodeName));
-  Node zoneReliefAirNodeName(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setZoneReliefAirNodeName(zoneReliefAirNodeName));
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSupplyAirFanObjectType("Fan:SystemModel"));
-  Fans supplyAirFan(m);
+  FanComponentModel supplyAirFan(m);
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSupplyAirFan(supplyAirFan));
-  // Autosize
-  // zoneHVACEvaporativeCoolerUnit.autosizeDesignSupplyAirFlowRate();
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setDesignSupplyAirFlowRate(0.9));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setFanPlacement("BlowThrough"));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setCoolerUnitControlMethod("ZoneTemperatureDeadbandOnOffCycling"));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setThrottlingRangeTemperatureDifference(1.2));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setCoolingLoadControlThresholdHeatTransferRate(1.3));
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setFirstEvaporativeCoolerObjectType("EvaporativeCooler:Direct:CelDekPad"));
-  EvapCooler firstEvaporativeCoolerObject(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setFirstEvaporativeCoolerObject(firstEvaporativeCoolerObject));
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSecondEvaporativeCoolerObjectType("EvaporativeCooler:Direct:CelDekPad"));
-  boost::optional<EvapCooler> secondEvaporativeCooler(m);
+  EvaporativeCoolerDirectResearchSpecial firstEvaporativeCooler(m, availabilitySchedule);
+  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setFirstEvaporativeCooler(firstEvaporativeCooler));
+  EvaporativeCoolerIndirectResearchSpecial secondEvaporativeCooler(m);
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSecondEvaporativeCooler(secondEvaporativeCooler));
-  boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizingObject(m);
-  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setDesignSpecificationZoneHVACSizingObject(designSpecificationZoneHVACSizingObject));
   EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setShutOffRelativeHumidity(95.0));
 
-  // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
+  // Need to be in a thermal zone to be translated, with at least one space
+  ThermalZone z(m);
+  zoneHVACEvaporativeCoolerUnit.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   const Workspace w = ft.translateModel(m);
   const auto idfObjs = w.getObjectsByType(IddObjectType::ZoneHVAC_EvaporativeCoolerUnit);
   ASSERT_EQ(1u, idfObjs.size());
-
   const auto& idfObject = idfObjs.front();
+
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::Name).get());
   EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName).get());
-  EXPECT_EQ(availabilityManagerList.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName).get());
-  EXPECT_EQ(outdoorAirInletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
-  EXPECT_EQ(coolerOutletNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
-  EXPECT_EQ(zoneReliefAirNodeName.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
-  EXPECT_EQ("Fan:SystemModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
+  EXPECT_EQ("Fan:ComponentModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get());
   EXPECT_EQ(supplyAirFan.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get());
-  // EXPECT_EQ("Autosize", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());  EXPECT_EQ(0.9, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());  EXPECT_EQ("BlowThrough", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FanPlacement).get());  EXPECT_EQ("ZoneTemperatureDeadbandOnOffCycling", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerUnitControlMethod).get());  EXPECT_EQ(1.2, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ThrottlingRangeTemperatureDifference).get());  EXPECT_EQ(1.3, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::CoolingLoadControlThresholdHeatTransferRate).get());  EXPECT_EQ("EvaporativeCooler:Direct:CelDekPad", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType).get()); EXPECT_EQ(firstEvaporativeCoolerObject.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName).get());
-  EXPECT_EQ("EvaporativeCooler:Direct:CelDekPad", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType).get());
+  EXPECT_EQ(0.9, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());
+  EXPECT_EQ("BlowThrough", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FanPlacement).get());
+  EXPECT_EQ("ZoneTemperatureDeadbandOnOffCycling", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerUnitControlMethod).get());
+  EXPECT_EQ(1.2, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ThrottlingRangeTemperatureDifference).get());
+  EXPECT_EQ(1.3, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::CoolingLoadControlThresholdHeatTransferRate).get());
+  EXPECT_EQ("EvaporativeCooler:Direct:ResearchSpecial",
+            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType).get());
+  EXPECT_EQ(firstEvaporativeCooler.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName).get());
+  EXPECT_EQ("EvaporativeCooler:Indirect:ResearchSpecial",
+            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType).get());
   EXPECT_EQ(secondEvaporativeCooler.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get());
-  EXPECT_EQ(designSpecificationZoneHVACSizingObject.nameString(),
-            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName).get());
   EXPECT_EQ(95.0, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ShutOffRelativeHumidity).get());
 }

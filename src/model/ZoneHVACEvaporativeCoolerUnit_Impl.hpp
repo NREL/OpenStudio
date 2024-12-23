@@ -36,13 +36,8 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class SystemAvailabilityManagerLists;
-  class Connection;
-  class Fans;
-  class EvapCooler;
-  class DesignSpecificationZoneHVACSizingName;
+  class HVACComponent;
 
   namespace detail {
 
@@ -71,6 +66,10 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
       virtual ComponentType componentType() const override;
       virtual std::vector<FuelType> coolingFuelTypes() const override;
       virtual std::vector<FuelType> heatingFuelTypes() const override;
@@ -80,23 +79,9 @@ namespace model {
       /** @name Getters */
       //@{
 
-      // TODO: Check return type. From object lists, some candidates are: Schedule.
       Schedule availabilitySchedule() const;
 
-      // TODO: Check return type. From object lists, some candidates are: SystemAvailabilityManagerLists.
-      boost::optional<SystemAvailabilityManagerLists> availabilityManagerList() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Connection.
-      Connection outdoorAirInletNode() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Connection.
-      Connection coolerOutletNode() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Connection.
-      boost::optional<Connection> zoneReliefAirNode() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Fans.
-      Fans supplyAirFan() const;
+      HVACComponent supplyAirFan() const;
 
       boost::optional<double> designSupplyAirFlowRate() const;
 
@@ -112,14 +97,9 @@ namespace model {
 
       double coolingLoadControlThresholdHeatTransferRate() const;
 
-      // TODO: Check return type. From object lists, some candidates are: EvapCooler.
-      EvapCooler firstEvaporativeCooler() const;
+      HVACComponent firstEvaporativeCooler() const;
 
-      // TODO: Check return type. From object lists, some candidates are: EvapCooler.
-      boost::optional<EvapCooler> secondEvaporativeCooler() const;
-
-      // TODO: Check return type. From object lists, some candidates are: DesignSpecificationZoneHVACSizingName.
-      boost::optional<DesignSpecificationZoneHVACSizingName> designSpecificationZoneHVACSizing() const;
+      boost::optional<HVACComponent> secondEvaporativeCooler() const;
 
       double shutOffRelativeHumidity() const;
 
@@ -127,28 +107,9 @@ namespace model {
       /** @name Setters */
       //@{
 
-      // TODO: Check argument type. From object lists, some candidates are: Schedule.
-      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      // TODO: Check argument type. From object lists, some candidates are: SystemAvailabilityManagerLists.
-      bool setAvailabilityManagerList(const SystemAvailabilityManagerLists& systemAvailabilityManagerLists);
-
-      void resetAvailabilityManagerList();
-
-      // TODO: Check argument type. From object lists, some candidates are: Connection.
-      bool setOutdoorAirInletNode(const Connection& connection);
-
-      // TODO: Check argument type. From object lists, some candidates are: Connection.
-      bool setCoolerOutletNode(const Connection& connection);
-
-      // TODO: Check argument type. From object lists, some candidates are: Connection.
-      bool setZoneReliefAirNode(const Connection& connection);
-
-      void resetZoneReliefAirNode();
-
-      // TODO: Check argument type. From object lists, some candidates are: Fans.
-      bool setSupplyAirFan(const Fans& fans);
+      bool setSupplyAirFan(const HVACComponent& hvacComponent);
 
       bool setDesignSupplyAirFlowRate(double designSupplyAirFlowRate);
 
@@ -162,18 +123,11 @@ namespace model {
 
       bool setCoolingLoadControlThresholdHeatTransferRate(double coolingLoadControlThresholdHeatTransferRate);
 
-      // TODO: Check argument type. From object lists, some candidates are: EvapCooler.
-      bool setFirstEvaporativeCooler(const EvapCooler& evapCooler);
+      bool setFirstEvaporativeCooler(const HVACComponent& hvacComponent);
 
-      // TODO: Check argument type. From object lists, some candidates are: EvapCooler.
-      bool setSecondEvaporativeCooler(const EvapCooler& evapCooler);
+      bool setSecondEvaporativeCooler(const HVACComponent& hvacComponent);
 
       void resetSecondEvaporativeCooler();
-
-      // TODO: Check argument type. From object lists, some candidates are: DesignSpecificationZoneHVACSizingName.
-      bool setDesignSpecificationZoneHVACSizing(const DesignSpecificationZoneHVACSizingName& designSpecificationZoneHVACSizingName);
-
-      void resetDesignSpecificationZoneHVACSizing();
 
       bool setShutOffRelativeHumidity(double shutOffRelativeHumidity);
 
@@ -190,15 +144,9 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.ZoneHVACEvaporativeCoolerUnit");
 
-      // TODO: Check the return types of these methods.
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
-      boost::optional<Connection> optionalOutdoorAirInletNode() const;
-      boost::optional<Connection> optionalCoolerOutletNode() const;
-      boost::optional<Fans> optionalSupplyAirFan() const;
-      boost::optional<EvapCooler> optionalFirstEvaporativeCooler() const;
+      boost::optional<HVACComponent> optionalSupplyAirFan() const;
+      boost::optional<HVACComponent> optionalFirstEvaporativeCooler() const;
     };
 
   }  // namespace detail

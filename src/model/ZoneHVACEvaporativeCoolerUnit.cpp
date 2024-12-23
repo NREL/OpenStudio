@@ -30,21 +30,18 @@
 #include "ZoneHVACEvaporativeCoolerUnit.hpp"
 #include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "SystemAvailabilityManagerLists.hpp"
-#include "SystemAvailabilityManagerLists_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Fans.hpp"
-#include "Fans_Impl.hpp"
-#include "EvapCooler.hpp"
-#include "EvapCooler_Impl.hpp"
-#include "DesignSpecificationZoneHVACSizingName.hpp"
-#include "DesignSpecificationZoneHVACSizingName_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "FanComponentModel.hpp"
+#include "FanComponentModel_Impl.hpp"
+#include "EvaporativeCoolerDirectResearchSpecial.hpp"
+#include "EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -85,7 +82,6 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> ZoneHVACEvaporativeCoolerUnit_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName)
@@ -95,24 +91,27 @@ namespace model {
       return result;
     }
 
+    unsigned ZoneHVACEvaporativeCoolerUnit_Impl::inletPort() const {
+      return OS_ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName;
+    }
+
+    unsigned ZoneHVACEvaporativeCoolerUnit_Impl::outletPort() const {
+      return OS_ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName;
+    }
+
     ComponentType ZoneHVACEvaporativeCoolerUnit_Impl::componentType() const {
-      // TODO
       return ComponentType::None;
     }
 
     std::vector<FuelType> ZoneHVACEvaporativeCoolerUnit_Impl::coolingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<FuelType> ZoneHVACEvaporativeCoolerUnit_Impl::heatingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<AppGFuelType> ZoneHVACEvaporativeCoolerUnit_Impl::appGHeatingFuelTypes() const {
-
-      // TODO
       return {};
     }
 
@@ -124,33 +123,8 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<SystemAvailabilityManagerLists> ZoneHVACEvaporativeCoolerUnit_Impl::availabilityManagerList() const {
-      return getObject<ModelObject>().getModelObjectTarget<SystemAvailabilityManagerLists>(
-        OS_ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName);
-    }
-
-    Connection ZoneHVACEvaporativeCoolerUnit_Impl::outdoorAirInletNode() const {
-      boost::optional<Connection> value = optionalOutdoorAirInletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Outdoor Air Inlet Node attached.");
-      }
-      return value.get();
-    }
-
-    Connection ZoneHVACEvaporativeCoolerUnit_Impl::coolerOutletNode() const {
-      boost::optional<Connection> value = optionalCoolerOutletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Cooler Outlet Node attached.");
-      }
-      return value.get();
-    }
-
-    boost::optional<Connection> ZoneHVACEvaporativeCoolerUnit_Impl::zoneReliefAirNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName);
-    }
-
-    Fans ZoneHVACEvaporativeCoolerUnit_Impl::supplyAirFan() const {
-      boost::optional<Fans> value = optionalSupplyAirFan();
+    HVACComponent ZoneHVACEvaporativeCoolerUnit_Impl::supplyAirFan() const {
+      boost::optional<HVACComponent> value = optionalSupplyAirFan();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
       }
@@ -198,21 +172,16 @@ namespace model {
       return value.get();
     }
 
-    EvapCooler ZoneHVACEvaporativeCoolerUnit_Impl::firstEvaporativeCooler() const {
-      boost::optional<EvapCooler> value = optionalFirstEvaporativeCooler();
+    HVACComponent ZoneHVACEvaporativeCoolerUnit_Impl::firstEvaporativeCooler() const {
+      boost::optional<HVACComponent> value = optionalFirstEvaporativeCooler();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an First Evaporative Cooler attached.");
       }
       return value.get();
     }
 
-    boost::optional<EvapCooler> ZoneHVACEvaporativeCoolerUnit_Impl::secondEvaporativeCooler() const {
-      return getObject<ModelObject>().getModelObjectTarget<EvapCooler>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName);
-    }
-
-    boost::optional<DesignSpecificationZoneHVACSizingName> ZoneHVACEvaporativeCoolerUnit_Impl::designSpecificationZoneHVACSizing() const {
-      return getObject<ModelObject>().getModelObjectTarget<DesignSpecificationZoneHVACSizingName>(
-        OS_ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizing);
+    boost::optional<HVACComponent> ZoneHVACEvaporativeCoolerUnit_Impl::secondEvaporativeCooler() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCooler);
     }
 
     double ZoneHVACEvaporativeCoolerUnit_Impl::shutOffRelativeHumidity() const {
@@ -227,38 +196,8 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setAvailabilityManagerList(const SystemAvailabilityManagerLists& systemAvailabilityManagerLists) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName, systemAvailabilityManagerLists.handle());
-      return result;
-    }
-
-    void ZoneHVACEvaporativeCoolerUnit_Impl::resetAvailabilityManagerList() {
-      const bool result = setString(OS_ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setOutdoorAirInletNode(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName, connection.handle());
-      return result;
-    }
-
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setCoolerOutletNode(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName, connection.handle());
-      return result;
-    }
-
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setZoneReliefAirNode(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName, connection.handle());
-      return result;
-    }
-
-    void ZoneHVACEvaporativeCoolerUnit_Impl::resetZoneReliefAirNode() {
-      const bool result = setString(OS_ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setSupplyAirFan(const Fans& fans) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, fans.handle());
+    bool ZoneHVACEvaporativeCoolerUnit_Impl::setSupplyAirFan(const HVACComponent& hvacComponent) {
+      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, hvacComponent.handle());
       return result;
     }
 
@@ -294,30 +233,18 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setFirstEvaporativeCooler(const EvapCooler& evapCooler) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCooler, evapCooler.handle());
+    bool ZoneHVACEvaporativeCoolerUnit_Impl::setFirstEvaporativeCooler(const HVACComponent& hvacComponent) {
+      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCooler, hvacComponent.handle());
       return result;
     }
 
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setSecondEvaporativeCooler(const EvapCooler& evapCooler) {
-      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName, evapCooler.handle());
+    bool ZoneHVACEvaporativeCoolerUnit_Impl::setSecondEvaporativeCooler(const HVACComponent& hvacComponent) {
+      const bool result = setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCooler, hvacComponent.handle());
       return result;
     }
 
     void ZoneHVACEvaporativeCoolerUnit_Impl::resetSecondEvaporativeCooler() {
-      const bool result = setString(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACEvaporativeCoolerUnit_Impl::setDesignSpecificationZoneHVACSizing(
-      const DesignSpecificationZoneHVACSizingName& designSpecificationZoneHVACSizingName) {
-      const bool result =
-        setPointer(OS_ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizing, designSpecificationZoneHVACSizingName.handle());
-      return result;
-    }
-
-    void ZoneHVACEvaporativeCoolerUnit_Impl::resetDesignSpecificationZoneHVACSizing() {
-      const bool result = setString(OS_ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizing, "");
+      const bool result = setString(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCooler, "");
       OS_ASSERT(result);
     }
 
@@ -332,7 +259,7 @@ namespace model {
 
     void ZoneHVACEvaporativeCoolerUnit_Impl::applySizingValues() {
       if (boost::optional<double> val_ = autosizedDesignSupplyAirFlowRate()) {
-        setDesignSupplyAirFlowRate(*val_));
+        setDesignSupplyAirFlowRate(*val_);
       }
     }
 
@@ -340,20 +267,12 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName);
     }
 
-    boost::optional<Connection> ZoneHVACEvaporativeCoolerUnit_Impl::optionalOutdoorAirInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName);
+    boost::optional<HVACComponent> ZoneHVACEvaporativeCoolerUnit_Impl::optionalSupplyAirFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName);
     }
 
-    boost::optional<Connection> ZoneHVACEvaporativeCoolerUnit_Impl::optionalCoolerOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName);
-    }
-
-    boost::optional<Fans> ZoneHVACEvaporativeCoolerUnit_Impl::optionalSupplyAirFan() const {
-      return getObject<ModelObject>().getModelObjectTarget<Fans>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName);
-    }
-
-    boost::optional<EvapCooler> ZoneHVACEvaporativeCoolerUnit_Impl::optionalFirstEvaporativeCooler() const {
-      return getObject<ModelObject>().getModelObjectTarget<EvapCooler>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCooler);
+    boost::optional<HVACComponent> ZoneHVACEvaporativeCoolerUnit_Impl::optionalFirstEvaporativeCooler() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCooler);
     }
 
   }  // namespace detail
@@ -366,12 +285,11 @@ namespace model {
     auto alwaysOn = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
-    // ok = setOutdoorAirInletNode();
+
+    FanComponentModel supplyAirFan(model);  // StripMallZoneEvapCooler.idf
+    ok = setSupplyAirFan(supplyAirFan);
     OS_ASSERT(ok);
-    // ok = setCoolerOutletNode();
-    OS_ASSERT(ok);
-    // ok = setSupplyAirFan();
-    OS_ASSERT(ok);
+
     autosizeDesignSupplyAirFlowRate();
     ok = setFanPlacement("BlowThrough");
     OS_ASSERT(ok);
@@ -381,8 +299,11 @@ namespace model {
     OS_ASSERT(ok);
     ok = setCoolingLoadControlThresholdHeatTransferRate(100.0);
     OS_ASSERT(ok);
-    // ok = setFirstEvaporativeCooler();
+
+    EvaporativeCoolerDirectResearchSpecial firstEvaporativeCooler(model, alwaysOn);
+    ok = setFirstEvaporativeCooler(firstEvaporativeCooler);  // StripMallZoneEvapCooler.idf
     OS_ASSERT(ok);
+
     ok = setShutOffRelativeHumidity(100.0);
     OS_ASSERT(ok);
   }
@@ -394,10 +315,6 @@ namespace model {
 
     bool ok = true;
     ok = setAvailabilitySchedule(availabilitySchedule);
-    OS_ASSERT(ok);
-    // ok = setOutdoorAirInletNode();
-    OS_ASSERT(ok);
-    // ok = setCoolerOutletNode();
     OS_ASSERT(ok);
     ok = setSupplyAirFan(supplyAirFan);
     OS_ASSERT(ok);
@@ -432,23 +349,7 @@ namespace model {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->availabilitySchedule();
   }
 
-  boost::optional<SystemAvailabilityManagerLists> ZoneHVACEvaporativeCoolerUnit::availabilityManagerList() const {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->availabilityManagerList();
-  }
-
-  Connection ZoneHVACEvaporativeCoolerUnit::outdoorAirInletNode() const {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->outdoorAirInletNode();
-  }
-
-  Connection ZoneHVACEvaporativeCoolerUnit::coolerOutletNode() const {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->coolerOutletNode();
-  }
-
-  boost::optional<Connection> ZoneHVACEvaporativeCoolerUnit::zoneReliefAirNode() const {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->zoneReliefAirNode();
-  }
-
-  Fans ZoneHVACEvaporativeCoolerUnit::supplyAirFan() const {
+  HVACComponent ZoneHVACEvaporativeCoolerUnit::supplyAirFan() const {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->supplyAirFan();
   }
 
@@ -480,16 +381,12 @@ namespace model {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->coolingLoadControlThresholdHeatTransferRate();
   }
 
-  EvapCooler ZoneHVACEvaporativeCoolerUnit::firstEvaporativeCooler() const {
+  HVACComponent ZoneHVACEvaporativeCoolerUnit::firstEvaporativeCooler() const {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->firstEvaporativeCooler();
   }
 
-  boost::optional<EvapCooler> ZoneHVACEvaporativeCoolerUnit::secondEvaporativeCooler() const {
+  boost::optional<HVACComponent> ZoneHVACEvaporativeCoolerUnit::secondEvaporativeCooler() const {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->secondEvaporativeCooler();
-  }
-
-  boost::optional<DesignSpecificationZoneHVACSizingName> ZoneHVACEvaporativeCoolerUnit::designSpecificationZoneHVACSizing() const {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->designSpecificationZoneHVACSizing();
   }
 
   double ZoneHVACEvaporativeCoolerUnit::shutOffRelativeHumidity() const {
@@ -500,32 +397,8 @@ namespace model {
     return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool ZoneHVACEvaporativeCoolerUnit::setAvailabilityManagerList(const SystemAvailabilityManagerLists& systemAvailabilityManagerLists) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setAvailabilityManagerList(systemAvailabilityManagerLists);
-  }
-
-  void ZoneHVACEvaporativeCoolerUnit::resetAvailabilityManagerList() {
-    getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->resetAvailabilityManagerList();
-  }
-
-  bool ZoneHVACEvaporativeCoolerUnit::setOutdoorAirInletNode(const Connection& connection) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setOutdoorAirInletNode(connection);
-  }
-
-  bool ZoneHVACEvaporativeCoolerUnit::setCoolerOutletNode(const Connection& connection) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setCoolerOutletNode(connection);
-  }
-
-  bool ZoneHVACEvaporativeCoolerUnit::setZoneReliefAirNode(const Connection& connection) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setZoneReliefAirNode(connection);
-  }
-
-  void ZoneHVACEvaporativeCoolerUnit::resetZoneReliefAirNode() {
-    getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->resetZoneReliefAirNode();
-  }
-
-  bool ZoneHVACEvaporativeCoolerUnit::setSupplyAirFan(const Fans& fans) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setSupplyAirFan(fans);
+  bool ZoneHVACEvaporativeCoolerUnit::setSupplyAirFan(const HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setSupplyAirFan(hvacComponent);
   }
 
   bool ZoneHVACEvaporativeCoolerUnit::setDesignSupplyAirFlowRate(double designSupplyAirFlowRate) {
@@ -553,25 +426,16 @@ namespace model {
       coolingLoadControlThresholdHeatTransferRate);
   }
 
-  bool ZoneHVACEvaporativeCoolerUnit::setFirstEvaporativeCooler(const EvapCooler& evapCooler) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setFirstEvaporativeCooler(evapCooler);
+  bool ZoneHVACEvaporativeCoolerUnit::setFirstEvaporativeCooler(const HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setFirstEvaporativeCooler(hvacComponent);
   }
 
-  bool ZoneHVACEvaporativeCoolerUnit::setSecondEvaporativeCooler(const EvapCooler& evapCooler) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setSecondEvaporativeCooler(evapCooler);
+  bool ZoneHVACEvaporativeCoolerUnit::setSecondEvaporativeCooler(const HVACComponent& hvacComponent) {
+    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setSecondEvaporativeCooler(hvacComponent);
   }
 
   void ZoneHVACEvaporativeCoolerUnit::resetSecondEvaporativeCooler() {
     getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->resetSecondEvaporativeCooler();
-  }
-
-  bool ZoneHVACEvaporativeCoolerUnit::setDesignSpecificationZoneHVACSizing(
-    const DesignSpecificationZoneHVACSizingName& designSpecificationZoneHVACSizingName) {
-    return getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->setDesignSpecificationZoneHVACSizing(designSpecificationZoneHVACSizingName);
-  }
-
-  void ZoneHVACEvaporativeCoolerUnit::resetDesignSpecificationZoneHVACSizing() {
-    getImpl<detail::ZoneHVACEvaporativeCoolerUnit_Impl>()->resetDesignSpecificationZoneHVACSizing();
   }
 
   bool ZoneHVACEvaporativeCoolerUnit::setShutOffRelativeHumidity(double shutOffRelativeHumidity) {
