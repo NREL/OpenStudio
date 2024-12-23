@@ -70,6 +70,44 @@ namespace model {
                                                                            bool keepHandle)
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
+    ModelObject ZoneHVACEvaporativeCoolerUnit_Impl::clone(Model model) const {
+      auto evaporativeCoolUnitClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACEvaporativeCoolerUnit>();
+
+      if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
+        evaporativeCoolUnitClone.setSupplyAirFan(intermediate->clone(model).cast<HVACComponent>());
+      }
+      if (OptionalHVACComponent intermediate = optionalFirstEvaporativeCooler()) {
+        evaporativeCoolUnitClone.setFirstEvaporativeCooler(intermediate->clone(model).cast<HVACComponent>());
+      }
+      if (OptionalHVACComponent intermediate = secondEvaporativeCooler()) {
+        evaporativeCoolUnitClone.setSecondEvaporativeCooler(intermediate->clone(model).cast<HVACComponent>());
+      }
+
+      return std::move(evaporativeCoolUnitClone);
+    }
+
+    std::vector<IdfObject> ZoneHVACEvaporativeCoolerUnit_Impl::remove() {
+      std::vector<IdfObject> result;
+
+      if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
+        std::vector<IdfObject> removedSupplyAirFans = intermediate->remove();
+        result.insert(result.end(), removedSupplyAirFans.begin(), removedSupplyAirFans.end());
+      }
+      if (OptionalHVACComponent intermediate = optionalFirstEvaporativeCooler()) {
+        std::vector<IdfObject> removedFirstEvaporativeCoolers = intermediate->remove();
+        result.insert(result.end(), removedFirstEvaporativeCoolers.begin(), removedFirstEvaporativeCoolers.end());
+      }
+      if (OptionalHVACComponent intermediate = secondEvaporativeCooler()) {
+        std::vector<IdfObject> removedSecondEvaporativeCoolers = intermediate->remove();
+        result.insert(result.end(), removedSecondEvaporativeCoolers.begin(), removedSecondEvaporativeCoolers.end());
+      }
+
+      std::vector<IdfObject> removedZoneHVACEvaporativeCoolerUnit = ZoneHVACComponent_Impl::remove();
+      result.insert(result.end(), removedZoneHVACEvaporativeCoolerUnit.begin(), removedZoneHVACEvaporativeCoolerUnit.end());
+
+      return result;
+    }
+
     const std::vector<std::string>& ZoneHVACEvaporativeCoolerUnit_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
       if (result.empty()) {
@@ -91,6 +129,20 @@ namespace model {
       return result;
     }
 
+    std::vector<ModelObject> ZoneHVACEvaporativeCoolerUnit_Impl::children() const {
+      std::vector<ModelObject> result;
+      if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
+        result.push_back(*intermediate);
+      }
+      if (OptionalHVACComponent intermediate = optionalFirstEvaporativeCooler()) {
+        result.push_back(*intermediate);
+      }
+      if (OptionalHVACComponent intermediate = secondEvaporativeCooler()) {
+        result.push_back(*intermediate);
+      }
+      return result;
+    }
+
     unsigned ZoneHVACEvaporativeCoolerUnit_Impl::inletPort() const {
       return OS_ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName;
     }
@@ -100,19 +152,46 @@ namespace model {
     }
 
     ComponentType ZoneHVACEvaporativeCoolerUnit_Impl::componentType() const {
-      return ComponentType::None;
+      return ComponentType::Cooling;
     }
 
     std::vector<FuelType> ZoneHVACEvaporativeCoolerUnit_Impl::coolingFuelTypes() const {
-      return {};
+      std::set<FuelType> result;
+      for (auto ft : firstEvaporativeCooler().coolingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto secondEvaporativeCooler_ = secondEvaporativeCooler()) {
+        for (auto ft : secondEvaporativeCooler_->coolingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
     std::vector<FuelType> ZoneHVACEvaporativeCoolerUnit_Impl::heatingFuelTypes() const {
-      return {};
+      std::set<FuelType> result;
+      for (auto ft : firstEvaporativeCooler().heatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto secondEvaporativeCooler_ = secondEvaporativeCooler()) {
+        for (auto ft : secondEvaporativeCooler_->heatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
     std::vector<AppGFuelType> ZoneHVACEvaporativeCoolerUnit_Impl::appGHeatingFuelTypes() const {
-      return {};
+      std::set<AppGFuelType> result;
+      for (auto ft : firstEvaporativeCooler().appGHeatingFuelTypes()) {
+        result.insert(ft);
+      }
+      if (auto secondEvaporativeCooler_ = secondEvaporativeCooler()) {
+        for (auto ft : secondEvaporativeCooler_->appGHeatingFuelTypes()) {
+          result.insert(ft);
+        }
+      }
+      return {result.begin(), result.end()};
     }
 
     Schedule ZoneHVACEvaporativeCoolerUnit_Impl::availabilitySchedule() const {
@@ -286,7 +365,7 @@ namespace model {
     ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
 
-    FanComponentModel supplyAirFan(model);  // StripMallZoneEvapCooler.idf
+    FanComponentModel supplyAirFan(model);
     ok = setSupplyAirFan(supplyAirFan);
     OS_ASSERT(ok);
 
@@ -301,7 +380,7 @@ namespace model {
     OS_ASSERT(ok);
 
     EvaporativeCoolerDirectResearchSpecial firstEvaporativeCooler(model, alwaysOn);
-    ok = setFirstEvaporativeCooler(firstEvaporativeCooler);  // StripMallZoneEvapCooler.idf
+    ok = setFirstEvaporativeCooler(firstEvaporativeCooler);
     OS_ASSERT(ok);
 
     ok = setShutOffRelativeHumidity(100.0);

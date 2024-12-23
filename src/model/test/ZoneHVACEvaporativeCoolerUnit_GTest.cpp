@@ -127,8 +127,8 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_HeatCoolFuelTypes) {
 
   ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
 
-  EXPECT_EQ(ComponentType(ComponentType::Both), zoneHVACEvaporativeCoolerUnit.componentType());
+  EXPECT_EQ(ComponentType(ComponentType::Cooling), zoneHVACEvaporativeCoolerUnit.componentType());
   testFuelTypeEquality({FuelType::Electricity}, zoneHVACEvaporativeCoolerUnit.coolingFuelTypes());
-  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, zoneHVACEvaporativeCoolerUnit.heatingFuelTypes());
-  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, zoneHVACEvaporativeCoolerUnit.appGHeatingFuelTypes());
+  testFuelTypeEquality({}, zoneHVACEvaporativeCoolerUnit.heatingFuelTypes());
+  testAppGFuelTypeEquality({}, zoneHVACEvaporativeCoolerUnit.appGHeatingFuelTypes());
 }

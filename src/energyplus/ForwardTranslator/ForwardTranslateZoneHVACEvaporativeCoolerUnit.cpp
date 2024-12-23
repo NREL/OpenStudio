@@ -218,16 +218,16 @@ namespace energyplus {
         inletNodeName = outdoorAirInletNodeName.get();
       }
 
-      if (fan_) {
+      if (istringEqual(fanPlacement, "DrawThrough") && fan_) {
         outletNodeName = baseName + " Second Evaporative Cooler - Fan Node";
       } else {
-        outletNodeName = outdoorAirInletNodeName.get();
+        outletNodeName = coolerOutletNodeName.get();
       }
 
       if (secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
         secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName, inletNodeName);
         secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName, outletNodeName);
-      } else if (firstEvaporativeCooler.iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
+      } else if (secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
         secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName, inletNodeName);
         secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName, outletNodeName);
       } else {

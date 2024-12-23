@@ -52,6 +52,9 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/ZoneHVAC_EvaporativeCoolerUnit_FieldEnums.hxx>
+#include <utilities/idd/Fan_ComponentModel_FieldEnums.hxx>
+#include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
+#include <utilities/idd/EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -94,10 +97,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
 
   EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::Name).get());
   EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName).get());
-  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName).get());
-  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
-  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
-  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
+  EXPECT_TRUE(idfObject.isEmpty(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName));
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airInletModelObject()->nameString(),
+            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airOutletModelObject()->nameString(),
+            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
+  EXPECT_TRUE(idfObject.isEmpty(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName));
   EXPECT_EQ("Fan:ComponentModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get());
   EXPECT_EQ(supplyAirFan.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get());
   EXPECT_EQ(0.9, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());
@@ -111,6 +116,156 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   EXPECT_EQ("EvaporativeCooler:Indirect:ResearchSpecial",
             idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType).get());
   EXPECT_EQ(secondEvaporativeCooler.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get());
-  EXPECT_EQ("", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName).get());
+  EXPECT_TRUE(idfObject.isEmpty(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSpecificationZoneHVACSizingObjectName));
   EXPECT_EQ(95.0, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ShutOffRelativeHumidity).get());
+
+  auto idf_supplyAirFan = idfObject.getTarget(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get();
+  EXPECT_EQ(idf_supplyAirFan.iddObject().type(), IddObjectType::Fan_ComponentModel);
+
+  auto idf_firstEvaporativeCooler = idfObject.getTarget(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName).get();
+  EXPECT_EQ(idf_firstEvaporativeCooler.iddObject().type(), IddObjectType::EvaporativeCooler_Direct_ResearchSpecial);
+
+  auto idf_secondEvaporativeCooler = idfObject.getTarget(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get();
+  EXPECT_EQ(idf_secondEvaporativeCooler.iddObject().type(), IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial);
+
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airInletModelObject()->nameString(),
+            idf_supplyAirFan.getString(Fan_ComponentModelFields::AirInletNodeName).get());
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString() + " Fan - First Evaporative Cooler Node",
+            idf_supplyAirFan.getString(Fan_ComponentModelFields::AirOutletNodeName).get());
+
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString() + " Fan - First Evaporative Cooler Node",
+            idf_firstEvaporativeCooler.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName).get());
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString() + " First Evaporative Cooler - Second Evaporative Cooler Node",
+            idf_firstEvaporativeCooler.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName).get());
+
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString() + " First Evaporative Cooler - Second Evaporative Cooler Node",
+            idf_secondEvaporativeCooler.getString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName).get());
+  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airOutletModelObject()->nameString(),
+            idf_secondEvaporativeCooler.getString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName).get());
+}
+
+std::vector<std::string> getEvaporativeCoolerUnitNodes(const Workspace& workspace) {
+  WorkspaceObjectVector idfEvaporativeCoolerUnits(workspace.getObjectsByType(IddObjectType::ZoneHVAC_EvaporativeCoolerUnit));
+  if (idfEvaporativeCoolerUnits.empty()) {
+    return {};
+  }
+
+  auto& idfEvaporativeCoolerUnit = idfEvaporativeCoolerUnits[0];
+
+  return {
+    idfEvaporativeCoolerUnit.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get(),
+    idfEvaporativeCoolerUnit.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get(),
+  };
+}
+
+std::vector<std::string> getSupplyAirFanNodes(const Workspace& workspace) {
+  WorkspaceObjectVector idfFans(workspace.getObjectsByType(IddObjectType::Fan_ComponentModel));
+  if (idfFans.empty()) {
+    return {};
+  }
+
+  auto& idfFan = idfFans[0];
+
+  return {
+    idfFan.getString(Fan_ComponentModelFields::AirInletNodeName).get(),
+    idfFan.getString(Fan_ComponentModelFields::AirOutletNodeName).get(),
+  };
+}
+
+std::vector<std::string> getFirstEvaporativeCoolerNodes(const Workspace& workspace) {
+  WorkspaceObjectVector idfFirstEvaporativeCoolers(workspace.getObjectsByType(IddObjectType::EvaporativeCooler_Direct_ResearchSpecial));
+  if (idfFirstEvaporativeCoolers.empty()) {
+    return {};
+  }
+
+  auto& idfFirstEvaporativeCooler = idfFirstEvaporativeCoolers[0];
+
+  return {
+    idfFirstEvaporativeCooler.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName).get(),
+    idfFirstEvaporativeCooler.getString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName).get(),
+  };
+}
+
+std::vector<std::string> getSecondEvaporativeCoolerNodes(const Workspace& workspace) {
+  WorkspaceObjectVector idfSecondEvaporativeCoolers(workspace.getObjectsByType(IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial));
+  if (idfSecondEvaporativeCoolers.empty()) {
+    return {};
+  }
+
+  auto& idfSecondEvaporativeCooler = idfSecondEvaporativeCoolers[0];
+
+  return {
+    idfSecondEvaporativeCooler.getString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName).get(),
+    idfSecondEvaporativeCooler.getString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName).get(),
+  };
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit_Nodes) {
+  for (std::string fanPlacement : {"BlowThrough", "DrawThrough"}) {
+
+    // first evaporative cooler
+    {
+      Model m;
+
+      ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
+      zoneHVACEvaporativeCoolerUnit.setFanPlacement(fanPlacement);
+
+      ThermalZone z(m);
+      zoneHVACEvaporativeCoolerUnit.addToThermalZone(z);
+      Space s(m);
+      s.setThermalZone(z);
+
+      ForwardTranslator ft;
+      Workspace workspace = ft.translateModel(m);
+
+      std::vector<std::string> evaporativeCoolerUnitNodes = getEvaporativeCoolerUnitNodes(workspace);
+      std::vector<std::string> fanNodes = getSupplyAirFanNodes(workspace);
+      std::vector<std::string> firstEvaporativeCoolerNodes = getFirstEvaporativeCoolerNodes(workspace);
+
+      if (fanPlacement == "BlowThrough") {
+        EXPECT_EQ(evaporativeCoolerUnitNodes[0], fanNodes[0]);
+        EXPECT_EQ(fanNodes[1], firstEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(firstEvaporativeCoolerNodes[1], evaporativeCoolerUnitNodes[1]);
+      } else if (fanPlacement == "DrawThrough") {
+        EXPECT_EQ(evaporativeCoolerUnitNodes[0], firstEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(firstEvaporativeCoolerNodes[1], fanNodes[0]);
+        EXPECT_EQ(fanNodes[1], evaporativeCoolerUnitNodes[1]);
+      }
+    }
+
+    // first evaporative cooler, second evaporative cooler
+    {
+      Model m;
+
+      ZoneHVACEvaporativeCoolerUnit zoneHVACEvaporativeCoolerUnit(m);
+      zoneHVACEvaporativeCoolerUnit.setFanPlacement(fanPlacement);
+      EvaporativeCoolerIndirectResearchSpecial secondEvaporativeCooler(m);
+      EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSecondEvaporativeCooler(secondEvaporativeCooler));
+
+      ThermalZone z(m);
+      zoneHVACEvaporativeCoolerUnit.addToThermalZone(z);
+      Space s(m);
+      s.setThermalZone(z);
+
+      ForwardTranslator ft;
+      Workspace workspace = ft.translateModel(m);
+
+      std::vector<std::string> evaporativeCoolerUnitNodes = getEvaporativeCoolerUnitNodes(workspace);
+      std::vector<std::string> fanNodes = getSupplyAirFanNodes(workspace);
+      std::vector<std::string> firstEvaporativeCoolerNodes = getFirstEvaporativeCoolerNodes(workspace);
+      std::vector<std::string> secondEvaporativeCoolerNodes = getSecondEvaporativeCoolerNodes(workspace);
+
+      if (fanPlacement == "BlowThrough") {
+        EXPECT_EQ(evaporativeCoolerUnitNodes[0], fanNodes[0]);
+        EXPECT_EQ(fanNodes[1], firstEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(firstEvaporativeCoolerNodes[1], secondEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(secondEvaporativeCoolerNodes[1], evaporativeCoolerUnitNodes[1]);
+      } else if (fanPlacement == "DrawThrough") {
+        EXPECT_EQ(evaporativeCoolerUnitNodes[0], firstEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(firstEvaporativeCoolerNodes[1], secondEvaporativeCoolerNodes[0]);
+        EXPECT_EQ(secondEvaporativeCoolerNodes[1], fanNodes[0]);
+        EXPECT_EQ(fanNodes[1], evaporativeCoolerUnitNodes[1]);
+      }
+    }
+  }
 }
