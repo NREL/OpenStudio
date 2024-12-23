@@ -1216,8 +1216,8 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
   EXPECT_EQ("Outdoors", wh.getString(17, false, true).get());
 
   // Last Field: Control Sensor Location In Stratified Tank
-  ASSERT_TRUE(wh.getString(25, false, true));
-  EXPECT_EQ("Heater2", wh.getString(25, false, true).get());
+  ASSERT_TRUE(wh.getString(26, false, true));
+  EXPECT_EQ("Heater2", wh.getString(26, false, true).get());
 }
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
@@ -4523,4 +4523,30 @@ TEST_F(OSVersionFixture, update_3_8_0_to_3_9_0_SizingZone) {
   WorkspaceObject sizing_zone = sizing_zones[0];
 
   EXPECT_EQ("Coincident", sizing_zone.getString(39).get());  // Sizing Option
+}
+
+TEST_F(OSVersionFixture, update_3_9_0_to_3_9_1_WaterHeaterHeatPump) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_9_1/test_vt_WaterHeaterHeatPump.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_9_1/test_vt_WaterHeaterHeatPump_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> hpwhs = model->getObjectsByType("OS:WaterHeater:HeatPump");
+  ASSERT_EQ(1u, hpwhs.size());
+  const auto& hpwh = hpwhs.front();
+
+  EXPECT_EQ("Water Heater Heat Pump 1", hpwh.getString(1).get());  // Name
+
+  // Before insertion: Inlet Air Mixer Schedule
+  ASSERT_TRUE(hpwh.getTarget(24));
+  EXPECT_EQ("HPWH Inlet Air Mixer Schedule", hpwh.getTarget(24)->nameString());
+
+  // New Field: Tank Element Control Logic
+  EXPECT_EQ("Simultaneous", hpwh.getString(25).get());
+
+  // After insertion and also last field: Control Sensor Location In Stratified Tank
+  EXPECT_EQ("Heater2", hpwh.getString(26).get());
 }

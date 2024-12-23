@@ -142,6 +142,11 @@ namespace energyplus {
     }
 
     {
+      auto value = modelObject.tankElementControlLogic();
+      idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::TankElementControlLogic, value);
+    }
+
+    {
       auto tank = modelObject.tank();
       if (auto stratifiedTank = tank.optionalCast<model::WaterHeaterStratified>()) {
         auto value = modelObject.controlSensorLocationInStratifiedTank();
