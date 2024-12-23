@@ -9670,6 +9670,30 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
+      } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // 1 Field has been inserted from 3.9.0 to 3.9.1:
+        // ----------------------------------------------
+        // * Bore Hole Top Depth * 6
+
+        auto iddObject = idd_3_9_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(6, 1.0);  // this value of 1 is what we previously had hardcoded in FT
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
         // No-op
       } else {
         ss << object;

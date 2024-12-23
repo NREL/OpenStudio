@@ -42,6 +42,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
 
   EXPECT_TRUE(ghx.setDesignFlowRate(0.004));
   EXPECT_TRUE(ghx.setNumberofBoreHoles(100));
+  EXPECT_TRUE(ghx.setBoreHoleTopDepth(1.35));
   EXPECT_TRUE(ghx.setBoreHoleLength(80.0));
   EXPECT_TRUE(ghx.setBoreHoleRadius(0.7E-01));
   EXPECT_TRUE(ghx.setGroundThermalConductivity(0.7));
@@ -108,7 +109,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ(100, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::NumberofBoreholes).get());
   EXPECT_EQ(0.001, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::GFunctionReferenceRatio).get());
 
-  EXPECT_EQ(1, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole).get());
+  EXPECT_EQ(1.35, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole).get());
   EXPECT_EQ(80.0, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeLength).get());
   EXPECT_EQ(0.7E-01 * 2, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeDiameter).get());
   EXPECT_EQ(0.7, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::GroutThermalConductivity).get());
