@@ -109,7 +109,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchangerVertical) {
   EXPECT_EQ(100, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::NumberofBoreholes).get());
   EXPECT_EQ(0.001, response.getDouble(GroundHeatExchanger_ResponseFactorsFields::GFunctionReferenceRatio).get());
 
-  EXPECT_EQ(1, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole).get());
   EXPECT_EQ(1.35, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::DepthofTopofBorehole).get());
   EXPECT_EQ(80.0, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeLength).get());
   EXPECT_EQ(0.7E-01 * 2, properties.getDouble(GroundHeatExchanger_Vertical_PropertiesFields::BoreholeDiameter).get());
