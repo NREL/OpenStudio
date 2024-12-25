@@ -71,6 +71,10 @@ namespace energyplus {
       if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
         auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX) {
+        auto coolingCoilDX = coolingCoil->cast<CoilCoolingDX>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,
+                       coolingCoilDX.performanceObject().baseOperatingMode().speeds().size());
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
       }
