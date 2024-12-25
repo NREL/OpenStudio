@@ -19,6 +19,7 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
