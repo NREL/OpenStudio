@@ -57,11 +57,9 @@ namespace energyplus {
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EvaporativeCoolerUnit, modelObject);
 
-    // Availability Schedule Name: Optional Object
-    if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
-        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName, wo_->nameString());
-      }
+    // Availability Schedule Name: Required Object
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(modelObject.availabilitySchedule())) {
+      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName, wo_->nameString());
     }
 
     boost::optional<std::string> outdoorAirInletNodeName;
@@ -81,23 +79,18 @@ namespace energyplus {
 
     // Supply Air Fan Object Type
     // Supply Air Fan Name
-    boost::optional<IdfObject> fan_;
-    if (boost::optional<HVACComponent> supplyAirFan = modelObject.supplyAirFan()) {
-      fan_ = translateAndMapModelObject(supplyAirFan.get());
+    boost::optional<IdfObject> fan_ = translateAndMapModelObject(modelObject.supplyAirFan().get());
 
-      if (fan_ && fan_->name()) {
-        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, fan_->iddObject().name());
-        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, fan_->name().get());
-      }
+    if (fan_ && fan_->name()) {
+      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, fan_->iddObject().name());
+      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, fan_->name().get());
     }
 
     if (modelObject.isDesignSupplyAirFlowRateAutosized()) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate, "Autosize");
     } else {
       // Design Supply Air Flow Rate: boost::optional<double>
-      if (boost::optional<double> designSupplyAirFlowRate_ = modelObject.designSupplyAirFlowRate()) {
-        idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate, designSupplyAirFlowRate_.get());
-      }
+      idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate, modelObject.designSupplyAirFlowRate().get());
     }
 
     // Fan Placement: Required String

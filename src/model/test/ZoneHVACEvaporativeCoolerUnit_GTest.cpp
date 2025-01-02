@@ -39,6 +39,14 @@
 #include "../EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../EvaporativeCoolerIndirectResearchSpecial.hpp"
 #include "../EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneSplitter_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -131,4 +139,109 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_HeatCoolFuelTypes) {
   testFuelTypeEquality({FuelType::Electricity}, zoneHVACEvaporativeCoolerUnit.coolingFuelTypes());
   testFuelTypeEquality({}, zoneHVACEvaporativeCoolerUnit.heatingFuelTypes());
   testAppGFuelTypeEquality({}, zoneHVACEvaporativeCoolerUnit.appGHeatingFuelTypes());
+}
+
+TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_addToThermalZone) {
+  Model m;
+  ZoneHVACEvaporativeCoolerUnit zonehvac(m);
+
+  ThermalZone tz(m);
+  ASSERT_TRUE(zonehvac.addToThermalZone(tz));
+  ASSERT_TRUE(zonehvac.thermalZone());
+  ASSERT_EQ(tz, zonehvac.thermalZone().get());
+  ASSERT_EQ(1u, tz.equipment().size());
+  zonehvac.removeFromThermalZone();
+  ASSERT_EQ(0u, tz.equipment().size());
+
+  ZoneHVACEvaporativeCoolerUnit zonehvac2(m);
+  zonehvac2.addToThermalZone(tz);
+  zonehvac2.remove();
+  ASSERT_EQ(0u, tz.equipment().size());
+}
+
+TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_clone) {
+  Model m;
+  FanComponentModel fan(m);
+  Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
+  EvaporativeCoolerDirectResearchSpecial firstEvaporativeCooler(model, availabilitySchedule);
+  ZoneHVACEvaporativeCoolerUnit zonehvac(m, availabilitySchedule, fan, firstEvaporativeCooler);
+  EvaporativeCoolerIndirectResearchSpecial secondEvaporativeCooler(m);
+  EXPECT_TRUE(zoneHVACEvaporativeCoolerUnit.setSecondEvaporativeCooler(secondEvaporativeCooler));
+  EXPECT_EQ(1u, m.getConcreteModelObjects<FanComponentModel>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+
+  ThermalZone tz(m);
+  EXPECT_TRUE(zonehvac.addToThermalZone(tz));
+  EXPECT_TRUE(zonehvac.inletModelObject());
+  EXPECT_TRUE(zonehvac.outletModelObject());
+  EXPECT_TRUE(zonehvac.thermalZone());
+  {
+    Model m2;
+    auto zonehvacClone = zonehvac.clone(m2).cast<ZoneHVACEvaporativeCoolerUnit>();
+    EXPECT_FALSE(zonehvacClone.inletModelObject());
+    EXPECT_FALSE(zonehvacClone.outletModelObject());
+    EXPECT_FALSE(zonehvacClone.thermalZone());
+    EXPECT_NE(fan.handle(), zonehvacClone.supplyAirFan().handle());
+    EXPECT_NE(firstEvaporativeCooler.handle(), zonehvacClone.firstEvaporativeCooler().handle());
+    EXPECT_NE(secondEvaporativeCooler.handle(), zonehvacClone.secondEvaporativeCooler().handle());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<FanComponentModel>().size());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+  }
+
+  {
+    auto zonehvacClone = zonehvac.clone(m).cast<ZoneHVACEvaporativeCoolerUnit>();
+    EXPECT_FALSE(zonehvacClone.inletModelObject());
+    EXPECT_FALSE(zonehvacClone.outletModelObject());
+    EXPECT_FALSE(zonehvacClone.thermalZone());
+    EXPECT_NE(fan.handle(), zonehvacClone.supplyAirFan().handle());
+    EXPECT_NE(firstEvaporativeCooler.handle(), zonehvacClone.firstEvaporativeCooler().handle());
+    EXPECT_NE(secondEvaporativeCooler.handle(), zonehvacClone.secondEvaporativeCooler().handle());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<FanComponentModel>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+  }
+}
+
+TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_remove) {
+  Model m;
+  ZoneHVACEvaporativeCoolerUnit zonehvac(m);
+
+  auto size = m.modelObjects().size();
+  EXPECT_FALSE(zonehvac.remove().empty());
+  EXPECT_EQ(size - 1, m.modelObjects().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>().size());
+}
+
+TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_addToNode) {
+  Model m;
+  ZoneHVACEvaporativeCoolerUnit zonehvac(m);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+
+  EXPECT_FALSE(zonehvac.addToNode(supplyOutletNode));
+  EXPECT_EQ(2, airLoop.supplyComponents().size());
+
+  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+
+  EXPECT_FALSE(zonehvac.addToNode(inletNode));
+  EXPECT_EQ(5, airLoop.demandComponents().size());
+
+  PlantLoop plantLoop(m);
+  supplyOutletNode = plantLoop.supplyOutletNode();
+  EXPECT_TRUE(zonehvac.addToNode(supplyOutletNode));
+  EXPECT_EQ(7, plantLoop.supplyComponents().size());
+
+  Node demandOutletNode = plantLoop.demandOutletNode();
+  EXPECT_FALSE(zonehvac.addToNode(demandOutletNode));
+  EXPECT_EQ(5, plantLoop.demandComponents().size());
+
+  auto zonehvacClone = zonehvac.clone(m).cast<ZoneHVACEvaporativeCoolerUnit>();
+  supplyOutletNode = plantLoop.supplyOutletNode();
+
+  EXPECT_TRUE(zonehvacClone.addToNode(supplyOutletNode));
+  EXPECT_EQ(9, plantLoop.supplyComponents().size());
 }

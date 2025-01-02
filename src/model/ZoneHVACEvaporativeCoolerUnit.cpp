@@ -395,8 +395,13 @@ namespace model {
     bool ok = true;
     ok = setAvailabilitySchedule(availabilitySchedule);
     OS_ASSERT(ok);
+
     ok = setSupplyAirFan(supplyAirFan);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply air fan to " << supplyAirFan.briefDescription() << ".");
+    }
+
     autosizeDesignSupplyAirFlowRate();
     ok = setFanPlacement("BlowThrough");
     OS_ASSERT(ok);
@@ -406,8 +411,13 @@ namespace model {
     OS_ASSERT(ok);
     ok = setCoolingLoadControlThresholdHeatTransferRate(100.0);
     OS_ASSERT(ok);
+
     ok = setFirstEvaporativeCooler(firstEvaporativeCooler);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s first evaporative cooler to " << firstEvaporativeCooler.briefDescription() << ".");
+    }
+
     ok = setShutOffRelativeHumidity(100.0);
     OS_ASSERT(ok);
   }
