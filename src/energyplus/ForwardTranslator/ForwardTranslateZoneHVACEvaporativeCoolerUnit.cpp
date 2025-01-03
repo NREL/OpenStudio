@@ -58,7 +58,8 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EvaporativeCoolerUnit, modelObject);
 
     // Availability Schedule Name: Required Object
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(modelObject.availabilitySchedule())) {
+    Schedule availabilitySchedule_ = modelObject.availabilitySchedule();
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_)) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName, wo_->nameString());
     }
 
@@ -79,7 +80,8 @@ namespace energyplus {
 
     // Supply Air Fan Object Type
     // Supply Air Fan Name
-    boost::optional<IdfObject> fan_ = translateAndMapModelObject(modelObject.supplyAirFan().get());
+    HVACComponent supplyAirFan_ = modelObject.supplyAirFan();
+    boost::optional<IdfObject> fan_ = translateAndMapModelObject(supplyAirFan_);
 
     if (fan_ && fan_->name()) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, fan_->iddObject().name());
