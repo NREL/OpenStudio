@@ -86,28 +86,6 @@ namespace model {
       return std::move(evaporativeCoolUnitClone);
     }
 
-    std::vector<IdfObject> ZoneHVACEvaporativeCoolerUnit_Impl::remove() {
-      std::vector<IdfObject> result;
-
-      if (OptionalHVACComponent intermediate = optionalSupplyAirFan()) {
-        std::vector<IdfObject> removedSupplyAirFans = intermediate->remove();
-        result.insert(result.end(), removedSupplyAirFans.begin(), removedSupplyAirFans.end());
-      }
-      if (OptionalHVACComponent intermediate = optionalFirstEvaporativeCooler()) {
-        std::vector<IdfObject> removedFirstEvaporativeCoolers = intermediate->remove();
-        result.insert(result.end(), removedFirstEvaporativeCoolers.begin(), removedFirstEvaporativeCoolers.end());
-      }
-      if (OptionalHVACComponent intermediate = secondEvaporativeCooler()) {
-        std::vector<IdfObject> removedSecondEvaporativeCoolers = intermediate->remove();
-        result.insert(result.end(), removedSecondEvaporativeCoolers.begin(), removedSecondEvaporativeCoolers.end());
-      }
-
-      std::vector<IdfObject> removedZoneHVACEvaporativeCoolerUnit = ZoneHVACComponent_Impl::remove();
-      result.insert(result.end(), removedZoneHVACEvaporativeCoolerUnit.begin(), removedZoneHVACEvaporativeCoolerUnit.end());
-
-      return result;
-    }
-
     const std::vector<std::string>& ZoneHVACEvaporativeCoolerUnit_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
       if (result.empty()) {

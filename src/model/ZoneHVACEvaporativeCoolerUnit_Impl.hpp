@@ -62,8 +62,6 @@ namespace model {
 
       virtual ModelObject clone(Model model) const override;
 
-      virtual std::vector<IdfObject> remove() override;
-
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;

@@ -33,6 +33,8 @@
 #include "../ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 #include "../FanComponentModel.hpp"
 #include "../FanComponentModel_Impl.hpp"
 #include "../EvaporativeCoolerDirectResearchSpecial.hpp"
@@ -204,9 +206,9 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_clone) {
     EXPECT_NE(firstEvaporativeCooler.handle(), zonehvacClone.firstEvaporativeCooler().handle());
     ASSERT_TRUE(zonehvacClone.secondEvaporativeCooler());
     EXPECT_NE(secondEvaporativeCooler.handle(), zonehvacClone.secondEvaporativeCooler().get().handle());
-    EXPECT_EQ(1u, m.getConcreteModelObjects<FanComponentModel>().size());
-    EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
-    EXPECT_EQ(1u, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<FanComponentModel>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
   }
 }
 
@@ -215,9 +217,18 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_remove) {
   ZoneHVACEvaporativeCoolerUnit zonehvac(m);
 
   auto size = m.modelObjects().size();
+  EXPECT_EQ(1, m.getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<FanComponentModel>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ScheduleConstant>().size());
   EXPECT_FALSE(zonehvac.remove().empty());
   EXPECT_EQ(size - 1, m.modelObjects().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<FanComponentModel>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ScheduleConstant>().size());
 }
 
 TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_addToNode) {
@@ -238,8 +249,8 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_addToNode) {
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_TRUE(zonehvac.addToNode(supplyOutletNode));
-  EXPECT_EQ(7, plantLoop.supplyComponents().size());
+  EXPECT_FALSE(zonehvac.addToNode(supplyOutletNode));
+  EXPECT_EQ(5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(zonehvac.addToNode(demandOutletNode));
@@ -248,6 +259,6 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_addToNode) {
   auto zonehvacClone = zonehvac.clone(m).cast<ZoneHVACEvaporativeCoolerUnit>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
-  EXPECT_TRUE(zonehvacClone.addToNode(supplyOutletNode));
-  EXPECT_EQ(9, plantLoop.supplyComponents().size());
+  EXPECT_FALSE(zonehvacClone.addToNode(supplyOutletNode));
+  EXPECT_EQ(5, plantLoop.supplyComponents().size());
 }
