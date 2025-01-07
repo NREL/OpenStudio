@@ -216,14 +216,27 @@ TEST_F(ModelFixture, ZoneHVACEvaporativeCoolerUnit_remove) {
   Model m;
   ZoneHVACEvaporativeCoolerUnit zonehvac(m);
 
+  auto fanComponent = zonehvac.supplyAirFan();
+  ASSERT_TRUE(fanComponent.optionalCast<FanComponentModel>());
+  EXPECT_TRUE(fanComponent.containingZoneHVACComponent());
+  EXPECT_EQ(zonehvac.handle(), fanComponent.containingZoneHVACComponent().get().handle());
+  EXPECT_FALSE(fanComponent.isRemovable());
+
+  auto evapCoolerComponent = zonehvac.firstEvaporativeCooler();
+  ASSERT_TRUE(evapCoolerComponent.optionalCast<EvaporativeCoolerDirectResearchSpecial>());
+  EXPECT_TRUE(evapCoolerComponent.containingZoneHVACComponent());
+  EXPECT_EQ(zonehvac.handle(), evapCoolerComponent.containingZoneHVACComponent().get().handle());
+  EXPECT_FALSE(evapCoolerComponent.isRemovable());
+
   auto size = m.modelObjects().size();
   EXPECT_EQ(1, m.getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<FanComponentModel>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<EvaporativeCoolerIndirectResearchSpecial>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<ScheduleConstant>().size());
+  // remove returns: ["Zone HVAC Evaporative Cooler Unit 1", "Fan Component Model 1", "Evaporative Cooler Direct Research Special 1"]
   EXPECT_FALSE(zonehvac.remove().empty());
-  EXPECT_EQ(size - 1, m.modelObjects().size());
+  EXPECT_EQ(size - 3, m.modelObjects().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<FanComponentModel>().size());
   EXPECT_EQ(0, m.getConcreteModelObjects<EvaporativeCoolerDirectResearchSpecial>().size());
