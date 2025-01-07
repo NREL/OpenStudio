@@ -19,6 +19,14 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
@@ -71,6 +79,10 @@ namespace energyplus {
       if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
         auto coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
+      } else if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX) {
+        auto coolingCoilDX = coolingCoil->cast<CoilCoolingDX>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,
+                       coolingCoilDX.performanceObject().baseOperatingMode().speeds().size());
       } else {
         sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
       }
