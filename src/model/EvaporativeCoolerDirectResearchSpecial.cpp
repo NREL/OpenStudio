@@ -15,6 +15,10 @@
 #include "Curve_Impl.hpp"
 #include "Model.hpp"
 
+// containing ZoneHVAC Component
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
+
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -124,6 +128,28 @@ namespace model {
       }
       OS_ASSERT(value);
       return value.get();
+    }
+
+    boost::optional<ZoneHVACComponent> EvaporativeCoolerDirectResearchSpecial_Impl::containingZoneHVACComponent() const {
+
+      std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+      for (const auto& elem : zoneHVACComponent) {
+        switch (elem.iddObject().type().value()) {
+          case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            auto component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
+            if (component.firstEvaporativeCooler().handle() == this->handle()) {
+              return elem;
+            }
+            // I guess it's fine since this is optional anyways
+            // } else if (auto comp_ = component.secondEvaporativeCooler(); comp_ && comp_->handle() == this->handle()) { return elem; }
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
+      return boost::none;
     }
 
     bool EvaporativeCoolerDirectResearchSpecial_Impl::setAvailabilitySchedule(Schedule& schedule) {
