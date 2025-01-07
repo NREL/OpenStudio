@@ -37,6 +37,8 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -419,6 +421,13 @@ namespace model {
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator: {
             auto component = elem.cast<ZoneHVACUnitVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
+            break;
+          }
+          case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            auto component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
             if (component.supplyAirFan().handle() == this->handle()) {
               return elem;
             }

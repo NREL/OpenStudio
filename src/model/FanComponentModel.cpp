@@ -39,8 +39,8 @@
 #include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 
 // containing ZoneHVAC Component
-// #include "ZoneHVACEvaporativeCoolerUnit.hpp"
-// #include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -386,23 +386,21 @@ namespace model {
 
     boost::optional<ZoneHVACComponent> FanComponentModel_Impl::containingZoneHVACComponent() const {
 
-      // Note JM 2021-01-26: Only ZoneHVAC:EvaporativeCoolerUnit apparently, which isn't wrapped in the OS SDK currently
-
-      //std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
-      //for (const auto& elem : zoneHVACComponent) {
-      //switch (elem.iddObject().type().value()) {
-
-      //// ZoneHVAC:EvaporativeCoolerUnit: not wrapped
-      //case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
-      //ZoneHVACEnergyRecoveryVentilator component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
-      //if (component.supplyAirFan().handle() == this->handle()) return elem;
-      //break;
-      //}
-      //default: {
-      //break;
-      //}
-      //}
-      //}
+      std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+      for (const auto& elem : zoneHVACComponent) {
+        switch (elem.iddObject().type().value()) {
+          case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            auto component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
       return boost::none;
     }
 

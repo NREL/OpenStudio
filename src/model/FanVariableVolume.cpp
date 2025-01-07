@@ -20,6 +20,8 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
@@ -485,6 +487,19 @@ namespace model {
       zoneHVACUnitVentilator = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
 
       for (const auto& elem : zoneHVACUnitVentilator) {
+        if (boost::optional<HVACComponent> fan = elem.supplyAirFan()) {
+          if (fan->handle() == this->handle()) {
+            return elem;
+          }
+        }
+      }
+
+      // ZoneHVACEvaporativeCoolerUnit
+      std::vector<ZoneHVACEvaporativeCoolerUnit> zoneHVACEvaporativeCoolerUnit;
+
+      zoneHVACEvaporativeCoolerUnit = this->model().getConcreteModelObjects<ZoneHVACEvaporativeCoolerUnit>();
+
+      for (const auto& elem : zoneHVACEvaporativeCoolerUnit) {
         if (boost::optional<HVACComponent> fan = elem.supplyAirFan()) {
           if (fan->handle() == this->handle()) {
             return elem;
