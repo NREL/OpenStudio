@@ -1077,8 +1077,9 @@ ThreeScene FloorplanJS::toThreeScene(bool openstudioFormat) const {
   Json::ArrayIndex storyN = stories.size();
   for (Json::ArrayIndex storyIdx = 0; storyIdx < storyN; ++storyIdx) {
 
+    std::string storyName = "";
     if (checkKeyAndType(stories[storyIdx], "name", Json::stringValue)) {
-      std::string storyName = stories[storyIdx].get("name", storyName).asString();
+      storyName = stories[storyIdx].get("name", "").asString();
       buildingStoryNames.push_back(storyName);
     }
 
