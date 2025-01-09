@@ -63,19 +63,27 @@ namespace energyplus {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName, wo_->nameString());
     }
 
-    boost::optional<std::string> outdoorAirInletNodeName;
+    const auto outdoorAirInletNodeName = modelObject.nameString() + " Outdoor Air Node";
     boost::optional<std::string> coolerOutletNodeName;
 
-    // Outdoor Air Inlet Node Name: Required Node
-    if (boost::optional<Node> node = modelObject.inletNode()) {
-      outdoorAirInletNodeName = node->nameString();
-      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName, node->nameString());
+    // Outdoor Air Inlet Node Name: Required Node - This is an Outdoor Air Node
+    {
+      IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+      oaNodeListIdf.setString(0, outdoorAirInletNodeName);
+      m_idfObjects.emplace_back(std::move(oaNodeListIdf));
+      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName, outdoorAirInletNodeName);
     }
 
-    // Cooler Outlet Node Name: Required Node
+    // Cooler Outlet Node Name: Required Node, a zone air inlet node
     if (boost::optional<Node> node = modelObject.outletNode()) {
       coolerOutletNodeName = node->nameString();
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName, node->nameString());
+    }
+
+    // Zone Relief Air Node Name: optional Node, filled to a Zone Exhaust Node if the flow is being balanced here and not elsewhere
+    if (boost::optional<Node> node = modelObject.inletNode()) {
+      coolerOutletNodeName = node->nameString();
+      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName, node->nameString());
     }
 
     // Supply Air Fan Object Type
@@ -138,7 +146,7 @@ namespace energyplus {
     std::string baseName = modelObject.nameString();
     if (fan_) {
       std::string outletNodeName;
-      std::string inletNodeName = outdoorAirInletNodeName.get();
+      std::string inletNodeName = outdoorAirInletNodeName;
       if (istringEqual(fanPlacement, "BlowThrough")) {
         if (firstEvaporativeCooler_) {
           outletNodeName = baseName + " Fan - First Evaporative Cooler Node";
@@ -180,7 +188,7 @@ namespace energyplus {
       if (istringEqual(fanPlacement, "BlowThrough") && fan_) {
         inletNodeName = baseName + " Fan - First Evaporative Cooler Node";
       } else {
-        inletNodeName = outdoorAirInletNodeName.get();
+        inletNodeName = outdoorAirInletNodeName;
       }
 
       if (secondEvaporativeCooler_) {
@@ -212,7 +220,7 @@ namespace energyplus {
       } else if (istringEqual(fanPlacement, "BlowThrough") && fan_) {
         inletNodeName = baseName + " Fan - Second Evaporative Cooler Node";
       } else {
-        inletNodeName = outdoorAirInletNodeName.get();
+        inletNodeName = outdoorAirInletNodeName;
       }
 
       if (istringEqual(fanPlacement, "DrawThrough") && fan_) {

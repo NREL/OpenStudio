@@ -122,7 +122,7 @@ namespace model {
     }
 
     unsigned ZoneHVACEvaporativeCoolerUnit_Impl::inletPort() const {
-      return OS_ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName;
+      return OS_ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName;
     }
 
     unsigned ZoneHVACEvaporativeCoolerUnit_Impl::outletPort() const {
