@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #ifndef ALFALFA_COMPONENT_METER_HPP
 #define ALFALFA_COMPONENT_METER_HPP
 

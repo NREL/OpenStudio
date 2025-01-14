@@ -20,7 +20,7 @@
     <!-- NuGet metadata properties -->
     <Product>OpenStudio</Product>
     <Version>${CSHARP_ASSEMBLY_VERSION}</Version>
-    <Copyright>Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.</Copyright>
+    <Copyright>Copyright (c) 2008-2025, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.</Copyright>
     <Description>OpenStudio C# bindings for whole building energy simulation</Description>
     <RepositoryUrl>https://github.com/NREL/OpenStudio</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

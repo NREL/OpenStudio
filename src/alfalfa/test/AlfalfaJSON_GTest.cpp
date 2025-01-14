@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #include <fmt/core.h>
 #include <gtest/gtest.h>
 #include <stdexcept>

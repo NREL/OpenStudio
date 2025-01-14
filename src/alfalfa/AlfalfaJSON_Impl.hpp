@@ -1,3 +1,8 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC.
+*  See also https://openstudio.net/license
+***********************************************************************************************************************/
+
 #ifndef UTILITIES_FILETYPES_ALFALFAJSON_IMPL_HPP
 #define UTILITIES_FILETYPES_ALFALFAJSON_IMPL_HPP
 
