@@ -54,9 +54,9 @@ TEST_F(PythonEngineFixture, BadMeasure) {
   std::string expected_exception = fmt::format(R"(SWIG director method error. In method 'arguments': `ValueError('oops')`
 
 Traceback (most recent call last):
-  File "{0}", line 17, in arguments
+  File "{0}", line 22, in arguments
     self.another_method()
-  File "{0}", line 14, in another_method
+  File "{0}", line 19, in another_method
     raise ValueError("oops")
 ValueError: oops)",
                                                scriptPath.generic_string());
@@ -85,7 +85,7 @@ TEST_F(PythonEngineFixture, WrongMethodMeasure) {
     fmt::format(R"(SWIG director method error. In method 'arguments': `AttributeError("'Model' object has no attribute 'nonExistingMethod'")`
 
 Traceback (most recent call last):
-  File "{}", line 14, in arguments
+  File "{}", line 19, in arguments
     model.nonExistingMethod()
     ^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'Model' object has no attribute 'nonExistingMethod')",
@@ -115,15 +115,15 @@ TEST_F(PythonEngineFixture, StackLevelTooDeepMeasure) {
     fmt::format(R"(SWIG director method error. In method 'arguments': `RecursionError('maximum recursion depth exceeded')`
 
 Traceback (most recent call last):
-  File "{0}", line 16, in arguments
+  File "{0}", line 21, in arguments
     s(10)
-  File "{0}", line 6, in s
+  File "{0}", line 11, in s
     return s(x)
            ^^^^
-  File "{0}", line 6, in s
+  File "{0}", line 11, in s
     return s(x)
            ^^^^
-  File "{0}", line 6, in s
+  File "{0}", line 11, in s
     return s(x)
            ^^^^
   [Previous line repeated 996 more times]
