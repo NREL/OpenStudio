@@ -154,3 +154,6 @@ b3d2e94e3ae1160f447af2035a1ffabaec4b3423
 
 # [chore] Commit clang-format autocorrects [github-lint-actions[bot], 2024-12-19]
 77309e0db461ce64a0cca1e1a0f2bbda29ff7a66
+
+# [chore] Copyright cleanup [Julien Marrec, 2025-01-14]
+ae602de89105983bf762cf1e6afd33d63d81b4a6

@@ -450,11 +450,12 @@ class TranslatorGenerator
     result << "#include \"../../utilities/idf/Workspace.hpp\"\n"
     result << "#include \"../../utilities/idf/IdfObject.hpp\"\n"
     result << "#include \"../../utilities/idf/WorkspaceObject.hpp\"\n"
+    result << "\n"
     result << "// E+ FieldEnums\n"
     result << "#include <utilities/idd/IddEnums.hxx>\n"
     result << "#include <utilities/idd/IddFactory.hxx>\n"
     result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n"
-
+    result << "\n"
     result << "using namespace openstudio::energyplus;\n"
     result << "using namespace openstudio::model;\n"
     result << "using namespace openstudio;\n\n"
@@ -481,7 +482,7 @@ class TranslatorGenerator
         s_setup << "  " << field.getterReturnType << " #{field.getterName}(m);\n"
         s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{field.getterName}));\n"
 
-        s_tests << " EXPECT_EQ(#{field.getterName}.nameString(), idfObject.getString(#{field.fieldEnum}).get());\n"
+        s_tests << "  EXPECT_EQ(#{field.getterName}.nameString(), idfObject.getString(#{field.fieldEnum}).get());\n"
 
       else
 
@@ -489,14 +490,14 @@ class TranslatorGenerator
           if field.hasDefault?
             if field.defaultValue == 'Yes'
               s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(false));  // Opposite from IDD default\n";
-              s_tests << "  EXPECT_EQ(\"No\", idfObject.getString(#{field.fieldEnum}).get());"
+              s_tests << "  EXPECT_EQ(\"No\", idfObject.getString(#{field.fieldEnum}).get());\n"
             else
               s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));   // Opposite from IDD default\n";
-              s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());"
+              s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());\n"
             end
           else
             s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));   // TODO: check this isnt the same as the Ctor\n";
-            s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());"
+            s_tests << "  EXPECT_EQ(\"Yes\", idfObject.getString(#{field.fieldEnum}).get());\n"
           end
 
         else
@@ -571,15 +572,15 @@ class TranslatorGenerator
           if field.canAutosize?
             s_setup << "  // Autosize\n"
             s_setup << "  // #{instanceName}." << field.autosizeName << "();\n"
-            s_tests << "  // EXPECT_EQ(\"Autosize\"\, idfObject.getString(#{field.fieldEnum}).get());"
+            s_tests << "  // EXPECT_EQ(\"Autosize\"\, idfObject.getString(#{field.fieldEnum}).get());\n"
           elsif field.canAutocalculate?
             s_setup << "  // Autocalculate\n"
             s_setup << "  // #{instanceName}." << field.autocalculateName << "();\n"
-            s_tests << "  // EXPECT_EQ(\"Autocalculate\"\, idfObject.getString(#{field.fieldEnum}).get());"
+            s_tests << "  // EXPECT_EQ(\"Autocalculate\"\, idfObject.getString(#{field.fieldEnum}).get());\n"
           end
 
           s_setup << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{good_val}));\n";
-          s_tests << "  EXPECT_EQ(#{good_val}, idfObject.get#{cat}(#{field.fieldEnum}).get());"
+          s_tests << "  EXPECT_EQ(#{good_val}, idfObject.get#{cat}(#{field.fieldEnum}).get());\n"
 
         end
 
@@ -641,7 +642,7 @@ class TranslatorGenerator
         s_setup << "  EXPECT_TRUE(#{instanceName}.setPointer(#{field.fieldEnum}, wo#{field.getterName}.handle()));\n"
 
         s_tests << "  ASSERT_TRUE(modelObject.#{field.getterName}().optionalCast<#{field.getterReturnType}>());\n"
-        s_tests << " EXPECT_EQ(wo#{field.getterName}.nameString(), modelObject.#{field.getterName}().nameString());\n"
+        s_tests << "  EXPECT_EQ(wo#{field.getterName}.nameString(), modelObject.#{field.getterName}().nameString());\n"
 
       else
 

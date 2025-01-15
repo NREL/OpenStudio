@@ -46,38 +46,8 @@ int main(int argc, char* argv[]) {
     // data common to the start of each file
     std::stringstream fileHeader;
     fileHeader << "/***********************************************************************************************************************" << '\n'
-               << "*  OpenStudio(R), Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved."
-               << '\n'
-               << "*" << '\n'
-               << "*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the" << '\n'
-               << "*  following conditions are met:" << '\n'
-               << "*" << '\n'
-               << "*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following" << '\n'
-               << "*  disclaimer." << '\n'
-               << "*" << '\n'
-               << "*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following" << '\n'
-               << "*  disclaimer in the documentation and/or other materials provided with the distribution." << '\n'
-               << "*" << '\n'
-               << "*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products"
-               << '\n'
-               << "*  derived from this software without specific prior written permission from the respective party." << '\n'
-               << "*" << '\n'
-               << "*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works" << '\n'
-               << "*  may not use the \"OpenStudio\" trademark, \"OS\", \"os\", or any other confusingly similar designation without specific prior"
-               << '\n'
-               << "*  written permission from Alliance for Sustainable Energy, LLC." << '\n'
-               << "*" << '\n'
-               << "*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES,"
-               << '\n'
-               << "*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE" << '\n'
-               << "*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED" << '\n'
-               << "*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL," << '\n'
-               << "*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF"
-               << '\n'
-               << "*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT," << '\n'
-               << "*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF"
-               << '\n'
-               << "*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." << '\n'
+               << "*  OpenStudio(R), Copyright (c) Alliance for Sustainable Energy, LLC." << '\n'
+               << "*  See also https://openstudio.net/license" << '\n'
                << "***********************************************************************************************************************/" << '\n';
 
     // create and initialize output files

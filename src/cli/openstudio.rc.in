@@ -11,7 +11,7 @@ BEGIN
             VALUE "FileDescription",  "OpenStudio CLI\0"
             VALUE "FileVersion",      "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}\0"
             VALUE "InternalName",     "openstudio\0"
-            VALUE "LegalCopyright",   "Copyright (c) 2008-2023, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\0"
+            VALUE "LegalCopyright",   "Copyright (c) 2008-2025, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.\0"
             VALUE "LegalTrademarks",  "OpenStudio (TM) is a trademark of NREL\0"
             VALUE "OriginalFilename", "openstudio.exe\0"
             VALUE "ProductName",      "OpenStudio\0"
