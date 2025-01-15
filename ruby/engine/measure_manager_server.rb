@@ -119,7 +119,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
         result = {}
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         my_measures_dir = data[:my_measures_dir]
 
         if my_measures_dir
@@ -132,7 +132,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
         result = []
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         uid = data[:uid]
 
         if uid
@@ -156,8 +156,8 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
         result = []
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
         force_reload = false
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
 
         # loop over all local BCL measures
         OpenStudio::LocalBCL.instance.measures.each do |local_measure|
@@ -181,7 +181,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
         result = []
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         measures_dir = data[:measures_dir] ? data[:measures_dir] : @my_measures_dir
         force_reload = data[:force_reload] ? data[:force_reload] : false
 
@@ -205,7 +205,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
       when "/compute_arguments"
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         measure_dir  = data[:measure_dir ]
         osm_path = data[:osm_path]
         force_reload = data[:force_reload] ? data[:force_reload] : false
@@ -239,7 +239,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
       when "/create_measure"
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         measure_dir = data[:measure_dir]
 
         # name = data[:name] # we do not take name as input
@@ -263,7 +263,7 @@ class MeasureManagerServlet < WEBrick::HTTPServlet::AbstractServlet
 
       when "/duplicate_measure"
 
-        data = JSON.parse(request.body, {:symbolize_names=>true})
+        data = JSON.parse(request.body || "{}", {:symbolize_names=>true})
         old_measure_dir = data[:old_measure_dir]
         measure_dir = data[:measure_dir]
 

@@ -364,6 +364,16 @@ if(BUILD_TESTING)
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Testing/"
     )
 
+    if (PyRequests_AVAILABLE)
+      add_test(NAME OpenStudioCLI.test_measure_manager
+        COMMAND ${Python_EXECUTABLE} -m pytest --verbose --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_measure_manager.py"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Testing/"
+      )
+      add_test(NAME OpenStudioCLI.Classic.test_measure_manager
+        COMMAND ${Python_EXECUTABLE} -m pytest --verbose --use-classic --os-cli-path $<TARGET_FILE:openstudio> "${CMAKE_CURRENT_SOURCE_DIR}/test/test_measure_manager.py"
+        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Testing/"
+      )
+    endif()
 
   else()
     # TODO: Remove. Fallback on these for now, as I don't know if CI has pytest installed

@@ -27,12 +27,20 @@ import requests
 HOST = "localhost"
 DEFAULT_MEASURES_DIR = Path("~/OpenStudio/Measures").expanduser()
 
-BASE_INTERNAL_STATE: Dict[str, Any] = {
-    "idf": [],
-    "measure_info": None,
-    "measures": None,
+BASE_INTERNAL_STATE_CLASSIC: Dict[str, Any] = {
+    "status": "running",
+    "my_measures_dir": DEFAULT_MEASURES_DIR.as_posix() + "/",
+    "osms": [],
+    "measures": [],
+    "measure_info": [],
+}
+
+BASE_INTERNAL_STATE_LABS: Dict[str, Any] = {
+    "idfs": [],
+    "measure_info": [],
+    "measures": [],
     "my_measures_dir": DEFAULT_MEASURES_DIR.as_posix(),
-    "osm": [],
+    "osms": [],
     "status": "running",
 }
 
@@ -48,8 +56,10 @@ def get_url(port: int):
 class MeasureManagerClient(requests.Session):
     """Stores the base url in the class so we don't repeat ourselves."""
 
-    def __init__(self, port):
+    def __init__(self, port, is_classic=False):
         self.base_url = get_url(port=port)
+        self.is_classic = is_classic
+        self.base_state = deepcopy(BASE_INTERNAL_STATE_CLASSIC if is_classic else BASE_INTERNAL_STATE_LABS)
         super().__init__()
 
     def request(self, method, url, *args, **kwargs):
@@ -68,12 +78,36 @@ class MeasureManagerClient(requests.Session):
 
     def reset_and_assert_internal_state(self):
         self.reset()
-        assert self.internal_state() == BASE_INTERNAL_STATE
+        assert self.internal_state() == self.base_state
 
+    def prime_a_new_my_measures_dir_with_a_single_measure(self, my_measures_dir: Path) -> Path:
+        """Calls /set then /create_measure and return the new measure path under it."""
+        my_measures_dir.mkdir(parents=True)
+
+        r = self.post("/set", json={"my_measures_dir": str(my_measures_dir)})
+        r.raise_for_status()
+        assert self.internal_state()["my_measures_dir"] == my_measures_dir.as_posix()
+
+        measure_dir = my_measures_dir / "MyMeasure"
+        data = {
+            # "name": "name",
+            "measure_dir": str(measure_dir),
+            "display_name": "A ModelMeasure that depends on model",
+            "class_name": "ModelDependentMeasure",
+            "taxonomy_tag": "taxonomy_tag",
+            "measure_type": "ModelMeasure",
+            "measure_language": "Ruby",
+            "description": "This is the description",
+            "modeler_description": "This is the modeler description",
+        }
+        r = self.post(url="/create_measure", json=data)
+        r.raise_for_status
+        assert measure_dir.is_dir()
+        return measure_dir
 
 @pytest.fixture
-def expected_internal_state():
-    return deepcopy(BASE_INTERNAL_STATE)
+def expected_internal_state(use_classic_cli):
+    return deepcopy(BASE_INTERNAL_STATE_CLASSIC if use_classic_cli else BASE_INTERNAL_STATE_LABS)
 
 
 def get_open_port_for_serving():
@@ -98,10 +132,15 @@ def get_open_port_for_serving():
     return port
 
 
-def launch_measure_manager_client(osclipath: Path) -> Tuple[subprocess.Popen, int]:
+def launch_measure_manager_client(osclipath: Path, use_classic_cli: bool) -> Tuple[subprocess.Popen, int]:
     port = get_open_port_for_serving()
     base_url = get_url(port=port)
-    proc = subprocess.Popen([str(osclipath), "labs", "measure", "-s", str(port)])  # NOTE: remove 'labs' to test old CLI
+    cmd_args = [str(osclipath)]
+    if use_classic_cli:
+        cmd_args.append("classic")
+    cmd_args += ["measure", "-s", str(port)]
+    print(cmd_args)
+    proc = subprocess.Popen(cmd_args)
     ok = False
     while not ok:
         try:
@@ -120,14 +159,14 @@ def launch_measure_manager_client(osclipath: Path) -> Tuple[subprocess.Popen, in
 
 
 @pytest.fixture
-def measure_manager_client(osclipath):
+def measure_manager_client(osclipath, use_classic_cli):
     """Launches a measure manager server and waits for it to be ready, then destroys at end."""
     # If you want to attach to your debug CLI session you have launched in a debugger, just do this isntead
     # yield MeasureManagerClient(port=8094)
     # return
     # Regular
-    proc, port = launch_measure_manager_client(osclipath=osclipath)
-    yield MeasureManagerClient(port=port)
+    proc, port = launch_measure_manager_client(osclipath=osclipath, use_classic_cli=use_classic_cli)
+    yield MeasureManagerClient(port=port, is_classic=use_classic_cli)
     # if sys.platform == "win32":
     #     proc.send_signal(signal.CTRL_C_EVENT)
     # else:
@@ -164,8 +203,34 @@ def test_default_internal_state(measure_manager_client, expected_internal_state)
     assert measure_manager_client.internal_state() == expected_internal_state
 
 
-def test_set_measures_dir(measure_manager_client, expected_internal_state):
-    my_measures_dir = Path("~/OpenStudio/Measures2").expanduser()
+def test_set_measures_dir(measure_manager_client, expected_internal_state, tmp_path):
+    my_measures_dir = tmp_path / 'Measures'
+
+    r = measure_manager_client.post("/set", json={"BAD": str(my_measures_dir)})
+    # The Classic CLI returns 200 even though it didn't set anything, the C++ error handling is better
+    if measure_manager_client.is_classic:
+        assert r.status_code == 200
+        assert not r.json()
+    else:
+        assert r.status_code == 400
+        assert r.json() == "Missing the my_measures_dir in the post data"
+    assert measure_manager_client.internal_state() == expected_internal_state
+
+    # When the measure directory does not exist, the C++ version catches it
+    assert not my_measures_dir.is_dir()
+    r = measure_manager_client.post("/set", json={"my_measures_dir": str(my_measures_dir)})
+    if measure_manager_client.is_classic:
+        assert r.status_code == 200
+        assert not r.json()
+        expected_internal_state["my_measures_dir"] = my_measures_dir.as_posix()
+        assert measure_manager_client.internal_state() == expected_internal_state
+    else:
+        assert r.status_code == 400
+        assert "is a not a valid directory" in r.text
+        assert measure_manager_client.internal_state() == expected_internal_state
+
+    my_measures_dir.mkdir(parents=True)
+
     r = measure_manager_client.post("/set", json={"my_measures_dir": str(my_measures_dir)})
     r.raise_for_status()
     expected_internal_state["my_measures_dir"] = my_measures_dir.as_posix()
@@ -174,12 +239,16 @@ def test_set_measures_dir(measure_manager_client, expected_internal_state):
 
 # tmp_path is a built-in pytest fixture hich will provide a temporary directory unique to the test invocation,
 # created in the base temporary directory.
+# @pytest.mark.skipif(measure_manager_client.is_classic, reason="Classic CLI does not have the POST /get_model")
 def test_get_model(
     measure_manager_client: MeasureManagerClient,
     expected_internal_state: Dict[str, Any],
     tmp_path: Path,
     osclipath: Path,
 ):
+    if measure_manager_client.is_classic:
+        pytest.skip("Classic CLI does not have the POST /get_model")
+
     osm_path = tmp_path / "model.osm"
     osm_path2 = tmp_path / "model2.osm"
 
@@ -191,7 +260,7 @@ def test_get_model(
     r.raise_for_status()
     assert r.json() == f"OK, loaded model with checksum {model_checksum}"
 
-    expected_internal_state["osm"].append(
+    expected_internal_state["osms"].append(
         {
             "checksum": model_checksum,
             "osm_path": osm_path.as_posix(),
@@ -203,7 +272,7 @@ def test_get_model(
     r.raise_for_status()
     assert r.json() == f"OK, loaded model with checksum {model_checksum2}"
 
-    expected_internal_state["osm"].append(
+    expected_internal_state["osms"].append(
         {
             "checksum": model_checksum2,
             "osm_path": osm_path2.as_posix(),
@@ -223,7 +292,7 @@ def test_get_model(
     r = measure_manager_client.post("/get_model", json={"osm_path": str(osm_path)})
     r.raise_for_status()
     assert r.json() == f"OK, loaded model with checksum {model_checksum}"
-    expected_internal_state["osm"][0] = {
+    expected_internal_state["osms"][0] = {
         "checksum": model_checksum,
         "osm_path": osm_path.as_posix(),
     }
@@ -234,11 +303,19 @@ def test_get_model(
 def test_download_bcl_measures(measure_manager_client: MeasureManagerClient, expected_internal_state: Dict[str, Any]):
     r = measure_manager_client.post(url="/download_bcl_measure", json={"": ""})
     assert r.status_code == 400
-    assert r.json() == "Missing the uid in the post data"
+    if measure_manager_client.is_classic:
+        # {"backtrace": [webcrick...], "error": "Missing required argument 'uid'}
+        assert "Missing required argument 'uid'" in r.text
+    else:
+        assert r.json() == "Missing the uid in the post data"
 
     r = measure_manager_client.post(url=f"/download_bcl_measure", json={"uid": "baduuid"})
     assert r.status_code == 400
-    assert r.json() == "Cannot find measure with uid='baduuid'"
+    if measure_manager_client.is_classic:
+        # {"backtrace": [webcrick...], "error": "Failed to download measure 'baduuid'"}
+        assert "Failed to download measure 'baduuid'" in r.text
+    else:
+        assert r.json() == "Cannot find measure with uid='baduuid'"
 
     measure_dir = BCL_DIR / TEST_BCL_MEASURE_UID
     if measure_dir.exists():
@@ -255,6 +332,8 @@ def test_download_bcl_measures(measure_manager_client: MeasureManagerClient, exp
     r = measure_manager_client.post(url="/download_bcl_measure", json={"uid": TEST_BCL_MEASURE_UID})
     r.raise_for_status()
     measure_data = r.json()
+    if measure_manager_client.is_classic:
+        measure_data = measure_data[0]
     assert "name" in measure_data
     assert "display_name" in measure_data
     assert "version_id" in measure_data
@@ -273,7 +352,10 @@ def test_download_bcl_measures(measure_manager_client: MeasureManagerClient, exp
     assert n_ori + 1 == n_new
 
 
-def test_update_measures(measure_manager_client: MeasureManagerClient, expected_internal_state: Dict[str, Any]):
+def test_update_measures(measure_manager_client: MeasureManagerClient, expected_internal_state: Dict[str, Any],
+                         tmp_path: Path):
+    measure_manager_client.prime_a_new_my_measures_dir_with_a_single_measure(my_measures_dir=tmp_path / 'Measures')
+
     r = measure_manager_client.post(url="/update_measures")
     r.raise_for_status()
 
@@ -357,6 +439,8 @@ def test_compute_arguments(
     osclipath: Path,
 ):
     is_ruby = measure_language == "Ruby"
+    if measure_manager_client.is_classic and not is_ruby:
+        pytest.skip("Python not available for the classic CLI")
     measure_dir = tmp_path / f"new_{measure_language}_measure"
     assert not measure_dir.is_dir()
     readme_out_path = measure_dir / "README.md"
@@ -410,9 +494,9 @@ def test_compute_arguments(
     assert len(arguments) == 2
     construction_arg = next(x for x in arguments if x["name"] == "construction")
     assert "choice_display_names" in construction_arg
-    assert "choices_values" in construction_arg
+    assert "choice_values" in construction_arg
     assert len(construction_arg["choice_display_names"]) > 5
-    assert len(construction_arg["choice_display_names"]) == len(construction_arg["choices_values"])
+    assert len(construction_arg["choice_display_names"]) == len(construction_arg["choice_values"])
 
     if is_ruby:
         assert readme_out_path.exists()
@@ -437,7 +521,12 @@ def test_create_measure(
     }
     r = measure_manager_client.post(url="/create_measure", json=data)
     assert not r.ok
-    assert r.json() == "The 'measure_dir' (string) must be in the post data."
+    if measure_manager_client.is_classic:
+        # A really bad error message, because it fails in expand_path since measure_dir is nil
+        assert "expand_path" in r.json()["backtrace"]
+        assert "no implicit conversion of nil into String" in r.json()["error"]
+    else:
+        assert r.json() == "The 'measure_dir' (string) must be in the post data."
 
     measure_dir = tmp_path / "new_measure"
     data["measure_dir"] = measure_dir.as_posix()
@@ -446,18 +535,24 @@ def test_create_measure(
     # The enums are throwy! Make sure we handle that gracefully
     r = measure_manager_client.post(url="/create_measure", json=data)
     assert not r.ok
-    assert (
-        r.json()
-        == "Couldn't convert 'BadMeasureType' to a MeasureType: Unknown OpenStudio Enum Value 'BADMEASURETYPE' for Enum MeasureType"
-    )
+    if measure_manager_client.is_classic:
+        assert r.json()["error"] == "Unknown OpenStudio Enum Value 'BADMEASURETYPE' for Enum MeasureType"
+    else:
+        assert (
+            r.json()
+            == "Couldn't convert 'BadMeasureType' to a MeasureType: Unknown OpenStudio Enum Value 'BADMEASURETYPE' for Enum MeasureType"
+        )
     data["measure_type"] = "ModelMeasure"
 
     r = measure_manager_client.post(url="/create_measure", json=data)
     assert not r.ok
-    assert (
-        r.json()
-        == "Couldn't convert 'BadMeasureLanguage' to a MeasureLanguage: Unknown OpenStudio Enum Value 'BADMEASURELANGUAGE' for Enum MeasureLanguage"
-    )
+    if measure_manager_client.is_classic:
+        assert r.json()["error"] == "Unknown OpenStudio Enum Value 'BADMEASURELANGUAGE' for Enum MeasureLanguage"
+    else:
+        assert (
+            r.json()
+            == "Couldn't convert 'BadMeasureLanguage' to a MeasureLanguage: Unknown OpenStudio Enum Value 'BADMEASURELANGUAGE' for Enum MeasureLanguage"
+        )
     data["measure_language"] = "Python"
 
     r = measure_manager_client.post("/create_measure", json=data)
@@ -483,7 +578,10 @@ def test_create_measure(
     # Should fail gracefully when directory exists already
     r = measure_manager_client.post("/create_measure", json=data)
     assert not r.ok
-    assert "The directory already exists" in r.json()
+    if measure_manager_client.is_classic:
+        assert "exists but is not an empty directory" in r.json()["error"]
+    else:
+        assert "The directory already exists" in r.json()
 
 
 def test_duplicate_measure(
