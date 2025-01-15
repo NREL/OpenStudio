@@ -47,6 +47,7 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    static std::vector<std::string> columnSeparatorValues();
     static std::vector<std::string> minutesperItemValues();
 
     /** @name Getters */

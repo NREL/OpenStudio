@@ -43,6 +43,14 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
+      virtual bool addToNode(Node& node) override;
+
+      virtual ModelObject clone(Model model) const override;
+
       virtual ComponentType componentType() const override;
       virtual std::vector<FuelType> coolingFuelTypes() const override;
       virtual std::vector<FuelType> heatingFuelTypes() const override;
@@ -236,11 +244,6 @@ namespace model {
       /** @name Other */
       //@{
 
-      virtual unsigned inletPort() const override;
-      virtual unsigned outletPort() const override;
-      std::vector<ModelObject> children() const override;
-      ModelObject clone(Model model) const override;
-
       //@}
      protected:
      private:
@@ -249,6 +252,7 @@ namespace model {
       boost::optional<HVACComponent> optionalSupplyAirFan() const;
       boost::optional<HVACComponent> optionalHeatingCoil() const;
       boost::optional<HVACComponent> optionalCoolingCoil() const;
+      boost::optional<HVACComponent> optionalSupplementalHeatingCoil() const;
     };
 
   }  // namespace detail

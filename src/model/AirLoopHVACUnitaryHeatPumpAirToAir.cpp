@@ -30,6 +30,8 @@
 #include "CoilHeatingElectric_Impl.hpp"
 #include "CoilHeatingGas.hpp"
 #include "CoilHeatingGas_Impl.hpp"
+#include "CoilHeatingWater.hpp"
+#include "CoilHeatingWater_Impl.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanOnOff.hpp"
@@ -114,10 +116,19 @@ namespace model {
     std::vector<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::children() const {
       std::vector<ModelObject> result;
 
-      result.push_back(supplyAirFan());
-      result.push_back(coolingCoil());
-      result.push_back(heatingCoil());
-      result.push_back(supplementalHeatingCoil());
+      // Avoid crashing when calling remove() in Ctor when failing to set one of the child component by calling the optional one
+      if (boost::optional<HVACComponent> supplyFan = this->optionalSupplyAirFan()) {
+        result.push_back(std::move(*supplyFan));
+      }
+      if (boost::optional<HVACComponent> coolingCoil = this->optionalCoolingCoil()) {
+        result.push_back(std::move(*coolingCoil));
+      }
+      if (boost::optional<HVACComponent> heatingCoil = this->optionalHeatingCoil()) {
+        result.push_back(std::move(*heatingCoil));
+      }
+      if (boost::optional<HVACComponent> supplementalHeatingCoil = this->optionalSupplementalHeatingCoil()) {
+        result.push_back(std::move(*supplementalHeatingCoil));
+      }
 
       return result;
     }
@@ -206,44 +217,51 @@ namespace model {
     }
 
     HVACComponent AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplyAirFan() const {
-      boost::optional<HVACComponent> result;
-
-      result = getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName);
-
-      OS_ASSERT(result);
-
-      return result.get();
+      boost::optional<HVACComponent> value = optionalSupplyAirFan();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
+      }
+      return value.get();
     }
 
     HVACComponent AirLoopHVACUnitaryHeatPumpAirToAir_Impl::heatingCoil() const {
-      boost::optional<HVACComponent> result;
-
-      result = getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName);
-
-      OS_ASSERT(result);
-
-      return result.get();
+      boost::optional<HVACComponent> value = optionalHeatingCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Heating Coil attached.");
+      }
+      return value.get();
     }
 
     HVACComponent AirLoopHVACUnitaryHeatPumpAirToAir_Impl::coolingCoil() const {
-      boost::optional<HVACComponent> result;
-
-      result = getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName);
-
-      OS_ASSERT(result);
-
-      return result.get();
+      boost::optional<HVACComponent> value = optionalCoolingCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
+      }
+      return value.get();
     }
 
     HVACComponent AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplementalHeatingCoil() const {
-      boost::optional<HVACComponent> result;
+      auto value = optionalSupplementalHeatingCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have a Supplemental Heating Coil attached.");
+      }
+      return value.get();
+    }
 
-      result =
-        getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName);
+    boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::optionalSupplyAirFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName);
+    }
 
-      OS_ASSERT(result);
+    boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::optionalHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::HeatingCoilName);
+    }
 
-      return result.get();
+    boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::optionalCoolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName);
+    }
+
+    boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::optionalSupplementalHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplementalHeatingCoilName);
     }
 
     boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::maximumSupplyAirTemperaturefromSupplementalHeater() const {
@@ -419,6 +437,8 @@ namespace model {
         isTypeOK = true;
       } else if (hvacComponent.optionalCast<CoilHeatingElectric>()) {
         isTypeOK = true;
+      } else if (hvacComponent.optionalCast<CoilHeatingWater>()) {
+        isTypeOK = true;
       }
 
       if (isTypeOK) {
@@ -486,130 +506,6 @@ namespace model {
     void AirLoopHVACUnitaryHeatPumpAirToAir_Impl::resetDehumidificationControlType() {
       bool result = setString(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::DehumidificationControlType, "");
       OS_ASSERT(result);
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::availabilityScheduleAsModelObject() const {
-      OptionalModelObject result = availabilitySchedule();
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::controllingZoneAsModelObject() const {
-      OptionalModelObject result;
-      OptionalThermalZone intermediate = controllingZone();
-      if (intermediate) {
-        result = *intermediate;
-      }
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplyAirFanAsModelObject() const {
-      OptionalModelObject result = supplyAirFan();
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::heatingCoilAsModelObject() const {
-      OptionalModelObject result = heatingCoil();
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::coolingCoilAsModelObject() const {
-      OptionalModelObject result = coolingCoil();
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplementalHeatingCoilAsModelObject() const {
-      OptionalModelObject result = supplementalHeatingCoil();
-      return result;
-    }
-
-    boost::optional<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::supplyAirFanOperatingModeScheduleAsModelObject() const {
-      OptionalModelObject result;
-      OptionalSchedule intermediate = supplyAirFanOperatingModeSchedule();
-      if (intermediate) {
-        result = *intermediate;
-      }
-      return result;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-        if (intermediate) {
-          Schedule schedule(*intermediate);
-          return setAvailabilitySchedule(schedule);
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setControllingZoneAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalThermalZone intermediate = modelObject->optionalCast<ThermalZone>();
-        if (intermediate) {
-          setControllingZone(*intermediate);
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFanAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-        if (intermediate) {
-          setSupplyAirFan(*intermediate);
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-        if (intermediate) {
-          setHeatingCoil(*intermediate);
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-        if (intermediate) {
-          setCoolingCoil(*intermediate);
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
-        if (intermediate) {
-          setSupplementalHeatingCoil(*intermediate);
-          return true;
-        }
-      }
-      return false;
-    }
-
-    bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFanOperatingModeScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-      if (modelObject) {
-        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-        if (intermediate) {
-          Schedule schedule(*intermediate);
-          return setSupplyAirFanOperatingModeSchedule(schedule);
-        } else {
-          return false;
-        }
-      } else {
-        resetSupplyAirFanOperatingModeSchedule();
-      }
-      return true;
     }
 
     boost::optional<double> AirLoopHVACUnitaryHeatPumpAirToAir_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
