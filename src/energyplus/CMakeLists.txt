@@ -722,6 +722,7 @@ set(${target_name}_test_src
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
+  Test/CoolingTowerSingleSpeed_GTest.cpp
   Test/CurveQuadLinear_GTest.cpp
   Test/CurveQuintLinear_GTest.cpp
   Test/DaylightingControl_GTest.cpp

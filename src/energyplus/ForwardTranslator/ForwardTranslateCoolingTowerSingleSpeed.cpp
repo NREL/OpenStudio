@@ -252,7 +252,7 @@ namespace energyplus {
 
     if (modelObject.isDesignRangeTemperatureAutosized()) {
       idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::DesignRangeTemperature, "Autosize");
-    } else if ((d = modelObject.designApproachTemperature())) {
+    } else if ((d = modelObject.designRangeTemperature())) {
       idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::DesignRangeTemperature, d.get());
     }
 
