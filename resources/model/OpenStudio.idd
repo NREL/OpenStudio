@@ -9230,7 +9230,8 @@ OS:Refrigeration:SecondarySystem,
   N3,   \field Evaporator Flow Rate for Secondary Fluid
         \type real
         \minimum 0.0
-        \units M3/s
+        \units m3/s
+        \ip-units gal/min
         \note For "FluidAlwaysLiquid", at least one of the two, Evaporator Capacity OR
         \note    Evaporator Flow Rate for Secondary Fluid, is required.
         \note For "FluidPhaseChange" loops, this input is not used. (see PhaseChange Circulating
@@ -9265,7 +9266,8 @@ OS:Refrigeration:SecondarySystem,
   N8,   \field Total Pump Flow Rate
         \type real
         \minimum 0.0
-        \units M3/s
+        \units m3/s
+        \ip-units gal/min
         \note For "FluidAlwaysLiquid",if not input, Evaporator Flow Rate for Secondary Fluid
         \note       will be used.
         \note For "FluidPhaseChange", if not input, this will be calculated using the
@@ -14553,6 +14555,7 @@ OS:HeatPump:AirToWater:FuelFired:Heating,
        \autosizable
        \minimum> 0
        \units m3/s
+       \ip-units gal/min
        \required-field
        \note Design Flow Rate in m3/s (autosizable)
    N4, \field Design Supply Temperature
@@ -14738,6 +14741,7 @@ OS:HeatPump:AirToWater:FuelFired:Cooling,
        \autosizable
        \minimum> 0
        \units m3/s
+       \ip-units gal/min
        \required-field
        \note Design Flow Rate in m3/s (autosizable)
    N4, \field Design Supply Temperature
@@ -17234,6 +17238,7 @@ OS:GroundHeatExchanger:HorizontalTrench,
         \required-field
         \type real
         \units m3/s
+        \ip-units gal/min
         \minimum> 0
    N2 , \field Trench Length in Pipe Axial Direction
         \note This is the total pipe axial length of the heat exchanger
@@ -31335,6 +31340,7 @@ OS:WaterHeater:Mixed,
        \note Not yet implemented
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum 0.0
        \default 0.0
   N7 , \field Heater Ignition Delay
@@ -33922,6 +33928,7 @@ OS:SolarCollectorPerformance:FlatPlate,
        \type real
        \minimum> 0
        \units m3/s
+       \ip-units gal/min
   A4 , \field Test Correlation Type
        \required-field
        \type choice
@@ -33980,6 +33987,7 @@ OS:SolarCollector:FlatPlate:Water,
        \type real
        \minimum> 0
        \units m3/s
+       \ip-units gal/min
 
 OS:SolarCollectorPerformance:IntegralCollectorStorage,
        \memo Thermal and optical performance parameters for a single glazed solar collector with
@@ -34162,6 +34170,7 @@ OS:SolarCollector:IntegralCollectorStorage,
        \type real
        \minimum> 0
        \units m3/s
+       \ip-units gal/min
 
 OS:SolarCollectorPerformance:PhotovoltaicThermal:Simple,
        \memo Thermal performance parameters for a hybrid photovoltaic-thermal (PVT) solar collector.
