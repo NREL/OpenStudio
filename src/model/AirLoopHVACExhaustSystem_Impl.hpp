@@ -42,24 +42,18 @@ namespace model {
 
   namespace detail {
 
-  /** AirLoopHVACExhaustSystem_Impl is a StraightComponent_Impl that is the implementation class for AirLoopHVACExhaustSystem.*/
+    /** AirLoopHVACExhaustSystem_Impl is a StraightComponent_Impl that is the implementation class for AirLoopHVACExhaustSystem.*/
     class MODEL_API AirLoopHVACExhaustSystem_Impl : public StraightComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      AirLoopHVACExhaustSystem_Impl(const IdfObject& idfObject,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirLoopHVACExhaustSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      AirLoopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirLoopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      AirLoopHVACExhaustSystem_Impl(const AirLoopHVACExhaustSystem_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      AirLoopHVACExhaustSystem_Impl(const AirLoopHVACExhaustSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~AirLoopHVACExhaustSystem_Impl() = default;
 
@@ -104,7 +98,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirLoopHVACExhaustSystem");
-  
+
       // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required

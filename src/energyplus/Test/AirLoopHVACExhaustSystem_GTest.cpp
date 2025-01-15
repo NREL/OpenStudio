@@ -69,7 +69,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACExhaustSystem) {
   FansSystemModel fan(m);
   EXPECT_TRUE(airLoopHVACExhaustSystem.setFan(fan));
 
-
   // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
   const Workspace w = ft.translateModel(m);
@@ -77,7 +76,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACExhaustSystem) {
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
- EXPECT_EQ(zoneMixer.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName).get());
-  EXPECT_EQ("Fan:SystemModel", idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanObjectType).get()); EXPECT_EQ(fan.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanName).get());
-
+  EXPECT_EQ(zoneMixer.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName).get());
+  EXPECT_EQ("Fan:SystemModel", idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanObjectType).get());
+  EXPECT_EQ(fan.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanName).get());
 }
