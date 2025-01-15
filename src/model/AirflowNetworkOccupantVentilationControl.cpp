@@ -51,16 +51,15 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> AirflowNetworkOccupantVentilationControl_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin());
       UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirflowNetworkOccupantVentilationControlFields::OpeningProbabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirflowNetworkOccupantVentilationControl", "Opening Probability"));
+        result.emplace_back("AirflowNetworkOccupantVentilationControl", "Opening Probability");
       }
       if (std::find(b, e, OS_AirflowNetworkOccupantVentilationControlFields::ClosingProbabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirflowNetworkOccupantVentilationControl", "Closing Probability"));
+        result.emplace_back("AirflowNetworkOccupantVentilationControl", "Closing Probability");
       }
       return result;
     }

@@ -52,16 +52,15 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> AirflowNetworkZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin());
       UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_AirflowNetworkZoneFields::VentilationControlZoneTemperatureSetpointScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirflowNetworkZone", "Ventilation Control Zone Temperature Setpoint"));
+        result.emplace_back("AirflowNetworkZone", "Ventilation Control Zone Temperature Setpoint");
       }
       if (std::find(b, e, OS_AirflowNetworkZoneFields::VentingAvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("AirflowNetworkZone", "Venting Availability"));
+        result.emplace_back("AirflowNetworkZone", "Venting Availability");
       }
       return result;
     }
