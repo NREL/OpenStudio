@@ -12912,7 +12912,6 @@ OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
       \units m3/s
       \minimum 0
 
-
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
   A1, \field Handle
