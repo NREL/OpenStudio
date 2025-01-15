@@ -84,6 +84,9 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
         * `getHighHumidityOutdoorAirFlowRatio` (`boost::optional<double>` to `double`)
         * `getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio` (`boost::optional<bool>` to `bool`)
 
+* [#5134](https://github.com/NREL/OpenStudio/pull/5134) - Addresses #5132, EPW design condition methods should return boost::optional doubles or integers
+    * `EpwDesignCondition` has many API-breaking changes related to its getters. The previous behavior was to misleadingly return a value of 0 for any empty design condition header field. The types for the getters are now either boost::optional<double> or boost::optional<int>.
+
 ## Minor changes and bug fixes
 
 Refer to the changelog on the release page at [v3.9.0](https://github.com/NREL/OpenStudio/releases/v3.9.0)
