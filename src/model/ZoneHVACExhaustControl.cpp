@@ -52,25 +52,23 @@ namespace model {
 
   namespace detail {
 
-    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const IdfObject& idfObject,
-                                                             Model_Impl* model, bool keepHandle)
+    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == ZoneHVACExhaustControl::iddObjectType());
     }
 
-    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                             Model_Impl* model, bool keepHandle)
+    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle)
       : ZoneHVACComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == ZoneHVACExhaustControl::iddObjectType());
     }
 
-    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const ZoneHVACExhaustControl_Impl& other,
-                                                             Model_Impl* model, bool keepHandle)
-    : ZoneHVACComponent_Impl(other, model, keepHandle) {}
+    ZoneHVACExhaustControl_Impl::ZoneHVACExhaustControl_Impl(const ZoneHVACExhaustControl_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& ZoneHVACExhaustControl_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()){
+      if (result.empty()) {
       }
       return result;
     }
@@ -83,28 +81,22 @@ namespace model {
       // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       const UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
-                    OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName)
-          != fieldIndices.cend()) {
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName) != fieldIndices.cend()) {
         result.emplace_back("ZoneHVACExhaustControl", "Availability");
       }
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
-                    OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName)
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName)
           != fieldIndices.cend()) {
         result.emplace_back("ZoneHVACExhaustControl", "Exhaust Flow Fraction");
       }
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
-                    OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName)
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName)
           != fieldIndices.cend()) {
         result.emplace_back("ZoneHVACExhaustControl", "Minimum Zone Temperature Limit");
       }
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
-                    OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName)
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName)
           != fieldIndices.cend()) {
         result.emplace_back("ZoneHVACExhaustControl", "Minimum Exhaust Flow Fraction");
       }
-      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(),
-                    OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName)
+      if (std::find(fieldIndices.cbegin(), fieldIndices.cend(), OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName)
           != fieldIndices.cend()) {
         result.emplace_back("ZoneHVACExhaustControl", "Balanced Exhaust Fraction");
       }
@@ -165,7 +157,7 @@ namespace model {
     }
 
     boost::optional<double> ZoneHVACExhaustControl_Impl::designExhaustFlowRate() const {
-      return getDouble(OS_ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate  , true  );
+      return getDouble(OS_ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate, true);
     }
 
     bool ZoneHVACExhaustControl_Impl::isDesignExhaustFlowRateAutosized() const {
@@ -177,7 +169,7 @@ namespace model {
       return result;
     }
 
-    boost::optional <double> ZoneHVACExhaustControl_Impl::autosizedDesignExhaustFlowRate() {
+    boost::optional<double> ZoneHVACExhaustControl_Impl::autosizedDesignExhaustFlowRate() {
       return getAutosizedValue("TODO_CHECK_SQL Design Exhaust Flow Rate", "m3/s");
     }
 
@@ -188,30 +180,27 @@ namespace model {
     }
 
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::exhaustFlowFractionSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName  );
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName);
     }
 
     boost::optional<Connection> ZoneHVACExhaustControl_Impl::supplyNodeorNodeList() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName  );
+      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName);
     }
 
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::minimumZoneTemperatureLimitSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName  );
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName);
     }
 
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::minimumExhaustFlowFractionSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName  );
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName);
     }
 
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::balancedExhaustFractionSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName  );
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName);
     }
 
     bool ZoneHVACExhaustControl_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName,
-                                "ZoneHVACExhaustControl",
-                                "Availability",
-                                schedule);
+      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName, "ZoneHVACExhaustControl", "Availability", schedule);
       return result;
     }
 
@@ -246,10 +235,8 @@ namespace model {
     }
 
     bool ZoneHVACExhaustControl_Impl::setExhaustFlowFractionSchedule(Schedule& schedule) {
-      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName,
-                                "ZoneHVACExhaustControl",
-                                "Exhaust Flow Fraction",
-                                schedule);
+      const bool result =
+        setSchedule(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName, "ZoneHVACExhaustControl", "Exhaust Flow Fraction", schedule);
       return result;
     }
 
@@ -269,10 +256,8 @@ namespace model {
     }
 
     bool ZoneHVACExhaustControl_Impl::setMinimumZoneTemperatureLimitSchedule(Schedule& schedule) {
-      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName,
-                                "ZoneHVACExhaustControl",
-                                "Minimum Zone Temperature Limit",
-                                schedule);
+      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName, "ZoneHVACExhaustControl",
+                                      "Minimum Zone Temperature Limit", schedule);
       return result;
     }
 
@@ -282,10 +267,8 @@ namespace model {
     }
 
     bool ZoneHVACExhaustControl_Impl::setMinimumExhaustFlowFractionSchedule(Schedule& schedule) {
-      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName,
-                                "ZoneHVACExhaustControl",
-                                "Minimum Exhaust Flow Fraction",
-                                schedule);
+      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName, "ZoneHVACExhaustControl",
+                                      "Minimum Exhaust Flow Fraction", schedule);
       return result;
     }
 
@@ -295,10 +278,8 @@ namespace model {
     }
 
     bool ZoneHVACExhaustControl_Impl::setBalancedExhaustFractionSchedule(Schedule& schedule) {
-      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName,
-                                "ZoneHVACExhaustControl",
-                                "Balanced Exhaust Fraction",
-                                schedule);
+      const bool result = setSchedule(OS_ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName, "ZoneHVACExhaustControl",
+                                      "Balanced Exhaust Fraction", schedule);
       return result;
     }
 
@@ -315,7 +296,6 @@ namespace model {
       if (boost::optional<double> val_ = autosizedDesignExhaustFlowRate()) {
         setDesignExhaustFlowRate(*val_));
       }
-
     }
 
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::optionalAvailabilitySchedule() const {
@@ -336,8 +316,7 @@ namespace model {
 
   }  // namespace detail
 
-  ZoneHVACExhaustControl::ZoneHVACExhaustControl(const Model& model)
-    : ZoneHVACComponent(ZoneHVACExhaustControl::iddObjectType(), model) {
+  ZoneHVACExhaustControl::ZoneHVACExhaustControl(const Model& model) : ZoneHVACComponent(ZoneHVACExhaustControl::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneHVACExhaustControl_Impl>());
 
     // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
@@ -367,8 +346,7 @@ namespace model {
   }
 
   std::vector<std::string> ZoneHVACExhaustControl::flowControlTypeValues() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_ExhaustControlFields::FlowControlType);
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneHVAC_ExhaustControlFields::FlowControlType);
   }
 
   Schedule ZoneHVACExhaustControl::availabilitySchedule() const {
@@ -395,7 +373,7 @@ namespace model {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->isDesignExhaustFlowRateAutosized();
   }
 
-  boost::optional <double> ZoneHVACExhaustControl::autosizedDesignExhaustFlowRate() {
+  boost::optional<double> ZoneHVACExhaustControl::autosizedDesignExhaustFlowRate() {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->autosizedDesignExhaustFlowRate();
   }
 
@@ -492,9 +470,7 @@ namespace model {
   }
 
   /// @cond
-  ZoneHVACExhaustControl::ZoneHVACExhaustControl(
-    std::shared_ptr<detail::ZoneHVACExhaustControl_Impl> impl)
-    : ZoneHVACComponent(std::move(impl)) {}
+  ZoneHVACExhaustControl::ZoneHVACExhaustControl(std::shared_ptr<detail::ZoneHVACExhaustControl_Impl> impl) : ZoneHVACComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

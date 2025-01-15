@@ -60,7 +60,6 @@ TEST_F(ModelFixture, AirloopHVACExhaustSystem_GettersSetters) {
   FansSystemModel fan(m);
   EXPECT_TRUE(airloopHVACExhaustSystem.setFan(fan));
   EXPECT_EQ(fan, airloopHVACExhaustSystem.fan());
-
 }
 TEST_F(ModelFixture, AirloopHVACExhaustSystem_HeatCoolFuelTypes) {
   Model m;

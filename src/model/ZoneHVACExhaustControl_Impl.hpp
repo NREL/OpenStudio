@@ -43,24 +43,18 @@ namespace model {
 
   namespace detail {
 
-  /** ZoneHVACExhaustControl_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACExhaustControl.*/
+    /** ZoneHVACExhaustControl_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACExhaustControl.*/
     class MODEL_API ZoneHVACExhaustControl_Impl : public ZoneHVACComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ZoneHVACExhaustControl_Impl(const IdfObject& idfObject,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      ZoneHVACExhaustControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACExhaustControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      ZoneHVACExhaustControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ZoneHVACExhaustControl_Impl(const ZoneHVACExhaustControl_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      ZoneHVACExhaustControl_Impl(const ZoneHVACExhaustControl_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~ZoneHVACExhaustControl_Impl() = default;
 
@@ -99,7 +93,7 @@ namespace model {
 
       bool isDesignExhaustFlowRateAutosized() const;
 
-      boost::optional <double> autosizedDesignExhaustFlowRate();
+      boost::optional<double> autosizedDesignExhaustFlowRate();
 
       std::string flowControlType() const;
 
@@ -123,7 +117,7 @@ namespace model {
       //@{
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setAvailabilitySchedule(Schedule& schedule);
 
       // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
@@ -142,7 +136,7 @@ namespace model {
       bool setFlowControlType(const std::string& flowControlType);
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setExhaustFlowFractionSchedule(Schedule& schedule);
 
       void resetExhaustFlowFractionSchedule();
@@ -153,19 +147,19 @@ namespace model {
       void resetSupplyNodeorNodeList();
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
       void resetMinimumZoneTemperatureLimitSchedule();
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setMinimumExhaustFlowFractionSchedule(Schedule& schedule);
 
       void resetMinimumExhaustFlowFractionSchedule();
 
       // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+      // Note Schedules are passed by reference, not const reference.
       bool setBalancedExhaustFractionSchedule(Schedule& schedule);
 
       void resetBalancedExhaustFractionSchedule();
@@ -182,7 +176,7 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.ZoneHVACExhaustControl");
-  
+
       // TODO: Check the return types of these methods.
       // Optional getters for use by methods like children() so can remove() if the constructor fails.
       // There are other ways for the public versions of these getters to fail--perhaps all required

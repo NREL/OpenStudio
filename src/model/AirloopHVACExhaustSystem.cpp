@@ -47,25 +47,23 @@ namespace model {
 
   namespace detail {
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model, bool keepHandle)
+    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == AirloopHVACExhaustSystem::iddObjectType());
     }
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model, bool keepHandle)
+    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                 bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == AirloopHVACExhaustSystem::iddObjectType());
     }
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const AirloopHVACExhaustSystem_Impl& other,
-                                                                 Model_Impl* model, bool keepHandle)
-    : StraightComponent_Impl(other, model, keepHandle) {}
+    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const AirloopHVACExhaustSystem_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& AirloopHVACExhaustSystem_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()){
+      if (result.empty()) {
       }
       return result;
     }
@@ -131,8 +129,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(const Model& model)
-    : StraightComponent(AirloopHVACExhaustSystem::iddObjectType(), model) {
+  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(const Model& model) : StraightComponent(AirloopHVACExhaustSystem::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirloopHVACExhaustSystem_Impl>());
 
     // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
@@ -168,8 +165,7 @@ namespace model {
   }
 
   /// @cond
-  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(
-    std::shared_ptr<detail::AirloopHVACExhaustSystem_Impl> impl)
+  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(std::shared_ptr<detail::AirloopHVACExhaustSystem_Impl> impl)
     : StraightComponent(std::move(impl)) {}
   /// @endcond
 

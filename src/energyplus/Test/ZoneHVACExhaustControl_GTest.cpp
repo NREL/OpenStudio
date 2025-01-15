@@ -94,7 +94,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACExhaustControl) {
   boost::optional<Schedule> balancedExhaustFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setBalancedExhaustFractionSchedule(balancedExhaustFractionSchedule));
 
-
   // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
   const Workspace w = ft.translateModel(m);
@@ -102,14 +101,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACExhaustControl) {
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
- EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName).get());
- EXPECT_EQ(zone.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ZoneName).get());
- EXPECT_EQ(inletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::InletNodeName).get());
- EXPECT_EQ(outletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::OutletNodeName).get());
+  EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName).get());
+  EXPECT_EQ(zone.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ZoneName).get());
+  EXPECT_EQ(inletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::InletNodeName).get());
+  EXPECT_EQ(outletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::OutletNodeName).get());
   // EXPECT_EQ("Autosize", idfObject.getString(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate).get());  EXPECT_EQ(0.6, idfObject.getDouble(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate).get());  EXPECT_EQ("Scheduled", idfObject.getString(ZoneHVAC_ExhaustControlFields::FlowControlType).get()); EXPECT_EQ(exhaustFlowFractionSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName).get());
- EXPECT_EQ(supplyNodeorNodeListName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName).get());
- EXPECT_EQ(minimumZoneTemperatureLimitSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName).get());
- EXPECT_EQ(minimumExhaustFlowFractionSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName).get());
- EXPECT_EQ(balancedExhaustFractionSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName).get());
-
+  EXPECT_EQ(supplyNodeorNodeListName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName).get());
+  EXPECT_EQ(minimumZoneTemperatureLimitSchedule.nameString(),
+            idfObject.getString(ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName).get());
+  EXPECT_EQ(minimumExhaustFlowFractionSchedule.nameString(),
+            idfObject.getString(ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName).get());
+  EXPECT_EQ(balancedExhaustFractionSchedule.nameString(),
+            idfObject.getString(ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName).get());
 }

@@ -124,7 +124,6 @@ TEST_F(ModelFixture, ZoneHVACExhaustControl_GettersSetters) {
   EXPECT_TRUE(zoneHVACExhaustControl.setBalancedExhaustFractionSchedule(balancedExhaustFractionSchedule));
   ASSERT_TRUE(zoneHVACExhaustControl.balancedExhaustFractionSchedule());
   EXPECT_EQ(balancedExhaustFractionSchedule, zoneHVACExhaustControl.balancedExhaustFractionSchedule().get());
-
 }
 TEST_F(ModelFixture, ZoneHVACExhaustControl_HeatCoolFuelTypes) {
   Model m;

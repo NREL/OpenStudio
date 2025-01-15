@@ -51,7 +51,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACExhaustControl( model::ZoneHVACExhaustControl& modelObject ) {
+  boost::optional<IdfObject> ForwardTranslator::translateZoneHVACExhaustControl(model::ZoneHVACExhaustControl& modelObject) {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_ExhaustControl, modelObject);
@@ -70,26 +70,26 @@ namespace energyplus {
 
     // Availability Schedule Name: Optional Object
     if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName, wo_->nameString());
       }
     }
 
     // Zone Name: Required Object
     Zone zone = modelObject.zone();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zone))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zone)) {
       idfObject.setString(ZoneHVAC_ExhaustControlFields::ZoneName, wo_->nameString());
     }
 
     // Inlet Node Name: Required Node
     Node inletNodeName = modelObject.inletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(inletNodeName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(inletNodeName)) {
       idfObject.setString(ZoneHVAC_ExhaustControlFields::InletNodeName, wo_->nameString());
     }
 
     // Outlet Node Name: Required Node
     Node outletNodeName = modelObject.outletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(outletNodeName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(outletNodeName)) {
       idfObject.setString(ZoneHVAC_ExhaustControlFields::OutletNodeName, wo_->nameString());
     }
 
@@ -100,43 +100,42 @@ namespace energyplus {
       if (boost::optional<double> designExhaustFlowRate_ = modelObject.designExhaustFlowRate()) {
         idfObject.setDouble(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate, designExhaustFlowRate_.get());
       }
-  }
+    }
 
     // Flow Control Type: Optional String
     const std::string flowControlType = modelObject.flowControlType();
     idfObject.setString(ZoneHVAC_ExhaustControlFields::FlowControlType, flowControlType);
 
-
     // Exhaust Flow Fraction Schedule Name: Optional Object
     if (boost::optional<Schedule> exhaustFlowFractionSchedule_ = modelObject.exhaustFlowFractionSchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(exhaustFlowFractionSchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(exhaustFlowFractionSchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName, wo_->nameString());
       }
     }
 
     // Supply Node or NodeList Name: Optional Node
     Node supplyNodeorNodeListName = modelObject.supplyNodeorNodeListName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyNodeorNodeListName))  {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyNodeorNodeListName)) {
       idfObject.setString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName, wo_->nameString());
     }
 
     // Minimum Zone Temperature Limit Schedule Name: Optional Object
     if (boost::optional<Schedule> minimumZoneTemperatureLimitSchedule_ = modelObject.minimumZoneTemperatureLimitSchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(minimumZoneTemperatureLimitSchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(minimumZoneTemperatureLimitSchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName, wo_->nameString());
       }
     }
 
     // Minimum Exhaust Flow Fraction Schedule Name: Optional Object
     if (boost::optional<Schedule> minimumExhaustFlowFractionSchedule_ = modelObject.minimumExhaustFlowFractionSchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(minimumExhaustFlowFractionSchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(minimumExhaustFlowFractionSchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::MinimumExhaustFlowFractionScheduleName, wo_->nameString());
       }
     }
 
     // Balanced Exhaust Fraction Schedule Name: Optional Object
     if (boost::optional<Schedule> balancedExhaustFractionSchedule_ = modelObject.balancedExhaustFractionSchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(balancedExhaustFractionSchedule_.get()))  {
+      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(balancedExhaustFractionSchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::BalancedExhaustFractionScheduleName, wo_->nameString());
       }
     }

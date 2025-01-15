@@ -89,7 +89,7 @@ namespace model {
 
     bool isDesignExhaustFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignExhaustFlowRate();
+    boost::optional<double> autosizedDesignExhaustFlowRate();
 
     std::string flowControlType() const;
 
