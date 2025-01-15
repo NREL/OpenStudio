@@ -186,21 +186,10 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.AirLoopHVACUnitaryHeatPumpAirToAir");
 
-      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
-      boost::optional<ModelObject> controllingZoneAsModelObject() const;
-      boost::optional<ModelObject> supplyAirFanAsModelObject() const;
-      boost::optional<ModelObject> heatingCoilAsModelObject() const;
-      boost::optional<ModelObject> coolingCoilAsModelObject() const;
-      boost::optional<ModelObject> supplementalHeatingCoilAsModelObject() const;
-      boost::optional<ModelObject> supplyAirFanOperatingModeScheduleAsModelObject() const;
-
-      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setControllingZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setSupplyAirFanAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setCoolingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
-      bool setSupplyAirFanOperatingModeScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      boost::optional<HVACComponent> optionalSupplyAirFan() const;
+      boost::optional<HVACComponent> optionalHeatingCoil() const;
+      boost::optional<HVACComponent> optionalCoolingCoil() const;
+      boost::optional<HVACComponent> optionalSupplementalHeatingCoil() const;
     };
 
   }  // namespace detail

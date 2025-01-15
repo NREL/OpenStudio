@@ -7,12 +7,14 @@
 #include "Model_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "Node.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -121,8 +123,7 @@ namespace model {
     }
 
     HVACComponent AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::supplementalHeatingCoil() const {
-      auto value = getObject<ModelObject>().getModelObjectTarget<HVACComponent>(
-        OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil);
+      auto value = optionalSupplementalHeatingCoil();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have a Supplemental Heating Coil attached.");
       }
@@ -583,6 +584,11 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingCoil);
     }
 
+    boost::optional<HVACComponent> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::optionalSupplementalHeatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(
+        OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoil);
+    }
+
     unsigned AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::inletPort() const {
       return OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AirInletNode;
     }
@@ -591,8 +597,18 @@ namespace model {
       return OS_AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::AirOutletNode;
     }
 
+    bool AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::addToNode(Node& node) {
+      if (boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC()) {
+        if (airLoop->supplyComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::clone(Model model) const {
-      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
       if (boost::optional<HVACComponent> supplyFan = this->supplyAirFan()) {
         modelObjectClone.setSupplyAirFan(supplyFan->clone(model).cast<HVACComponent>());
@@ -613,17 +629,18 @@ namespace model {
     std::vector<ModelObject> AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl::children() const {
       std::vector<ModelObject> result;
 
-      if (boost::optional<HVACComponent> supplyFan = this->supplyAirFan()) {
-        result.push_back(*supplyFan);
+      // Avoid crashing when calling remove() in Ctor when failing to set one of the child component by calling the optional one
+      if (boost::optional<HVACComponent> supplyFan = this->optionalSupplyAirFan()) {
+        result.push_back(std::move(*supplyFan));
       }
-      if (boost::optional<HVACComponent> coolingCoil = this->coolingCoil()) {
-        result.push_back(*coolingCoil);
+      if (boost::optional<HVACComponent> coolingCoil = this->optionalCoolingCoil()) {
+        result.push_back(std::move(*coolingCoil));
       }
-      if (boost::optional<HVACComponent> heatingCoil = this->heatingCoil()) {
-        result.push_back(*heatingCoil);
+      if (boost::optional<HVACComponent> heatingCoil = this->optionalHeatingCoil()) {
+        result.push_back(std::move(*heatingCoil));
       }
-      if (boost::optional<HVACComponent> supplementalHeatingCoil = this->supplementalHeatingCoil()) {
-        result.push_back(*supplementalHeatingCoil);
+      if (boost::optional<HVACComponent> supplementalHeatingCoil = this->optionalSupplementalHeatingCoil()) {
+        result.push_back(std::move(*supplementalHeatingCoil));
       }
 
       return result;
