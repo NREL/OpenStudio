@@ -196,7 +196,7 @@ class UTILITIES_API BCLSearchResult
   std::string m_modelerDescription;
   std::string m_fidelityLevel;
   std::string m_componentType;
-  bool m_provenanceRequired;
+  bool m_provenanceRequired = false;
   std::vector<BCLProvenance> m_provenances;
   std::vector<std::string> m_tags;
   std::vector<Attribute> m_attributes;
