@@ -42,25 +42,25 @@ namespace model {
 
   namespace detail {
 
-    class AirloopHVACExhaustSystem_Impl;
+    class AirLoopHVACExhaustSystem_Impl;
 
   }  // namespace detail
 
-  /** AirloopHVACExhaustSystem is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ExhaustSystem'. */
-  class MODEL_API AirloopHVACExhaustSystem : public StraightComponent
+  /** AirLoopHVACExhaustSystem is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ExhaustSystem'. */
+  class MODEL_API AirLoopHVACExhaustSystem : public StraightComponent
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit AirloopHVACExhaustSystem(const Model& model);
+    explicit AirLoopHVACExhaustSystem(const Model& model);
 
-    virtual ~AirloopHVACExhaustSystem() = default;
+    virtual ~AirLoopHVACExhaustSystem() = default;
     // Default the copy and move operators because the virtual dtor is explicit
-    AirloopHVACExhaustSystem(const AirloopHVACExhaustSystem& other) = default;
-    AirloopHVACExhaustSystem(AirloopHVACExhaustSystem&& other) = default;
-    AirloopHVACExhaustSystem& operator=(const AirloopHVACExhaustSystem&) = default;
-    AirloopHVACExhaustSystem& operator=(AirloopHVACExhaustSystem&&) = default;
+    AirLoopHVACExhaustSystem(const AirLoopHVACExhaustSystem& other) = default;
+    AirLoopHVACExhaustSystem(AirLoopHVACExhaustSystem&& other) = default;
+    AirLoopHVACExhaustSystem& operator=(const AirLoopHVACExhaustSystem&) = default;
+    AirLoopHVACExhaustSystem& operator=(AirLoopHVACExhaustSystem&&) = default;
 
     //@}
 
@@ -92,24 +92,24 @@ namespace model {
     //@}
    protected:
     /// @cond
-    using ImplType = detail::AirloopHVACExhaustSystem_Impl;
+    using ImplType = detail::AirLoopHVACExhaustSystem_Impl;
 
-    explicit AirloopHVACExhaustSystem(std::shared_ptr<detail::AirloopHVACExhaustSystem_Impl> impl);
+    explicit AirLoopHVACExhaustSystem(std::shared_ptr<detail::AirLoopHVACExhaustSystem_Impl> impl);
 
-    friend class detail::AirloopHVACExhaustSystem_Impl;
+    friend class detail::AirLoopHVACExhaustSystem_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.AirloopHVACExhaustSystem");
+    REGISTER_LOGGER("openstudio.model.AirLoopHVACExhaustSystem");
   };
 
-  /** \relates AirloopHVACExhaustSystem*/
-  using OptionalAirloopHVACExhaustSystem = boost::optional<AirloopHVACExhaustSystem>;
+  /** \relates AirLoopHVACExhaustSystem*/
+  using OptionalAirLoopHVACExhaustSystem = boost::optional<AirLoopHVACExhaustSystem>;
 
-  /** \relates AirloopHVACExhaustSystem*/
-  using AirloopHVACExhaustSystemVector = std::vector<AirloopHVACExhaustSystem>;
+  /** \relates AirLoopHVACExhaustSystem*/
+  using AirLoopHVACExhaustSystemVector = std::vector<AirLoopHVACExhaustSystem>;
 
 }  // namespace model
 }  // namespace openstudio

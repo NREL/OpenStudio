@@ -29,8 +29,8 @@
 
 #include "ModelFixture.hpp"
 
-#include "../AirloopHVACExhaustSystem.hpp"
-#include "../AirloopHVACExhaustSystem_Impl.hpp"
+#include "../AirLoopHVACExhaustSystem.hpp"
+#include "../AirLoopHVACExhaustSystem_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
 #include "../ZoneMixers.hpp"
@@ -42,34 +42,35 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirloopHVACExhaustSystem_GettersSetters) {
+TEST_F(ModelFixture, AirLoopHVACExhaustSystem_GettersSetters) {
   Model m;
   // TODO: Check regular Ctor arguments
-  AirloopHVACExhaustSystem airloopHVACExhaustSystem(m);
+  AirLoopHVACExhaustSystem airLoopHVACExhaustSystem(m);
   // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // AirloopHVACExhaustSystem airloopHVACExhaustSystem = m.getUniqueModelObject<AirloopHVACExhaustSystem>();
+  // AirLoopHVACExhaustSystem airLoopHVACExhaustSystem = m.getUniqueModelObject<AirLoopHVACExhaustSystem>();
 
-  airloopHVACExhaustSystem.setName("My AirloopHVACExhaustSystem");
+  airLoopHVACExhaustSystem.setName("My AirLoopHVACExhaustSystem");
 
   // Zone Mixer Name: Required Object
   ZoneMixers zoneMixer(m);
-  EXPECT_TRUE(airloopHVACExhaustSystem.setZoneMixer(zoneMixer));
-  EXPECT_EQ(zoneMixer, airloopHVACExhaustSystem.zoneMixer());
+  EXPECT_TRUE(airLoopHVACExhaustSystem.setZoneMixer(zoneMixer));
+  EXPECT_EQ(zoneMixer, airLoopHVACExhaustSystem.zoneMixer());
 
   // Fan Name: Required Object
   FansSystemModel fan(m);
-  EXPECT_TRUE(airloopHVACExhaustSystem.setFan(fan));
-  EXPECT_EQ(fan, airloopHVACExhaustSystem.fan());
+  EXPECT_TRUE(airLoopHVACExhaustSystem.setFan(fan));
+  EXPECT_EQ(fan, airLoopHVACExhaustSystem.fan());
+
 }
-TEST_F(ModelFixture, AirloopHVACExhaustSystem_HeatCoolFuelTypes) {
+TEST_F(ModelFixture, AirLoopHVACExhaustSystem_HeatCoolFuelTypes) {
   Model m;
   // TODO: Check regular Ctor arguments
-  AirloopHVACExhaustSystem airloopHVACExhaustSystem(m);
+  AirLoopHVACExhaustSystem airLoopHVACExhaustSystem(m);
   // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // AirloopHVACExhaustSystem airloopHVACExhaustSystem = m.getUniqueModelObject<AirloopHVACExhaustSystem>();
+  // AirLoopHVACExhaustSystem airLoopHVACExhaustSystem = m.getUniqueModelObject<AirLoopHVACExhaustSystem>();
 
-  EXPECT_EQ(ComponentType(ComponentType::Both), airloopHVACExhaustSystem.componentType());
-  testFuelTypeEquality({FuelType::Electricity}, airloopHVACExhaustSystem.coolingFuelTypes());
-  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, airloopHVACExhaustSystem.heatingFuelTypes());
-  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, airloopHVACExhaustSystem.appGHeatingFuelTypes());
+  EXPECT_EQ(ComponentType(ComponentType::Both), airLoopHVACExhaustSystem.componentType());
+  testFuelTypeEquality({FuelType::Electricity}, airLoopHVACExhaustSystem.coolingFuelTypes());
+  testFuelTypeEquality({FuelType::Electricity, FuelType::Propane}, airLoopHVACExhaustSystem.heatingFuelTypes());
+  testAppGFuelTypeEquality({AppGFuelType::Fuel, AppGFuelType::HeatPump}, airLoopHVACExhaustSystem.appGHeatingFuelTypes());
 }

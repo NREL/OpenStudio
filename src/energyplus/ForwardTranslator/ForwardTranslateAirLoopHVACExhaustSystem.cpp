@@ -48,7 +48,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACExhaustSystem(model::AirLoopHVACExhaustSystem& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACExhaustSystem( model::AirLoopHVACExhaustSystem& modelObject ) {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_ExhaustSystem, modelObject);
@@ -67,7 +67,7 @@ namespace energyplus {
 
     // Zone Mixer Name: Required Object
     ZoneMixers zoneMixer = modelObject.zoneMixer();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zoneMixer)) {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zoneMixer))  {
       idfObject.setString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName, wo_->nameString());
     }
 
@@ -75,9 +75,10 @@ namespace energyplus {
     const std::string fanObjectType = modelObject.fanObjectType();
     idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanObjectType, fanObjectType);
 
+
     // Fan Name: Required Object
     FansSystemModel fan = modelObject.fan();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(fan)) {
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(fan))  {
       idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanName, wo_->nameString());
     }
 

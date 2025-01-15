@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "AirloopHVACExhaustSystem.hpp"
-#include "AirloopHVACExhaustSystem_Impl.hpp"
+#include "AirLoopHVACExhaustSystem.hpp"
+#include "AirLoopHVACExhaustSystem_Impl.hpp"
 
 // TODO: Check the following class names against object getters and setters.
 #include "ZoneMixers.hpp"
@@ -47,53 +47,55 @@ namespace model {
 
   namespace detail {
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+    AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const IdfObject& idfObject,
+                                                                 Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(idfObject, model, keepHandle) {
-      OS_ASSERT(idfObject.iddObject().type() == AirloopHVACExhaustSystem::iddObjectType());
+      OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACExhaustSystem::iddObjectType());
     }
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                 bool keepHandle)
+    AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                 Model_Impl* model, bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {
-      OS_ASSERT(other.iddObject().type() == AirloopHVACExhaustSystem::iddObjectType());
+      OS_ASSERT(other.iddObject().type() == AirLoopHVACExhaustSystem::iddObjectType());
     }
 
-    AirloopHVACExhaustSystem_Impl::AirloopHVACExhaustSystem_Impl(const AirloopHVACExhaustSystem_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {}
+    AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const AirLoopHVACExhaustSystem_Impl& other,
+                                                                 Model_Impl* model, bool keepHandle)
+    : StraightComponent_Impl(other, model, keepHandle) {}
 
-    const std::vector<std::string>& AirloopHVACExhaustSystem_Impl::outputVariableNames() const {
+    const std::vector<std::string>& AirLoopHVACExhaustSystem_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
-      if (result.empty()) {
+      if (result.empty()){
       }
       return result;
     }
 
-    IddObjectType AirloopHVACExhaustSystem_Impl::iddObjectType() const {
-      return AirloopHVACExhaustSystem::iddObjectType();
+    IddObjectType AirLoopHVACExhaustSystem_Impl::iddObjectType() const {
+      return AirLoopHVACExhaustSystem::iddObjectType();
     }
 
-    ComponentType AirloopHVACExhaustSystem_Impl::componentType() const {
+    ComponentType AirLoopHVACExhaustSystem_Impl::componentType() const {
       // TODO
       return ComponentType::None;
     }
 
-    std::vector<FuelType> AirloopHVACExhaustSystem_Impl::coolingFuelTypes() const {
+    std::vector<FuelType> AirLoopHVACExhaustSystem_Impl::coolingFuelTypes() const {
       // TODO
       return {};
     }
 
-    std::vector<FuelType> AirloopHVACExhaustSystem_Impl::heatingFuelTypes() const {
+    std::vector<FuelType> AirLoopHVACExhaustSystem_Impl::heatingFuelTypes() const {
       // TODO
       return {};
     }
 
-    std::vector<AppGFuelType> AirloopHVACExhaustSystem_Impl::appGHeatingFuelTypes() const {
+    std::vector<AppGFuelType> AirLoopHVACExhaustSystem_Impl::appGHeatingFuelTypes() const {
 
       // TODO
       return {};
     }
 
-    ZoneMixers AirloopHVACExhaustSystem_Impl::zoneMixer() const {
+    ZoneMixers AirLoopHVACExhaustSystem_Impl::zoneMixer() const {
       boost::optional<ZoneMixers> value = optionalZoneMixer();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Zone Mixer attached.");
@@ -101,7 +103,7 @@ namespace model {
       return value.get();
     }
 
-    FansSystemModel AirloopHVACExhaustSystem_Impl::fan() const {
+    FansSystemModel AirLoopHVACExhaustSystem_Impl::fan() const {
       boost::optional<FansSystemModel> value = optionalFan();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Fan attached.");
@@ -109,28 +111,29 @@ namespace model {
       return value.get();
     }
 
-    bool AirloopHVACExhaustSystem_Impl::setZoneMixer(const ZoneMixers& zoneMixers) {
+    bool AirLoopHVACExhaustSystem_Impl::setZoneMixer(const ZoneMixers& zoneMixers) {
       const bool result = setPointer(OS_AirLoopHVAC_ExhaustSystemFields::ZoneMixerName, zoneMixers.handle());
       return result;
     }
 
-    bool AirloopHVACExhaustSystem_Impl::setFan(const FansSystemModel& fansSystemModel) {
+    bool AirLoopHVACExhaustSystem_Impl::setFan(const FansSystemModel& fansSystemModel) {
       const bool result = setPointer(OS_AirLoopHVAC_ExhaustSystemFields::FanName, fansSystemModel.handle());
       return result;
     }
 
-    boost::optional<ZoneMixers> AirloopHVACExhaustSystem_Impl::optionalZoneMixer() const {
+    boost::optional<ZoneMixers> AirLoopHVACExhaustSystem_Impl::optionalZoneMixer() const {
       return getObject<ModelObject>().getModelObjectTarget<ZoneMixers>(OS_AirLoopHVAC_ExhaustSystemFields::ZoneMixerName);
     }
 
-    boost::optional<FansSystemModel> AirloopHVACExhaustSystem_Impl::optionalFan() const {
+    boost::optional<FansSystemModel> AirLoopHVACExhaustSystem_Impl::optionalFan() const {
       return getObject<ModelObject>().getModelObjectTarget<FansSystemModel>(OS_AirLoopHVAC_ExhaustSystemFields::FanName);
     }
 
   }  // namespace detail
 
-  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(const Model& model) : StraightComponent(AirloopHVACExhaustSystem::iddObjectType(), model) {
-    OS_ASSERT(getImpl<detail::AirloopHVACExhaustSystem_Impl>());
+  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(const Model& model)
+    : StraightComponent(AirLoopHVACExhaustSystem::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirLoopHVACExhaustSystem_Impl>());
 
     // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
 
@@ -144,28 +147,29 @@ namespace model {
     OS_ASSERT(ok);
   }
 
-  IddObjectType AirloopHVACExhaustSystem::iddObjectType() {
+  IddObjectType AirLoopHVACExhaustSystem::iddObjectType() {
     return {IddObjectType::OS_AirLoopHVAC_ExhaustSystem};
   }
 
-  ZoneMixers AirloopHVACExhaustSystem::zoneMixer() const {
-    return getImpl<detail::AirloopHVACExhaustSystem_Impl>()->zoneMixer();
+  ZoneMixers AirLoopHVACExhaustSystem::zoneMixer() const {
+    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->zoneMixer();
   }
 
-  FansSystemModel AirloopHVACExhaustSystem::fan() const {
-    return getImpl<detail::AirloopHVACExhaustSystem_Impl>()->fan();
+  FansSystemModel AirLoopHVACExhaustSystem::fan() const {
+    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->fan();
   }
 
-  bool AirloopHVACExhaustSystem::setZoneMixer(const ZoneMixers& zoneMixers) {
-    return getImpl<detail::AirloopHVACExhaustSystem_Impl>()->setZoneMixer(zoneMixers);
+  bool AirLoopHVACExhaustSystem::setZoneMixer(const ZoneMixers& zoneMixers) {
+    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->setZoneMixer(zoneMixers);
   }
 
-  bool AirloopHVACExhaustSystem::setFan(const FansSystemModel& fansSystemModel) {
-    return getImpl<detail::AirloopHVACExhaustSystem_Impl>()->setFan(fansSystemModel);
+  bool AirLoopHVACExhaustSystem::setFan(const FansSystemModel& fansSystemModel) {
+    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->setFan(fansSystemModel);
   }
 
   /// @cond
-  AirloopHVACExhaustSystem::AirloopHVACExhaustSystem(std::shared_ptr<detail::AirloopHVACExhaustSystem_Impl> impl)
+  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(
+    std::shared_ptr<detail::AirLoopHVACExhaustSystem_Impl> impl)
     : StraightComponent(std::move(impl)) {}
   /// @endcond
 
