@@ -453,6 +453,10 @@ namespace model {
     return {IddObjectType::OS_Schedule_File};
   }
 
+  std::vector<std::string> ScheduleFile::columnSeparatorValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Schedule_FileFields::ColumnSeparator);
+  }
+
   std::vector<std::string> ScheduleFile::minutesperItemValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Schedule_FileFields::MinutesperItem);
   }
