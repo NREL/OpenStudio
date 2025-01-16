@@ -42,6 +42,8 @@
 #include "../../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
 #include "../../model/EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/PortList.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 
@@ -90,6 +92,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   Space s(m);
   s.setThermalZone(z);
 
+  z.inletPortList().modelObjects()[0].setName("Zone Air Inlet Node");
+  z.exhaustPortList().modelObjects()[0].setName("Zone Air Exhaust Node");
+  z.zoneAirNode().setName("Zone Air Node");
+
   const Workspace w = ft.translateModel(m);
   const auto idfObjs = w.getObjectsByType(IddObjectType::ZoneHVAC_EvaporativeCoolerUnit);
   ASSERT_EQ(1u, idfObjs.size());
@@ -98,11 +104,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::Name).get());
   EXPECT_EQ(availabilitySchedule.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityScheduleName).get());
   EXPECT_TRUE(idfObject.isEmpty(ZoneHVAC_EvaporativeCoolerUnitFields::AvailabilityManagerListName));
-  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airInletModelObject()->nameString(),
+  EXPECT_EQ("My ZoneHVACEvaporativeCoolerUnit Outdoor Air Node",
             idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::OutdoorAirInletNodeName).get());
-  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airOutletModelObject()->nameString(),
-            idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
-  EXPECT_TRUE(idfObject.isEmpty(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName));
+  EXPECT_EQ("Zone Air Inlet Node", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::CoolerOutletNodeName).get());
+  EXPECT_EQ("Zone Air Exhaust Node", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::ZoneReliefAirNodeName).get());
   EXPECT_EQ("Fan:ComponentModel", idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType).get());
   EXPECT_EQ(supplyAirFan.nameString(), idfObject.getString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName).get());
   EXPECT_EQ(0.9, idfObject.getDouble(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate).get());
@@ -128,8 +133,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACEvaporativeCoolerUnit) {
   auto idf_secondEvaporativeCooler = idfObject.getTarget(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName).get();
   EXPECT_EQ(idf_secondEvaporativeCooler.iddObject().type(), IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial);
 
-  EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.airInletModelObject()->nameString(),
-            idf_supplyAirFan.getString(Fan_ComponentModelFields::AirInletNodeName).get());
+  EXPECT_EQ("My ZoneHVACEvaporativeCoolerUnit Outdoor Air Node", idf_supplyAirFan.getString(Fan_ComponentModelFields::AirInletNodeName).get());
   EXPECT_EQ(zoneHVACEvaporativeCoolerUnit.nameString() + " Fan - First Evaporative Cooler Node",
             idf_supplyAirFan.getString(Fan_ComponentModelFields::AirOutletNodeName).get());
 
