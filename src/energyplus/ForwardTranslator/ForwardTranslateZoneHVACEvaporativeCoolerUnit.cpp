@@ -54,6 +54,30 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEvaporativeCoolerUnit(model::ZoneHVACEvaporativeCoolerUnit& modelObject) {
 
+    boost::optional<IdfObject> i_firstEvaporativeCooler_;
+    {
+      HVACComponent firstEvaporativeCooler = modelObject.firstEvaporativeCooler();
+      i_firstEvaporativeCooler_ = translateAndMapModelObject(firstEvaporativeCooler);
+      if (!i_firstEvaporativeCooler_) {
+        LOG(Error, "ZoneHVACEvaporativeCoolerUnit '" << modelObject.nameString() << "', could not translate required First Evaporative Cooler:"
+                                                     << firstEvaporativeCooler.briefDescription());
+        return boost::none;
+      }
+    }
+
+    boost::optional<IdfObject> i_fan_;
+    {
+      HVACComponent supplyAirFan = modelObject.supplyAirFan();
+      i_fan_ = translateAndMapModelObject(supplyAirFan);
+      if (!i_fan_) {
+        LOG(Error, "ZoneHVACEvaporativeCoolerUnit '" << modelObject.nameString()
+                                                     << "', could not translate required Supply Air Fan:" << supplyAirFan.briefDescription());
+        return boost::none;
+      }
+    }
+
+    // i_firstEvaporativeCooler_ and i_fan_ are always initialized now
+
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_EvaporativeCoolerUnit, modelObject);
 
@@ -91,13 +115,8 @@ namespace energyplus {
 
     // Supply Air Fan Object Type
     // Supply Air Fan Name
-    HVACComponent supplyAirFan_ = modelObject.supplyAirFan();
-    boost::optional<IdfObject> fan_ = translateAndMapModelObject(supplyAirFan_);
-
-    if (fan_ && fan_->name()) {
-      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, fan_->iddObject().name());
-      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, fan_->nameString());
-    }
+    idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanObjectType, i_fan_->iddObject().name());
+    idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SupplyAirFanName, i_fan_->nameString());
 
     if (modelObject.isDesignSupplyAirFlowRateAutosized()) {
       idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::DesignSupplyAirFlowRate, "Autosize");
@@ -108,6 +127,7 @@ namespace energyplus {
 
     // Fan Placement: Required String
     const std::string fanPlacement = modelObject.fanPlacement();
+    const bool blowThroughFan = istringEqual(fanPlacement, "BlowThrough");
     idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FanPlacement, fanPlacement);
 
     // Cooler Unit Control Method: Required String
@@ -125,41 +145,32 @@ namespace energyplus {
 
     // First Evaporative Cooler Object Type: Required String
     // First Evaporative Cooler Object Name: Required Object
-    HVACComponent firstEvaporativeCooler = modelObject.firstEvaporativeCooler();
-    boost::optional<IdfObject> firstEvaporativeCooler_ = translateAndMapModelObject(firstEvaporativeCooler);
-    if (firstEvaporativeCooler_) {
-      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType, firstEvaporativeCooler_->iddObject().name());
-      idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName, firstEvaporativeCooler_->nameString());
-    }
+    idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectType, i_firstEvaporativeCooler_->iddObject().name());
+    idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::FirstEvaporativeCoolerObjectName, i_firstEvaporativeCooler_->nameString());
 
     // Second Evaporative Cooler Object Type: boost::optional<std::string>
     // Second Evaporative Cooler Name: Optional Object
-    boost::optional<HVACComponent> _secondEvaporativeCooler = modelObject.secondEvaporativeCooler();
-    boost::optional<IdfObject> secondEvaporativeCooler_;
-    if (_secondEvaporativeCooler) {
-      secondEvaporativeCooler_ = translateAndMapModelObject(_secondEvaporativeCooler.get());
-      if (secondEvaporativeCooler_) {
-        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType, secondEvaporativeCooler_->iddObject().name());
-        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName, secondEvaporativeCooler_->nameString());
+    boost::optional<IdfObject> i_secondEvaporativeCooler_;
+    if (boost::optional<HVACComponent> secondEvaporativeCooler_ = modelObject.secondEvaporativeCooler()) {
+      i_secondEvaporativeCooler_ = translateAndMapModelObject(*secondEvaporativeCooler_);
+      if (i_secondEvaporativeCooler_) {
+        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerObjectType, i_secondEvaporativeCooler_->iddObject().name());
+        idfObject.setString(ZoneHVAC_EvaporativeCoolerUnitFields::SecondEvaporativeCoolerName, i_secondEvaporativeCooler_->nameString());
       }
     }
 
-    // If BlowThrough:   o---- Fan ---- E1 ---- E2 ----o
-    // If DrawThrough:   o---- E1 ---- E2 ---- Fan ----o
+    // If BlowThrough:   o---- Fan ---- E1 (---- E2) ----o
+    // If DrawThrough:   o---- E1 (---- E2) ---- Fan ----o
     std::string baseName = modelObject.nameString();
-    if (fan_) {
+    // if (i_fan_) is always true
+    {
+      std::string inletNodeName;
       std::string outletNodeName;
-      std::string inletNodeName = outdoorAirInletNodeName;
-      if (istringEqual(fanPlacement, "BlowThrough")) {
-        if (firstEvaporativeCooler_) {
-          outletNodeName = baseName + " Fan - First Evaporative Cooler Node";
-        } else if (secondEvaporativeCooler_) {
-          outletNodeName = baseName + " Fan - Second Evaporative Cooler Node";
-        } else {
-          outletNodeName = coolerOutletNodeName;
-        }
+      if (blowThroughFan) {
+        inletNodeName = outdoorAirInletNodeName;
+        outletNodeName = baseName + " Fan - First Evaporative Cooler Node";
       } else {
-        if (secondEvaporativeCooler_) {
+        if (i_secondEvaporativeCooler_) {
           inletNodeName = baseName + " Second Evaporative Cooler - Fan Node";
         } else {
           inletNodeName = baseName + " First Evaporative Cooler - Fan Node";
@@ -167,88 +178,77 @@ namespace energyplus {
         outletNodeName = coolerOutletNodeName;
       }
 
-      if (fan_->iddObject().type() == IddObjectType::Fan_ConstantVolume) {
-        fan_->setString(Fan_ConstantVolumeFields::AirInletNodeName, inletNodeName);
-        fan_->setString(Fan_ConstantVolumeFields::AirOutletNodeName, outletNodeName);
-      } else if (fan_->iddObject().type() == IddObjectType::Fan_VariableVolume) {
-        fan_->setString(Fan_VariableVolumeFields::AirInletNodeName, inletNodeName);
-        fan_->setString(Fan_VariableVolumeFields::AirOutletNodeName, outletNodeName);
-      } else if (fan_->iddObject().type() == IddObjectType::Fan_OnOff) {
-        fan_->setString(Fan_OnOffFields::AirInletNodeName, inletNodeName);
-        fan_->setString(Fan_OnOffFields::AirOutletNodeName, outletNodeName);
-      } else if (fan_->iddObject().type() == IddObjectType::Fan_SystemModel) {
-        fan_->setString(Fan_SystemModelFields::AirInletNodeName, inletNodeName);
-        fan_->setString(Fan_SystemModelFields::AirOutletNodeName, outletNodeName);
-      } else if (fan_->iddObject().type() == IddObjectType::Fan_ComponentModel) {
-        fan_->setString(Fan_ComponentModelFields::AirInletNodeName, inletNodeName);
-        fan_->setString(Fan_ComponentModelFields::AirOutletNodeName, outletNodeName);
+      if (i_fan_->iddObject().type() == IddObjectType::Fan_ConstantVolume) {
+        i_fan_->setString(Fan_ConstantVolumeFields::AirInletNodeName, inletNodeName);
+        i_fan_->setString(Fan_ConstantVolumeFields::AirOutletNodeName, outletNodeName);
+      } else if (i_fan_->iddObject().type() == IddObjectType::Fan_VariableVolume) {
+        i_fan_->setString(Fan_VariableVolumeFields::AirInletNodeName, inletNodeName);
+        i_fan_->setString(Fan_VariableVolumeFields::AirOutletNodeName, outletNodeName);
+      } else if (i_fan_->iddObject().type() == IddObjectType::Fan_OnOff) {
+        i_fan_->setString(Fan_OnOffFields::AirInletNodeName, inletNodeName);
+        i_fan_->setString(Fan_OnOffFields::AirOutletNodeName, outletNodeName);
+      } else if (i_fan_->iddObject().type() == IddObjectType::Fan_SystemModel) {
+        i_fan_->setString(Fan_SystemModelFields::AirInletNodeName, inletNodeName);
+        i_fan_->setString(Fan_SystemModelFields::AirOutletNodeName, outletNodeName);
+      } else if (i_fan_->iddObject().type() == IddObjectType::Fan_ComponentModel) {
+        i_fan_->setString(Fan_ComponentModelFields::AirInletNodeName, inletNodeName);
+        i_fan_->setString(Fan_ComponentModelFields::AirOutletNodeName, outletNodeName);
       }
     }
 
-    if (firstEvaporativeCooler_) {
-      std::string outletNodeName;
+    // if (i_firstEvaporativeCooler_) is always true
+    {
       std::string inletNodeName;
-      if (istringEqual(fanPlacement, "BlowThrough") && fan_) {
+      std::string outletNodeName;
+      if (blowThroughFan) {
         inletNodeName = baseName + " Fan - First Evaporative Cooler Node";
+        if (i_secondEvaporativeCooler_) {
+          outletNodeName = baseName + " First Evaporative Cooler - Second Evaporative Cooler Node";
+        } else {
+          outletNodeName = coolerOutletNodeName;
+        }
       } else {
         inletNodeName = outdoorAirInletNodeName;
-      }
-
-      if (secondEvaporativeCooler_) {
-        outletNodeName = baseName + " First Evaporative Cooler - Second Evaporative Cooler Node";
-      } else if (istringEqual(fanPlacement, "BlowThrough")) {
-        outletNodeName = coolerOutletNodeName;
-      } else {
         outletNodeName = baseName + " First Evaporative Cooler - Fan Node";
       }
 
-      if (firstEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName, inletNodeName);
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName, outletNodeName);
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
-      } else if (firstEvaporativeCooler.iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName, inletNodeName);
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName, outletNodeName);
-        firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
+      if (i_firstEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName, inletNodeName);
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName, outletNodeName);
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
+      } else if (i_firstEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName, inletNodeName);
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName, outletNodeName);
+        i_firstEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
       } else {
-        LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << firstEvaporativeCooler_->iddObject().type() << ".");
+        LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << i_firstEvaporativeCooler_->iddObject().type() << ".");
       }
     }
 
-    if (secondEvaporativeCooler_) {
+    if (i_secondEvaporativeCooler_) {
+      const std::string inletNodeName = baseName + " First Evaporative Cooler - Second Evaporative Cooler Node";
       std::string outletNodeName;
-      std::string inletNodeName;
-      if (firstEvaporativeCooler_) {
-        inletNodeName = baseName + " First Evaporative Cooler - Second Evaporative Cooler Node";
-      } else if (istringEqual(fanPlacement, "BlowThrough") && fan_) {
-        inletNodeName = baseName + " Fan - Second Evaporative Cooler Node";
-      } else {
-        inletNodeName = outdoorAirInletNodeName;
-      }
-
-      if (istringEqual(fanPlacement, "DrawThrough") && fan_) {
-        outletNodeName = baseName + " Second Evaporative Cooler - Fan Node";
-      } else {
+      if (blowThroughFan) {
         outletNodeName = coolerOutletNodeName;
+      } else {
+        outletNodeName = baseName + " Second Evaporative Cooler - Fan Node";
       }
 
-      if (secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName, inletNodeName);
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName, outletNodeName);
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
-      } else if (secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName, inletNodeName);
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName, outletNodeName);
-        secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
+      if (i_secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName, inletNodeName);
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName, outletNodeName);
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Direct_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
+      } else if (i_secondEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Indirect_ResearchSpecial) {
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirInletNodeName, inletNodeName);
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::PrimaryAirOutletNodeName, outletNodeName);
+        i_secondEvaporativeCooler_->setString(EvaporativeCooler_Indirect_ResearchSpecialFields::SensorNodeName, coolerOutletNodeName);
       } else {
-        LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << secondEvaporativeCooler_->iddObject().type() << ".");
+        LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << i_secondEvaporativeCooler_->iddObject().type() << ".");
       }
     }
 
     // Shut Off Relative Humidity: boost::optional<double>
-    if (boost::optional<double> shutOffRelativeHumidity_ = modelObject.shutOffRelativeHumidity()) {
-      idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ShutOffRelativeHumidity, shutOffRelativeHumidity_.get());
-    }
+    idfObject.setDouble(ZoneHVAC_EvaporativeCoolerUnitFields::ShutOffRelativeHumidity, modelObject.shutOffRelativeHumidity());
 
     return idfObject;
   }  // End of translate function
