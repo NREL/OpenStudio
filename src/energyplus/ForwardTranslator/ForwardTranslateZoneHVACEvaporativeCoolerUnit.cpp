@@ -162,6 +162,7 @@ namespace energyplus {
     // If BlowThrough:   o---- Fan ---- E1 (---- E2) ----o
     // If DrawThrough:   o---- E1 (---- E2) ---- Fan ----o
     std::string baseName = modelObject.nameString();
+
     // if (i_fan_) is always true
     {
       std::string inletNodeName;
@@ -209,7 +210,11 @@ namespace energyplus {
         }
       } else {
         inletNodeName = outdoorAirInletNodeName;
-        outletNodeName = baseName + " First Evaporative Cooler - Fan Node";
+        if (i_secondEvaporativeCooler_) {
+          outletNodeName = baseName + " First Evaporative Cooler - Second Evaporative Cooler Node";
+        } else {
+          outletNodeName = baseName + " First Evaporative Cooler - Fan Node";
+        }
       }
 
       if (i_firstEvaporativeCooler_->iddObject().type() == IddObjectType::EvaporativeCooler_Direct_ResearchSpecial) {
