@@ -282,7 +282,7 @@ namespace model {
 
     void ZoneHVACExhaustControl_Impl::applySizingValues() {
       if (boost::optional<double> val_ = autosizedDesignExhaustFlowRate()) {
-        setDesignExhaustFlowRate(*val_));
+        setDesignExhaustFlowRate(*val_);
       }
     }
 
