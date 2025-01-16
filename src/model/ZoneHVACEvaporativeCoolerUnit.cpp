@@ -202,7 +202,7 @@ namespace model {
     }
 
     boost::optional<double> ZoneHVACEvaporativeCoolerUnit_Impl::autosizedDesignSupplyAirFlowRate() {
-      return getAutosizedValue("TODO_CHECK_SQL Design Supply Air Flow Rate", "m3/s");
+      return getAutosizedValue("Design Size Design Supply Air Flow Rate", "m3/s");
     }
 
     std::string ZoneHVACEvaporativeCoolerUnit_Impl::fanPlacement() const {

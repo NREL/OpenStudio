@@ -84,8 +84,6 @@ namespace model {
 
     bool isDesignSupplyAirFlowRateAutosized() const;
 
-    boost::optional<double> autosizedDesignSupplyAirFlowRate();
-
     std::string fanPlacement() const;
 
     std::string coolerUnitControlMethod() const;
@@ -131,6 +129,8 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<double> autosizedDesignSupplyAirFlowRate();
 
     //@}
    protected:

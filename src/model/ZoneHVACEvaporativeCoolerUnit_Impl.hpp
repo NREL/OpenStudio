@@ -74,6 +74,10 @@ namespace model {
 
       virtual unsigned outletPort() const override;
 
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
       virtual ComponentType componentType() const override;
       virtual std::vector<FuelType> coolingFuelTypes() const override;
       virtual std::vector<FuelType> heatingFuelTypes() const override;
@@ -90,8 +94,6 @@ namespace model {
       boost::optional<double> designSupplyAirFlowRate() const;
 
       bool isDesignSupplyAirFlowRateAutosized() const;
-
-      boost::optional<double> autosizedDesignSupplyAirFlowRate();
 
       std::string fanPlacement() const;
 
@@ -135,13 +137,11 @@ namespace model {
 
       bool setShutOffRelativeHumidity(double shutOffRelativeHumidity);
 
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
-
       //@}
       /** @name Other */
       //@{
+
+      boost::optional<double> autosizedDesignSupplyAirFlowRate();
 
       //@}
      protected:
