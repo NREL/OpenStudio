@@ -29508,17 +29508,12 @@ OS:ZoneHVAC:ExhaustControl,
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4 , \field Zone Name
-       \required-field
-       \note Zone the exhaust inlet node is part of
-       \type object-list
-       \object-list ThermalZoneNames
-  A5 , \field Inlet Node Name
+  A4 , \field Inlet Node Name
        \note Inlet node name for the exhaust. Must be a zone exhaust node.
        \required-field
        \type object-list
        \object-list ConnectionNames
-  A6 , \field Outlet Node Name
+  A5 , \field Outlet Node Name
        \note Outlet node name for the exhaust
        \required-field
        \type object-list
@@ -29528,32 +29523,32 @@ OS:ZoneHVAC:ExhaustControl,
        \units m3/s
        \minimum> 0
        \required-field
-  A7 , \field Flow Control Type
+  A6 , \field Flow Control Type
        \note Control type of the zone exhaust flow
        \type choice
        \key Scheduled
        \key FollowSupply
        \required-field
-  A8 , \field Exhaust Flow Fraction Schedule Name
+  A7 , \field Exhaust Flow Fraction Schedule Name
        \note Schedule name of the exhaust flow fraction. Used only with Scheduled control type.
        \note If this field is blank, the flow fraction is always 1.0.
        \type object-list
        \object-list ScheduleNames
-  A9 , \field Supply Node or NodeList Name
+  A8 , \field Supply Node or NodeList Name
        \note Used only with FollowSupply control type.
        \type object-list
        \object-list ConnectionNames
-  A10, \field Minimum Zone Temperature Limit Schedule Name
+  A9,  \field Minimum Zone Temperature Limit Schedule Name
        \note Schedule name of the Minimum Zone Temperature Limit in degree Celsius
        \note If this field is blank, there is no limit.
        \type object-list
        \object-list ScheduleNames
-  A11, \field Minimum Exhaust Flow Fraction Schedule Name
+  A10, \field Minimum Exhaust Flow Fraction Schedule Name
        \note Schedule name of the minimum exhaust flow fraction.
        \note Applied when the zone temperature falls below the Minimum Zone Temperature Limit.
        \type object-list
        \object-list ScheduleNames
-  A12; \field Balanced Exhaust Fraction Schedule Name
+  A11; \field Balanced Exhaust Fraction Schedule Name
        \note Schedule name of the Balanced Exhaust Fraction.
        \type object-list
        \object-list ScheduleNames
