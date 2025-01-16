@@ -29,15 +29,10 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-
 #include "../../model/AirLoopHVACExhaustSystem.hpp"
-
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/ZoneMixers.hpp"
-#include "../../model/ZoneMixers_Impl.hpp"
-
-#include "../../model/FansSystemModel.hpp"
-#include "../../model/FansSystemModel_Impl.hpp"
+#include "../../model/AirLoopHVACExhaustSystem_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
 
 #include <utilities/idd/AirLoopHVAC_ExhaustSystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -52,31 +47,13 @@ namespace energyplus {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_ExhaustSystem, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject(openstudio::IddObjectType::AirLoopHVAC_ExhaustSystem);
-    // m_idfObjects.push_back(idfObject);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    idfObject.setName(modelObject.nameString());
-
-    // Zone Mixer Name: Required Object
-    ZoneMixers zoneMixer = modelObject.zoneMixer();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zoneMixer)) {
-      idfObject.setString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName, wo_->nameString());
-    }
 
     // Fan Object Type: Required String
     const std::string fanObjectType = modelObject.fanObjectType();
     idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanObjectType, fanObjectType);
 
     // Fan Name: Required Object
-    FansSystemModel fan = modelObject.fan();
+    HVACComponent fan = modelObject.fan();
     if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(fan)) {
       idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanName, wo_->nameString());
     }

@@ -30,11 +30,10 @@
 #include "AirLoopHVACExhaustSystem.hpp"
 #include "AirLoopHVACExhaustSystem_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "ZoneMixers.hpp"
-#include "ZoneMixers_Impl.hpp"
-#include "FansSystemModel.hpp"
-#include "FansSystemModel_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -73,58 +72,36 @@ namespace model {
     }
 
     ComponentType AirLoopHVACExhaustSystem_Impl::componentType() const {
-      // TODO
       return ComponentType::None;
     }
 
     std::vector<FuelType> AirLoopHVACExhaustSystem_Impl::coolingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<FuelType> AirLoopHVACExhaustSystem_Impl::heatingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<AppGFuelType> AirLoopHVACExhaustSystem_Impl::appGHeatingFuelTypes() const {
-
-      // TODO
       return {};
     }
 
-    ZoneMixers AirLoopHVACExhaustSystem_Impl::zoneMixer() const {
-      boost::optional<ZoneMixers> value = optionalZoneMixer();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Zone Mixer attached.");
-      }
-      return value.get();
-    }
-
-    FansSystemModel AirLoopHVACExhaustSystem_Impl::fan() const {
-      boost::optional<FansSystemModel> value = optionalFan();
+    HVACComponent AirLoopHVACExhaustSystem_Impl::fan() const {
+      boost::optional<HVACComponent> value = optionalFan();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Fan attached.");
       }
       return value.get();
     }
 
-    bool AirLoopHVACExhaustSystem_Impl::setZoneMixer(const ZoneMixers& zoneMixers) {
-      const bool result = setPointer(OS_AirLoopHVAC_ExhaustSystemFields::ZoneMixerName, zoneMixers.handle());
+    bool AirLoopHVACExhaustSystem_Impl::setFan(const HVACComponent& fan) {
+      const bool result = setPointer(OS_AirLoopHVAC_ExhaustSystemFields::FanName, fan.handle());
       return result;
     }
 
-    bool AirLoopHVACExhaustSystem_Impl::setFan(const FansSystemModel& fansSystemModel) {
-      const bool result = setPointer(OS_AirLoopHVAC_ExhaustSystemFields::FanName, fansSystemModel.handle());
-      return result;
-    }
-
-    boost::optional<ZoneMixers> AirLoopHVACExhaustSystem_Impl::optionalZoneMixer() const {
-      return getObject<ModelObject>().getModelObjectTarget<ZoneMixers>(OS_AirLoopHVAC_ExhaustSystemFields::ZoneMixerName);
-    }
-
-    boost::optional<FansSystemModel> AirLoopHVACExhaustSystem_Impl::optionalFan() const {
-      return getObject<ModelObject>().getModelObjectTarget<FansSystemModel>(OS_AirLoopHVAC_ExhaustSystemFields::FanName);
+    boost::optional<HVACComponent> AirLoopHVACExhaustSystem_Impl::optionalFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_AirLoopHVAC_ExhaustSystemFields::FanName);
     }
 
   }  // namespace detail
@@ -132,14 +109,10 @@ namespace model {
   AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(const Model& model) : StraightComponent(AirLoopHVACExhaustSystem::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirLoopHVACExhaustSystem_Impl>());
 
-    // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
-
-    // TODO: Appropriately handle the following required object-list fields.
-    //     OS_AirLoopHVAC_ExhaustSystemFields::ZoneMixerName
-    //     OS_AirLoopHVAC_ExhaustSystemFields::FanName
     bool ok = true;
     // ok = setZoneMixer();
     OS_ASSERT(ok);
+
     // ok = setFan();
     OS_ASSERT(ok);
   }
@@ -148,20 +121,12 @@ namespace model {
     return {IddObjectType::OS_AirLoopHVAC_ExhaustSystem};
   }
 
-  ZoneMixers AirLoopHVACExhaustSystem::zoneMixer() const {
-    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->zoneMixer();
-  }
-
-  FansSystemModel AirLoopHVACExhaustSystem::fan() const {
+  HVACComponent AirLoopHVACExhaustSystem::fan() const {
     return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->fan();
   }
 
-  bool AirLoopHVACExhaustSystem::setZoneMixer(const ZoneMixers& zoneMixers) {
-    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->setZoneMixer(zoneMixers);
-  }
-
-  bool AirLoopHVACExhaustSystem::setFan(const FansSystemModel& fansSystemModel) {
-    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->setFan(fansSystemModel);
+  bool AirLoopHVACExhaustSystem::setFan(const HVACComponent& fan) {
+    return getImpl<detail::AirLoopHVACExhaustSystem_Impl>()->setFan(fan);
   }
 
   /// @cond

@@ -36,9 +36,7 @@
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class ZoneMixers;
-  class FansSystemModel;
+  class HVACComponent;
 
   namespace detail {
 
@@ -69,21 +67,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ZoneMixers.
-    ZoneMixers zoneMixer() const;
-
-    // TODO: Check return type. From object lists, some candidates are: FansSystemModel, FansComponentModel.
-    FansSystemModel fan() const;
+    HVACComponent fan() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ZoneMixers.
-    bool setZoneMixer(const ZoneMixers& zoneMixers);
-
-    // TODO: Check argument type. From object lists, some candidates are: FansSystemModel, FansComponentModel.
-    bool setFan(const FansSystemModel& fansSystemModel);
+    bool setFan(const HVACComponent& fan);
 
     //@}
     /** @name Other */

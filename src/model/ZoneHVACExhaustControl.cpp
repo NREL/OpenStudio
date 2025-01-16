@@ -30,13 +30,12 @@
 #include "ZoneHVACExhaustControl.hpp"
 #include "ZoneHVACExhaustControl_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -103,24 +102,27 @@ namespace model {
       return result;
     }
 
+    unsigned ZoneHVACExhaustControl_Impl::inletPort() const {
+      return OS_ZoneHVAC_ExhaustControlFields::InletNodeName;
+    }
+
+    unsigned ZoneHVACExhaustControl_Impl::outletPort() const {
+      return OS_ZoneHVAC_ExhaustControlFields::OutletNodeName;
+    }
+
     ComponentType ZoneHVACExhaustControl_Impl::componentType() const {
-      // TODO
       return ComponentType::None;
     }
 
     std::vector<FuelType> ZoneHVACExhaustControl_Impl::coolingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<FuelType> ZoneHVACExhaustControl_Impl::heatingFuelTypes() const {
-      // TODO
       return {};
     }
 
     std::vector<AppGFuelType> ZoneHVACExhaustControl_Impl::appGHeatingFuelTypes() const {
-
-      // TODO
       return {};
     }
 
@@ -132,28 +134,17 @@ namespace model {
       return value.get();
     }
 
-    ThermalZone ZoneHVACExhaustControl_Impl::zone() const {
-      boost::optional<ThermalZone> value = optionalZone();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Zone attached.");
-      }
-      return value.get();
-    }
+    boost::optional<ThermalZone> ZoneHVACExhaustControl_Impl::thermalZone() const {
+      auto thisObject = this->getObject<ModelObject>();
+      std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+      for (const auto& thermalZone : thermalZones) {
+        std::vector<ModelObject> equipment = thermalZone.equipment();
 
-    Connection ZoneHVACExhaustControl_Impl::inletNode() const {
-      boost::optional<Connection> value = optionalInletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Inlet Node attached.");
+        if (std::find(equipment.begin(), equipment.end(), thisObject) != equipment.end()) {
+          return thermalZone;
+        }
       }
-      return value.get();
-    }
-
-    Connection ZoneHVACExhaustControl_Impl::outletNode() const {
-      boost::optional<Connection> value = optionalOutletNode();
-      if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Outlet Node attached.");
-      }
-      return value.get();
+      return boost::none;
     }
 
     boost::optional<double> ZoneHVACExhaustControl_Impl::designExhaustFlowRate() const {
@@ -183,10 +174,6 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName);
     }
 
-    boost::optional<Connection> ZoneHVACExhaustControl_Impl::supplyNodeorNodeList() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName);
-    }
-
     boost::optional<Schedule> ZoneHVACExhaustControl_Impl::minimumZoneTemperatureLimitSchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName);
     }
@@ -204,19 +191,30 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACExhaustControl_Impl::setZone(const ThermalZone& thermalZone) {
-      const bool result = setPointer(OS_ZoneHVAC_ExhaustControlFields::ZoneName, thermalZone.handle());
-      return result;
+    bool ZoneHVACExhaustControl_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      Model m = this->model();
+
+      if (thermalZone.model() != m) {
+        return false;
+      }
+
+      if (thermalZone.isPlenum()) {
+        return false;
+      }
+
+      removeFromThermalZone();
+
+      thermalZone.setUseIdealAirLoads(false);
+
+      thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+      return true;
     }
 
-    bool ZoneHVACExhaustControl_Impl::setInletNode(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_ExhaustControlFields::InletNodeName, connection.handle());
-      return result;
-    }
-
-    bool ZoneHVACExhaustControl_Impl::setOutletNode(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_ExhaustControlFields::OutletNodeName, connection.handle());
-      return result;
+    void ZoneHVACExhaustControl_Impl::removeFromThermalZone() {
+      if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+        thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+      }
     }
 
     bool ZoneHVACExhaustControl_Impl::setDesignExhaustFlowRate(double designExhaustFlowRate) {
@@ -242,16 +240,6 @@ namespace model {
 
     void ZoneHVACExhaustControl_Impl::resetExhaustFlowFractionSchedule() {
       const bool result = setString(OS_ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName, "");
-      OS_ASSERT(result);
-    }
-
-    bool ZoneHVACExhaustControl_Impl::setSupplyNodeorNodeList(const Connection& connection) {
-      const bool result = setPointer(OS_ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName, connection.handle());
-      return result;
-    }
-
-    void ZoneHVACExhaustControl_Impl::resetSupplyNodeorNodeList() {
-      const bool result = setString(OS_ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName, "");
       OS_ASSERT(result);
     }
 
@@ -302,41 +290,22 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName);
     }
 
-    boost::optional<ThermalZone> ZoneHVACExhaustControl_Impl::optionalZone() const {
-      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneHVAC_ExhaustControlFields::ZoneName);
-    }
-
-    boost::optional<Connection> ZoneHVACExhaustControl_Impl::optionalInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_ExhaustControlFields::InletNodeName);
-    }
-
-    boost::optional<Connection> ZoneHVACExhaustControl_Impl::optionalOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_ZoneHVAC_ExhaustControlFields::OutletNodeName);
-    }
-
   }  // namespace detail
 
   ZoneHVACExhaustControl::ZoneHVACExhaustControl(const Model& model) : ZoneHVACComponent(ZoneHVACExhaustControl::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ZoneHVACExhaustControl_Impl>());
 
-    // TODO: consider adding (overloaded or not) explicit ctors taking required objects as argument
-
-    // TODO: Appropriately handle the following required object-list fields.
-    //     OS_ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName
-    //     OS_ZoneHVAC_ExhaustControlFields::ZoneName
-    //     OS_ZoneHVAC_ExhaustControlFields::InletNodeName
-    //     OS_ZoneHVAC_ExhaustControlFields::OutletNodeName
     bool ok = true;
-    // ok = setAvailabilitySchedule();
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
-    // ok = setZone();
+
+    // ok = setThermalZone();
     OS_ASSERT(ok);
-    // ok = setInletNode();
-    OS_ASSERT(ok);
-    // ok = setOutletNode();
-    OS_ASSERT(ok);
+
     // ok = setDesignExhaustFlowRate();
     OS_ASSERT(ok);
+
     // ok = setFlowControlType();
     OS_ASSERT(ok);
   }
@@ -353,16 +322,8 @@ namespace model {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->availabilitySchedule();
   }
 
-  ThermalZone ZoneHVACExhaustControl::zone() const {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->zone();
-  }
-
-  Connection ZoneHVACExhaustControl::inletNode() const {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->inletNode();
-  }
-
-  Connection ZoneHVACExhaustControl::outletNode() const {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->outletNode();
+  boost::optional<ThermalZone> ZoneHVACExhaustControl::thermalZone() const {
+    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->thermalZone();
   }
 
   boost::optional<double> ZoneHVACExhaustControl::designExhaustFlowRate() const {
@@ -385,10 +346,6 @@ namespace model {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->exhaustFlowFractionSchedule();
   }
 
-  boost::optional<Connection> ZoneHVACExhaustControl::supplyNodeorNodeList() const {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->supplyNodeorNodeList();
-  }
-
   boost::optional<Schedule> ZoneHVACExhaustControl::minimumZoneTemperatureLimitSchedule() const {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->minimumZoneTemperatureLimitSchedule();
   }
@@ -405,16 +362,12 @@ namespace model {
     return getImpl<detail::ZoneHVACExhaustControl_Impl>()->setAvailabilitySchedule(schedule);
   }
 
-  bool ZoneHVACExhaustControl::setZone(const ThermalZone& thermalZone) {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->setZone(thermalZone);
+  bool ZoneHVACExhaustControl::addToThermalZone(ThermalZone& thermalZone) {
+    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->addToThermalZone(thermalZone);
   }
 
-  bool ZoneHVACExhaustControl::setInletNode(const Connection& connection) {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->setInletNode(connection);
-  }
-
-  bool ZoneHVACExhaustControl::setOutletNode(const Connection& connection) {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->setOutletNode(connection);
+  void ZoneHVACExhaustControl::removeFromThermalZone() {
+    getImpl<detail::ZoneHVACExhaustControl_Impl>()->removeFromThermalZone();
   }
 
   bool ZoneHVACExhaustControl::setDesignExhaustFlowRate(double designExhaustFlowRate) {
@@ -435,14 +388,6 @@ namespace model {
 
   void ZoneHVACExhaustControl::resetExhaustFlowFractionSchedule() {
     getImpl<detail::ZoneHVACExhaustControl_Impl>()->resetExhaustFlowFractionSchedule();
-  }
-
-  bool ZoneHVACExhaustControl::setSupplyNodeorNodeList(const Connection& connection) {
-    return getImpl<detail::ZoneHVACExhaustControl_Impl>()->setSupplyNodeorNodeList(connection);
-  }
-
-  void ZoneHVACExhaustControl::resetSupplyNodeorNodeList() {
-    getImpl<detail::ZoneHVACExhaustControl_Impl>()->resetSupplyNodeorNodeList();
   }
 
   bool ZoneHVACExhaustControl::setMinimumZoneTemperatureLimitSchedule(Schedule& schedule) {

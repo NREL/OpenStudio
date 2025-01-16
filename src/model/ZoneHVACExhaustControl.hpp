@@ -37,10 +37,7 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class Schedule;
-  class ThermalZone;
-  class Connection;
 
   namespace detail {
 
@@ -73,17 +70,9 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-    ThermalZone zone() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection inletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection outletNode() const;
+    boost::optional<ThermalZone> thermalZone() const override;
 
     boost::optional<double> designExhaustFlowRate() const;
 
@@ -93,37 +82,23 @@ namespace model {
 
     std::string flowControlType() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> exhaustFlowFractionSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> supplyNodeorNodeList() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> minimumExhaustFlowFractionSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> balancedExhaustFractionSchedule() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-    bool setZone(const ThermalZone& thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOutletNode(const Connection& connection);
+    void removeFromThermalZone();
 
     bool setDesignExhaustFlowRate(double designExhaustFlowRate);
 
@@ -131,31 +106,18 @@ namespace model {
 
     bool setFlowControlType(const std::string& flowControlType);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setExhaustFlowFractionSchedule(Schedule& schedule);
 
     void resetExhaustFlowFractionSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setSupplyNodeorNodeList(const Connection& connection);
-
-    void resetSupplyNodeorNodeList();
-
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
     void resetMinimumZoneTemperatureLimitSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setMinimumExhaustFlowFractionSchedule(Schedule& schedule);
 
     void resetMinimumExhaustFlowFractionSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
     bool setBalancedExhaustFractionSchedule(Schedule& schedule);
 
     void resetBalancedExhaustFractionSchedule();

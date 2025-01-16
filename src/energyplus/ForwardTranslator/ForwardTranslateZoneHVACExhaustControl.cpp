@@ -29,16 +29,12 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-
 #include "../../model/ZoneHVACExhaustControl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
+#include "../../model/ZoneHVACExhaustControl_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-
-#include "../../model/Zone.hpp"
-#include "../../model/Zone_Impl.hpp"
-
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 
@@ -55,42 +51,27 @@ namespace energyplus {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneHVAC_ExhaustControl, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject(openstudio::IddObjectType::ZoneHVAC_ExhaustControl);
-    // m_idfObjects.push_back(idfObject);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    idfObject.setName(modelObject.nameString());
-
-    // Availability Schedule Name: Optional Object
-    if (boost::optional<Schedule> availabilitySchedule_ = modelObject.availabilitySchedule()) {
-      if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_.get())) {
-        idfObject.setString(ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName, wo_->nameString());
-      }
+    // Availability Schedule Name: Required Object
+    Schedule availabilitySchedule_ = modelObject.availabilitySchedule();
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(availabilitySchedule_)) {
+      idfObject.setString(ZoneHVAC_ExhaustControlFields::AvailabilityScheduleName, wo_->nameString());
     }
 
     // Zone Name: Required Object
-    Zone zone = modelObject.zone();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(zone)) {
+    ThermalZone thermalZone = modelObject.thermalZone();
+    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(thermalZone)) {
       idfObject.setString(ZoneHVAC_ExhaustControlFields::ZoneName, wo_->nameString());
     }
 
-    // Inlet Node Name: Required Node
-    Node inletNodeName = modelObject.inletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(inletNodeName)) {
-      idfObject.setString(ZoneHVAC_ExhaustControlFields::InletNodeName, wo_->nameString());
+    // InletNodeName
+    if (auto node = modelObject.inletNode()) {
+      idfObject.setString(ZoneHVAC_ExhaustControlFields::InletNodeName, node->name().get());
     }
 
-    // Outlet Node Name: Required Node
-    Node outletNodeName = modelObject.outletNodeName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(outletNodeName)) {
-      idfObject.setString(ZoneHVAC_ExhaustControlFields::OutletNodeName, wo_->nameString());
+    // OutletNodeName
+    if (auto node = modelObject.outletNode()) {
+      idfObject.setString(ZoneHVAC_ExhaustControlFields::OutletNodeName, node->name().get());
     }
 
     if (modelObject.isDesignExhaustFlowRateAutosized()) {
@@ -111,12 +92,6 @@ namespace energyplus {
       if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(exhaustFlowFractionSchedule_.get())) {
         idfObject.setString(ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName, wo_->nameString());
       }
-    }
-
-    // Supply Node or NodeList Name: Optional Node
-    Node supplyNodeorNodeListName = modelObject.supplyNodeorNodeListName();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(supplyNodeorNodeListName)) {
-      idfObject.setString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName, wo_->nameString());
     }
 
     // Minimum Zone Temperature Limit Schedule Name: Optional Object
