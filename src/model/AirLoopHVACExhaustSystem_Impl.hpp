@@ -31,7 +31,7 @@
 #define MODEL_AIRLOOPHVACEXHAUSTSYSTEM_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "StraightComponent_Impl.hpp"
+#include "HVACComponent_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -40,8 +40,8 @@ namespace model {
 
   namespace detail {
 
-    /** AirLoopHVACExhaustSystem_Impl is a StraightComponent_Impl that is the implementation class for AirLoopHVACExhaustSystem.*/
-    class MODEL_API AirLoopHVACExhaustSystem_Impl : public StraightComponent_Impl
+    /** AirLoopHVACExhaustSystem_Impl is a HVACComponent_Impl that is the implementation class for AirLoopHVACExhaustSystem.*/
+    class MODEL_API AirLoopHVACExhaustSystem_Impl : public HVACComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */

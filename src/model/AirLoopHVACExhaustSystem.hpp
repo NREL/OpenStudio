@@ -31,7 +31,7 @@
 #define MODEL_AIRLOOPHVACEXHAUSTSYSTEM_HPP
 
 #include <model/ModelAPI.hpp>
-#include "StraightComponent.hpp"
+#include "HVACComponent.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,8 +44,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** AirLoopHVACExhaustSystem is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ExhaustSystem'. */
-  class MODEL_API AirLoopHVACExhaustSystem : public StraightComponent
+  /** AirLoopHVACExhaustSystem is a HVACComponent that wraps the OpenStudio IDD object 'OS:AirLoopHVAC:ExhaustSystem'. */
+  class MODEL_API AirLoopHVACExhaustSystem : public HVACComponent
   {
    public:
     /** @name Constructors and Destructors */

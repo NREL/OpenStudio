@@ -47,18 +47,18 @@ namespace model {
   namespace detail {
 
     AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      : HVACComponent_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == AirLoopHVACExhaustSystem::iddObjectType());
     }
 
     AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
                                                                  bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {
+      : HVACComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == AirLoopHVACExhaustSystem::iddObjectType());
     }
 
     AirLoopHVACExhaustSystem_Impl::AirLoopHVACExhaustSystem_Impl(const AirLoopHVACExhaustSystem_Impl& other, Model_Impl* model, bool keepHandle)
-      : StraightComponent_Impl(other, model, keepHandle) {}
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& AirLoopHVACExhaustSystem_Impl::outputVariableNames() const {
       static std::vector<std::string> result;
@@ -106,7 +106,7 @@ namespace model {
 
   }  // namespace detail
 
-  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(const Model& model) : StraightComponent(AirLoopHVACExhaustSystem::iddObjectType(), model) {
+  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(const Model& model) : HVACComponent(AirLoopHVACExhaustSystem::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirLoopHVACExhaustSystem_Impl>());
 
     bool ok = true;
@@ -130,8 +130,7 @@ namespace model {
   }
 
   /// @cond
-  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(std::shared_ptr<detail::AirLoopHVACExhaustSystem_Impl> impl)
-    : StraightComponent(std::move(impl)) {}
+  AirLoopHVACExhaustSystem::AirLoopHVACExhaustSystem(std::shared_ptr<detail::AirLoopHVACExhaustSystem_Impl> impl) : HVACComponent(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model
