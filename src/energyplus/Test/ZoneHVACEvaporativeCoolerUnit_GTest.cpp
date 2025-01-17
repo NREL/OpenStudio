@@ -38,6 +38,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/FanComponentModel.hpp"
 #include "../../model/FanComponentModel_Impl.hpp"
+#include "../../model/FanSystemModel.hpp"
+#include "../../model/FanSystemModel_Impl.hpp"
 #include "../../model/EvaporativeCoolerDirectResearchSpecial.hpp"
 #include "../../model/EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 #include "../../model/EvaporativeCoolerIndirectResearchSpecial.hpp"
@@ -55,6 +57,7 @@
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/ZoneHVAC_EvaporativeCoolerUnit_FieldEnums.hxx>
 #include <utilities/idd/Fan_ComponentModel_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/EvaporativeCooler_Direct_ResearchSpecial_FieldEnums.hxx>
 #include <utilities/idd/EvaporativeCooler_Indirect_ResearchSpecial_FieldEnums.hxx>
 
@@ -163,7 +166,7 @@ std::vector<std::string> getEvaporativeCoolerUnitNodes(const Workspace& workspac
 }
 
 std::vector<std::string> getSupplyAirFanNodes(const Workspace& workspace) {
-  WorkspaceObjectVector idfFans(workspace.getObjectsByType(IddObjectType::Fan_ComponentModel));
+  WorkspaceObjectVector idfFans(workspace.getObjectsByType(IddObjectType::Fan_SystemModel));
   if (idfFans.empty()) {
     return {};
   }
@@ -171,8 +174,8 @@ std::vector<std::string> getSupplyAirFanNodes(const Workspace& workspace) {
   auto& idfFan = idfFans[0];
 
   return {
-    idfFan.getString(Fan_ComponentModelFields::AirInletNodeName).get(),
-    idfFan.getString(Fan_ComponentModelFields::AirOutletNodeName).get(),
+    idfFan.getString(Fan_SystemFields::AirInletNodeName).get(),
+    idfFan.getString(Fan_SystemFields::AirOutletNodeName).get(),
   };
 }
 
