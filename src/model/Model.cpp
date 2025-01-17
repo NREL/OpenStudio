@@ -2254,9 +2254,9 @@ namespace model {
     if (!openstudio::equal(inputResult, outputResult, tol)) {
       LOG_FREE(logLevel, "openstudio.model.Model",
                "The " << attributeName << " values determined for " << object.briefDescription()
-                      << " using input and output data differ by a (relative) error " << "greater than " << tol
-                      << ". The value calculated from input data was " << inputResult << ", whereas the value calculated from output data was "
-                      << outputResult << ".");
+                      << " using input and output data differ by a (relative) error "
+                      << "greater than " << tol << ". The value calculated from input data was " << inputResult
+                      << ", whereas the value calculated from output data was " << outputResult << ".");
       return false;
     }
     return true;
@@ -3899,6 +3899,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
     REGISTER_CONSTRUCTOR(AirGap);
     REGISTER_CONSTRUCTOR(AirLoopHVAC);
+    REGISTER_CONSTRUCTOR(AirLoopHVACExhaustSystem);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
     REGISTER_CONSTRUCTOR(AirLoopHVACUnitaryHeatPumpAirToAir);
@@ -4410,6 +4411,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
+    REGISTER_CONSTRUCTOR(ZoneHVACExhaustControl);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
@@ -4473,6 +4475,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
     REGISTER_COPYCONSTRUCTORS(AirGap);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVAC);
+    REGISTER_COPYCONSTRUCTORS(AirLoopHVACExhaustSystem);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAir);
     REGISTER_COPYCONSTRUCTORS(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
@@ -4984,6 +4987,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACExhaustControl);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);

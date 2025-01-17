@@ -696,6 +696,11 @@ namespace energyplus {
         retVal = translateAirLoopHVAC(airLoopHVAC);
         break;
       }
+      case openstudio::IddObjectType::OS_AirLoopHVAC_ExhaustSystem: {
+        auto airLoopHVACExhaustSystem = modelObject.cast<AirLoopHVACExhaustSystem>();
+        retVal = translateAirLoopHVACExhaustSystem(airLoopHVACExhaustSystem);
+        break;
+      }
       case openstudio::IddObjectType::OS_AirLoopHVAC_ReturnPlenum: {
         auto airLoopHVACReturnPlenum = modelObject.cast<AirLoopHVACReturnPlenum>();
         retVal = translateAirLoopHVACReturnPlenum(airLoopHVACReturnPlenum);
@@ -3202,6 +3207,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_ZoneHVAC_EquipmentList: {
         auto mo = modelObject.cast<ZoneHVACEquipmentList>();
         retVal = translateZoneHVACEquipmentList(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_ZoneHVAC_ExhaustControl: {
+        auto mo = modelObject.cast<ZoneHVACExhaustControl>();
+        retVal = translateZoneHVACExhaustControl(mo);
         break;
       }
       case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil: {

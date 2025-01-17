@@ -133,6 +133,9 @@ set(${target_name}_src
   AirLoopHVAC.hpp
   AirLoopHVAC_Impl.hpp
   AirLoopHVAC.cpp
+  AirLoopHVACExhaustSystem.hpp
+  AirLoopHVACExhaustSystem_Impl.hpp
+  AirLoopHVACExhaustSystem.cpp
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp
   AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.cpp
@@ -1774,6 +1777,9 @@ set(${target_name}_src
   ZoneHVACEquipmentList.hpp
   ZoneHVACEquipmentList_Impl.hpp
   ZoneHVACEquipmentList.cpp
+  ZoneHVACExhaustControl.hpp
+  ZoneHVACExhaustControl_Impl.hpp
+  ZoneHVACExhaustControl.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp
@@ -1914,6 +1920,7 @@ set(${target_name}_test_src
   test/AirLoopHVACUnitarySystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   test/AirLoopHVAC_GTest.cpp
+  test/AirLoopHVACExhaustSystem_GTest.cpp
   test/AirTerminalDualDuctConstantVolume_GTest.cpp
   test/AirTerminalDualDuctVAV_GTest.cpp
   test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
@@ -2365,6 +2372,7 @@ set(${target_name}_test_src
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
   test/ZoneHVACEquipmentList_GTest.cpp
+  test/ZoneHVACExhaustControl_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp

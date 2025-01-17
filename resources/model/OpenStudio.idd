@@ -11205,6 +11205,27 @@ OS:AirLoopHVAC:DedicatedOutdoorAirSystem,
        \type object-list
        \object-list AirPrimaryLoops
 
+OS:AirLoopHVAC:ExhaustSystem,
+       \memo Defines a general exhaust system with a central exhaust fan drawing from one or more
+       \memo ZoneHVAC:ExhaustControl outlet nodes via an AirLoopHVAC:ZoneMixer.
+       \min-fields 4
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \note Name of the exhaust system
+   A3, \field Zone Mixer Name
+       \required-field
+       \type object-list
+       \note The name of the exhaust system AirLoopHVAC:ZoneMixer
+       \object-list ZoneMixers
+   A4; \field Fan Name
+       \required-field
+       \type object-list
+       \object-list FansSystemModel
+       \object-list FansComponentModel
+
 OS:AirLoopHVAC:ReturnPlenum,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
        \min-fields 1
@@ -12893,7 +12914,6 @@ OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
       \autosizable
       \units m3/s
       \minimum 0
-
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
@@ -29152,7 +29172,6 @@ OS:ZoneHVAC:EquipmentList,
        \type object-list
        \object-list ScheduleNames
 
-
 OS:ZoneVentilation:DesignFlowRate,
   A1, \field Handle
        \type handle
@@ -29473,6 +29492,66 @@ OS:ZoneHVAC:Baseboard:Convective:Water,
        \type object-list
        \required-field
        \object-list BaseboardHeatingCoil
+
+OS:ZoneHVAC:ExhaustControl,
+       \memo Defines a controlled exhaust flow from a zone which finally feeds into
+       \memo one of AirLoopHVAC:ZoneMixer's inlets, which are part of an AirLoopHVAC:ExhaustSystem.
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this exhaust system. Schedule value > 0 means it is available.
+       \note If this field is blank, the exhaust system is always available. If the attached
+       \note AirLoopHVAC:ExhaustSystem is off, then the flow will be zero.
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+  A4 , \field Inlet Node Name
+       \note Inlet node name for the exhaust. Must be a zone exhaust node.
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Outlet Node Name
+       \note Outlet node name for the exhaust
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Design Exhaust Flow Rate
+       \autosizable
+       \units m3/s
+       \minimum> 0
+       \required-field
+  A6 , \field Flow Control Type
+       \note Control type of the zone exhaust flow
+       \type choice
+       \key Scheduled
+       \key FollowSupply
+       \required-field
+  A7 , \field Exhaust Flow Fraction Schedule Name
+       \note Schedule name of the exhaust flow fraction. Used only with Scheduled control type.
+       \note If this field is blank, the flow fraction is always 1.0.
+       \type object-list
+       \object-list ScheduleNames
+  A8 , \field Supply Node or NodeList Name
+       \note Used only with FollowSupply control type.
+       \type object-list
+       \object-list ConnectionNames
+  A9,  \field Minimum Zone Temperature Limit Schedule Name
+       \note Schedule name of the Minimum Zone Temperature Limit in degree Celsius
+       \note If this field is blank, there is no limit.
+       \type object-list
+       \object-list ScheduleNames
+  A10, \field Minimum Exhaust Flow Fraction Schedule Name
+       \note Schedule name of the minimum exhaust flow fraction.
+       \note Applied when the zone temperature falls below the Minimum Zone Temperature Limit.
+       \type object-list
+       \object-list ScheduleNames
+  A11; \field Balanced Exhaust Fraction Schedule Name
+       \note Schedule name of the Balanced Exhaust Fraction.
+       \type object-list
+       \object-list ScheduleNames
 
 OS:ZoneHVAC:HighTemperatureRadiant,
    A1,  \field Handle
