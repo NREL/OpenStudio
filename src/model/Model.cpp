@@ -2254,9 +2254,9 @@ namespace model {
     if (!openstudio::equal(inputResult, outputResult, tol)) {
       LOG_FREE(logLevel, "openstudio.model.Model",
                "The " << attributeName << " values determined for " << object.briefDescription()
-                      << " using input and output data differ by a (relative) error " << "greater than " << tol
-                      << ". The value calculated from input data was " << inputResult << ", whereas the value calculated from output data was "
-                      << outputResult << ".");
+                      << " using input and output data differ by a (relative) error "
+                      << "greater than " << tol << ". The value calculated from input data was " << inputResult
+                      << ", whereas the value calculated from output data was " << outputResult << ".");
       return false;
     }
     return true;
@@ -4410,6 +4410,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneControlHumidistat);
     REGISTER_CONSTRUCTOR(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_CONSTRUCTOR(ZoneHVACEquipmentList);
+    REGISTER_CONSTRUCTOR(ZoneHVACEvaporativeCoolerUnit);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
@@ -4984,6 +4985,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneControlHumidistat);
     REGISTER_COPYCONSTRUCTORS(ZoneControlThermostatStagedDualSetpoint);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEquipmentList);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACEvaporativeCoolerUnit);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);

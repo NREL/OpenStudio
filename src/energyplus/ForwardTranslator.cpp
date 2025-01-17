@@ -3204,6 +3204,11 @@ namespace energyplus {
         retVal = translateZoneHVACEquipmentList(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+        auto mo = modelObject.cast<ZoneHVACEvaporativeCoolerUnit>();
+        retVal = translateZoneHVACEvaporativeCoolerUnit(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil: {
         auto mo = modelObject.cast<ZoneHVACFourPipeFanCoil>();
         retVal = translateZoneHVACFourPipeFanCoil(mo);

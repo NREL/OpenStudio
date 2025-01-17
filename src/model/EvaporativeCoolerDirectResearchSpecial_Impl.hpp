@@ -131,6 +131,8 @@ namespace model {
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
     };
 
   }  // namespace detail

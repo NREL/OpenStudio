@@ -9,12 +9,17 @@
 #include "EvaporativeCoolerIndirectResearchSpecial_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "Model.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
+// containing ZoneHVAC Component
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -259,6 +264,28 @@ namespace model {
       }
 
       return false;
+    }
+
+    boost::optional<ZoneHVACComponent> EvaporativeCoolerIndirectResearchSpecial_Impl::containingZoneHVACComponent() const {
+
+      std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+      for (const auto& elem : zoneHVACComponent) {
+        switch (elem.iddObject().type().value()) {
+          case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            auto component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
+            if (component.firstEvaporativeCooler().handle() == this->handle()) {
+              return elem;
+            }
+            // I guess it's fine since this is optional anyways
+            // } else if (auto comp_ = component.secondEvaporativeCooler(); comp_ && comp_->handle() == this->handle()) { return elem; }
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
+      return boost::none;
     }
 
     bool EvaporativeCoolerIndirectResearchSpecial_Impl::setReliefAirInletNode(const Node& node) {

@@ -195,6 +195,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.EvaporativeCoolerIndirectResearchSpecial");
+
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
     };
 
   }  // namespace detail

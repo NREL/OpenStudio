@@ -1774,6 +1774,9 @@ set(${target_name}_src
   ZoneHVACEquipmentList.hpp
   ZoneHVACEquipmentList_Impl.hpp
   ZoneHVACEquipmentList.cpp
+  ZoneHVACEvaporativeCoolerUnit.hpp
+  ZoneHVACEvaporativeCoolerUnit_Impl.hpp
+  ZoneHVACEvaporativeCoolerUnit.cpp
   ZoneHVACFourPipeFanCoil.hpp
   ZoneHVACFourPipeFanCoil_Impl.hpp
   ZoneHVACFourPipeFanCoil.cpp
@@ -2365,6 +2368,7 @@ set(${target_name}_test_src
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
   test/ZoneHVACEquipmentList_GTest.cpp
+  test/ZoneHVACEvaporativeCoolerUnit_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp

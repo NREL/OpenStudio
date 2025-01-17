@@ -47,6 +47,8 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit.hpp"
+#include "ZoneHVACEvaporativeCoolerUnit_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 // These are supposed to be ZoneHVACComponents
@@ -479,6 +481,13 @@ namespace model {
           }
           case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator: {
             auto component = elem.cast<ZoneHVACUnitVentilator>();
+            if (component.supplyAirFan().handle() == this->handle()) {
+              return elem;
+            }
+            break;
+          }
+          case openstudio::IddObjectType::OS_ZoneHVAC_EvaporativeCoolerUnit: {
+            auto component = elem.cast<ZoneHVACEvaporativeCoolerUnit>();
             if (component.supplyAirFan().handle() == this->handle()) {
               return elem;
             }

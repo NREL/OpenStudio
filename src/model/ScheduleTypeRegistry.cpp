@@ -558,6 +558,7 @@ namespace model {
       {"ZoneHVACUnitVentilator", "Maximum Outdoor Air Fraction or Temperature", "maximumOutdoorAirFractionorTemperatureSchedule", true, "",
        OptionalDouble(), OptionalDouble()},
       {"ZoneHVACUnitVentilator", "Supply Air Fan Operating Mode", "supplyAirFanOperatingModeSchedule", false, "ControlMode", 0.0, 1.0},
+      {"ZoneHVACEvaporativeCoolerUnit", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"ZoneMixing", "Zone Mixing", "schedule", true, "Dimensionless", 0.0, 1.0},
       {"ZoneMixing", "Delta Temperature", "deltaTemperatureSchedule", true, "DeltaTemperature", OptionalDouble(), OptionalDouble()},
       {"ZoneMixing", "Minimum Receiving Temperature", "minimumReceivingTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
