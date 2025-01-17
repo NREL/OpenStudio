@@ -296,17 +296,14 @@ namespace model {
     OS_ASSERT(getImpl<detail::ZoneHVACExhaustControl_Impl>());
 
     bool ok = true;
+
     auto alwaysOn = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
 
-    // ok = setThermalZone();
-    OS_ASSERT(ok);
+    autosizeDesignExhaustFlowRate();
 
-    // ok = setDesignExhaustFlowRate();
-    OS_ASSERT(ok);
-
-    // ok = setFlowControlType();
+    ok = setFlowControlType("Scheduled");
     OS_ASSERT(ok);
   }
 

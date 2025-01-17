@@ -31,42 +31,28 @@
 
 #include "../AirLoopHVACExhaustSystem.hpp"
 #include "../AirLoopHVACExhaustSystem_Impl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
-#include "../ZoneMixers.hpp"
-#include "../ZoneMixers_Impl.hpp"
-
-#include "../FansSystemModel.hpp"
-#include "../FansSystemModel_Impl.hpp"
+#include "../FanSystemModel.hpp"
+#include "../FanSystemModel_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirLoopHVACExhaustSystem_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   AirLoopHVACExhaustSystem airLoopHVACExhaustSystem(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // AirLoopHVACExhaustSystem airLoopHVACExhaustSystem = m.getUniqueModelObject<AirLoopHVACExhaustSystem>();
 
   airLoopHVACExhaustSystem.setName("My AirLoopHVACExhaustSystem");
 
-  // Zone Mixer Name: Required Object
-  ZoneMixers zoneMixer(m);
-  EXPECT_TRUE(airLoopHVACExhaustSystem.setZoneMixer(zoneMixer));
-  EXPECT_EQ(zoneMixer, airLoopHVACExhaustSystem.zoneMixer());
-
   // Fan Name: Required Object
-  FansSystemModel fan(m);
+  FanSystemModel fan(m);
   EXPECT_TRUE(airLoopHVACExhaustSystem.setFan(fan));
   EXPECT_EQ(fan, airLoopHVACExhaustSystem.fan());
 }
 TEST_F(ModelFixture, AirLoopHVACExhaustSystem_HeatCoolFuelTypes) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   AirLoopHVACExhaustSystem airLoopHVACExhaustSystem(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // AirLoopHVACExhaustSystem airLoopHVACExhaustSystem = m.getUniqueModelObject<AirLoopHVACExhaustSystem>();
 
   EXPECT_EQ(ComponentType(ComponentType::Both), airLoopHVACExhaustSystem.componentType());
   testFuelTypeEquality({FuelType::Electricity}, airLoopHVACExhaustSystem.coolingFuelTypes());

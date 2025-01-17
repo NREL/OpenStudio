@@ -34,6 +34,8 @@
 #include "Model_Impl.hpp"
 #include "HVACComponent.hpp"
 #include "HVACComponent_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/data/DataEnums.hpp"
@@ -90,7 +92,7 @@ namespace model {
     HVACComponent AirLoopHVACExhaustSystem_Impl::fan() const {
       boost::optional<HVACComponent> value = optionalFan();
       if (!value) {
-        LOG_AND_THROW(briefDescription() << " does not have an Fan attached.");
+        LOG_AND_THROW(briefDescription() << " does not have a Fan attached.");
       }
       return value.get();
     }
@@ -110,10 +112,9 @@ namespace model {
     OS_ASSERT(getImpl<detail::AirLoopHVACExhaustSystem_Impl>());
 
     bool ok = true;
-    // ok = setZoneMixer();
-    OS_ASSERT(ok);
 
-    // ok = setFan();
+    FanSystemModel fan(model);
+    ok = setFan(fan);
     OS_ASSERT(ok);
   }
 

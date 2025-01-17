@@ -696,7 +696,7 @@ namespace energyplus {
         retVal = translateAirLoopHVAC(airLoopHVAC);
         break;
       }
-      case openstudio::IddObjectType::OS_AirLoop_ExhaustSystem: {
+      case openstudio::IddObjectType::OS_AirLoopHVAC_ExhaustSystem: {
         auto airLoopHVACExhaustSystem = modelObject.cast<AirLoopHVACExhaustSystem>();
         retVal = translateAirLoopHVACExhaustSystem(airLoopHVACExhaustSystem);
         break;

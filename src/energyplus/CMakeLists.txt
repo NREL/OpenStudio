@@ -18,6 +18,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirflowNetwork.cpp
   ForwardTranslator/ForwardTranslateAirGap.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVAC.cpp
+  ForwardTranslator/ForwardTranslateAirLoopHVACExhaustSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACOutdoorAirSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACDedicatedOutdoorAirSystem.cpp
   ForwardTranslator/ForwardTranslateAirLoopHVACReturnPlenum.cpp
@@ -444,6 +445,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilatorController.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEquipmentList.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACExhaustControl.cpp
   ForwardTranslator/ForwardTranslateZoneHVACFourPipeFanCoil.cpp
   ForwardTranslator/ForwardTranslateZoneHVACHighTemperatureRadiant.cpp
   ForwardTranslator/ForwardTranslateZoneHVACIdealLoadsAirSystem.cpp
@@ -674,6 +676,7 @@ set(${target_name}_test_src
   Test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
+  Test/AirLoopHVACExhaustSystem_GTest.cpp
   Test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   Test/PlantLoop_GTest.cpp
 
@@ -840,6 +843,7 @@ set(${target_name}_test_src
   Test/WaterUseConnections_GTest.cpp
   Test/ZoneAirHeatBalanceAlgorithm_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  Test/ZoneHVACExhaustControl_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp

@@ -31,48 +31,25 @@
 
 #include "../ZoneHVACExhaustControl.hpp"
 #include "../ZoneHVACExhaustControl_Impl.hpp"
-
-// TODO: Check the following class names against object getters and setters.
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
-
-#include "../ThermalZone.hpp"
-#include "../ThermalZone_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ZoneHVACExhaustControl_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACExhaustControl zoneHVACExhaustControl(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACExhaustControl zoneHVACExhaustControl = m.getUniqueModelObject<ZoneHVACExhaustControl>();
 
   zoneHVACExhaustControl.setName("My ZoneHVACExhaustControl");
 
   // Availability Schedule Name: Required Object
-  Schedule availabilitySchedule(m);
+  Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(zoneHVACExhaustControl.setAvailabilitySchedule(availabilitySchedule));
   EXPECT_EQ(availabilitySchedule, zoneHVACExhaustControl.availabilitySchedule());
-
-  // Zone Name: Required Object
-  ThermalZone zone(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setZone(zone));
-  EXPECT_EQ(zone, zoneHVACExhaustControl.zone());
-
-  // Inlet Node Name: Required Object
-  Connection inletNode(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setInletNode(inletNode));
-  EXPECT_EQ(inletNode, zoneHVACExhaustControl.inletNode());
-
-  // Outlet Node Name: Required Object
-  Connection outletNode(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setOutletNode(outletNode));
-  EXPECT_EQ(outletNode, zoneHVACExhaustControl.outletNode());
 
   // Design Exhaust Flow Rate: Required Double
   // Autosize
@@ -96,41 +73,33 @@ TEST_F(ModelFixture, ZoneHVACExhaustControl_GettersSetters) {
   EXPECT_EQ("Scheduled", zoneHVACExhaustControl.flowControlType());
 
   // Exhaust Flow Fraction Schedule Name: Optional Object
-  boost::optional<Schedule> exhaustFlowFractionSchedule(m);
+  ScheduleConstant exhaustFlowFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setExhaustFlowFractionSchedule(exhaustFlowFractionSchedule));
   ASSERT_TRUE(zoneHVACExhaustControl.exhaustFlowFractionSchedule());
   EXPECT_EQ(exhaustFlowFractionSchedule, zoneHVACExhaustControl.exhaustFlowFractionSchedule().get());
 
-  // Supply Node or NodeList Name: Optional Object
-  boost::optional<Connection> supplyNodeorNodeList(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setSupplyNodeorNodeList(supplyNodeorNodeList));
-  ASSERT_TRUE(zoneHVACExhaustControl.supplyNodeorNodeList());
-  EXPECT_EQ(supplyNodeorNodeList, zoneHVACExhaustControl.supplyNodeorNodeList().get());
-
   // Minimum Zone Temperature Limit Schedule Name: Optional Object
-  boost::optional<Schedule> minimumZoneTemperatureLimitSchedule(m);
+  ScheduleConstant minimumZoneTemperatureLimitSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setMinimumZoneTemperatureLimitSchedule(minimumZoneTemperatureLimitSchedule));
   ASSERT_TRUE(zoneHVACExhaustControl.minimumZoneTemperatureLimitSchedule());
   EXPECT_EQ(minimumZoneTemperatureLimitSchedule, zoneHVACExhaustControl.minimumZoneTemperatureLimitSchedule().get());
 
   // Minimum Exhaust Flow Fraction Schedule Name: Optional Object
-  boost::optional<Schedule> minimumExhaustFlowFractionSchedule(m);
+  ScheduleConstant minimumExhaustFlowFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setMinimumExhaustFlowFractionSchedule(minimumExhaustFlowFractionSchedule));
   ASSERT_TRUE(zoneHVACExhaustControl.minimumExhaustFlowFractionSchedule());
   EXPECT_EQ(minimumExhaustFlowFractionSchedule, zoneHVACExhaustControl.minimumExhaustFlowFractionSchedule().get());
 
   // Balanced Exhaust Fraction Schedule Name: Optional Object
-  boost::optional<Schedule> balancedExhaustFractionSchedule(m);
+  ScheduleConstant balancedExhaustFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setBalancedExhaustFractionSchedule(balancedExhaustFractionSchedule));
   ASSERT_TRUE(zoneHVACExhaustControl.balancedExhaustFractionSchedule());
   EXPECT_EQ(balancedExhaustFractionSchedule, zoneHVACExhaustControl.balancedExhaustFractionSchedule().get());
 }
 TEST_F(ModelFixture, ZoneHVACExhaustControl_HeatCoolFuelTypes) {
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACExhaustControl zoneHVACExhaustControl(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACExhaustControl zoneHVACExhaustControl = m.getUniqueModelObject<ZoneHVACExhaustControl>();
 
   EXPECT_EQ(ComponentType(ComponentType::Both), zoneHVACExhaustControl.componentType());
   testFuelTypeEquality({FuelType::Electricity}, zoneHVACExhaustControl.coolingFuelTypes());

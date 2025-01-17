@@ -31,23 +31,13 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
 #include "../../model/ZoneHVACExhaustControl.hpp"
 #include "../../model/ZoneHVACExhaustControl_Impl.hpp"
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include "../../model/Zone.hpp"
-#include "../../model/Zone_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -56,6 +46,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/ZoneHVAC_ExhaustControl_FieldEnums.hxx>
+
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
@@ -65,36 +56,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACExhaustControl) {
   ForwardTranslator ft;
 
   Model m;
-  // TODO: Check regular Ctor arguments
+
   ZoneHVACExhaustControl zoneHVACExhaustControl(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ZoneHVACExhaustControl zoneHVACExhaustControl = m.getUniqueModelObject<ZoneHVACExhaustControl>();
 
   zoneHVACExhaustControl.setName("My ZoneHVACExhaustControl");
-  boost::optional<Schedule> availabilitySchedule(m);
+  Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
   EXPECT_TRUE(zoneHVACExhaustControl.setAvailabilitySchedule(availabilitySchedule));
-  Zone zone(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setZone(zone));
-  Node inletNodeName(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setInletNodeName(inletNodeName));
-  Node outletNodeName(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setOutletNodeName(outletNodeName));
-  // Autosize
-  // zoneHVACExhaustControl.autosizeDesignExhaustFlowRate();
   EXPECT_TRUE(zoneHVACExhaustControl.setDesignExhaustFlowRate(0.6));
   EXPECT_TRUE(zoneHVACExhaustControl.setFlowControlType("Scheduled"));
-  boost::optional<Schedule> exhaustFlowFractionSchedule(m);
+  ScheduleConstant exhaustFlowFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setExhaustFlowFractionSchedule(exhaustFlowFractionSchedule));
-  Node supplyNodeorNodeListName(m);
-  EXPECT_TRUE(zoneHVACExhaustControl.setSupplyNodeorNodeListName(supplyNodeorNodeListName));
-  boost::optional<Schedule> minimumZoneTemperatureLimitSchedule(m);
+  ScheduleConstant minimumZoneTemperatureLimitSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setMinimumZoneTemperatureLimitSchedule(minimumZoneTemperatureLimitSchedule));
-  boost::optional<Schedule> minimumExhaustFlowFractionSchedule(m);
+  ScheduleConstant minimumExhaustFlowFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setMinimumExhaustFlowFractionSchedule(minimumExhaustFlowFractionSchedule));
-  boost::optional<Schedule> balancedExhaustFractionSchedule(m);
+  ScheduleConstant balancedExhaustFractionSchedule(m);
   EXPECT_TRUE(zoneHVACExhaustControl.setBalancedExhaustFractionSchedule(balancedExhaustFractionSchedule));
-
-  // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
   const Workspace w = ft.translateModel(m);
   const auto idfObjs = w.getObjectsByType(IddObjectType::ZoneHVAC_ExhaustControl);
@@ -105,8 +82,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACExhaustControl) {
   EXPECT_EQ(zone.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ZoneName).get());
   EXPECT_EQ(inletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::InletNodeName).get());
   EXPECT_EQ(outletNodeName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::OutletNodeName).get());
-  // EXPECT_EQ("Autosize", idfObject.getString(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate).get());  EXPECT_EQ(0.6, idfObject.getDouble(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate).get());  EXPECT_EQ("Scheduled", idfObject.getString(ZoneHVAC_ExhaustControlFields::FlowControlType).get()); EXPECT_EQ(exhaustFlowFractionSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName).get());
-  EXPECT_EQ(supplyNodeorNodeListName.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName).get());
+  EXPECT_EQ(0.6, idfObject.getDouble(ZoneHVAC_ExhaustControlFields::DesignExhaustFlowRate).get());
+  EXPECT_EQ("Scheduled", idfObject.getString(ZoneHVAC_ExhaustControlFields::FlowControlType).get());
+  EXPECT_EQ(exhaustFlowFractionSchedule.nameString(), idfObject.getString(ZoneHVAC_ExhaustControlFields::ExhaustFlowFractionScheduleName).get());
+  EXPECT_EQ("", idfObject.getString(ZoneHVAC_ExhaustControlFields::SupplyNodeorNodeListName).get());
   EXPECT_EQ(minimumZoneTemperatureLimitSchedule.nameString(),
             idfObject.getString(ZoneHVAC_ExhaustControlFields::MinimumZoneTemperatureLimitScheduleName).get());
   EXPECT_EQ(minimumExhaustFlowFractionSchedule.nameString(),

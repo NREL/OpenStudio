@@ -31,15 +31,11 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
-#include "../ReverseTranslator.hpp"
 
 #include "../../model/AirLoopHVACExhaustSystem.hpp"
 #include "../../model/AirLoopHVACExhaustSystem_Impl.hpp"
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/ZoneMixers.hpp"
-#include "../../model/ZoneMixers_Impl.hpp"
-#include "../../model/FansSystemModel.hpp"
-#include "../../model/FansSystemModel_Impl.hpp"
+#include "../../model/FanSystemModel.hpp"
+#include "../../model/FanSystemModel_Impl.hpp"
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
@@ -48,6 +44,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/AirLoopHVAC_ExhaustSystem_FieldEnums.hxx>
+
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
@@ -57,26 +54,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACExhaustSystem) {
   ForwardTranslator ft;
 
   Model m;
-  // TODO: Check regular Ctor arguments
+
   AirLoopHVACExhaustSystem airLoopHVACExhaustSystem(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // AirLoopHVACExhaustSystem airLoopHVACExhaustSystem = m.getUniqueModelObject<AirLoopHVACExhaustSystem>();
 
   airLoopHVACExhaustSystem.setName("My AirLoopHVACExhaustSystem");
-  ZoneMixers zoneMixer(m);
-  EXPECT_TRUE(airLoopHVACExhaustSystem.setZoneMixer(zoneMixer));
-  EXPECT_TRUE(airLoopHVACExhaustSystem.setFanObjectType("Fan:SystemModel"));
-  FansSystemModel fan(m);
+  FanSystemModel fan(m);
   EXPECT_TRUE(airLoopHVACExhaustSystem.setFan(fan));
-
-  // TODO: you're responsible for creating all other objects needed so this object actually gets ForwardTranslated
 
   const Workspace w = ft.translateModel(m);
   const auto idfObjs = w.getObjectsByType(IddObjectType::AirLoopHVAC_ExhaustSystem);
   ASSERT_EQ(1u, idfObjs.size());
 
   const auto& idfObject = idfObjs.front();
-  EXPECT_EQ(zoneMixer.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName).get());
+  EXPECT_EQ("", idfObject.getString(AirLoopHVAC_ExhaustSystemFields::ZoneMixerName).get());
   EXPECT_EQ("Fan:SystemModel", idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanObjectType).get());
   EXPECT_EQ(fan.nameString(), idfObject.getString(AirLoopHVAC_ExhaustSystemFields::FanName).get());
 }
