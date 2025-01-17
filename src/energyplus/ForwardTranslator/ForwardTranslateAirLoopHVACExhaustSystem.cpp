@@ -49,12 +49,10 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::AirLoopHVAC_ExhaustSystem, modelObject);
 
     // Fan Object Type: Required String
-    const std::string fanObjectType = modelObject.fanObjectType();
-    idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanObjectType, fanObjectType);
-
     // Fan Name: Required Object
     HVACComponent fan = modelObject.fan();
     if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(fan)) {
+      idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanObjectType, wo_->iddObject().name());
       idfObject.setString(AirLoopHVAC_ExhaustSystemFields::FanName, wo_->nameString());
     }
 
