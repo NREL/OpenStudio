@@ -38,8 +38,8 @@
 #include "HVACComponent_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include "FanComponentModel.hpp"
-#include "FanComponentModel_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "EvaporativeCoolerDirectResearchSpecial.hpp"
 #include "EvaporativeCoolerDirectResearchSpecial_Impl.hpp"
 
@@ -343,7 +343,7 @@ namespace model {
     ok = setAvailabilitySchedule(alwaysOn);
     OS_ASSERT(ok);
 
-    FanComponentModel supplyAirFan(model);
+    FanSystemModel supplyAirFan(model);
     ok = setSupplyAirFan(supplyAirFan);
     OS_ASSERT(ok);
 
