@@ -59,9 +59,13 @@ namespace energyplus {
     }
 
     // Zone Name: Required Object
-    ThermalZone thermalZone = modelObject.thermalZone();
-    if (boost::optional<IdfObject> wo_ = translateAndMapModelObject(thermalZone)) {
-      idfObject.setString(ZoneHVAC_ExhaustControlFields::ZoneName, wo_->nameString());
+    boost::optional<std::string> thermalZoneName;
+    if (boost::optional<ThermalZone> zone = modelObject.thermalZone()) {
+      if ((s = zone->name())) {
+        thermalZoneName = s;
+
+        idfObject.setString(ZoneHVAC_ExhaustControlFields::ZoneName, thermalZoneName.get());
+      }
     }
 
     // InletNodeName
