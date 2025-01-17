@@ -174,8 +174,8 @@ std::vector<std::string> getSupplyAirFanNodes(const Workspace& workspace) {
   auto& idfFan = idfFans[0];
 
   return {
-    idfFan.getString(Fan_SystemFields::AirInletNodeName).get(),
-    idfFan.getString(Fan_SystemFields::AirOutletNodeName).get(),
+    idfFan.getString(Fan_SystemModelFields::AirInletNodeName).get(),
+    idfFan.getString(Fan_SystemModelFields::AirOutletNodeName).get(),
   };
 }
 
