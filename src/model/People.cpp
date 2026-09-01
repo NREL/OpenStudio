@@ -17,6 +17,8 @@
 #include "Space_Impl.hpp"
 #include "SpaceType.hpp"
 #include "SpaceType_Impl.hpp"
+#include "ZoneMRTCalculation.hpp"
+#include "ZoneMRTCalculation_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
@@ -88,6 +90,19 @@ namespace model {
 
     IddObjectType People_Impl::iddObjectType() const {
       return People::iddObjectType();
+    }
+
+    std::vector<openstudio::IdfObject> People_Impl::remove() {
+      People people = getObject<People>();
+      std::vector<ZoneMRTCalculation> zoneMRTCalculations = people.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType());
+
+      for (ZoneMRTCalculation& zoneMRTCalculation : zoneMRTCalculations) {
+        while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(MRTWeightingFactor(people, 0.0))) {
+          zoneMRTCalculation.removeMRTWeightingFactor(index.get());
+        }
+      }
+
+      return SpaceLoadInstance_Impl::remove();
     }
 
     std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule& schedule) const {

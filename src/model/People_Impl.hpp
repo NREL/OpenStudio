@@ -39,6 +39,8 @@ namespace model {
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual std::vector<openstudio::IdfObject> remove() override;
+
       virtual IddObjectType iddObjectType() const override;
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;

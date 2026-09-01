@@ -137,9 +137,15 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   ASSERT_TRUE(mrtWeightingFactor);
   EXPECT_DOUBLE_EQ(0.20, mrtWeightingFactor->mrtWeightingFactor());
 
+  people2.remove();
+  EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people3, 0.80));
+  EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
+
   zoneMRTCalculation.removeAllMRTWeightingFactors();
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
-  EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactors({MRTWeightingFactor(people2, 0.25), MRTWeightingFactor(people3, 0.5)}));
+  EXPECT_FALSE(
+    zoneMRTCalculation.addMRTWeightingFactors({MRTWeightingFactor(peopleWithoutThermalComfortModel, 0.25), MRTWeightingFactor(people3, 0.5)}));
   EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
 
   zoneMRTCalculation.removeMRTWeightingFactor(0);
