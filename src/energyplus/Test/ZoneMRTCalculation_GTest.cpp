@@ -12,13 +12,17 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/People.hpp"
+#include "../../model/People_Impl.hpp"
 #include "../../model/PeopleDefinition.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ZoneMRTCalculation.hpp"
+#include "../../model/ZoneMRTCalculation_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceObject_Impl.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
