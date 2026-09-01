@@ -7,6 +7,8 @@
 #include "ZoneMRTCalculation_Impl.hpp"
 #include "People.hpp"
 #include "People_Impl.hpp"
+#include "PeopleDefinition.hpp"
+#include "PeopleDefinition_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -196,6 +198,12 @@ namespace model {
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (!thermalZone || (thermalZone->handle() != this->thermalZone().handle())) {
         LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because it is not assigned to the ThermalZone.");
+        return result;
+      }
+
+      if (people.peopleDefinition().numThermalComfortModelTypes() == 0) {
+        LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription()
+                                 << " because it does not select at least one Thermal Comfort Model Type.");
         return result;
       }
 

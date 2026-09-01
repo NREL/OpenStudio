@@ -93,6 +93,14 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   space.setThermalZone(thermalZone);
   EXPECT_TRUE(people.setSpace(space));
 
+  PeopleDefinition noComfortDefinition(model);
+  noComfortDefinition.setNumberofPeople(1.0);
+  People peopleWithoutThermalComfortModel(noComfortDefinition);
+  peopleWithoutThermalComfortModel.setName("People Without Thermal Comfort Model");
+  EXPECT_TRUE(peopleWithoutThermalComfortModel.setSpace(space));
+  EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactor(peopleWithoutThermalComfortModel, 0.5));
+  EXPECT_EQ(0u, zoneMRTCalculation.numberofMRTWeightingFactors());
+
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
 

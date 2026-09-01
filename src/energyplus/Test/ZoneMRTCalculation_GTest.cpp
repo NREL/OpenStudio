@@ -157,6 +157,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation_InvalidMRTWeighti
 
   std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
   ASSERT_EQ(1u, thermalZones.size());
-  ZoneMRTCalculation zoneMRTCalculation = thermalZones[0].getZoneMRTCalculation();
+  std::vector<ZoneMRTCalculation> zoneMRTCalculations = model.getConcreteModelObjects<ZoneMRTCalculation>();
+  ASSERT_EQ(1u, zoneMRTCalculations.size());
+  ZoneMRTCalculation zoneMRTCalculation = zoneMRTCalculations[0];
+  EXPECT_EQ(thermalZones[0].handle(), zoneMRTCalculation.thermalZone().handle());
   EXPECT_EQ(0u, zoneMRTCalculation.numberofMRTWeightingFactors());
 }
