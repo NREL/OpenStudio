@@ -34,7 +34,7 @@ namespace model {
 *****************************************************************************************************************************************************/
   MRTWeightingFactor::MRTWeightingFactor(const People& people, double mrtWeightingFactor)
     : m_people(people), m_mrtWeightingFactor(mrtWeightingFactor) {
-    if ((m_mrtWeightingFactor < 0.0) || (m_mrtWeightingFactor > 1.0)) {
+    if (!((m_mrtWeightingFactor >= 0.0) && (m_mrtWeightingFactor <= 1.0))) {
       LOG_AND_THROW("Unable to create MRT weighting factor, factor of " << m_mrtWeightingFactor << " is not between 0 and 1");
     }
   }
@@ -215,6 +215,28 @@ namespace model {
                          << existingMRTWeightingFactor.get() << " to " << mrtWeightingFactor << ".");
       }
 
+      double sum = mrtWeightingFactor.mrtWeightingFactor();
+      for (unsigned i = 0; i < numberofMRTWeightingFactors(); ++i) {
+        if (existingIndex && (i == existingIndex.get())) {
+          continue;
+        }
+
+        boost::optional<double> existingValue = getMRTWeightingFactorValue(i);
+        if (!existingValue || !((*existingValue >= 0.0) && (*existingValue <= 1.0))) {
+          LOG(Error,
+              "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because an existing MRT Weighting Factor is invalid.");
+          return result;
+        }
+
+        sum += existingValue.get();
+      }
+
+      if (sum > 1.0) {
+        LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because the MRT Weighting Factors would sum to "
+                                 << sum << ", which is greater than 1.");
+        return result;
+      }
+
       std::vector<std::string> temp;
       ModelExtensibleGroup group = (existingIndex ? getExtensibleGroup(existingIndex.get()).cast<ModelExtensibleGroup>()
                                                   : pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>());
@@ -230,7 +252,9 @@ namespace model {
       if (peopleSet && factorSet) {
         result = true;
       } else {
-        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+        if (!existingIndex) {
+          getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+        }
       }
 
       return result;
@@ -247,6 +271,7 @@ namespace model {
       for (const MRTWeightingFactor& mrtWeightingFactor : mrtWeightingFactors) {
         bool thisResult = addMRTWeightingFactor(mrtWeightingFactor);
         if (!thisResult) {
+          result = false;
           LOG(Error, "Could not add mrtWeightingFactor " << mrtWeightingFactor << " to " << briefDescription() << ". Continuing with others.");
         }
       }

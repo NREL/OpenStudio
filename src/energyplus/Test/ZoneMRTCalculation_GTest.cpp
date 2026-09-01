@@ -89,6 +89,45 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneMRTCalculation_Empty) {
   EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ZoneMRTCalculation).empty());
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneMRTCalculation_StalePeopleReferences) {
+  Model model;
+  ThermalZone zone(model);
+  zone.setName("Thermal Zone 1");
+
+  Space space(model);
+  space.setName("Space 1");
+  EXPECT_TRUE(space.setThermalZone(zone));
+
+  PeopleDefinition definition1(model);
+  EXPECT_TRUE(definition1.setNumberofPeople(1.0));
+  EXPECT_TRUE(definition1.setThermalComfortModelType(0, "Fanger"));
+  People people1(definition1);
+  people1.setName("People 1");
+  EXPECT_TRUE(people1.setSpace(space));
+
+  PeopleDefinition definition2(model);
+  EXPECT_TRUE(definition2.setNumberofPeople(1.0));
+  EXPECT_TRUE(definition2.setThermalComfortModelType(0, "Fanger"));
+  People people2(definition2);
+  people2.setName("People 2");
+  EXPECT_TRUE(people2.setSpace(space));
+
+  ZoneMRTCalculation zoneMRTCalculation = zone.getZoneMRTCalculation();
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people1, 0.25));
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people2, 0.50));
+
+  ThermalZone otherZone(model);
+  Space otherSpace(model);
+  EXPECT_TRUE(otherSpace.setThermalZone(otherZone));
+  EXPECT_TRUE(people1.setSpace(otherSpace));
+  EXPECT_TRUE(definition2.eraseThermalComfortModelType(0));
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ZoneMRTCalculation).empty());
+}
+
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation) {
   Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 

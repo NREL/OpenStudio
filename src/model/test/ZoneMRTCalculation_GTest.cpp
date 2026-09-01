@@ -15,6 +15,8 @@
 #include "../ZoneMRTCalculation.hpp"
 #include "../ZoneMRTCalculation_Impl.hpp"
 
+#include <limits>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -28,6 +30,7 @@ TEST_F(ModelFixture, ZoneMRTCalculation_MRTWeightingFactor) {
   EXPECT_NO_THROW(MRTWeightingFactor(people, 1.0));
   EXPECT_THROW(MRTWeightingFactor(people, -0.1), openstudio::Exception);
   EXPECT_THROW(MRTWeightingFactor(people, 1.1), openstudio::Exception);
+  EXPECT_THROW(MRTWeightingFactor(people, std::numeric_limits<double>::quiet_NaN()), openstudio::Exception);
 }
 
 TEST_F(ModelFixture, ZoneMRTCalculation_Uniqueness) {
@@ -120,6 +123,23 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   people2.setName("People 2");
   EXPECT_TRUE(people2.setSpace(space));
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactors({MRTWeightingFactor(people2, 0.75)}));
+  EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
+
+  People people3(definition);
+  people3.setName("People 3");
+  EXPECT_TRUE(people3.setSpace(space));
+  EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactor(people3, 0.01));
+  EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
+
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.20));
+  EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
+  mrtWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
+  ASSERT_TRUE(mrtWeightingFactor);
+  EXPECT_DOUBLE_EQ(0.20, mrtWeightingFactor->mrtWeightingFactor());
+
+  zoneMRTCalculation.removeAllMRTWeightingFactors();
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
+  EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactors({MRTWeightingFactor(people2, 0.25), MRTWeightingFactor(people3, 0.5)}));
   EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
 
   zoneMRTCalculation.removeMRTWeightingFactor(0);
