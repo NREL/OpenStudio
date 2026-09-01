@@ -24,6 +24,8 @@ TEST_F(ModelFixture, ZoneMRTCalculation_MRTWeightingFactor) {
   People people(definition);
 
   EXPECT_NO_THROW(MRTWeightingFactor(people, 0.5));
+  EXPECT_NO_THROW(MRTWeightingFactor(people, 0.0));
+  EXPECT_NO_THROW(MRTWeightingFactor(people, 1.0));
   EXPECT_THROW(MRTWeightingFactor(people, -0.1), openstudio::Exception);
   EXPECT_THROW(MRTWeightingFactor(people, 1.1), openstudio::Exception);
 }
@@ -51,6 +53,20 @@ TEST_F(ModelFixture, ZoneMRTCalculation_Uniqueness) {
   EXPECT_EQ(size + 1, model.modelObjects().size());
 }
 
+TEST_F(ModelFixture, ZoneMRTCalculation_ThrowingAPIs) {
+  Model model;
+  ThermalZone thermalZone(model);
+  ZoneMRTCalculation zoneMRTCalculation = thermalZone.getZoneMRTCalculation();
+
+  PeopleDefinition definition(model);
+  People people(definition);
+
+  EXPECT_THROW(zoneMRTCalculation.addMRTWeightingFactor(people, -0.1), openstudio::Exception);
+  EXPECT_THROW(zoneMRTCalculation.addMRTWeightingFactor(people, 1.1), openstudio::Exception);
+  EXPECT_THROW((ZoneMRTCalculation(thermalZone)), openstudio::Exception);
+  EXPECT_THROW(zoneMRTCalculation.clone(model), openstudio::Exception);
+}
+
 TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   Model model;
   ThermalZone thermalZone(model);
@@ -67,6 +83,13 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
   EXPECT_EQ(0u, zoneMRTCalculation.numberofMRTWeightingFactors());
 
+  ThermalZone otherThermalZone(model);
+  Space otherSpace(model);
+  EXPECT_TRUE(otherSpace.setThermalZone(otherThermalZone));
+  EXPECT_TRUE(people.setSpace(otherSpace));
+  EXPECT_FALSE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
+  EXPECT_EQ(0u, zoneMRTCalculation.numberofMRTWeightingFactors());
+
   space.setThermalZone(thermalZone);
   EXPECT_TRUE(people.setSpace(space));
 
@@ -77,6 +100,7 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   ASSERT_TRUE(mrtWeightingFactor);
   EXPECT_EQ(people.handle(), mrtWeightingFactor->people().handle());
   EXPECT_DOUBLE_EQ(0.5, mrtWeightingFactor->mrtWeightingFactor());
+  EXPECT_FALSE(zoneMRTCalculation.getMRTWeightingFactor(1));
 
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.25));
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());

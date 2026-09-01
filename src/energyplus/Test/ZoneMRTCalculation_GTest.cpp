@@ -73,6 +73,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneMRTCalculation) {
   EXPECT_DOUBLE_EQ(0.75, group1.getDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor).get());
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneMRTCalculation_Empty) {
+  Model model;
+  ThermalZone zone(model);
+  zone.setName("Thermal Zone 1");
+  zone.getZoneMRTCalculation();
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ZoneMRTCalculation).empty());
+}
+
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation) {
   Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
@@ -114,4 +126,37 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation) {
   ASSERT_EQ(1u, mrtWeightingFactors.size());
   EXPECT_EQ("People 1", mrtWeightingFactors[0].people().nameString());
   EXPECT_DOUBLE_EQ(0.5, mrtWeightingFactors[0].mrtWeightingFactor());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation_InvalidMRTWeightingFactor) {
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject zone = workspace.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(zone);
+  zone->setName("Thermal Zone 1");
+
+  OptionalWorkspaceObject people = workspace.addObject(IdfObject(IddObjectType::People));
+  ASSERT_TRUE(people);
+  people->setName("People 1");
+  EXPECT_TRUE(people->setPointer(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, zone->handle()));
+  EXPECT_TRUE(people->setString(PeopleFields::NumberofPeopleCalculationMethod, "People"));
+  EXPECT_TRUE(people->setDouble(PeopleFields::NumberofPeople, 1.0));
+  EXPECT_TRUE(people->setString(PeopleFields::ThermalComfortModel1Type, "Fanger"));
+
+  IdfObject idfZoneMRTCalculation(IddObjectType::ZoneMRTCalculation);
+  idfZoneMRTCalculation.setString(ZoneMRTCalculationFields::ZoneName, "Thermal Zone 1");
+  IdfExtensibleGroup group = idfZoneMRTCalculation.pushExtensibleGroup();
+  group.setString(ZoneMRTCalculationExtensibleFields::PeopleName, "People 1");
+  group.setDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor, 1.1);
+  OptionalWorkspaceObject epZoneMRTCalculation = workspace.addObject(idfZoneMRTCalculation);
+  ASSERT_TRUE(epZoneMRTCalculation);
+
+  ReverseTranslator rt;
+  Model model;
+  EXPECT_NO_THROW(model = rt.translateWorkspace(workspace));
+
+  std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
+  ASSERT_EQ(1u, thermalZones.size());
+  ZoneMRTCalculation zoneMRTCalculation = thermalZones[0].getZoneMRTCalculation();
+  EXPECT_EQ(0u, zoneMRTCalculation.numberofMRTWeightingFactors());
 }
