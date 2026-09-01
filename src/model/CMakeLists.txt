@@ -2422,6 +2422,7 @@ set(${target_name}_test_src
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
+  test/ZoneMRTCalculation_GTest.cpp
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
   test/ZoneVentilationWindandStackOpenArea_GTest.cpp
