@@ -82,6 +82,29 @@ TEST_F(ModelFixture, ZoneMRTCalculation_ThrowingAPIs) {
   EXPECT_THROW(zoneMRTCalculation.clone(model), openstudio::Exception);
 }
 
+TEST_F(ModelFixture, ZoneMRTCalculation_ThermalZoneRemove) {
+  Model model;
+  ThermalZone thermalZone(model);
+
+  Space space(model);
+  EXPECT_TRUE(space.setThermalZone(thermalZone));
+
+  PeopleDefinition definition(model);
+  definition.setNumberofPeople(1.0);
+  EXPECT_TRUE(definition.setThermalComfortModelType(0, "Fanger"));
+
+  People people(definition);
+  EXPECT_TRUE(people.setSpace(space));
+
+  ZoneMRTCalculation zoneMRTCalculation = thermalZone.getZoneMRTCalculation();
+  EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 1.0));
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ZoneMRTCalculation>().size());
+
+  // Removing the ThermalZone should also remove the ZoneMRTCalculation that requires it.
+  thermalZone.remove();
+  EXPECT_TRUE(model.getConcreteModelObjects<ZoneMRTCalculation>().empty());
+}
+
 TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   Model model;
   ThermalZone thermalZone(model);

@@ -190,7 +190,7 @@ namespace model {
         // Temperatures and RH
         "Zone Mean Air Temperature",  // Zone level
         "Zone Air Temperature",       // HVAC level
-        "Zone Mean Air Dewpoint Temperature", "Zone Mean Radiant Temperature", "Zone Operative Temperature", "Zone Air Humidity Ratio",
+        "Zone Mean Air Dewpoint Temperature", "Zone Mean Radiant Temperature", "Zone Standard Mean Radiant Temperature", "Zone Operative Temperature", "Zone Air Humidity Ratio",
         "Zone Air Relative Humidity",
 
         // Heat Balance
@@ -1671,6 +1671,11 @@ namespace model {
       // remove ZoneMixing objects
       for (auto& mixing : this->zoneMixing()) {
         mixing.remove();
+      }
+
+      // remove ZoneMRTCalculation objects before the required Thermal Zone pointer is cleared
+      for (auto& zoneMRTCalculation : thermalZone.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType())) {
+        zoneMRTCalculation.remove();
       }
 
       return HVACComponent_Impl::remove();
