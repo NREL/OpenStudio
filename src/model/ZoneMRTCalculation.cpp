@@ -97,11 +97,11 @@ namespace model {
       return numExtensibleGroups();
     }
 
-    boost::optional<unsigned> ZoneMRTCalculation_Impl::mrtWeightingFactorIndex(const MRTWeightingFactor& mrtWeightingFactor) const {
+    boost::optional<unsigned> ZoneMRTCalculation_Impl::mrtWeightingFactorIndex(const People& people) const {
       boost::optional<unsigned> result;
 
       auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
-      auto peopleHandle = toString(mrtWeightingFactor.people().handle());
+      auto peopleHandle = toString(people.handle());
       auto it = std::find_if(egs.begin(), egs.end(), [&](const WorkspaceExtensibleGroup& eg) {
         return eg.getField(OS_ZoneMRTCalculationExtensibleFields::PeopleName).get() == peopleHandle;
       });
@@ -207,7 +207,7 @@ namespace model {
         return result;
       }
 
-      boost::optional<unsigned> existingIndex = mrtWeightingFactorIndex(mrtWeightingFactor);
+      boost::optional<unsigned> existingIndex = mrtWeightingFactorIndex(people);
       if (existingIndex) {
         boost::optional<MRTWeightingFactor> existingMRTWeightingFactor = getMRTWeightingFactor(existingIndex.get());
         OS_ASSERT(existingMRTWeightingFactor);
@@ -324,8 +324,8 @@ namespace model {
     return getImpl<detail::ZoneMRTCalculation_Impl>()->numberofMRTWeightingFactors();
   }
 
-  boost::optional<unsigned> ZoneMRTCalculation::mrtWeightingFactorIndex(const MRTWeightingFactor& mrtWeightingFactor) const {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->mrtWeightingFactorIndex(mrtWeightingFactor);
+  boost::optional<unsigned> ZoneMRTCalculation::mrtWeightingFactorIndex(const People& people) const {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->mrtWeightingFactorIndex(people);
   }
 
   boost::optional<MRTWeightingFactor> ZoneMRTCalculation::getMRTWeightingFactor(unsigned groupIndex) const {

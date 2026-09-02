@@ -74,7 +74,7 @@ namespace model {
 
     unsigned int numberofMRTWeightingFactors() const;
 
-    boost::optional<unsigned> mrtWeightingFactorIndex(const MRTWeightingFactor& mrtWeightingFactor) const;
+    boost::optional<unsigned> mrtWeightingFactorIndex(const People& people) const;
 
     boost::optional<MRTWeightingFactor> getMRTWeightingFactor(unsigned groupIndex) const;
 

@@ -17,6 +17,8 @@
 #include "Space_Impl.hpp"
 #include "SpaceType.hpp"
 #include "SpaceType_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "ZoneMRTCalculation.hpp"
 #include "ZoneMRTCalculation_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
@@ -93,17 +95,73 @@ namespace model {
     }
 
     std::vector<openstudio::IdfObject> People_Impl::remove() {
-      People people = getObject<People>();
+      removeZoneMRTCalculationReferences();
+      return SpaceLoadInstance_Impl::remove();
+    }
+
+    void People_Impl::removeZoneMRTCalculationReferences() {
+      People people = getObject<ModelObject>().cast<People>();
       std::vector<ZoneMRTCalculation> zoneMRTCalculations = people.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType());
 
       for (ZoneMRTCalculation& zoneMRTCalculation : zoneMRTCalculations) {
-        while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(MRTWeightingFactor(people, 0.0))) {
+        while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(people)) {
           zoneMRTCalculation.removeMRTWeightingFactor(index.get());
         }
       }
-
-      return SpaceLoadInstance_Impl::remove();
     }
+
+    // The hooks below would remove ZoneMRTCalculation extensible groups as soon as a referenced People object
+    // becomes invalid by being moved to another Space, reset from its Space, assigned to a SpaceType, or losing
+    // its thermal comfort model types. That is more proactive than most existing extensible-reference patterns in
+    // the model, which generally clean references only from the referenced object's remove() path and otherwise
+    // rely on explicit remove APIs or read/translation-time filtering.
+    /*
+    bool People_Impl::setSpace(const Space& space) {
+      bool result = SpaceLoadInstance_Impl::setSpace(space);
+      if (result) {
+        removeInvalidZoneMRTCalculationReferences();
+      }
+      return result;
+    }
+
+    void People_Impl::resetSpace() {
+      SpaceLoadInstance_Impl::resetSpace();
+      removeInvalidZoneMRTCalculationReferences();
+    }
+
+    bool People_Impl::setSpaceType(const SpaceType& spaceType) {
+      bool result = SpaceLoadInstance_Impl::setSpaceType(spaceType);
+      if (result) {
+        removeInvalidZoneMRTCalculationReferences();
+      }
+      return result;
+    }
+
+    void People_Impl::resetSpaceType() {
+      SpaceLoadInstance_Impl::resetSpaceType();
+      removeInvalidZoneMRTCalculationReferences();
+    }
+
+    void People_Impl::removeInvalidZoneMRTCalculationReferences() {
+      People people = getObject<ModelObject>().cast<People>();
+      std::vector<ZoneMRTCalculation> zoneMRTCalculations = people.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType());
+
+      for (ZoneMRTCalculation& zoneMRTCalculation : zoneMRTCalculations) {
+        bool valid = false;
+        boost::optional<Space> space = people.space();
+        if (space && (people.peopleDefinition().numThermalComfortModelTypes() > 0)) {
+          boost::optional<ThermalZone> thermalZone = space->thermalZone();
+          valid = thermalZone && (thermalZone->handle() == zoneMRTCalculation.thermalZone().handle());
+        }
+
+        if (!valid) {
+          while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(people)) {
+            zoneMRTCalculation.removeMRTWeightingFactor(index.get());
+          }
+        }
+      }
+    }
+    */
 
     std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
