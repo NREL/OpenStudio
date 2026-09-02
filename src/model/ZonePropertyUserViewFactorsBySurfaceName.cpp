@@ -119,7 +119,7 @@ namespace model {
 
     ModelObject ZonePropertyUserViewFactorsBySurfaceName_Impl::clone(Model /*model*/) const {
       LOG_AND_THROW("Cloning isn't allowed for ZonePropertyUserViewFactorsBySurfaceName in order to guarantee that every "
-                    "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and"
+                    "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and "
                     "that a thermal zone must have only one ZonePropertyUserViewFactorsBySurfaceName.");
     }
 

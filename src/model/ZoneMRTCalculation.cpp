@@ -82,7 +82,7 @@ namespace model {
     }
 
     ModelObject ZoneMRTCalculation_Impl::clone(Model /*model*/) const {
-      LOG_AND_THROW("Cloning isn't allowed for ZoneMRTCalculation in order to guarantee that every ZoneMRTCalculation has a thermal zone, and"
+      LOG_AND_THROW("Cloning isn't allowed for ZoneMRTCalculation in order to guarantee that every ZoneMRTCalculation has a thermal zone, and "
                     "that a thermal zone must have only one ZoneMRTCalculation.");
     }
 
