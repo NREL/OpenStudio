@@ -196,8 +196,10 @@ namespace model {
       }
 
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (!thermalZone || (thermalZone->handle() != this->thermalZone().handle())) {
-        LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because it is not assigned to the ThermalZone.");
+      if (!thermalZone) {
+        LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because it is not assigned to any ThermalZone.");
+      } else if (thermalZone->handle() != this->thermalZone().handle()) {
+        LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because it is assigned to ThermalZone '" << thermalZone->nameString() << "' instead of '" << this->thermalZone().nameString() << "'.");
         return result;
       }
 
