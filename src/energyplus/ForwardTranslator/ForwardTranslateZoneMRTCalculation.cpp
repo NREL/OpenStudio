@@ -82,7 +82,7 @@ namespace energyplus {
           continue;
         }
 
-        translatedMRTWeightingFactors.emplace_back(_people->name().get(), value);
+        translatedMRTWeightingFactors.emplace_back(_people->nameString(), value);
       } else {
         LOG(Error, "Could not translate an MRTWeightingFactor group for " << modelObject.briefDescription() << ". Continuing with the rest.");
       }
