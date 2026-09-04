@@ -33,7 +33,7 @@ namespace energyplus {
 
     std::vector<MRTWeightingFactor> mrtWeightingFactors = modelObject.mrtWeightingFactors();
     if (mrtWeightingFactors.empty()) {
-      LOG(Error,
+      LOG(Warn,
           "ZoneMRTCalculation for zone '" << zone.nameString() << "' doesn't have at least one MRT weighting factor, it will not be translated.");
       return boost::none;
     }
