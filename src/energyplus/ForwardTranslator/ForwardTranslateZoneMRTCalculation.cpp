@@ -99,10 +99,10 @@ namespace energyplus {
 
     idfObject.setString(ZoneMRTCalculationFields::ZoneName, zone.nameString());
 
-    for (const auto& translatedMRTWeightingFactor : translatedMRTWeightingFactors) {
+    for (const auto& [name, weight] : translatedMRTWeightingFactors) {
       auto eg = idfObject.pushExtensibleGroup();
-      eg.setString(ZoneMRTCalculationExtensibleFields::PeopleName, translatedMRTWeightingFactor.first);
-      eg.setDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor, translatedMRTWeightingFactor.second);
+      eg.setString(ZoneMRTCalculationExtensibleFields::PeopleName, name);
+      eg.setDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor, weight);
     }
 
     return idfObject;
