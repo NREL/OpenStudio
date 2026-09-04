@@ -30,11 +30,6 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneMRTCalculation(ZoneMRTCalculation& modelObject) {
     ThermalZone zone = modelObject.thermalZone();
-    boost::optional<IdfObject> _zone = translateAndMapModelObject(zone);
-    if (!_zone) {
-      LOG(Error, "ZoneMRTCalculation references a zone '" << zone.nameString() << "' that was not translated, so it will not be translated either");
-      return boost::none;
-    }
 
     std::vector<MRTWeightingFactor> mrtWeightingFactors = modelObject.mrtWeightingFactors();
     if (mrtWeightingFactors.empty()) {
@@ -97,7 +92,7 @@ namespace energyplus {
     IdfObject idfObject(openstudio::IddObjectType::ZoneMRTCalculation);
     m_idfObjects.push_back(idfObject);
 
-    idfObject.setString(ZoneMRTCalculationFields::ZoneName, _zone->name().get());
+    idfObject.setString(ZoneMRTCalculationFields::ZoneName, zone.nameString());
 
     for (const auto& translatedMRTWeightingFactor : translatedMRTWeightingFactors) {
       auto eg = idfObject.pushExtensibleGroup();

@@ -21,6 +21,8 @@
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
 #include "../../model/ZoneVentilationWindandStackOpenArea.hpp"
 #include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
+#include "../../model/ZoneMRTCalculation.hpp"
+#include "../../model/ZoneMRTCalculation_Impl.hpp"
 #include "../../model/SizingZone.hpp"
 #include "../../model/SizingZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -804,6 +806,11 @@ namespace energyplus {
     // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea do not go on equipment connections or associated list
     for (auto& zone_vent : zoneVentilationObjects) {
       translateAndMapModelObject(zone_vent);
+    }
+
+    // ZoneMRTCalculation
+    for (auto& zoneMRTCalculation : modelObject.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType())) {
+      translateAndMapModelObject(zoneMRTCalculation);
     }
 
     bool zoneHVACIdealWorkaround = false;

@@ -3509,7 +3509,6 @@ namespace energyplus {
       IddObjectType::OS_ShadingSurfaceGroup,
       IddObjectType::OS_ShadingSurface,
 
-      IddObjectType::OS_ZoneMRTCalculation,
       IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName,
 
       IddObjectType::OS_Daylighting_Control,
