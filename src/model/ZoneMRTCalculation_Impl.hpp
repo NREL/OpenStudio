@@ -50,6 +50,14 @@ namespace model {
 
       ThermalZone thermalZone() const;
 
+      //@}
+      /** @name Setters */
+      //@{
+
+      //@}
+      /** @name Other */
+      //@{
+
       std::vector<MRTWeightingFactor> mrtWeightingFactors() const;
 
       unsigned int numberofMRTWeightingFactors() const;
@@ -57,10 +65,6 @@ namespace model {
       boost::optional<unsigned> mrtWeightingFactorIndex(const People& people) const;
 
       boost::optional<MRTWeightingFactor> getMRTWeightingFactor(unsigned groupIndex) const;
-
-      //@}
-      /** @name Setters */
-      //@{
 
       bool addMRTWeightingFactor(const MRTWeightingFactor& mrtWeightingFactor);
 
@@ -71,10 +75,6 @@ namespace model {
       bool removeMRTWeightingFactor(unsigned groupIndex);
 
       void removeAllMRTWeightingFactors();
-
-      //@}
-      /** @name Other */
-      //@{
 
       //@}
      protected:
