@@ -45,10 +45,15 @@ namespace energyplus {
       People people = mrtWeightingFactor.people();
 
       boost::optional<Space> space = people.space();
-      boost::optional<ThermalZone> thermalZone;
-      if (space) {
-        thermalZone = space->thermalZone();
+
+      if (!space) {
+        LOG(Error, "Could not translate an MRTWeightingFactor group for " << modelObject.briefDescription() << " because "
+                                                                          << people.briefDescription()
+                                                                          << " is not assigned to a Space.");
+        continue;
       }
+
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
 
       if (!thermalZone || (thermalZone->handle() != zone.handle())) {
         LOG(Error, "Could not translate an MRTWeightingFactor group for " << modelObject.briefDescription() << " because "
