@@ -48,7 +48,7 @@ namespace model {
   }
 
   std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mrtWeightingFactor) {
-    out << "(people " << mrtWeightingFactor.people().iddObject().name() << "='" << mrtWeightingFactor.people().nameString()
+    out << "(people='" << mrtWeightingFactor.people().nameString()
         << "', MRT weighting factor=" << mrtWeightingFactor.mrtWeightingFactor() << ")";
     return out;
   }
