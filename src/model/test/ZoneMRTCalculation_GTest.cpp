@@ -54,7 +54,7 @@ TEST_F(ModelFixture, ZoneMRTCalculation_Uniqueness) {
 
   // A newly created object starts with no extensible People/weight records.
   EXPECT_EQ(0u, zoneMRTCalculation2.numberofMRTWeightingFactors());
-  EXPECT_TRUE(zoneMRTCalculation2.mrtWeightingFactors().empty());
+  EXPECT_TRUE(zoneMRTCalculation2.mRTWeightingFactors().empty());
 
   // Direct construction is intentionally blocked once the ThermalZone already has one object.
   EXPECT_THROW((ZoneMRTCalculation(thermalZone)), openstudio::Exception);
@@ -145,21 +145,21 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   // A valid People/weight pair creates the first extensible group and can be found by People identity.
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.5));
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
-  EXPECT_EQ(0u, zoneMRTCalculation.mrtWeightingFactorIndex(people).get());
+  EXPECT_EQ(0u, zoneMRTCalculation.mRTWeightingFactorIndex(people).get());
 
   // Indexed access returns the complete helper wrapper, while out-of-range access returns none.
-  boost::optional<MRTWeightingFactor> mrtWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
-  ASSERT_TRUE(mrtWeightingFactor);
-  EXPECT_EQ(people.handle(), mrtWeightingFactor->people().handle());
-  EXPECT_DOUBLE_EQ(0.5, mrtWeightingFactor->mrtWeightingFactor());
+  boost::optional<MRTWeightingFactor> mRTWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
+  ASSERT_TRUE(mRTWeightingFactor);
+  EXPECT_EQ(people.handle(), mRTWeightingFactor->people().handle());
+  EXPECT_DOUBLE_EQ(0.5, mRTWeightingFactor->mRTWeightingFactor());
   EXPECT_FALSE(zoneMRTCalculation.getMRTWeightingFactor(1));
 
   // Adding the same People again updates the existing group rather than creating a duplicate.
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.25));
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
-  mrtWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
-  ASSERT_TRUE(mrtWeightingFactor);
-  EXPECT_DOUBLE_EQ(0.25, mrtWeightingFactor->mrtWeightingFactor());
+  mRTWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
+  ASSERT_TRUE(mRTWeightingFactor);
+  EXPECT_DOUBLE_EQ(0.25, mRTWeightingFactor->mRTWeightingFactor());
 
   // Bulk add succeeds when each new factor keeps the total weighting sum within the IDD maximum of 1.0.
   People people2(definition);
@@ -181,9 +181,9 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
   // Replacing an existing People's weight recalculates the total without double-counting the old value.
   EXPECT_TRUE(zoneMRTCalculation.addMRTWeightingFactor(people, 0.20));
   EXPECT_EQ(2u, zoneMRTCalculation.numberofMRTWeightingFactors());
-  mrtWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
-  ASSERT_TRUE(mrtWeightingFactor);
-  EXPECT_DOUBLE_EQ(0.20, mrtWeightingFactor->mrtWeightingFactor());
+  mRTWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
+  ASSERT_TRUE(mRTWeightingFactor);
+  EXPECT_DOUBLE_EQ(0.20, mRTWeightingFactor->mRTWeightingFactor());
 
   // Removing a referenced People object cleans up its ZoneMRTCalculation extensible group.
   people2.remove();
@@ -220,9 +220,9 @@ TEST_F(ModelFixture, ZoneMRTCalculation_AddAndRemoveMRTWeightingFactors) {
 
   EXPECT_TRUE(definition3.eraseThermalComfortModelType(0));
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
-  mrtWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
-  ASSERT_TRUE(mrtWeightingFactor);
-  EXPECT_EQ(people.handle(), mrtWeightingFactor->people().handle());
+  mRTWeightingFactor = zoneMRTCalculation.getMRTWeightingFactor(0);
+  ASSERT_TRUE(mRTWeightingFactor);
+  EXPECT_EQ(people.handle(), mRTWeightingFactor->people().handle());
 
   EXPECT_TRUE(definition3.setThermalComfortModelType(0, "Fanger"));
   */

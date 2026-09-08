@@ -32,10 +32,10 @@ namespace model {
   /*****************************************************************************************************************************************************
 *                                                M R T   W E I G H T I N G   F A C T O R                                                            *
 *****************************************************************************************************************************************************/
-  MRTWeightingFactor::MRTWeightingFactor(const People& people, double mrtWeightingFactor)
-    : m_people(people), m_mrtWeightingFactor(mrtWeightingFactor) {
-    if (!((m_mrtWeightingFactor >= 0.0) && (m_mrtWeightingFactor <= 1.0))) {
-      LOG_AND_THROW("Unable to create MRT weighting factor, factor of " << m_mrtWeightingFactor << " is not between 0 and 1");
+  MRTWeightingFactor::MRTWeightingFactor(const People& people, double mRTWeightingFactor)
+    : m_people(people), m_mRTWeightingFactor(mRTWeightingFactor) {
+    if (!((m_mRTWeightingFactor >= 0.0) && (m_mRTWeightingFactor <= 1.0))) {
+      LOG_AND_THROW("Unable to create MRT weighting factor, factor of " << m_mRTWeightingFactor << " is not between 0 and 1");
     }
   }
 
@@ -43,13 +43,13 @@ namespace model {
     return m_people;
   }
 
-  double MRTWeightingFactor::mrtWeightingFactor() const {
-    return m_mrtWeightingFactor;
+  double MRTWeightingFactor::mRTWeightingFactor() const {
+    return m_mRTWeightingFactor;
   }
 
-  std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mrtWeightingFactor) {
-    out << "(people='" << mrtWeightingFactor.people().nameString()
-        << "', MRT weighting factor=" << mrtWeightingFactor.mrtWeightingFactor() << ")";
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mRTWeightingFactor) {
+    out << "(people='" << mRTWeightingFactor.people().nameString()
+        << "', MRT weighting factor=" << mRTWeightingFactor.mRTWeightingFactor() << ")";
     return out;
   }
 
@@ -97,7 +97,7 @@ namespace model {
       return numExtensibleGroups();
     }
 
-    boost::optional<unsigned> ZoneMRTCalculation_Impl::mrtWeightingFactorIndex(const People& people) const {
+    boost::optional<unsigned> ZoneMRTCalculation_Impl::mRTWeightingFactorIndex(const People& people) const {
       boost::optional<unsigned> result;
 
       auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
@@ -164,13 +164,13 @@ namespace model {
       return result;
     }
 
-    std::vector<MRTWeightingFactor> ZoneMRTCalculation_Impl::mrtWeightingFactors() const {
+    std::vector<MRTWeightingFactor> ZoneMRTCalculation_Impl::mRTWeightingFactors() const {
       std::vector<MRTWeightingFactor> result;
 
       for (unsigned i = 0; i < numberofMRTWeightingFactors(); ++i) {
-        boost::optional<MRTWeightingFactor> mrtWeightingFactor = getMRTWeightingFactor(i);
-        if (mrtWeightingFactor) {
-          result.push_back(mrtWeightingFactor.get());
+        boost::optional<MRTWeightingFactor> mRTWeightingFactor = getMRTWeightingFactor(i);
+        if (mRTWeightingFactor) {
+          result.push_back(mRTWeightingFactor.get());
         } else {
           LOG(Error, briefDescription() << " has an invalid MRTWeightingFactor group at index " << i);
         }
@@ -179,10 +179,10 @@ namespace model {
       return result;
     }
 
-    bool ZoneMRTCalculation_Impl::addMRTWeightingFactor(const MRTWeightingFactor& mrtWeightingFactor) {
+    bool ZoneMRTCalculation_Impl::addMRTWeightingFactor(const MRTWeightingFactor& mRTWeightingFactor) {
       bool result = false;
 
-      People people = mrtWeightingFactor.people();
+      People people = mRTWeightingFactor.people();
 
       if (people.model() != model()) {
         LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because they are in different models.");
@@ -209,15 +209,15 @@ namespace model {
         return result;
       }
 
-      boost::optional<unsigned> existingIndex = mrtWeightingFactorIndex(people);
+      boost::optional<unsigned> existingIndex = mRTWeightingFactorIndex(people);
       if (existingIndex) {
         boost::optional<MRTWeightingFactor> existingMRTWeightingFactor = getMRTWeightingFactor(existingIndex.get());
         OS_ASSERT(existingMRTWeightingFactor);
         LOG(Warn, "For " << briefDescription() << ", MRTWeightingFactor already exists, will be modified in place from "
-                         << existingMRTWeightingFactor.get() << " to " << mrtWeightingFactor << ".");
+                         << existingMRTWeightingFactor.get() << " to " << mRTWeightingFactor << ".");
       }
 
-      double sum = mrtWeightingFactor.mrtWeightingFactor();
+      double sum = mRTWeightingFactor.mRTWeightingFactor();
       for (unsigned i = 0; i < numberofMRTWeightingFactors(); ++i) {
         if (existingIndex && (i == existingIndex.get())) {
           continue;
@@ -249,7 +249,7 @@ namespace model {
         OS_ASSERT(false);
       }
 
-      bool factorSet = group.setDouble(OS_ZoneMRTCalculationExtensibleFields::MRTWeightingFactor, mrtWeightingFactor.mrtWeightingFactor());
+      bool factorSet = group.setDouble(OS_ZoneMRTCalculationExtensibleFields::MRTWeightingFactor, mRTWeightingFactor.mRTWeightingFactor());
 
       if (peopleSet && factorSet) {
         result = true;
@@ -262,19 +262,19 @@ namespace model {
       return result;
     }
 
-    bool ZoneMRTCalculation_Impl::addMRTWeightingFactor(const People& people, double mrtWeightingFactor) {
-      MRTWeightingFactor weightingFactor(people, mrtWeightingFactor);
+    bool ZoneMRTCalculation_Impl::addMRTWeightingFactor(const People& people, double mRTWeightingFactor) {
+      MRTWeightingFactor weightingFactor(people, mRTWeightingFactor);
       return addMRTWeightingFactor(weightingFactor);
     }
 
-    bool ZoneMRTCalculation_Impl::addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mrtWeightingFactors) {
+    bool ZoneMRTCalculation_Impl::addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mRTWeightingFactors) {
       bool result = true;
 
-      for (const MRTWeightingFactor& mrtWeightingFactor : mrtWeightingFactors) {
-        bool thisResult = addMRTWeightingFactor(mrtWeightingFactor);
+      for (const MRTWeightingFactor& mRTWeightingFactor : mRTWeightingFactors) {
+        bool thisResult = addMRTWeightingFactor(mRTWeightingFactor);
         if (!thisResult) {
           result = false;
-          LOG(Error, "Could not add mrtWeightingFactor " << mrtWeightingFactor << " to " << briefDescription() << ". Continuing with others.");
+          LOG(Error, "Could not add mRTWeightingFactor " << mRTWeightingFactor << " to " << briefDescription() << ". Continuing with others.");
         }
       }
 
@@ -318,32 +318,32 @@ namespace model {
     return getImpl<detail::ZoneMRTCalculation_Impl>()->thermalZone();
   }
 
-  std::vector<MRTWeightingFactor> ZoneMRTCalculation::mrtWeightingFactors() const {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->mrtWeightingFactors();
+  std::vector<MRTWeightingFactor> ZoneMRTCalculation::mRTWeightingFactors() const {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->mRTWeightingFactors();
   }
 
   unsigned int ZoneMRTCalculation::numberofMRTWeightingFactors() const {
     return getImpl<detail::ZoneMRTCalculation_Impl>()->numberofMRTWeightingFactors();
   }
 
-  boost::optional<unsigned> ZoneMRTCalculation::mrtWeightingFactorIndex(const People& people) const {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->mrtWeightingFactorIndex(people);
+  boost::optional<unsigned> ZoneMRTCalculation::mRTWeightingFactorIndex(const People& people) const {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->mRTWeightingFactorIndex(people);
   }
 
   boost::optional<MRTWeightingFactor> ZoneMRTCalculation::getMRTWeightingFactor(unsigned groupIndex) const {
     return getImpl<detail::ZoneMRTCalculation_Impl>()->getMRTWeightingFactor(groupIndex);
   }
 
-  bool ZoneMRTCalculation::addMRTWeightingFactor(const MRTWeightingFactor& mrtWeightingFactor) {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactor(mrtWeightingFactor);
+  bool ZoneMRTCalculation::addMRTWeightingFactor(const MRTWeightingFactor& mRTWeightingFactor) {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactor(mRTWeightingFactor);
   }
 
-  bool ZoneMRTCalculation::addMRTWeightingFactor(const People& people, double mrtWeightingFactor) {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactor(people, mrtWeightingFactor);
+  bool ZoneMRTCalculation::addMRTWeightingFactor(const People& people, double mRTWeightingFactor) {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactor(people, mRTWeightingFactor);
   }
 
-  bool ZoneMRTCalculation::addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mrtWeightingFactors) {
-    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactors(mrtWeightingFactors);
+  bool ZoneMRTCalculation::addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mRTWeightingFactors) {
+    return getImpl<detail::ZoneMRTCalculation_Impl>()->addMRTWeightingFactors(mRTWeightingFactors);
   }
 
   void ZoneMRTCalculation::removeMRTWeightingFactor(int groupIndex) {

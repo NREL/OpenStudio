@@ -25,19 +25,19 @@ namespace model {
   class MODEL_API MRTWeightingFactor
   {
    public:
-    MRTWeightingFactor(const People& people, double mrtWeightingFactor);
+    MRTWeightingFactor(const People& people, double mRTWeightingFactor);
 
     People people() const;
-    double mrtWeightingFactor() const;
+    double mRTWeightingFactor() const;
 
    private:
     People m_people;
-    double m_mrtWeightingFactor;
+    double m_mRTWeightingFactor;
     REGISTER_LOGGER("openstudio.model.MRTWeightingFactor");
   };
 
   /** \relates MRTWeightingFactor */
-  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mrtWeightingFactor);
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mRTWeightingFactor);
 
   /** ZoneMRTCalculation is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneMRTCalculation'. */
   class MODEL_API ZoneMRTCalculation : public ModelObject
@@ -78,19 +78,19 @@ namespace model {
     /** @name Other */
     //@{
 
-    std::vector<MRTWeightingFactor> mrtWeightingFactors() const;
+    std::vector<MRTWeightingFactor> mRTWeightingFactors() const;
 
     unsigned int numberofMRTWeightingFactors() const;
 
-    boost::optional<unsigned> mrtWeightingFactorIndex(const People& people) const;
+    boost::optional<unsigned> mRTWeightingFactorIndex(const People& people) const;
 
     boost::optional<MRTWeightingFactor> getMRTWeightingFactor(unsigned groupIndex) const;
 
-    bool addMRTWeightingFactor(const MRTWeightingFactor& mrtWeightingFactor);
+    bool addMRTWeightingFactor(const MRTWeightingFactor& mRTWeightingFactor);
 
-    bool addMRTWeightingFactor(const People& people, double mrtWeightingFactor);
+    bool addMRTWeightingFactor(const People& people, double mRTWeightingFactor);
 
-    bool addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mrtWeightingFactors);
+    bool addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mRTWeightingFactors);
 
     void removeMRTWeightingFactor(int groupIndex);
 

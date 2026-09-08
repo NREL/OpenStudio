@@ -104,7 +104,7 @@ namespace model {
       std::vector<ZoneMRTCalculation> zoneMRTCalculations = people.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType());
 
       for (ZoneMRTCalculation& zoneMRTCalculation : zoneMRTCalculations) {
-        while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(people)) {
+        while (boost::optional<unsigned> index = zoneMRTCalculation.mRTWeightingFactorIndex(people)) {
           zoneMRTCalculation.removeMRTWeightingFactor(index.get());
         }
       }
@@ -155,7 +155,7 @@ namespace model {
         }
 
         if (!valid) {
-          while (boost::optional<unsigned> index = zoneMRTCalculation.mrtWeightingFactorIndex(people)) {
+          while (boost::optional<unsigned> index = zoneMRTCalculation.mRTWeightingFactorIndex(people)) {
             zoneMRTCalculation.removeMRTWeightingFactor(index.get());
           }
         }

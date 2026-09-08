@@ -58,19 +58,19 @@ namespace model {
       /** @name Other */
       //@{
 
-      std::vector<MRTWeightingFactor> mrtWeightingFactors() const;
+      std::vector<MRTWeightingFactor> mRTWeightingFactors() const;
 
       unsigned int numberofMRTWeightingFactors() const;
 
-      boost::optional<unsigned> mrtWeightingFactorIndex(const People& people) const;
+      boost::optional<unsigned> mRTWeightingFactorIndex(const People& people) const;
 
       boost::optional<MRTWeightingFactor> getMRTWeightingFactor(unsigned groupIndex) const;
 
-      bool addMRTWeightingFactor(const MRTWeightingFactor& mrtWeightingFactor);
+      bool addMRTWeightingFactor(const MRTWeightingFactor& mRTWeightingFactor);
 
-      bool addMRTWeightingFactor(const People& people, double mrtWeightingFactor);
+      bool addMRTWeightingFactor(const People& people, double mRTWeightingFactor);
 
-      bool addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mrtWeightingFactors);
+      bool addMRTWeightingFactors(const std::vector<MRTWeightingFactor>& mRTWeightingFactors);
 
       bool removeMRTWeightingFactor(unsigned groupIndex);
 

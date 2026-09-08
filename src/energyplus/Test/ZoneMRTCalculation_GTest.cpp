@@ -165,10 +165,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation) {
 
   ZoneMRTCalculation zoneMRTCalculation = thermalZone.getZoneMRTCalculation();
   EXPECT_EQ(1u, zoneMRTCalculation.numberofMRTWeightingFactors());
-  std::vector<MRTWeightingFactor> mrtWeightingFactors = zoneMRTCalculation.mrtWeightingFactors();
-  ASSERT_EQ(1u, mrtWeightingFactors.size());
-  EXPECT_EQ("People 1", mrtWeightingFactors[0].people().nameString());
-  EXPECT_DOUBLE_EQ(0.5, mrtWeightingFactors[0].mrtWeightingFactor());
+  std::vector<MRTWeightingFactor> mRTWeightingFactors = zoneMRTCalculation.mRTWeightingFactors();
+  ASSERT_EQ(1u, mRTWeightingFactors.size());
+  EXPECT_EQ("People 1", mRTWeightingFactors[0].people().nameString());
+  EXPECT_DOUBLE_EQ(0.5, mRTWeightingFactors[0].mRTWeightingFactor());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneMRTCalculation_InvalidMRTWeightingFactor) {

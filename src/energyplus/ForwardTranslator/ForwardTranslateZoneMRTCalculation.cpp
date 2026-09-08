@@ -31,8 +31,8 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateZoneMRTCalculation(ZoneMRTCalculation& modelObject) {
     ThermalZone zone = modelObject.thermalZone();
 
-    std::vector<MRTWeightingFactor> mrtWeightingFactors = modelObject.mrtWeightingFactors();
-    if (mrtWeightingFactors.empty()) {
+    std::vector<MRTWeightingFactor> mRTWeightingFactors = modelObject.mRTWeightingFactors();
+    if (mRTWeightingFactors.empty()) {
       LOG(Warn,
           "ZoneMRTCalculation for zone '" << zone.nameString() << "' doesn't have at least one MRT weighting factor, it will not be translated.");
       return boost::none;
@@ -41,8 +41,8 @@ namespace energyplus {
     std::vector<std::pair<std::string, double>> translatedMRTWeightingFactors;
     double sum = 0.0;
 
-    for (const MRTWeightingFactor& mrtWeightingFactor : mrtWeightingFactors) {
-      People people = mrtWeightingFactor.people();
+    for (const MRTWeightingFactor& mRTWeightingFactor : mRTWeightingFactors) {
+      People people = mRTWeightingFactor.people();
 
       boost::optional<Space> space = people.space();
 
@@ -72,7 +72,7 @@ namespace energyplus {
       boost::optional<IdfObject> _people = translateAndMapModelObject(people);
 
       if (_people) {
-        double value = mrtWeightingFactor.mrtWeightingFactor();
+        double value = mRTWeightingFactor.mRTWeightingFactor();
         sum += value;
         if (sum > 1.0) {
           LOG(Error, "Could not translate an MRTWeightingFactor group for " << modelObject.briefDescription()

@@ -62,9 +62,9 @@ namespace energyplus {
       auto workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 
       boost::optional<WorkspaceObject> peopleTarget = workspaceGroup.getTarget(ZoneMRTCalculationExtensibleFields::PeopleName);
-      OptionalDouble mrtWeightingFactor = workspaceGroup.getDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor);
+      OptionalDouble mRTWeightingFactor = workspaceGroup.getDouble(ZoneMRTCalculationExtensibleFields::MRTWeightingFactor);
 
-      if (!peopleTarget || !mrtWeightingFactor) {
+      if (!peopleTarget || !mRTWeightingFactor) {
         LOG(Error, "Could not retrieve an MRTWeightingFactor group for " << workspaceObject.briefDescription() << ". Continuing with the rest.");
         continue;
       }
@@ -73,15 +73,15 @@ namespace energyplus {
       if (peopleModelObject) {
         if (boost::optional<People> people = peopleModelObject->optionalCast<People>()) {
           try {
-            MRTWeightingFactor weightingFactor(people.get(), mrtWeightingFactor.get());
+            MRTWeightingFactor weightingFactor(people.get(), mRTWeightingFactor.get());
             if (!zoneMRTCalculation.addMRTWeightingFactor(weightingFactor)) {
               LOG(Warn, "Adding MRTWeightingFactor in ThermalZone " << thermalZone->nameString()
-                                                                    << " failed for mrtWeightingFactor=" << weightingFactor << ".");
+                                                                    << " failed for mRTWeightingFactor=" << weightingFactor << ".");
             }
           } catch (...) {
             LOG(Error, "Could not create MRTWeightingFactor in ThermalZone " << thermalZone->nameString() << " for people=("
                                                                              << people->briefDescription()
-                                                                             << ") and mrtWeightingFactor=" << mrtWeightingFactor.get() << ".");
+                                                                             << ") and mRTWeightingFactor=" << mRTWeightingFactor.get() << ".");
           }
         } else {
           LOG(Error, "Could not translate People for an MRTWeightingFactor group in " << workspaceObject.briefDescription() << ".");
