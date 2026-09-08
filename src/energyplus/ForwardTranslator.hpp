@@ -441,6 +441,7 @@ namespace model {
   class SpaceVentilationDesignFlowRate;
   class SpaceType;
   class SteamEquipment;
+  class SteamEquipmentDefinition;
   class SubSurface;
   class Surface;
   class SurfaceControlMovableInsulation;
@@ -1493,6 +1494,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateStandardOpaqueMaterial(model::StandardOpaqueMaterial& modelObject);
 
     boost::optional<IdfObject> translateSteamEquipment(model::SteamEquipment& modelObject);
+    boost::optional<IdfObject> translateSteamEquipmentLegacy(model::SteamEquipment& modelObject);
+    boost::optional<IdfObject> translateSteamEquipmentInstance(model::SteamEquipment& modelObject);
+    boost::optional<IdfObject> translateSteamEquipmentDefinition(model::SteamEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateSubSurface(model::SubSurface& modelObject);
 

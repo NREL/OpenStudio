@@ -402,6 +402,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateStandardGlazing.cpp
   ForwardTranslator/ForwardTranslateStandardOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
+  ForwardTranslator/ForwardTranslateSteamEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
   ForwardTranslator/ForwardTranslateSurfaceControlMovableInsulation.cpp
@@ -842,6 +843,7 @@ set(${target_name}_test_src
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   Test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   Test/StandardGlazing_GTest.cpp
+  Test/SteamEquipment_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp

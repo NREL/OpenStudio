@@ -2956,7 +2956,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_SteamEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<SteamEquipmentDefinition>();
+        retVal = translateSteamEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Surface: {
