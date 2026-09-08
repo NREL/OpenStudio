@@ -205,6 +205,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateFoundationKivaSettings.cpp
   ForwardTranslator/ForwardTranslateGas.cpp
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
+  ForwardTranslator/ForwardTranslateGasEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
   ForwardTranslator/ForwardTranslateGeneratorPVWatts.cpp

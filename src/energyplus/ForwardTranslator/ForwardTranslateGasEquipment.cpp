@@ -21,6 +21,7 @@
 #include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/GasEquipment_FieldEnums.hxx>
+#include <utilities/idd/GasEquipment_Instance_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -33,6 +34,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateGasEquipment(GasEquipment& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateGasEquipmentLegacy(modelObject);
+    }
+    return translateGasEquipmentInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateGasEquipmentLegacy(GasEquipment& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::GasEquipment);
     m_idfObjects.push_back(idfObject);
 
@@ -90,6 +98,37 @@ namespace energyplus {
 
     if (!modelObject.isEndUseSubcategoryDefaulted()) {
       idfObject.setString(GasEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateGasEquipmentInstance(GasEquipment& modelObject) {
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GasEquipment_Instance, modelObject);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    GasEquipmentDefinition definition = modelObject.gasEquipmentDefinition();
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(GasEquipment_InstanceFields::GasEquipmentDefinitionName, definitionIdfObject_->nameString());
+
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(GasEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(GasEquipment_InstanceFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setDouble(GasEquipment_InstanceFields::Multiplier, modelObject.multiplier());
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(GasEquipment_InstanceFields::EndUseSubcategory, modelObject.endUseSubcategory());
     }
 
     return idfObject;

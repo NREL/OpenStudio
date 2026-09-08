@@ -241,6 +241,7 @@ namespace model {
   class FoundationKivaSettings;
   class Gas;
   class GasEquipment;
+  class GasEquipmentDefinition;
   class GasMixture;
   class GeneratorMicroTurbine;
   class GeneratorFuelCell;
@@ -1093,6 +1094,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateGas(model::Gas& modelObject);
 
     boost::optional<IdfObject> translateGasEquipment(model::GasEquipment& modelObject);
+    boost::optional<IdfObject> translateGasEquipmentLegacy(model::GasEquipment& modelObject);
+    boost::optional<IdfObject> translateGasEquipmentInstance(model::GasEquipment& modelObject);
+    boost::optional<IdfObject> translateGasEquipmentDefinition(model::GasEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateGasMixture(model::GasMixture& modelObject);
 

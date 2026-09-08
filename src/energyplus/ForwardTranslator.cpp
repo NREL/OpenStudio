@@ -2074,7 +2074,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_GasEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<GasEquipmentDefinition>();
+        retVal = translateGasEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_IlluminanceMap: {
