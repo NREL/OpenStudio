@@ -2463,7 +2463,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_People_Definition: {
-        // no-op
+        auto definition = modelObject.cast<PeopleDefinition>();
+        retVal = translatePeopleDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs: {

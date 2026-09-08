@@ -19,6 +19,8 @@
 #include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/People_FieldEnums.hxx>
+#include <utilities/idd/People_Instance_FieldEnums.hxx>
+#include <utilities/idd/People_Definition_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -133,6 +135,129 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_People) {
   EXPECT_EQ("AnkleLevelAirVelocitySchedule", peopleObject.getString(PeopleFields::AnkleLevelAirVelocityScheduleName).get());
   EXPECT_EQ(15.0, peopleObject.getDouble(PeopleFields::ColdStressTemperatureThreshold).get());
   EXPECT_EQ(31.0, peopleObject.getDouble(PeopleFields::HeatStressTemperatureThreshold).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_People_Instance) {
+  Model m;
+
+  ThermalZone zone(m);
+
+  Space space(m);
+  space.setThermalZone(zone);
+
+  PeopleDefinition pd(m);
+  EXPECT_TRUE(pd.setSpaceFloorAreaperPerson(10.0));
+  EXPECT_TRUE(pd.setThermalComfortModelType(0, "Fanger"));
+  EXPECT_TRUE(pd.setThermalComfortModelType(1, "Pierce"));
+  EXPECT_TRUE(pd.setFractionRadiant(0.35));
+  EXPECT_TRUE(pd.setSensibleHeatFraction(0.2));
+  EXPECT_TRUE(pd.setCarbonDioxideGenerationRate(3.6e-8));
+  EXPECT_TRUE(pd.setEnableASHRAE55ComfortWarnings(true));
+  EXPECT_TRUE(pd.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+
+  People p(pd);
+  EXPECT_TRUE(p.setSpace(space));
+
+  {
+    ScheduleConstant numPeopleSch(m);
+    numPeopleSch.setName("NumberofPeopleSchedule");
+    numPeopleSch.setValue(1);
+    EXPECT_TRUE(p.setNumberofPeopleSchedule(numPeopleSch));
+  }
+  {
+    ScheduleConstant activitySch(m);
+    activitySch.setName("ActivitySchedule");
+    activitySch.setValue(131.8);
+    EXPECT_TRUE(p.setActivityLevelSchedule(activitySch));
+  }
+  {
+
+    ScheduleConstant workEffSch(m);
+    workEffSch.setName("WorkEfficiencySchedule");
+    workEffSch.setValue(0.0);
+    EXPECT_TRUE(p.setWorkEfficiencySchedule(workEffSch));
+  }
+  {
+    ScheduleConstant cloSch(m);
+    cloSch.setName("ClothingInsulationSchedule");
+    cloSch.setValue(1.0);
+    EXPECT_TRUE(p.setClothingInsulationSchedule(cloSch));
+
+    ScheduleConstant cloSch2(m);
+    cloSch2.setName("CalculationMethodSchedule");
+    cloSch2.setValue(1.0);
+    EXPECT_TRUE(p.setClothingInsulationCalculationMethodSchedule(cloSch2));
+  }
+
+  {
+    ScheduleConstant airSch(m);
+    airSch.setName("AirVelocitySchedule");
+    airSch.setValue(0.137);
+    EXPECT_TRUE(p.setAirVelocitySchedule(airSch));
+  }
+
+  EXPECT_TRUE(p.setMultiplier(2));
+  {
+    ScheduleConstant ankleSch(m);
+    ankleSch.setName("AnkleLevelAirVelocitySchedule");
+    ankleSch.setValue(0.127);
+    EXPECT_TRUE(p.setAnkleLevelAirVelocitySchedule(ankleSch));
+  }
+
+  EXPECT_TRUE(p.setColdStressTemperatureThreshold(15.0));
+  EXPECT_TRUE(p.setHeatStressTemperatureThreshold(31.0));
+
+  ForwardTranslator ft;
+  ft.setExcludeSpaceLoadInstances(false);
+  Workspace workspace = ft.translateModel(m);
+  EXPECT_EQ(0, ft.errors().size());
+
+  // Legacy People object should not be translated at all
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::People).size());
+
+  std::vector<WorkspaceObject> definitionObjects = workspace.getObjectsByType(IddObjectType::People_Definition);
+  ASSERT_EQ(1u, definitionObjects.size());
+  auto& definitionObject = definitionObjects.front();
+
+  EXPECT_EQ(pd.nameString(), definitionObject.nameString());
+  EXPECT_EQ("Area/Person", definitionObject.getString(People_DefinitionFields::NumberofPeopleCalculationMethod).get());
+  EXPECT_TRUE(definitionObject.isEmpty(People_DefinitionFields::NumberofPeople));
+  EXPECT_TRUE(definitionObject.isEmpty(People_DefinitionFields::PeopleperFloorArea));
+  // Definition values are NOT multiplied
+  EXPECT_EQ(10.0, definitionObject.getDouble(People_DefinitionFields::FloorAreaperPerson).get());
+  EXPECT_EQ(0.35, definitionObject.getDouble(People_DefinitionFields::FractionRadiant).get());
+  EXPECT_EQ(0.2, definitionObject.getDouble(People_DefinitionFields::SensibleHeatFraction).get());
+  EXPECT_EQ(3.6e-08, definitionObject.getDouble(People_DefinitionFields::CarbonDioxideGenerationRate).get());
+  EXPECT_EQ("Yes", definitionObject.getString(People_DefinitionFields::EnableASHRAE55ComfortWarnings).get());
+  EXPECT_EQ("SurfaceWeighted", definitionObject.getString(People_DefinitionFields::MeanRadiantTemperatureCalculationType).get());
+  EXPECT_EQ("Fanger", definitionObject.getString(People_DefinitionFields::ThermalComfortModel1Type).get());
+  EXPECT_EQ("Pierce", definitionObject.getString(People_DefinitionFields::ThermalComfortModel2Type).get());
+
+  std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::People_Instance);
+  ASSERT_EQ(1u, instanceObjects.size());
+  auto& instanceObject = instanceObjects.front();
+
+  EXPECT_EQ(p.nameString(), instanceObject.nameString());
+
+  boost::optional<WorkspaceObject> definitionTarget_ = instanceObject.getTarget(People_InstanceFields::PeopleDefinitionName);
+  ASSERT_TRUE(definitionTarget_);
+  EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+  EXPECT_EQ("Space 1", instanceObject.getString(People_InstanceFields::ZoneorZoneListorSpaceorSpaceListName).get());
+  EXPECT_EQ("NumberofPeopleSchedule", instanceObject.getString(People_InstanceFields::NumberofPeopleScheduleName).get());
+  EXPECT_EQ("ActivitySchedule", instanceObject.getString(People_InstanceFields::ActivityLevelScheduleName).get());
+  EXPECT_EQ("WorkEfficiencySchedule", instanceObject.getString(People_InstanceFields::WorkEfficiencyScheduleName).get());
+
+  EXPECT_EQ("ClothingInsulationSchedule", instanceObject.getString(People_InstanceFields::ClothingInsulationCalculationMethod).get());
+  EXPECT_TRUE(instanceObject.isEmpty(People_InstanceFields::ClothingInsulationCalculationMethodScheduleName));
+  EXPECT_EQ("ClothingInsulationSchedule", instanceObject.getString(People_InstanceFields::ClothingInsulationScheduleName).get());
+
+  EXPECT_EQ("AirVelocitySchedule", instanceObject.getString(People_InstanceFields::AirVelocityScheduleName).get());
+  EXPECT_EQ(2.0, instanceObject.getDouble(People_InstanceFields::Multiplier).get());
+
+  EXPECT_EQ("AnkleLevelAirVelocitySchedule", instanceObject.getString(People_InstanceFields::AnkleLevelAirVelocityScheduleName).get());
+  EXPECT_EQ(15.0, instanceObject.getDouble(People_InstanceFields::ColdStressTemperatureThreshold).get());
+  EXPECT_EQ(31.0, instanceObject.getDouble(People_InstanceFields::HeatStressTemperatureThreshold).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_People) {
