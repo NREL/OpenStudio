@@ -50,12 +50,20 @@ TEST_F(ModelFixture, ComfortViewFactorAngles) {
   EXPECT_EQ(1u, comfortViewFactorAngles.numberofAngleFactors());
   EXPECT_DOUBLE_EQ(0.5, comfortViewFactorAngles.getAngleFactor(0)->angleFactor());
 
+  // New groups may bring the total to one, but cannot make it exceed one.
+  Surface otherSurfaceInModel(points, model);
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(otherSurfaceInModel, 0.5));
+  EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
+  Surface thirdSurfaceInModel(points, model);
+  EXPECT_FALSE(comfortViewFactorAngles.addAngleFactor(thirdSurfaceInModel, 0.01));
+  EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
+
   // A Surface in another Model cannot be referenced.
   Model otherModel;
   Surface otherSurface(points, otherModel);
   EXPECT_FALSE(comfortViewFactorAngles.angleFactorIndex(otherSurface));
   EXPECT_FALSE(comfortViewFactorAngles.addAngleFactor(otherSurface, 0.75));
-  EXPECT_EQ(1u, comfortViewFactorAngles.numberofAngleFactors());
+  EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
 
   PeopleDefinition peopleDefinition(model);
   EXPECT_FALSE(peopleDefinition.setSurfaceNameAngleFactorListName(otherSurface));
@@ -64,10 +72,11 @@ TEST_F(ModelFixture, ComfortViewFactorAngles) {
 
   // Indexed removal deletes one group.
   comfortViewFactorAngles.removeAngleFactor(0);
+  EXPECT_EQ(1u, comfortViewFactorAngles.numberofAngleFactors());
+  comfortViewFactorAngles.removeAngleFactor(0);
   EXPECT_EQ(0u, comfortViewFactorAngles.numberofAngleFactors());
 
   // Bulk addition supports distinct Surface groups, and clearing removes them all.
-  Surface otherSurfaceInModel(points, model);
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactors({AngleFactor(surface, 0.25), AngleFactor(otherSurfaceInModel, 0.75)}));
   EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
   EXPECT_DOUBLE_EQ(0.25, comfortViewFactorAngles.getAngleFactor(0)->angleFactor());

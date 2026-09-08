@@ -504,6 +504,10 @@ namespace model {
     return getImpl<detail::PeopleDefinition_Impl>()->isMeanRadiantTemperatureCalculationTypeDefaulted();
   }
 
+  boost::optional<ModelObject> PeopleDefinition::surfaceNameAngleFactorListName() const {
+    return getImpl<detail::PeopleDefinition_Impl>()->surfaceNameAngleFactorListName();
+  }
+
   boost::optional<std::string> PeopleDefinition::getThermalComfortModelType(int i) const {
     return getImpl<detail::PeopleDefinition_Impl>()->getThermalComfortModelType(i);
   }
@@ -562,6 +566,14 @@ namespace model {
 
   void PeopleDefinition::resetMeanRadiantTemperatureCalculationType() {
     getImpl<detail::PeopleDefinition_Impl>()->resetMeanRadiantTemperatureCalculationType();
+  }
+
+  bool PeopleDefinition::setSurfaceNameAngleFactorListName(const ModelObject& modelObject) {
+    return getImpl<detail::PeopleDefinition_Impl>()->setSurfaceNameAngleFactorListName(modelObject);
+  }
+
+  void PeopleDefinition::resetSurfaceNameAngleFactorListName() {
+    getImpl<detail::PeopleDefinition_Impl>()->resetSurfaceNameAngleFactorListName();
   }
 
   bool PeopleDefinition::pushThermalComfortModelType(const std::string& thermalComfortModelType) {

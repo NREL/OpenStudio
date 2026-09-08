@@ -15,6 +15,9 @@
 #include "../../model/Surface.hpp"
 #include "../../model/ThermalZone.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/geometry/Point3d.hpp"
+
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

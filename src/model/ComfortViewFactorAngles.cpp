@@ -138,6 +138,27 @@ namespace model {
         return false;
       }
       const auto existingIndex = angleFactorIndex(angleFactor.surface());
+
+      double sum = angleFactor.angleFactor();
+      for (unsigned i = 0; i < numberofAngleFactors(); ++i) {
+        if (existingIndex && (i == *existingIndex)) {
+          continue;
+        }
+        auto existingValue = getAngleFactorValue(i);
+        if (!existingValue || (*existingValue < 0.0) || (*existingValue > 1.0)) {
+          LOG(Error, "Cannot add an AngleFactor to " << briefDescription() << " because an existing Angle Factor is invalid.");
+          return false;
+        }
+        sum += *existingValue;
+      }
+
+      constexpr double tolerance = 0.000001;
+      if (sum > 1.0 + tolerance) {
+        LOG(Error, "Cannot add an AngleFactor to " << briefDescription() << " because the Angle Factors would sum to " << sum
+                                                      << ", which is greater than 1.");
+        return false;
+      }
+
       auto group = (existingIndex ? getExtensibleGroup(*existingIndex).cast<ModelExtensibleGroup>()
                   : pushExtensibleGroup({}, false).cast<ModelExtensibleGroup>());
       bool surfaceSet = group.setPointer(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName, angleFactor.surface().handle(), false);
