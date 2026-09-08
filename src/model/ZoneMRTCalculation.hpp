@@ -30,6 +30,9 @@ namespace model {
     People people() const;
     double mRTWeightingFactor() const;
 
+    bool operator==(const MRTWeightingFactor& other) const = default;
+    bool operator!=(const MRTWeightingFactor& other) const;
+
    private:
     People m_people;
     double m_mRTWeightingFactor;

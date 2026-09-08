@@ -47,6 +47,10 @@ namespace model {
     return m_mRTWeightingFactor;
   }
 
+  bool MRTWeightingFactor::operator!=(const MRTWeightingFactor& other) const {
+    return !operator==(other);
+  }
+
   std::ostream& operator<<(std::ostream& out, const openstudio::model::MRTWeightingFactor& mRTWeightingFactor) {
     out << "(people='" << mRTWeightingFactor.people().nameString()
         << "', MRT weighting factor=" << mRTWeightingFactor.mRTWeightingFactor() << ")";
