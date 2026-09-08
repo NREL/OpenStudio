@@ -581,6 +581,11 @@ namespace energyplus {
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
+    /** If excludeSpaceLoadInstances is false, translate SpaceLoads (People, Lights, ElectricEquipment, etc)
+    * to their EnergyPlus ...:Definition / ...:Instance object pairs instead of the legacy combined objects.
+    *  Use this at your own risks */
+    void setExcludeSpaceLoadInstances(bool excludeSpaceLoadInstances);
+
     //@}
 
    private:
