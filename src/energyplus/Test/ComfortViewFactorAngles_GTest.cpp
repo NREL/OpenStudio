@@ -12,6 +12,8 @@
 #include "../../model/ComfortViewFactorAngles.hpp"
 #include "../../model/ComfortViewFactorAngles_Impl.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/People.hpp"
+#include "../../model/PeopleDefinition.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/ThermalZone.hpp"
@@ -42,8 +44,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles) {
   comfortViewFactorAngles.setName("Angle Factors");
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
+  PeopleDefinition definition(model);
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  People people(definition);
+  EXPECT_TRUE(people.setSpace(space));
+
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
+  Workspace workspace = forwardTranslator.translateModel(model);
 
   const auto angleFactorObjects = workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles);
   ASSERT_EQ(1u, angleFactorObjects.size());
@@ -77,21 +84,34 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_InvalidSum) 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 0.5));
 
+  PeopleDefinition definition(model);
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  People people(definition);
+  EXPECT_TRUE(people.setSpace(space));
+
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
+  Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles).empty());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_UntranslatedSurface) {
   Model model;
+  ThermalZone zone(model);
+  Space space(model);
+  EXPECT_TRUE(space.setThermalZone(zone));
   Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
   Surface surface(points, model);
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
+  PeopleDefinition definition(model);
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  People people(definition);
+  EXPECT_TRUE(people.setSpace(space));
+
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
+  Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles).empty());
 }
 
@@ -111,8 +131,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_SkipsUntrans
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(translatedSurface, 1.0));
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(untranslatedSurface, 0.0));
 
+  PeopleDefinition definition(model);
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  People people(definition);
+  EXPECT_TRUE(people.setSpace(space));
+
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
+  Workspace workspace = forwardTranslator.translateModel(model);
 
   const auto angleFactorObjects = workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles);
   ASSERT_EQ(1u, angleFactorObjects.size());
