@@ -35,7 +35,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles) {
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   comfortViewFactorAngles.setName("Angle Factors");
-  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 1.0));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
@@ -61,7 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_InvalidSum) 
   EXPECT_TRUE(surface.setSpace(space));
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
-  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 0.5));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 0.5));
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);
@@ -74,7 +74,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_Untranslated
   Surface surface(points, model);
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
-  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 1.0));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModelObject(comfortViewFactorAngles);

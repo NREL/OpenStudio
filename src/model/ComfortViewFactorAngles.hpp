@@ -17,18 +17,25 @@ namespace model {
     class ComfortViewFactorAngles_Impl;
   }
 
-  class MODEL_API ComfortViewFactorAngle
+  class MODEL_API AngleFactor
   {
    public:
-    ComfortViewFactorAngle(const Surface& surface, double angleFactor);
+    AngleFactor(const Surface& surface, double angleFactor);
 
     Surface surface() const;
     double angleFactor() const;
 
+    bool operator==(const AngleFactor& other) const = default;
+    bool operator!=(const AngleFactor& other) const;
+
    private:
     Surface m_surface;
     double m_angleFactor;
+    REGISTER_LOGGER("openstudio.model.AngleFactor");
   };
+
+  /** \relates AngleFactor */
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::AngleFactor& angleFactor);
 
   class MODEL_API ComfortViewFactorAngles : public ModelObject
   {
@@ -39,12 +46,12 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    std::vector<ComfortViewFactorAngle> comfortViewFactorAngles() const;
+    std::vector<AngleFactor> comfortViewFactorAngles() const;
     unsigned int numberofComfortViewFactorAngles() const;
-    boost::optional<ComfortViewFactorAngle> getComfortViewFactorAngle(unsigned groupIndex) const;
+    boost::optional<AngleFactor> getComfortViewFactorAngle(unsigned groupIndex) const;
 
-    bool addComfortViewFactorAngle(const ComfortViewFactorAngle& comfortViewFactorAngle);
-    bool addComfortViewFactorAngle(const Surface& surface, double angleFactor);
+    bool addAngleFactor(const AngleFactor& angleFactor);
+    bool addAngleFactor(const Surface& surface, double angleFactor);
     void removeComfortViewFactorAngle(int groupIndex);
     void removeAllComfortViewFactorAngles();
 

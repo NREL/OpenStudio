@@ -4048,6 +4048,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
+    REGISTER_CONSTRUCTOR(ComfortViewFactorAngles);
     REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
     REGISTER_CONSTRUCTOR(ComponentData);
     REGISTER_CONSTRUCTOR(Connection);
@@ -4479,7 +4480,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
     REGISTER_CONSTRUCTOR(ZoneMixing);
-    REGISTER_CONSTRUCTOR(ComfortViewFactorAngles);
     REGISTER_CONSTRUCTOR(ZoneMRTCalculation);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
@@ -4634,6 +4634,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
     REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
+    REGISTER_COPYCONSTRUCTORS(ComfortViewFactorAngles);
     REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
     REGISTER_COPYCONSTRUCTORS(ComponentData);
     REGISTER_COPYCONSTRUCTORS(Connection);

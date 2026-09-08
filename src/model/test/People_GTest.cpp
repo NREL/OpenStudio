@@ -54,7 +54,7 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   Surface surface(points, model);
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
-  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 1.0));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
   EXPECT_EQ(1u, comfortViewFactorAngles.numberofComfortViewFactorAngles());
   auto comfortViewFactorAngle = comfortViewFactorAngles.getComfortViewFactorAngle(0);
   ASSERT_TRUE(comfortViewFactorAngle);

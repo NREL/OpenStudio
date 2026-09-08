@@ -12,7 +12,7 @@
 namespace openstudio {
 namespace model {
 
-  class ComfortViewFactorAngle;
+  class AngleFactor;
   class Surface;
 
   namespace detail {
@@ -28,12 +28,12 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
       virtual IddObjectType iddObjectType() const override;
 
-      std::vector<ComfortViewFactorAngle> comfortViewFactorAngles() const;
+      std::vector<AngleFactor> comfortViewFactorAngles() const;
       unsigned int numberofComfortViewFactorAngles() const;
-      boost::optional<ComfortViewFactorAngle> getComfortViewFactorAngle(unsigned groupIndex) const;
+      boost::optional<AngleFactor> getComfortViewFactorAngle(unsigned groupIndex) const;
 
-      bool addComfortViewFactorAngle(const ComfortViewFactorAngle& comfortViewFactorAngle);
-      bool addComfortViewFactorAngle(const Surface& surface, double angleFactor);
+      bool addAngleFactor(const AngleFactor& angleFactor);
+      bool addAngleFactor(const Surface& surface, double angleFactor);
       bool removeComfortViewFactorAngle(unsigned groupIndex);
       void removeAllComfortViewFactorAngles();
     };

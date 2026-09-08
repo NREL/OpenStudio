@@ -37,7 +37,7 @@ namespace energyplus {
       }
       if (auto modelObject = translateAndMapWorkspaceObject(*surfaceTarget)) {
         if (auto surface = modelObject->optionalCast<Surface>()) {
-          comfortViewFactorAngles.addComfortViewFactorAngle(*surface, *angleFactor);
+          comfortViewFactorAngles.addAngleFactor(*surface, *angleFactor);
         }
       }
     }

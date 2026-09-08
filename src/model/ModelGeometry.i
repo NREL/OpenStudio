@@ -199,6 +199,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::AngleFactor {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -254,7 +263,7 @@ MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
-MODELOBJECT_TEMPLATES(ComfortViewFactorAngle);
+MODELOBJECT_TEMPLATES(AngleFactor);
 MODELOBJECT_TEMPLATES(ComfortViewFactorAngles);
 MODELOBJECT_TEMPLATES(MRTWeightingFactor); // Helper class defined in ZoneMRTCalculation
 MODELOBJECT_TEMPLATES(ZoneMRTCalculation);

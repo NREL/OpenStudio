@@ -7,7 +7,9 @@
 #include "PeopleDefinition_Impl.hpp"
 
 #include "ComfortViewFactorAngles.hpp"
+#include "ComfortViewFactorAngles_Impl.hpp"
 #include "Surface.hpp"
+#include "Surface_Impl.hpp"
 
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -133,7 +135,7 @@ namespace model {
     }
 
     boost::optional<ModelObject> PeopleDefinition_Impl::surfaceNameAngleFactorListName() const {
-      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_People_DefinitionFields::SurfaceNameAngleFactorListName);
+      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_People_DefinitionFields::SurfaceName_AngleFactorListName);
     }
 
     boost::optional<std::string> PeopleDefinition_Impl::getThermalComfortModelType(int i) const {
@@ -287,11 +289,11 @@ namespace model {
       if (!setMeanRadiantTemperatureCalculationType(mrtType)) {
         return false;
       }
-      return setPointer(OS_People_DefinitionFields::SurfaceNameAngleFactorListName, modelObject.handle());
+      return setPointer(OS_People_DefinitionFields::SurfaceName_AngleFactorListName, modelObject.handle());
     }
 
     void PeopleDefinition_Impl::resetSurfaceNameAngleFactorListName() {
-      bool result = setString(OS_People_DefinitionFields::SurfaceNameAngleFactorListName, "");
+      bool result = setString(OS_People_DefinitionFields::SurfaceName_AngleFactorListName, "");
       OS_ASSERT(result);
     }
 

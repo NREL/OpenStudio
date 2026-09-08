@@ -150,7 +150,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_People_AngleFactor) {
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   comfortViewFactorAngles.setName("Angle Factors");
-  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 1.0));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
   PeopleDefinition definition(model);
   EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
