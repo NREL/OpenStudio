@@ -2050,7 +2050,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_HotWaterEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<HotWaterEquipmentDefinition>();
+        retVal = translateHotWaterEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Humidifier_Steam_Electric: {
@@ -2281,7 +2282,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_OtherEquipment_Definition: {
-        //no-op
+        auto definition = modelObject.cast<OtherEquipmentDefinition>();
+        retVal = translateOtherEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_PlantLoop: {

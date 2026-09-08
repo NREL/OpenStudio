@@ -276,6 +276,7 @@ namespace model {
   class HeatPumpPlantLoopEIRCooling;
   class HeatPumpPlantLoopEIRHeating;
   class HotWaterEquipment;
+  class HotWaterEquipmentDefinition;
   class HumidifierSteamElectric;
   class HumidifierSteamGas;
   class IlluminanceMap;
@@ -298,6 +299,7 @@ namespace model {
   class MeterCustomDecrement;
   class Node;
   class OtherEquipment;
+  class OtherEquipmentDefinition;
   class OutsideSurfaceConvectionAlgorithm;
   class OutputControlFiles;
   class OutputControlReportingTolerances;
@@ -1160,6 +1162,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateHumidifierSteamGas(model::HumidifierSteamGas& modelObject);
 
     boost::optional<IdfObject> translateHotWaterEquipment(model::HotWaterEquipment& modelObject);
+    boost::optional<IdfObject> translateHotWaterEquipmentLegacy(model::HotWaterEquipment& modelObject);
+    boost::optional<IdfObject> translateHotWaterEquipmentInstance(model::HotWaterEquipment& modelObject);
+    boost::optional<IdfObject> translateHotWaterEquipmentDefinition(model::HotWaterEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateIlluminanceMap(model::IlluminanceMap& modelObject);
 
@@ -1201,6 +1206,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateNode(model::Node& modelObject);
 
     boost::optional<IdfObject> translateOtherEquipment(model::OtherEquipment& modelObject);
+    boost::optional<IdfObject> translateOtherEquipmentLegacy(model::OtherEquipment& modelObject);
+    boost::optional<IdfObject> translateOtherEquipmentInstance(model::OtherEquipment& modelObject);
+    boost::optional<IdfObject> translateOtherEquipmentDefinition(model::OtherEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm(model::OutsideSurfaceConvectionAlgorithm& modelObject);
 

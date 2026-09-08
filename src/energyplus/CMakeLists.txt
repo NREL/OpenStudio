@@ -238,6 +238,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRCooling.cpp
   ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRHeating.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
+  ForwardTranslator/ForwardTranslateHotWaterEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamGas.cpp
   ForwardTranslator/ForwardTranslateIlluminanceMap.cpp
@@ -260,6 +261,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
+  ForwardTranslator/ForwardTranslateOtherEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
@@ -795,6 +797,7 @@ set(${target_name}_test_src
   Test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
   Test/MaterialPropertyPhaseChange_GTest.cpp
   Test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
+  Test/OtherEquipment_GTest.cpp
   Test/OutputControlFiles_GTest.cpp
   Test/OutputControlReportingTolerances_GTest.cpp
   Test/OutputControlResilienceSummaries_GTest.cpp

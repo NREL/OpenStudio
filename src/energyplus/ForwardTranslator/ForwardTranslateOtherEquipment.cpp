@@ -21,6 +21,7 @@
 #include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/OtherEquipment_FieldEnums.hxx>
+#include <utilities/idd/OtherEquipment_Instance_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -33,6 +34,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOtherEquipment(OtherEquipment& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateOtherEquipmentLegacy(modelObject);
+    }
+    return translateOtherEquipmentInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateOtherEquipmentLegacy(OtherEquipment& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::OtherEquipment);
     m_idfObjects.push_back(idfObject);
 
@@ -87,6 +95,39 @@ namespace energyplus {
 
     if (!modelObject.isEndUseSubcategoryDefaulted()) {
       idfObject.setString(OtherEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateOtherEquipmentInstance(OtherEquipment& modelObject) {
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::OtherEquipment_Instance, modelObject);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    OtherEquipmentDefinition definition = modelObject.otherEquipmentDefinition();
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(OtherEquipment_InstanceFields::OtherEquipmentDefinitionName, definitionIdfObject_->nameString());
+
+    idfObject.setString(OtherEquipment_InstanceFields::FuelType, modelObject.fuelType());
+
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(OtherEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(OtherEquipment_InstanceFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setDouble(OtherEquipment_InstanceFields::Multiplier, modelObject.multiplier());
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(OtherEquipment_InstanceFields::EndUseSubcategory, modelObject.endUseSubcategory());
     }
 
     return idfObject;
