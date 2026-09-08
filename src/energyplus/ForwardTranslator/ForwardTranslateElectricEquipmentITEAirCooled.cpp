@@ -36,6 +36,7 @@
 #include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/ElectricEquipment_ITE_AirCooled_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_ITE_AirCooled_Instance_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/core/ASCIIStrings.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -50,6 +51,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCooled(ElectricEquipmentITEAirCooled& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateElectricEquipmentITEAirCooledLegacy(modelObject);
+    }
+    return translateElectricEquipmentITEAirCooledInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCooledLegacy(ElectricEquipmentITEAirCooled& modelObject) {
 
     boost::optional<Space> space_ = modelObject.space();
     if (!space_) {
@@ -260,6 +268,140 @@ namespace energyplus {
     if (returnTemperatureDifferenceSchedule) {
       idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ReturnTemperatureDifferenceSchedule,
                           returnTemperatureDifferenceSchedule->name().get());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCooledInstance(ElectricEquipmentITEAirCooled& modelObject) {
+
+    boost::optional<Space> space_ = modelObject.space();
+    if (!space_) {
+      // This shouldn't happen
+      LOG(Warn, modelObject.briefDescription() << " not assigned to a valid space.");
+      return boost::none;
+    }
+
+    auto space = space_.get();
+
+    boost::optional<ThermalZone> thermalZone_ = space.thermalZone();
+    if (!thermalZone_) {
+      // This shouldn't happen
+      LOG(Warn, modelObject.briefDescription() << " not assigned to a valid thermal Zone.");
+      return boost::none;
+    }
+    auto thermalZone = thermalZone_.get();
+
+    IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment_ITE_AirCooled_Instance);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    ElectricEquipmentITEAirCooledDefinition definition = modelObject.electricEquipmentITEAirCooledDefinition();
+
+    // Assign object to Zone/Space
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
+    idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::ZoneorSpaceName, parentIdfObject.nameString());
+
+    // attach the supply air node to zone if there is an available supply air node
+    // search airloop first
+    if (auto mo = thermalZone.inletPortList().airLoopHVACModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::SupplyAirNodeName, node->name().get());
+      }
+    } else {
+      // if no airloop, just get a supply node of the thermal zone (could be zoneHVAC)
+      if (!thermalZone.inletPortList().modelObjects().empty()) {
+        std::vector<ModelObject> objects = thermalZone.inletPortList().modelObjects();
+        for (const auto& elem : objects) {
+          if (auto node = elem.optionalCast<Node>()) {
+            idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::SupplyAirNodeName, node->name().get());
+          }
+        }
+      }
+    }
+
+    // apply constraint #1: For multiple ITE objects defined for one zone, the same calculation method should apply.
+    // Note: since the Definition is now shared/deduped across Instances, only the first Instance translated for a
+    // given Definition can effectively drive this correction on the shared ElectricEquipment:ITE:AirCooled:Definition.
+    std::set<std::string> methods;
+
+    auto caseInsensitiveMethodForITE = [](const ElectricEquipmentITEAirCooled& ite) {
+      return openstudio::ascii_to_lower_copy(ite.electricEquipmentITEAirCooledDefinition().airFlowCalculationMethod());
+    };
+
+    if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+      // One Zone = One Space at this point
+      auto ites = space.electricEquipmentITEAirCooled();
+      std::transform(ites.begin(), ites.end(), std::inserter(methods, methods.begin()), caseInsensitiveMethodForITE);
+    } else {
+      // Does this constraint apply per Space? Per the I/O ref I think it applies for the entire zone.
+      // I/O 9.6.0: "For multiple ITE objects defined for one zone, the same calculation method should apply."
+      for (const auto& s : thermalZone.spaces()) {
+        auto ites = s.electricEquipmentITEAirCooled();
+        std::transform(ites.begin(), ites.end(), std::inserter(methods, methods.begin()), caseInsensitiveMethodForITE);
+      }
+    }
+
+    std::string thisMethod = definition.airFlowCalculationMethod();
+    if ((methods.size() > 1) && !openstudio::istringEqual(thisMethod, "FlowControlWithApproachTemperatures")) {
+      definition.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures");
+      LOG(Warn, parentIdfObject.briefDescription() << " has multiple IT equipment with different air flow calculation methods, "
+                                                   << modelObject.briefDescription() << " is re-assigned to 'FlowControlWithApproachTemperatures'");
+    }
+
+    // Constraint #2:The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.
+    if (istringEqual(thisMethod, "FlowControlWithApproachTemperatures")) {
+      auto terminal = thermalZone.airLoopHVACTerminal();
+      bool isTerminalOk =
+        (terminal && (terminal->optionalCast<AirTerminalSingleDuctVAVReheat>() || terminal->optionalCast<AirTerminalSingleDuctVAVNoReheat>()));
+
+      if (!isTerminalOk) {
+        LOG(
+          Error,
+          modelObject.briefDescription() << " will not be translated. "
+                                            " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
+        return boost::none;
+      }
+    }
+
+    // After pre-checking gets through, add the object to the translation list
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setName(modelObject.nameString());
+
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::ElectricEquipmentITEAirCooledDefinitionName,
+                        definitionIdfObject_->nameString());
+
+    idfObject.setDouble(ElectricEquipment_ITE_AirCooled_InstanceFields::Multiplier, modelObject.multiplier());
+
+    boost::optional<Schedule> designPowerInputSchedule = modelObject.designPowerInputSchedule();
+    if (designPowerInputSchedule) {
+      idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::DesignPowerInputScheduleName, designPowerInputSchedule->name().get());
+    }
+
+    boost::optional<Schedule> cPULoadingSchedule = modelObject.cPULoadingSchedule();
+    if (cPULoadingSchedule) {
+      idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::CPULoadingScheduleName, cPULoadingSchedule->name().get());
+    }
+
+    OptionalString s = modelObject.cPUEndUseSubcategory();
+    if (s) {
+      idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::CPUEndUseSubcategory, modelObject.cPUEndUseSubcategory());
+    }
+
+    s = modelObject.fanEndUseSubcategory();
+    if (s) {
+      idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::FanEndUseSubcategory, modelObject.fanEndUseSubcategory());
+    }
+
+    s = modelObject.electricPowerSupplyEndUseSubcategory();
+    if (s) {
+      idfObject.setString(ElectricEquipment_ITE_AirCooled_InstanceFields::ElectricPowerSupplyEndUseSubcategory,
+                          modelObject.electricPowerSupplyEndUseSubcategory());
     }
 
     return idfObject;

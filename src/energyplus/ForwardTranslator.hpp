@@ -188,6 +188,7 @@ namespace model {
   class ElectricEquipment;
   class ElectricEquipmentDefinition;
   class ElectricEquipmentITEAirCooled;
+  class ElectricEquipmentITEAirCooledDefinition;
   class ElectricLoadCenterDistribution;
   class ElectricLoadCenterInverterLookUpTable;
   class ElectricLoadCenterInverterSimple;
@@ -982,6 +983,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateElectricEquipmentDefinition(model::ElectricEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateElectricEquipmentITEAirCooled(model::ElectricEquipmentITEAirCooled& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentITEAirCooledLegacy(model::ElectricEquipmentITEAirCooled& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentITEAirCooledInstance(model::ElectricEquipmentITEAirCooled& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentITEAirCooledDefinition(model::ElectricEquipmentITEAirCooledDefinition& modelObject);
 
     boost::optional<IdfObject> translateElectricLoadCenterDistribution(model::ElectricLoadCenterDistribution& modelObject);
 

@@ -152,6 +152,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
   ForwardTranslator/ForwardTranslateElectricEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
+  ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooledDefinition.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp

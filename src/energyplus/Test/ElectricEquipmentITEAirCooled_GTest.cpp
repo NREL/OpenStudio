@@ -57,6 +57,8 @@
 #include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/ElectricEquipment_ITE_AirCooled_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_ITE_AirCooled_Instance_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_ITE_AirCooled_Definition_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/ComponentCost_LineItem_FieldEnums.hxx>
@@ -142,6 +144,57 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
 
   //model.save(toPath("./ITE_translator_Space.osm"), true);
   //workspace.save(toPath("./ITE_translator_Space.idf"), true);
+}
+
+// Same as ForwardTranslator_ElectricEquipmentITEAirCooled_Space, but with excludeSpaceLoadInstances(false):
+// translates to ElectricEquipment:ITE:AirCooled:Instance + ElectricEquipment:ITE:AirCooled:Definition instead
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Instance_Basic) {
+  Model model;
+
+  ThermalZone thermalZone(model);
+  Space space(model);
+  space.setThermalZone(thermalZone);
+
+  ElectricEquipmentITEAirCooledDefinition definition(model);
+  definition.setDesignLevel(100.0);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
+  electricEquipmentITEAirCooled.setSpace(space);
+  electricEquipmentITEAirCooled.setMultiplier(2.0);
+  EXPECT_TRUE(electricEquipmentITEAirCooled.setCPUEndUseSubcategory("My CPU End Use"));
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+  forwardTranslator.setExcludeSpaceLoadInstances(false);
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0, forwardTranslator.errors().size());
+
+  // Legacy ElectricEquipment:ITE:AirCooled object should not be translated at all
+  ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Definition).size());
+  WorkspaceObject definitionObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Definition)[0];
+  EXPECT_EQ(definition.nameString(), definitionObject.nameString());
+  // Definition values are NOT multiplied
+  EXPECT_EQ(100.0, definitionObject.getDouble(ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperUnit, true).get());
+  ASSERT_TRUE(
+    definitionObject.getString(ElectricEquipment_ITE_AirCooled_DefinitionFields::CPUPowerInputFunctionofLoadingandAirTemperatureCurveName, true));
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Instance).size());
+  WorkspaceObject instanceObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Instance)[0];
+  EXPECT_EQ(electricEquipmentITEAirCooled.nameString(), instanceObject.nameString());
+
+  boost::optional<WorkspaceObject> definitionTarget_ =
+    instanceObject.getTarget(ElectricEquipment_ITE_AirCooled_InstanceFields::ElectricEquipmentITEAirCooledDefinitionName);
+  ASSERT_TRUE(definitionTarget_);
+  EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+  ASSERT_TRUE(instanceObject.getTarget(ElectricEquipment_ITE_AirCooled_InstanceFields::ZoneorSpaceName));
+  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+  EXPECT_EQ(zoneObject.handle(), instanceObject.getTarget(ElectricEquipment_ITE_AirCooled_InstanceFields::ZoneorSpaceName)->handle());
+
+  EXPECT_EQ(2.0, instanceObject.getDouble(ElectricEquipment_ITE_AirCooled_InstanceFields::Multiplier, true).get());
+  EXPECT_EQ("My CPU End Use", instanceObject.getString(ElectricEquipment_ITE_AirCooled_InstanceFields::CPUEndUseSubcategory, true).get());
 }
 
 // OS has IT object and definition, and a valid spaceType associated => Expected: to be translated, spacetype in OS but space in E+

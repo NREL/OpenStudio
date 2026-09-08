@@ -1589,7 +1589,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition: {
-        // no-op
+        auto definition = modelObject.cast<ElectricEquipmentITEAirCooledDefinition>();
+        retVal = translateElectricEquipmentITEAirCooledDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution: {
