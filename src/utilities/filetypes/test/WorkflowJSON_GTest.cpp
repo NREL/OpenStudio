@@ -1101,6 +1101,7 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
     EXPECT_FALSE(ftOptions.excludeHTMLOutputReport());
     EXPECT_FALSE(ftOptions.excludeVariableDictionary());
     EXPECT_FALSE(ftOptions.excludeSpaceTranslation());
+    EXPECT_TRUE(ftOptions.excludeSpaceLoadInstances());
   }
 
   // This makes no sense, but we picked 3 spaces for some reason... return string is formated with wbuilder["indentation"] = "   ";
@@ -1126,6 +1127,7 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
     EXPECT_TRUE(ftOptions.excludeHTMLOutputReport());
     EXPECT_TRUE(ftOptions.excludeVariableDictionary());
     EXPECT_TRUE(ftOptions.excludeSpaceTranslation());
+    EXPECT_TRUE(ftOptions.excludeSpaceLoadInstances());  // Not in ft_options JSON, so still defaulted (default is also true)
   }
 
   workflow.setRunOptions(options);
@@ -1358,6 +1360,19 @@ TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
   ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+
+  // Ctor Default
+  ASSERT_TRUE(ftOptions.excludeSpaceLoadInstances());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeSpaceLoadInstances(false);
+  ASSERT_FALSE(ftOptions.excludeSpaceLoadInstances());
+  ASSERT_FALSE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+  // Reset
+  ftOptions.resetExcludeSpaceLoadInstances();
+  ASSERT_TRUE(ftOptions.excludeSpaceLoadInstances());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
 }
 
 TEST(Filetypes, RunOptions_overrideValuesWith) {
@@ -1396,6 +1411,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
   ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+  ASSERT_TRUE(ftOptions.excludeSpaceLoadInstances());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
 
   RunOptions otherRunOptions;
   ForwardTranslatorOptions otherftOptions = otherRunOptions.forwardTranslatorOptions();
@@ -1437,6 +1454,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
   ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
+  ASSERT_TRUE(ftOptions.excludeSpaceLoadInstances());
+  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
 }
 
 TEST(Filetypes, WorkflowJSON_ValidateMeasures_Ok) {
