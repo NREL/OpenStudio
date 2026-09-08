@@ -72,6 +72,8 @@ namespace model {
 
       bool isMeanRadiantTemperatureCalculationTypeDefaulted() const;
 
+      boost::optional<ModelObject> surfaceNameAngleFactorListName() const;
+
       /** Return the thermal comfort model type in extensible group i. Indexing starts at 0, and
      *  i should be less than numThermalComfortModelTypes. */
       boost::optional<std::string> getThermalComfortModelType(int i) const;
@@ -108,6 +110,10 @@ namespace model {
       bool setMeanRadiantTemperatureCalculationType(const std::string& meanRadiantTemperatureCalculationType);
 
       void resetMeanRadiantTemperatureCalculationType();
+
+      bool setSurfaceNameAngleFactorListName(const ModelObject& modelObject);
+
+      void resetSurfaceNameAngleFactorListName();
 
       bool pushThermalComfortModelType(const std::string& thermalComfortModelType);
 

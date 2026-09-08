@@ -6,6 +6,9 @@
 #include "PeopleDefinition.hpp"
 #include "PeopleDefinition_Impl.hpp"
 
+#include "ComfortViewFactorAngles.hpp"
+#include "Surface.hpp"
+
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -127,6 +130,10 @@ namespace model {
 
     bool PeopleDefinition_Impl::isMeanRadiantTemperatureCalculationTypeDefaulted() const {
       return isEmpty(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType);
+    }
+
+    boost::optional<ModelObject> PeopleDefinition_Impl::surfaceNameAngleFactorListName() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_People_DefinitionFields::SurfaceNameAngleFactorListName);
     }
 
     boost::optional<std::string> PeopleDefinition_Impl::getThermalComfortModelType(int i) const {
@@ -251,11 +258,40 @@ namespace model {
       const std::string mrtType =
         istringEqual("ZoneAveraged", meanRadiantTemperatureCalculationType) ? "EnclosureAveraged" : meanRadiantTemperatureCalculationType;
       bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, mrtType);
+      if (result && istringEqual(mrtType, "EnclosureAveraged")) {
+        resetSurfaceNameAngleFactorListName();
+      }
       return result;
     }
 
     void PeopleDefinition_Impl::resetMeanRadiantTemperatureCalculationType() {
       bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, "");
+      OS_ASSERT(result);
+    }
+
+    bool PeopleDefinition_Impl::setSurfaceNameAngleFactorListName(const ModelObject& modelObject) {
+      if (modelObject.model() != model()) {
+        LOG(Error, "Surface Name/Angle Factor List Name must reference an object in the same Model.");
+        return false;
+      }
+
+      std::string mrtType;
+      if (modelObject.optionalCast<Surface>()) {
+        mrtType = "SurfaceWeighted";
+      } else if (modelObject.optionalCast<ComfortViewFactorAngles>()) {
+        mrtType = "AngleFactor";
+      } else {
+        LOG(Error, "Surface Name/Angle Factor List Name must reference a Surface or ComfortViewFactorAngles object.");
+        return false;
+      }
+      if (!setMeanRadiantTemperatureCalculationType(mrtType)) {
+        return false;
+      }
+      return setPointer(OS_People_DefinitionFields::SurfaceNameAngleFactorListName, modelObject.handle());
+    }
+
+    void PeopleDefinition_Impl::resetSurfaceNameAngleFactorListName() {
+      bool result = setString(OS_People_DefinitionFields::SurfaceNameAngleFactorListName, "");
       OS_ASSERT(result);
     }
 

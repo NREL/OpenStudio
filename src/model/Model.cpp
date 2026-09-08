@@ -4479,6 +4479,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
     REGISTER_CONSTRUCTOR(ZoneMixing);
+    REGISTER_CONSTRUCTOR(ComfortViewFactorAngles);
     REGISTER_CONSTRUCTOR(ZoneMRTCalculation);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);

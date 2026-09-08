@@ -254,6 +254,8 @@ MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
+MODELOBJECT_TEMPLATES(ComfortViewFactorAngle);
+MODELOBJECT_TEMPLATES(ComfortViewFactorAngles);
 MODELOBJECT_TEMPLATES(MRTWeightingFactor); // Helper class defined in ZoneMRTCalculation
 MODELOBJECT_TEMPLATES(ZoneMRTCalculation);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);

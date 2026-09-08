@@ -565,6 +565,7 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneMixing.hpp"
+#include "ComfortViewFactorAngles.hpp"
 #include "ZoneMRTCalculation.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"

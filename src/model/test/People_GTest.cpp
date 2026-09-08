@@ -12,6 +12,8 @@
 #include "../People_Impl.hpp"
 #include "../PeopleDefinition.hpp"
 #include "../PeopleDefinition_Impl.hpp"
+#include "../ComfortViewFactorAngles.hpp"
+#include "../Surface.hpp"
 
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleDay.hpp"
@@ -48,12 +50,29 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   EXPECT_NE("ZoneAveraged", definition.meanRadiantTemperatureCalculationType());
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
 
-  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
+  Surface surface(points, model);
+
+  ComfortViewFactorAngles comfortViewFactorAngles(model);
+  EXPECT_TRUE(comfortViewFactorAngles.addComfortViewFactorAngle(surface, 1.0));
+  EXPECT_EQ(1u, comfortViewFactorAngles.numberofComfortViewFactorAngles());
+  auto comfortViewFactorAngle = comfortViewFactorAngles.getComfortViewFactorAngle(0);
+  ASSERT_TRUE(comfortViewFactorAngle);
+  EXPECT_EQ(surface.handle(), comfortViewFactorAngle->surface().handle());
+  EXPECT_DOUBLE_EQ(1.0, comfortViewFactorAngle->angleFactor());
+
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  EXPECT_EQ("AngleFactor", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_TRUE(definition.surfaceNameAngleFactorListName());
+
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(surface));
   EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_TRUE(definition.surfaceNameAngleFactorListName());
 
   // Backward compat
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("ZoneAveraged"));
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_FALSE(definition.surfaceNameAngleFactorListName());
 
   EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
