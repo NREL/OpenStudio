@@ -10309,7 +10309,49 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
-        // No-op
+      } else if (iddname == "OS:People:Definition") {
+
+        // 1 Field has been added from 3.11.0 to 3.12.0:
+        // ------------------------------------------------
+        // * Surface Name/Angle Factor List Name * 11
+
+        auto iddObject = idd_3_12_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:People") {
+
+        // 1 Field has been removed from 3.11.0 to 3.12.0:
+        // --------------------------------------------------
+        // * Surface Name/Angle Factor List Name * 6
+
+        auto iddObject = idd_3_12_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else if (i > 6) {
+              newObject.setString(i - 1, value.get());
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }

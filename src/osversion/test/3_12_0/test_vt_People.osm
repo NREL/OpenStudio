@@ -1,0 +1,35 @@
+OS:Version,
+  {b3d95565-1790-4500-aab1-06a7e08376b0}, !- Handle
+  3.11.0;                                 !- Version Identifier
+
+OS:People:Definition,
+  {4af0ce1e-eaa2-4451-b35d-777777777777}, !- Handle
+  People Definition 1,                    !- Name
+  People,                                  !- Number of People Calculation Method
+  1,                                      !- Number of People
+  ,                                       !- People per Space Floor Area
+  ,                                       !- Space Floor Area per Person
+  0.3,                                    !- Fraction Radiant
+  autocalculate,                          !- Sensible Heat Fraction
+  3.82e-08,                               !- Carbon Dioxide Generation Rate
+  No,                                     !- Enable ASHRAE 55 Comfort Warnings
+  SurfaceWeighted,                        !- Mean Radiant Temperature Calculation Type
+  Fanger;                                 !- Thermal Comfort Model 1 Type
+
+OS:People,
+  {c69a6d60-b110-4322-8888-999999999999}, !- Handle
+  People 1,                               !- Name
+  {4af0ce1e-eaa2-4451-b35d-777777777777}, !- People Definition Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Number of People Schedule Name
+  ,                                       !- Activity Level Schedule Name
+  ,                                       !- Surface Name/Angle Factor List Name
+  ,                                       !- Work Efficiency Schedule Name
+  ClothingInsulationSchedule,             !- Clothing Insulation Calculation Method
+  ,                                       !- Clothing Insulation Calculation Method Schedule Name
+  ,                                       !- Clothing Insulation Schedule Name
+  ,                                       !- Air Velocity Schedule Name
+  1,                                      !- Multiplier
+  ,                                       !- Ankle Level Air Velocity Schedule Name
+  15.56,                                  !- Cold Stress Temperature Threshold
+  30;                                     !- Heat Stress Temperature Threshold
