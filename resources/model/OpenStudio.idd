@@ -3976,22 +3976,25 @@ OS:People:Definition,
        \key AnkleDraftASH55
 
 OS:ComfortViewFactorAngles,
+       \min-fields 4
        \extensible:2
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference AllHeatTranAngFacNames
-  A3, \field Surface 1 Name
+  A3,  \field Surface 1 Name
        \type object-list
        \object-list SurfaceNames
        \begin-extensible
-  N1; \field Angle Factor 1
+       \required-field
+  N1;  \field Angle Factor 1
        \type real
        \minimum 0.0
        \maximum 1.0
+       \required-field
 
 OS:Lights:Definition,
        \min-fields 1
