@@ -25,13 +25,10 @@
   %ignore openstudio::model::SpaceType::spaces;
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
-  %ignore openstudio::model::ShadingControl::subSurfaces;
   %ignore openstudio::model::ShadingControl::subSurfaceIndex;
   %ignore openstudio::model::ShadingControl::addSubSurface;
   %ignore openstudio::model::ShadingControl::setSubSurfaceIndex;
   %ignore openstudio::model::ShadingControl::removeSubSurface(const SubSurface& subSurface); // The unsigned index overload is fine
-  %ignore openstudio::model::ShadingControl::addSubSurfaces;
-  %ignore openstudio::model::ShadingControl::setSubSurfaces;
 
   // CoilCoolingDX is defined in StraightComponent.i
   %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
@@ -43,6 +40,16 @@
   %ignore openstudio::model::ExternalFile::chillerElectricASHRAE205s;
 
 #endif
+
+// Note JM 2026-08-31: SWIG >= 4.4.0 cannot properly resolve std::vector<SubSurface> as a parameter
+// or return type here, because SubSurface is only forward-declared in this module: the real type
+// and its %template(SubSurfaceVector) live in ModelGeometry.i, which imports this module. This used
+// to work with SWIG 4.1.1. Ignore these here (for all languages, not just C#/Java) and
+// reimplement/rebind them in ModelGeometry.i where SubSurface is fully known.
+// See https://github.com/NatLabRockies/OpenStudio/issues/5645
+%ignore openstudio::model::ShadingControl::subSurfaces;
+%ignore openstudio::model::ShadingControl::addSubSurfaces;
+%ignore openstudio::model::ShadingControl::setSubSurfaces;
 
 #if defined(SWIGJAVA)
 %ignore openstudio::model::OpaqueMaterial::solarAbsorptance;

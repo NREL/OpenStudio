@@ -28,11 +28,16 @@
   %ignore openstudio::model::WeatherFile::site;
   %ignore openstudio::model::ClimateZones::site;
 
-  // Note JM 2020-03-11: Ignoring this, will reimplement later in ModelHVAC.i using partial classes
-  %ignore openstudio::model::ShadowCalculation::addShadingZoneGroup;
-  %ignore openstudio::model::ShadowCalculation::getShadingZoneGroup;
-
 #endif
+
+// Note JM 2026-08-31: SWIG >= 4.4.0 cannot properly resolve std::vector<ThermalZone> as a parameter
+// or return type here, because ThermalZone is only forward-declared in this module: the real type
+// and its %template(ThermalZoneVector) live in ModelHVAC.i, which imports this module. This used to
+// work with SWIG 4.1.1. Ignore both here (for all languages, not just C#) and reimplement/rebind them
+// in ModelHVAC.i where ThermalZone is fully known.
+// See https://github.com/NatLabRockies/OpenStudio/issues/5645
+%ignore openstudio::model::ShadowCalculation::addShadingZoneGroup;
+%ignore openstudio::model::ShadowCalculation::getShadingZoneGroup;
 
 #if defined SWIGPYTHON
   %pythoncode %{

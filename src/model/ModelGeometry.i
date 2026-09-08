@@ -391,6 +391,51 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
 
 #endif
 
+#if defined(SWIGPYTHON) || defined(SWIGRUBY)
+  // See ModelResources.i: SWIG >= 4.4.0 cannot resolve std::vector<SubSurface> as a parameter or
+  // return type there since SubSurface is only forward-declared in that module. Reimplement these
+  // here where SubSurface is fully known, then rebind them onto ShadingControl below.
+  %inline {
+    namespace openstudio {
+      namespace model {
+        std::vector<openstudio::model::SubSurface> getSubSurfaces(const openstudio::model::ShadingControl& sc) {
+          return sc.subSurfaces();
+        }
+        bool addSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.addSubSurfaces(subSurfaces);
+        }
+        bool setSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.setSubSurfaces(subSurfaces);
+        }
+      }
+    }
+  }
+#endif
+
+#if defined SWIGPYTHON
+  %pythoncode %{
+    def _subSurfaces(self):
+        return getSubSurfaces(self)
+    openstudiomodelresources.ShadingControl.subSurfaces = _subSurfaces
+
+    def _addSubSurfaces(self, subSurfaces):
+        return addSubSurfacesForShadingControl(self, subSurfaces)
+    openstudiomodelresources.ShadingControl.addSubSurfaces = _addSubSurfaces
+
+    def _setSubSurfaces(self, subSurfaces):
+        return setSubSurfacesForShadingControl(self, subSurfaces)
+    openstudiomodelresources.ShadingControl.setSubSurfaces = _setSubSurfaces
+  %}
+#endif
+
+#if defined SWIGRUBY
+  %init %{
+    rb_eval_string("OpenStudio::Model::ShadingControl.class_eval { define_method(:subSurfaces) { OpenStudio::Model.getSubSurfaces(self); } }");
+    rb_eval_string("OpenStudio::Model::ShadingControl.class_eval { define_method(:addSubSurfaces) { |subSurfaces| OpenStudio::Model.addSubSurfacesForShadingControl(self, subSurfaces); } }");
+    rb_eval_string("OpenStudio::Model::ShadingControl.class_eval { define_method(:setSubSurfaces) { |subSurfaces| OpenStudio::Model.setSubSurfacesForShadingControl(self, subSurfaces); } }");
+  %}
+#endif
+
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
   %pragma(csharp) moduleimports=%{
