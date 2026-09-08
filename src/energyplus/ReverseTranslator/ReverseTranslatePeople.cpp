@@ -7,6 +7,7 @@
 
 #include "../../model/People.hpp"
 #include "../../model/People_Impl.hpp"
+#include "../../model/ComfortViewFactorAngles.hpp"
 #include "../../model/PeopleDefinition.hpp"
 #include "../../model/PeopleDefinition_Impl.hpp"
 #include "../../model/Space.hpp"
@@ -104,7 +105,9 @@ namespace energyplus {
 
     OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::PeopleFields::SurfaceName_AngleFactorListName);
     if (target) {
-      LOG(Error, "SurfaceName_AngleFactorListName not currently imported");
+      if (auto modelObject = translateAndMapWorkspaceObject(*target)) {
+        definition.setSurfaceNameAngleFactorListName(*modelObject);
+      }
     }
 
     // As of 22.2.0, this is no longer possible to make this an extensible field
