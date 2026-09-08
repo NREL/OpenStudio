@@ -20,6 +20,9 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/Surface.hpp"
 
+#include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/People_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

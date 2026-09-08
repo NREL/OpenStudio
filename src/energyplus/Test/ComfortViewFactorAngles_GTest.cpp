@@ -10,12 +10,14 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/ComfortViewFactorAngles.hpp"
+#include "../../model/ComfortViewFactorAngles_Impl.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/ThermalZone.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
@@ -146,7 +148,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ComfortViewFactorAngles) {
 
   auto angleFactorObject = workspace.addObject(IdfObject(IddObjectType::ComfortViewFactorAngles)).get();
   angleFactorObject.setName("Angle Factors");
-  auto group = angleFactorObject.pushExtensibleGroup();
+  auto group = angleFactorObject.pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
   EXPECT_TRUE(group.setPointer(0, surface.handle()));
   EXPECT_TRUE(group.setDouble(1, 1.0));
 
