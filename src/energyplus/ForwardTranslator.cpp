@@ -3348,6 +3348,11 @@ namespace energyplus {
         retVal = translateZoneMixing(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ComfortViewFactorAngles: {
+        auto mo = modelObject.cast<ComfortViewFactorAngles>();
+        retVal = translateComfortViewFactorAngles(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneMRTCalculation: {
         auto mo = modelObject.cast<ZoneMRTCalculation>();
         retVal = translateZoneMRTCalculation(mo);

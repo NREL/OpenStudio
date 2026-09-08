@@ -10,6 +10,7 @@
 #include "../../model/People_Impl.hpp"
 #include "../../model/PeopleDefinition.hpp"
 #include "../../model/PeopleDefinition_Impl.hpp"
+#include "../../model/ComfortViewFactorAngles.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
 #include "../../model/SpaceType.hpp"
@@ -102,11 +103,32 @@ namespace energyplus {
       }
     }
 
-    if (!definition.isMeanRadiantTemperatureCalculationTypeDefaulted()) {
-      idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, definition.meanRadiantTemperatureCalculationType());
+    std::string mrtType = definition.meanRadiantTemperatureCalculationType();
+    if (auto target = definition.surfaceNameAngleFactorListName()) {
+      if (target->optionalCast<Surface>()) {
+        if (auto idfTarget = translateAndMapModelObject(*target)) {
+          mrtType = "SurfaceWeighted";
+          idfObject.setString(PeopleFields::SurfaceName_AngleFactorListName, idfTarget->nameString());
+        } else {
+          mrtType = "EnclosureAveraged";
+        }
+      } else if (target->optionalCast<ComfortViewFactorAngles>()) {
+        if (auto idfTarget = translateAndMapModelObject(*target)) {
+          mrtType = "AngleFactor";
+          idfObject.setString(PeopleFields::SurfaceName_AngleFactorListName, idfTarget->nameString());
+        } else {
+          mrtType = "EnclosureAveraged";
+        }
+      } else {
+        mrtType = "EnclosureAveraged";
+      }
+    } else if (!istringEqual(mrtType, "EnclosureAveraged")) {
+      mrtType = "EnclosureAveraged";
     }
 
-    // TODO: Surface Name/Angle Factor List Name
+    if (!definition.isMeanRadiantTemperatureCalculationTypeDefaulted() || !istringEqual(mrtType, "EnclosureAveraged")) {
+      idfObject.setString(PeopleFields::MeanRadiantTemperatureCalculationType, mrtType);
+    }
 
     if (boost::optional<Schedule> schedule_ = modelObject.workEfficiencySchedule()) {
       if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
