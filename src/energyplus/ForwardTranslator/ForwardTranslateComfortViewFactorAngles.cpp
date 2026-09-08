@@ -5,10 +5,16 @@
 
 #include "../ForwardTranslator.hpp"
 
+#include "../../model/Model.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
 #include "../../model/ComfortViewFactorAngles.hpp"
+#include "../../model/ComfortViewFactorAngles_Impl.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/math/FloatCompare.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ComfortViewFactorAngles_FieldEnums.hxx>
 
 using namespace openstudio::model;
@@ -17,30 +23,35 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateComfortViewFactorAngles(ComfortViewFactorAngles& modelObject) {
-    const auto comfortViewFactorAngles = modelObject.comfortViewFactorAngles();
-    if (comfortViewFactorAngles.empty()) {
-      LOG(Error, modelObject.briefDescription() << " does not have any angle factors and will not be translated.");
-      return boost::none;
-    }
-
-    double sum = 0.0;
-    for (const auto& comfortViewFactorAngle : comfortViewFactorAngles) {
-      sum += comfortViewFactorAngle.angleFactor();
-    }
-    constexpr double tolerance = 0.000001;
-    if (!equal(sum, 1.0, tolerance)) {
-      LOG(Error, modelObject.briefDescription() << " has angle factors that sum to " << sum << " instead of 1.0 and will not be translated.");
+    std::vector<AngleFactor> angleFactors = modelObject.angleFactors();
+    if (angleFactors.empty()) {
+      LOG(Warn, modelObject.briefDescription() << " does not have any angle factors and will not be translated.");
       return boost::none;
     }
 
     std::vector<std::pair<std::string, double>> translatedAngleFactors;
-    for (const auto& comfortViewFactorAngle : comfortViewFactorAngles) {
-      if (auto surface = translateAndMapModelObject(comfortViewFactorAngle.surface())) {
-        translatedAngleFactors.emplace_back(surface->nameString(), comfortViewFactorAngle.angleFactor());
+    double sum = 0.0;
+    constexpr double tolerance = 0.000001;
+
+    for (const AngleFactor& angleFactor : angleFactors) {
+      Surface surface = angleFactor.surface();
+      if (auto idfSurface = translateAndMapModelObject(surface)) {
+        const double value = angleFactor.angleFactor();
+        sum += value;
+        translatedAngleFactors.emplace_back(idfSurface->nameString(), value);
       } else {
-        LOG(Error, "Could not translate a Surface for " << modelObject.briefDescription() << ".");
-        return boost::none;
+        LOG(Error, "Could not translate an AngleFactor group for " << modelObject.briefDescription() << ". Continuing with the rest.");
       }
+    }
+
+    if (translatedAngleFactors.empty()) {
+      LOG(Error, modelObject.briefDescription() << " does not have any valid angle factors and will not be translated.");
+      return boost::none;
+    }
+
+    if (!equal(sum, 1.0, tolerance)) {
+      LOG(Error, modelObject.briefDescription() << " has valid angle factors that sum to " << sum << " instead of 1.0 and will not be translated.");
+      return boost::none;
     }
 
     IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ComfortViewFactorAngles, modelObject);

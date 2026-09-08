@@ -6,11 +6,17 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/ComfortViewFactorAngles.hpp"
+#include "../../model/ComfortViewFactorAngles_Impl.hpp"
 #include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/ComfortViewFactorAngles_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 

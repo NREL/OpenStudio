@@ -19,6 +19,10 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/ComfortViewFactorAngles.hpp"
+#include "../../model/ComfortViewFactorAngles_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
