@@ -3895,7 +3895,7 @@ OS:InternalMass:Definition,
 OS:People:Definition,
        \extensible:1
        \min-fields 1
-       \max-fields 16
+       \max-fields 17
   A1, \field Handle
        \type handle
        \required-field
@@ -3960,7 +3960,10 @@ OS:People:Definition,
        \key EnclosureAveraged
        \key SurfaceWeighted
        \key AngleFactor
-  A6; \field Thermal Comfort Model Type
+  A6, \field Surface Name/Angle Factor List Name
+       \type object-list
+       \object-list AllHeatTranAngFacNames
+  A7; \field Thermal Comfort Model Type
        \note optional (only needed for people thermal comfort results reporting)
        \type choice
        \begin-extensible
@@ -3971,6 +3974,24 @@ OS:People:Definition,
        \key AdaptiveCEN15251
        \key CoolingEffectASH55
        \key AnkleDraftASH55
+
+OS:ComfortViewFactorAngles,
+       \extensible:2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference AllHeatTranAngFacNames
+  A3, \field Surface 1 Name
+       \type object-list
+       \object-list SurfaceNames
+       \begin-extensible
+  N1; \field Angle Factor 1
+       \type real
+       \minimum 0.0
+       \maximum 1.0
 
 OS:Lights:Definition,
        \min-fields 1
@@ -7079,31 +7100,27 @@ OS:People,
        \note units in schedule should be fraction applied to number of people (0.0 - 1.0)
        \type object-list
        \object-list ScheduleNames
-  A7, \field Surface Name/Angle Factor List Name
-       \note optional (only required for thermal comfort runs)
-       \type object-list
-       \object-list AllHeatTranAngFacNames
-  A8, \field Work Efficiency Schedule Name
+  A7, \field Work Efficiency Schedule Name
        \note units in schedule are 0.0 to 1.0
        \note optional (only required for thermal comfort runs)
        \type object-list
        \object-list ScheduleNames
-  A9, \field Clothing Insulation Calculation Method
+  A8, \field Clothing Insulation Calculation Method
        \type choice
        \key ClothingInsulationSchedule
        \key DynamicClothingModelASHRAE55
        \key CalculationMethodSchedule
        \required-field
-  A10, \field Clothing Insulation Calculation Method Schedule Name
+  A9, \field Clothing Insulation Calculation Method Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note a schedule value of 1 for the Scheduled method, and 2 for the DynamicClothingModelASHRAE55 method
-  A11, \field Clothing Insulation Schedule Name
+  A10, \field Clothing Insulation Schedule Name
        \note use "Clo" from ASHRAE or Thermal Comfort guides
        \note optional (only required for thermal comfort runs)
        \type object-list
        \object-list ScheduleNames
-  A12, \field Air Velocity Schedule Name
+  A11, \field Air Velocity Schedule Name
        \note units in the schedule are m/s
        \note optional (only required for thermal comfort runs)
        \type object-list
@@ -7112,7 +7129,7 @@ OS:People,
        \type real
        \minimum 0.0
        \default 1.0
-  A13, \field Ankle Level Air Velocity Schedule Name
+  A12, \field Ankle Level Air Velocity Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note units in the schedule are m/s
