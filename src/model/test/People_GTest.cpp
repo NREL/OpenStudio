@@ -20,6 +20,8 @@
 #include "../ScheduleTypeRegistry.hpp"
 #include "../ScheduleConstant.hpp"
 
+#include "../../utilities/geometry/Point3d.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
@@ -55,11 +57,11 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
-  EXPECT_EQ(1u, comfortViewFactorAngles.numberofComfortViewFactorAngles());
-  auto comfortViewFactorAngle = comfortViewFactorAngles.getComfortViewFactorAngle(0);
-  ASSERT_TRUE(comfortViewFactorAngle);
-  EXPECT_EQ(surface.handle(), comfortViewFactorAngle->surface().handle());
-  EXPECT_DOUBLE_EQ(1.0, comfortViewFactorAngle->angleFactor());
+  EXPECT_EQ(1u, comfortViewFactorAngles.numberofAngleFactors());
+  const auto angleFactors = comfortViewFactorAngles.angleFactors();
+  ASSERT_EQ(1u, angleFactors.size());
+  EXPECT_EQ(surface.handle(), angleFactors.front().surface().handle());
+  EXPECT_DOUBLE_EQ(1.0, angleFactors.front().angleFactor());
 
   EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
   EXPECT_EQ("AngleFactor", definition.meanRadiantTemperatureCalculationType());

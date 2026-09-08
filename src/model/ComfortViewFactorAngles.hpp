@@ -46,14 +46,16 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    std::vector<AngleFactor> comfortViewFactorAngles() const;
-    unsigned int numberofComfortViewFactorAngles() const;
-    boost::optional<AngleFactor> getComfortViewFactorAngle(unsigned groupIndex) const;
+    std::vector<AngleFactor> angleFactors() const;
+    unsigned int numberofAngleFactors() const;
+    boost::optional<unsigned> angleFactorIndex(const Surface& surface) const;
+    boost::optional<AngleFactor> getAngleFactor(unsigned groupIndex) const;
 
     bool addAngleFactor(const AngleFactor& angleFactor);
     bool addAngleFactor(const Surface& surface, double angleFactor);
-    void removeComfortViewFactorAngle(int groupIndex);
-    void removeAllComfortViewFactorAngles();
+    bool addAngleFactors(const std::vector<AngleFactor>& angleFactors);
+    void removeAngleFactor(int groupIndex);
+    void removeAllAngleFactors();
 
    protected:
     using ImplType = detail::ComfortViewFactorAngles_Impl;

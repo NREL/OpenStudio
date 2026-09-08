@@ -6,6 +6,8 @@
 #include "ComfortViewFactorAngles.hpp"
 #include "ComfortViewFactorAngles_Impl.hpp"
 
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -67,27 +69,63 @@ namespace model {
       return ComfortViewFactorAngles::iddObjectType();
     }
 
-    std::vector<AngleFactor> ComfortViewFactorAngles_Impl::comfortViewFactorAngles() const {
+    std::vector<AngleFactor> ComfortViewFactorAngles_Impl::angleFactors() const {
       std::vector<AngleFactor> result;
-      for (unsigned i = 0; i < numberofComfortViewFactorAngles(); ++i) {
-        if (auto comfortViewFactorAngle = getComfortViewFactorAngle(i)) {
-          result.push_back(*comfortViewFactorAngle);
+      for (unsigned i = 0; i < numberofAngleFactors(); ++i) {
+        if (auto angleFactor = getAngleFactor(i)) {
+          result.push_back(*angleFactor);
         }
       }
       return result;
     }
 
-    unsigned int ComfortViewFactorAngles_Impl::numberofComfortViewFactorAngles() const {
+    unsigned int ComfortViewFactorAngles_Impl::numberofAngleFactors() const {
       return numExtensibleGroups();
     }
 
-    boost::optional<AngleFactor> ComfortViewFactorAngles_Impl::getComfortViewFactorAngle(unsigned groupIndex) const {
-      if (groupIndex >= numberofComfortViewFactorAngles()) {
+    boost::optional<unsigned> ComfortViewFactorAngles_Impl::angleFactorIndex(const Surface& surface) const {
+      for (unsigned i = 0; i < numberofAngleFactors(); ++i) {
+        if (auto existingSurface = getSurface(i); existingSurface && (existingSurface->handle() == surface.handle())) {
+          return i;
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<Surface> ComfortViewFactorAngles_Impl::getSurface(unsigned groupIndex) const {
+      boost::optional<Surface> result;
+
+      if (groupIndex >= numberofAngleFactors()) {
+        LOG(Error, "Asked to get Surface with index " << groupIndex << ", but " << briefDescription() << " has just " << numberofAngleFactors()
+                                                        << " angle factors.");
+        return result;
+      }
+      auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+      result = group.getModelObjectTarget<Surface>(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName);
+
+      if (!result) {
+        LOG(Error, "Could not retrieve Surface Name for extensible group " << group.groupIndex() << ".");
+      }
+      return result;
+    }
+
+    boost::optional<double> ComfortViewFactorAngles_Impl::getAngleFactorValue(unsigned groupIndex) const {
+      if (groupIndex >= numberofAngleFactors()) {
+        LOG(Error, "Asked to get Angle Factor with index " << groupIndex << ", but " << briefDescription() << " has just " << numberofAngleFactors()
+                                                             << " angle factors.");
         return boost::none;
       }
       auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
-      auto surface = group.getModelObjectTarget<Surface>(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName);
-      auto angleFactor = group.getDouble(OS_ComfortViewFactorAnglesExtensibleFields::AngleFactor);
+      auto result = group.getDouble(OS_ComfortViewFactorAnglesExtensibleFields::AngleFactor);
+      if (!result) {
+        LOG(Error, "Could not retrieve Angle Factor for extensible group " << group.groupIndex() << ".");
+      }
+      return result;
+    }
+
+    boost::optional<AngleFactor> ComfortViewFactorAngles_Impl::getAngleFactor(unsigned groupIndex) const {
+      auto surface = getSurface(groupIndex);
+      auto angleFactor = getAngleFactorValue(groupIndex);
       if (surface && angleFactor) {
         return AngleFactor(*surface, *angleFactor);
       }
@@ -99,13 +137,17 @@ namespace model {
         LOG(Error, "Cannot add a Surface from another Model to " << briefDescription() << ".");
         return false;
       }
-      auto group = pushExtensibleGroup({}, false).cast<ModelExtensibleGroup>();
+      const auto existingIndex = angleFactorIndex(angleFactor.surface());
+      auto group = (existingIndex ? getExtensibleGroup(*existingIndex).cast<ModelExtensibleGroup>()
+                  : pushExtensibleGroup({}, false).cast<ModelExtensibleGroup>());
       bool surfaceSet = group.setPointer(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName, angleFactor.surface().handle(), false);
       bool angleFactorSet = group.setDouble(OS_ComfortViewFactorAnglesExtensibleFields::AngleFactor, angleFactor.angleFactor());
       if (surfaceSet && angleFactorSet) {
         return true;
       }
-      getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+      if (!existingIndex) {
+        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+      }
       return false;
     }
 
@@ -113,15 +155,25 @@ namespace model {
       return addAngleFactor(AngleFactor(surface, angleFactor));
     }
 
-    bool ComfortViewFactorAngles_Impl::removeComfortViewFactorAngle(unsigned groupIndex) {
-      if (groupIndex >= numberofComfortViewFactorAngles()) {
+    bool ComfortViewFactorAngles_Impl::addAngleFactors(const std::vector<AngleFactor>& angleFactors) {
+      bool result = true;
+      for (const auto& angleFactor : angleFactors) {
+        if (!addAngleFactor(angleFactor)) {
+          result = false;
+        }
+      }
+      return result;
+    }
+
+    bool ComfortViewFactorAngles_Impl::removeAngleFactor(unsigned groupIndex) {
+      if (groupIndex >= numberofAngleFactors()) {
         return false;
       }
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
       return true;
     }
 
-    void ComfortViewFactorAngles_Impl::removeAllComfortViewFactorAngles() {
+    void ComfortViewFactorAngles_Impl::removeAllAngleFactors() {
       getObject<ModelObject>().clearExtensibleGroups();
     }
 
@@ -135,16 +187,20 @@ namespace model {
     return IddObjectType::OS_ComfortViewFactorAngles;
   }
 
-  std::vector<AngleFactor> ComfortViewFactorAngles::comfortViewFactorAngles() const {
-    return getImpl<detail::ComfortViewFactorAngles_Impl>()->comfortViewFactorAngles();
+  std::vector<AngleFactor> ComfortViewFactorAngles::angleFactors() const {
+    return getImpl<detail::ComfortViewFactorAngles_Impl>()->angleFactors();
   }
 
-  unsigned int ComfortViewFactorAngles::numberofComfortViewFactorAngles() const {
-    return getImpl<detail::ComfortViewFactorAngles_Impl>()->numberofComfortViewFactorAngles();
+  unsigned int ComfortViewFactorAngles::numberofAngleFactors() const {
+    return getImpl<detail::ComfortViewFactorAngles_Impl>()->numberofAngleFactors();
   }
 
-  boost::optional<AngleFactor> ComfortViewFactorAngles::getComfortViewFactorAngle(unsigned groupIndex) const {
-    return getImpl<detail::ComfortViewFactorAngles_Impl>()->getComfortViewFactorAngle(groupIndex);
+  boost::optional<unsigned> ComfortViewFactorAngles::angleFactorIndex(const Surface& surface) const {
+    return getImpl<detail::ComfortViewFactorAngles_Impl>()->angleFactorIndex(surface);
+  }
+
+  boost::optional<AngleFactor> ComfortViewFactorAngles::getAngleFactor(unsigned groupIndex) const {
+    return getImpl<detail::ComfortViewFactorAngles_Impl>()->getAngleFactor(groupIndex);
   }
 
   bool ComfortViewFactorAngles::addAngleFactor(const AngleFactor& angleFactor) {
@@ -155,12 +211,16 @@ namespace model {
     return getImpl<detail::ComfortViewFactorAngles_Impl>()->addAngleFactor(surface, angleFactor);
   }
 
-  void ComfortViewFactorAngles::removeComfortViewFactorAngle(int groupIndex) {
-    getImpl<detail::ComfortViewFactorAngles_Impl>()->removeComfortViewFactorAngle(groupIndex);
+  bool ComfortViewFactorAngles::addAngleFactors(const std::vector<AngleFactor>& angleFactors) {
+    return getImpl<detail::ComfortViewFactorAngles_Impl>()->addAngleFactors(angleFactors);
   }
 
-  void ComfortViewFactorAngles::removeAllComfortViewFactorAngles() {
-    getImpl<detail::ComfortViewFactorAngles_Impl>()->removeAllComfortViewFactorAngles();
+  void ComfortViewFactorAngles::removeAngleFactor(int groupIndex) {
+    getImpl<detail::ComfortViewFactorAngles_Impl>()->removeAngleFactor(groupIndex);
+  }
+
+  void ComfortViewFactorAngles::removeAllAngleFactors() {
+    getImpl<detail::ComfortViewFactorAngles_Impl>()->removeAllAngleFactors();
   }
 
   ComfortViewFactorAngles::ComfortViewFactorAngles(std::shared_ptr<detail::ComfortViewFactorAngles_Impl> impl) : ModelObject(std::move(impl)) {}

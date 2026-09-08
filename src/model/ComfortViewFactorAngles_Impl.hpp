@@ -28,14 +28,22 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
       virtual IddObjectType iddObjectType() const override;
 
-      std::vector<AngleFactor> comfortViewFactorAngles() const;
-      unsigned int numberofComfortViewFactorAngles() const;
-      boost::optional<AngleFactor> getComfortViewFactorAngle(unsigned groupIndex) const;
+      std::vector<AngleFactor> angleFactors() const;
+      unsigned int numberofAngleFactors() const;
+      boost::optional<unsigned> angleFactorIndex(const Surface& surface) const;
+      boost::optional<AngleFactor> getAngleFactor(unsigned groupIndex) const;
 
       bool addAngleFactor(const AngleFactor& angleFactor);
       bool addAngleFactor(const Surface& surface, double angleFactor);
-      bool removeComfortViewFactorAngle(unsigned groupIndex);
-      void removeAllComfortViewFactorAngles();
+      bool addAngleFactors(const std::vector<AngleFactor>& angleFactors);
+      bool removeAngleFactor(unsigned groupIndex);
+      void removeAllAngleFactors();
+
+     private:
+      REGISTER_LOGGER("openstudio.model.ComfortViewFactorAngles");
+
+      boost::optional<Surface> getSurface(unsigned groupIndex) const;
+      boost::optional<double> getAngleFactorValue(unsigned groupIndex) const;
     };
   }
 
