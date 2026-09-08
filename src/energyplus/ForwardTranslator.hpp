@@ -289,6 +289,7 @@ namespace model {
   class LifeCycleCost;
   class LifeCycleCostParameters;
   class Lights;
+  class LightsDefinition;
   class Luminaire;
   class MaterialPropertyGlazingSpectralData;
   class MaterialPropertyMoisturePenetrationDepthSettings;
@@ -1185,6 +1186,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateLifeCycleCostParameters(model::LifeCycleCostParameters& modelObject);
 
     boost::optional<IdfObject> translateLights(model::Lights& modelObject);
+    boost::optional<IdfObject> translateLightsLegacy(model::Lights& modelObject);
+    boost::optional<IdfObject> translateLightsInstance(model::Lights& modelObject);
+    boost::optional<IdfObject> translateLightsDefinition(model::LightsDefinition& modelObject);
 
     boost::optional<IdfObject> translateLuminaire(model::Luminaire& modelObject);
 

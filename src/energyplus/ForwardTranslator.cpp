@@ -2185,7 +2185,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Lights_Definition: {
-        // no-op
+        auto definition = modelObject.cast<LightsDefinition>();
+        retVal = translateLightsDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Luminaire: {

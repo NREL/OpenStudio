@@ -26,6 +26,8 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ScheduleCompact.hpp"
 #include "../../model/ScheduleCompact_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 #include "../../model/DefaultScheduleSet.hpp"
 #include "../../model/DefaultScheduleSet_Impl.hpp"
 #include "../../model/LifeCycleCost.hpp"
@@ -34,6 +36,8 @@
 #include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/Lights_Instance_FieldEnums.hxx>
+#include <utilities/idd/Lights_Definition_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/SpaceList_FieldEnums.hxx>
@@ -761,4 +765,131 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   EXPECT_EQ(1, idfObjects[0].getInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodYears).get());
   EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodMonths));
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Instance_Basic) {
+  Model model;
+  ThermalZone zone(model);
+
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
+
+  boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space);
+  space->setThermalZone(zone);
+
+  LightsDefinition definition(model);
+  definition.setLightingLevel(100.0);
+  definition.setReturnAirFraction(0.1);
+  definition.setFractionRadiant(0.2);
+  definition.setFractionVisible(0.3);
+
+  Lights lights(definition);
+  lights.setSpace(*space);
+  lights.setMultiplier(2.0);
+  lights.setEndUseSubcategory("My End Use");
+  lights.setFractionReplaceable(0.5);
+
+  ScheduleConstant schedule(model);
+  schedule.setValue(0.5);
+  EXPECT_TRUE(lights.setSchedule(schedule));
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(false);
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0, forwardTranslator.errors().size());
+
+  // Legacy Lights object should not be translated at all
+  WorkspaceObjectVector legacyLights = workspace.getObjectsByType(IddObjectType::Lights);
+  ASSERT_EQ(0, legacyLights.size());
+
+  WorkspaceObjectVector definitions = workspace.getObjectsByType(IddObjectType::Lights_Definition);
+  ASSERT_EQ(1, definitions.size());
+  const WorkspaceObject& definitionObject = definitions[0];
+  EXPECT_EQ(definition.nameString(), definitionObject.nameString());
+  EXPECT_EQ("LightingLevel", definitionObject.getString(Lights_DefinitionFields::DesignLevelCalculationMethod, true).get());
+  // Definition values are NOT multiplied
+  EXPECT_EQ(100.0, definitionObject.getDouble(Lights_DefinitionFields::LightingLevel, true).get());
+  EXPECT_EQ(0.1, definitionObject.getDouble(Lights_DefinitionFields::ReturnAirFraction, true).get());
+  EXPECT_EQ(0.2, definitionObject.getDouble(Lights_DefinitionFields::FractionRadiant, true).get());
+  EXPECT_EQ(0.3, definitionObject.getDouble(Lights_DefinitionFields::FractionVisible, true).get());
+
+  WorkspaceObjectVector instances = workspace.getObjectsByType(IddObjectType::Lights_Instance);
+  ASSERT_EQ(1, instances.size());
+  const WorkspaceObject& instanceObject = instances[0];
+  EXPECT_EQ(lights.nameString(), instanceObject.nameString());
+
+  boost::optional<WorkspaceObject> definitionTarget_ = instanceObject.getTarget(Lights_InstanceFields::LightsDefinitionName);
+  ASSERT_TRUE(definitionTarget_);
+  EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+  // FractionReplaceable lives on the Instance, not the Definition
+  EXPECT_EQ(0.5, instanceObject.getDouble(Lights_InstanceFields::FractionReplaceable, true).get());
+  EXPECT_EQ(space->nameString(), instanceObject.getString(Lights_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+  EXPECT_EQ(schedule.nameString(), instanceObject.getString(Lights_InstanceFields::ScheduleName, true).get());
+  EXPECT_EQ(2.0, instanceObject.getDouble(Lights_InstanceFields::Multiplier, true).get());
+  EXPECT_EQ("My End Use", instanceObject.getString(Lights_InstanceFields::EndUseSubcategory, true).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Instance_SharedDefinition) {
+  Model model;
+  ThermalZone zone(model);
+
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
+
+  boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space1);
+  space1->setThermalZone(zone);
+
+  boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space2);
+  space2->setThermalZone(zone);
+
+  LightsDefinition definition(model);
+  definition.setLightingLevel(100.0);
+
+  Lights lights1(definition);
+  lights1.setSpace(*space1);
+
+  Lights lights2(definition);
+  lights2.setSpace(*space2);
+  lights2.setMultiplier(3.0);
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(false);
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0, forwardTranslator.errors().size());
+
+  // The shared Definition is only translated (and shared) once
+  WorkspaceObjectVector definitions = workspace.getObjectsByType(IddObjectType::Lights_Definition);
+  ASSERT_EQ(1, definitions.size());
+  const WorkspaceObject& definitionObject = definitions[0];
+  EXPECT_EQ(100.0, definitionObject.getDouble(Lights_DefinitionFields::LightingLevel, true).get());
+
+  WorkspaceObjectVector instances = workspace.getObjectsByType(IddObjectType::Lights_Instance);
+  ASSERT_EQ(2, instances.size());
+  for (const auto& instance : instances) {
+    boost::optional<WorkspaceObject> definitionTarget_ = instance.getTarget(Lights_InstanceFields::LightsDefinitionName);
+    ASSERT_TRUE(definitionTarget_);
+    EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+    if (instance.nameString() == lights1.nameString()) {
+      EXPECT_EQ(space1->nameString(), instance.getString(Lights_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+      EXPECT_EQ(1.0, instance.getDouble(Lights_InstanceFields::Multiplier, true).get());
+    } else {
+      EXPECT_EQ(space2->nameString(), instance.getString(Lights_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+      EXPECT_EQ(3.0, instance.getDouble(Lights_InstanceFields::Multiplier, true).get());
+    }
+  }
 }
