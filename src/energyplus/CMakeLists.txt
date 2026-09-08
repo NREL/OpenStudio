@@ -464,6 +464,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneMixing.cpp
+  ForwardTranslator/ForwardTranslateComfortViewFactorAngles.cpp
   ForwardTranslator/ForwardTranslateZoneMRTCalculation.cpp
   ForwardTranslator/ForwardTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationDesignFlowRate.cpp
@@ -651,6 +652,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneInfiltrationFlowCoefficient.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
+  ReverseTranslator/ReverseTranslateComfortViewFactorAngles.cpp
   ReverseTranslator/ReverseTranslateZoneMRTCalculation.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
@@ -737,6 +739,7 @@ set(${target_name}_test_src
   Test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp
+  Test/ComfortViewFactorAngles_GTest.cpp
   Test/Construction_GTest.cpp
   Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
