@@ -18,6 +18,7 @@ namespace model {
   namespace detail {
 
     class ZoneMRTCalculation_Impl;
+    class ThermalZone_Impl;
 
   }  // namespace detail
 
@@ -48,14 +49,6 @@ namespace model {
    public:
     /** @name Constructors and Destructors */
     //@{
-
-    /*
-     * This constructor shouldn't be used, ThermalZone::getZoneMRTCalculation should be preferred
-     * as it will either instantiate a new object or return the existing one.
-     * A ThermalZone should not have more than one ZoneMRTCalculation. If you try to instantiate a second one for a given
-     * ThermalZone this constructor will throw.
-     */
-    explicit ZoneMRTCalculation(const ThermalZone& thermalZone);
 
     virtual ~ZoneMRTCalculation() override = default;
     // Default the copy and move operators because the virtual dtor is explicit
@@ -104,9 +97,18 @@ namespace model {
     /// @cond
     using ImplType = detail::ZoneMRTCalculation_Impl;
 
+    /*
+     * This constructor shouldn't be used directly, ThermalZone::getZoneMRTCalculation should be preferred
+     * as it will either instantiate a new object or return the existing one.
+     * A ThermalZone should not have more than one ZoneMRTCalculation. If you try to instantiate a second one for a given
+     * ThermalZone this constructor will throw.
+     */
+    explicit ZoneMRTCalculation(const ThermalZone& thermalZone);
+
     explicit ZoneMRTCalculation(std::shared_ptr<detail::ZoneMRTCalculation_Impl> impl);
 
     friend class detail::ZoneMRTCalculation_Impl;
+    friend class detail::ThermalZone_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;

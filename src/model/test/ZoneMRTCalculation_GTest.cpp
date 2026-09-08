@@ -56,10 +56,6 @@ TEST_F(ModelFixture, ZoneMRTCalculation_Uniqueness) {
   EXPECT_EQ(0u, zoneMRTCalculation2.numberofMRTWeightingFactors());
   EXPECT_TRUE(zoneMRTCalculation2.mRTWeightingFactors().empty());
 
-  // Direct construction is intentionally blocked once the ThermalZone already has one object.
-  EXPECT_THROW((ZoneMRTCalculation(thermalZone)), openstudio::Exception);
-  EXPECT_EQ(size + 1, model.modelObjects().size());
-
   // Cloning is disallowed so cloned objects cannot lose the required one-per-zone relationship.
   EXPECT_THROW(zoneMRTCalculation1.clone(model), openstudio::Exception);
   EXPECT_EQ(size + 1, model.modelObjects().size());
@@ -78,7 +74,6 @@ TEST_F(ModelFixture, ZoneMRTCalculation_ThrowingAPIs) {
   EXPECT_THROW(zoneMRTCalculation.addMRTWeightingFactor(people, 1.1), openstudio::Exception);
 
   // The explicit throwing paths remain covered here as a compact smoke test.
-  EXPECT_THROW((ZoneMRTCalculation(thermalZone)), openstudio::Exception);
   EXPECT_THROW(zoneMRTCalculation.clone(model), openstudio::Exception);
 }
 

@@ -44,7 +44,7 @@
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
-  %ignore openstudio::model::ZoneMRTCalculation::ZoneMRTCalculation(const ThermalZone& thermalZone);
+  // Constructor is already protected: %ignore openstudio::model::ZoneMRTCalculation::ZoneMRTCalculation(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZoneMRTCalculation::thermalZone;
 
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
