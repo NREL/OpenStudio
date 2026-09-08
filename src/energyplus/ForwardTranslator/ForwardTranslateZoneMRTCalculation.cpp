@@ -40,6 +40,7 @@ namespace energyplus {
 
     std::vector<std::pair<std::string, double>> translatedMRTWeightingFactors;
     double sum = 0.0;
+    constexpr double tolerance = 0.000001;
 
     for (const MRTWeightingFactor& mRTWeightingFactor : mRTWeightingFactors) {
       People people = mRTWeightingFactor.people();
@@ -74,7 +75,7 @@ namespace energyplus {
       if (_people) {
         double value = mRTWeightingFactor.mRTWeightingFactor();
         sum += value;
-        if (sum > 1.0) {
+        if (sum > 1.0 + tolerance) {
           LOG(Error, "Could not translate an MRTWeightingFactor group for " << modelObject.briefDescription()
                                                                             << " because the MRT Weighting Factors would sum to " << sum
                                                                             << ", which is greater than 1.");

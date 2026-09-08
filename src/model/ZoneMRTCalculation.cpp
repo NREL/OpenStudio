@@ -233,7 +233,8 @@ namespace model {
         sum += existingValue.get();
       }
 
-      if (sum > 1.0) {
+      constexpr double tolerance = 0.000001;
+      if (sum > 1.0 + tolerance) {
         LOG(Error, "Cannot add " << people.briefDescription() << " to " << briefDescription() << " because the MRT Weighting Factors would sum to "
                                  << sum << ", which is greater than 1.");
         return result;
