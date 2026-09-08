@@ -21,6 +21,7 @@
 #include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/ElectricEquipment_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_Instance_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -31,6 +32,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment(ElectricEquipment& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateElectricEquipmentLegacy(modelObject);
+    }
+    return translateElectricEquipmentInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentLegacy(ElectricEquipment& modelObject) {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricEquipment, modelObject);
 
@@ -82,6 +90,37 @@ namespace energyplus {
 
     if (!modelObject.isEndUseSubcategoryDefaulted()) {
       idfObject.setString(ElectricEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentInstance(ElectricEquipment& modelObject) {
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricEquipment_Instance, modelObject);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(ElectricEquipment_InstanceFields::ElectricEquipmentDefinitionName, definitionIdfObject_->nameString());
+
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(ElectricEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(ElectricEquipment_InstanceFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setDouble(ElectricEquipment_InstanceFields::Multiplier, modelObject.multiplier());
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(ElectricEquipment_InstanceFields::EndUseSubcategory, modelObject.endUseSubcategory());
     }
 
     return idfObject;

@@ -186,6 +186,7 @@ namespace model {
   class DistrictHeatingSteam;
   class Duct;
   class ElectricEquipment;
+  class ElectricEquipmentDefinition;
   class ElectricEquipmentITEAirCooled;
   class ElectricLoadCenterDistribution;
   class ElectricLoadCenterInverterLookUpTable;
@@ -970,6 +971,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateDuct(model::Duct& modelObject);
 
     boost::optional<IdfObject> translateElectricEquipment(model::ElectricEquipment& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentLegacy(model::ElectricEquipment& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentInstance(model::ElectricEquipment& modelObject);
+    boost::optional<IdfObject> translateElectricEquipmentDefinition(model::ElectricEquipmentDefinition& modelObject);
 
     boost::optional<IdfObject> translateElectricEquipmentITEAirCooled(model::ElectricEquipmentITEAirCooled& modelObject);
 

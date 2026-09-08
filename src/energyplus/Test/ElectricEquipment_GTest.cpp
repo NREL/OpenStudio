@@ -19,6 +19,8 @@
 #include "../../model/ElectricEquipment_Impl.hpp"
 #include "../../model/ElectricEquipmentDefinition.hpp"
 #include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -26,6 +28,8 @@
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ElectricEquipment_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_Instance_FieldEnums.hxx>
+#include <utilities/idd/ElectricEquipment_Definition_FieldEnums.hxx>
 #include <utilities/idd/SpaceList_FieldEnums.hxx>
 
 #include <resources.hxx>
@@ -685,6 +689,130 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
 
       EXPECT_TRUE(equip.isEmpty(ElectricEquipmentFields::DesignLevel));
       EXPECT_EQ("Watts/Area", equip.getString(ElectricEquipmentFields::DesignLevelCalculationMethod, true).get());
+    }
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_Instance_Basic) {
+  Model model;
+  ThermalZone zone(model);
+
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
+
+  boost::optional<Space> space = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space);
+  space->setThermalZone(zone);
+
+  ElectricEquipmentDefinition definition(model);
+  definition.setDesignLevel(100.0);
+  definition.setFractionLatent(0.1);
+  definition.setFractionRadiant(0.2);
+  definition.setFractionLost(0.3);
+
+  ElectricEquipment electricEquipment(definition);
+  electricEquipment.setSpace(*space);
+  electricEquipment.setMultiplier(2.0);
+  electricEquipment.setEndUseSubcategory("My End Use");
+
+  ScheduleConstant schedule(model);
+  schedule.setValue(0.5);
+  EXPECT_TRUE(electricEquipment.setSchedule(schedule));
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(false);
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0, forwardTranslator.errors().size());
+
+  // Legacy ElectricEquipment object should not be translated at all
+  WorkspaceObjectVector legacyEquips = workspace.getObjectsByType(IddObjectType::ElectricEquipment);
+  ASSERT_EQ(0, legacyEquips.size());
+
+  WorkspaceObjectVector definitions = workspace.getObjectsByType(IddObjectType::ElectricEquipment_Definition);
+  ASSERT_EQ(1, definitions.size());
+  const WorkspaceObject& definitionObject = definitions[0];
+  EXPECT_EQ(definition.nameString(), definitionObject.nameString());
+  EXPECT_EQ("EquipmentLevel", definitionObject.getString(ElectricEquipment_DefinitionFields::DesignLevelCalculationMethod, true).get());
+  // Definition values are NOT multiplied
+  EXPECT_EQ(100.0, definitionObject.getDouble(ElectricEquipment_DefinitionFields::DesignLevel, true).get());
+  EXPECT_EQ(0.1, definitionObject.getDouble(ElectricEquipment_DefinitionFields::FractionLatent, true).get());
+  EXPECT_EQ(0.2, definitionObject.getDouble(ElectricEquipment_DefinitionFields::FractionRadiant, true).get());
+  EXPECT_EQ(0.3, definitionObject.getDouble(ElectricEquipment_DefinitionFields::FractionLost, true).get());
+
+  WorkspaceObjectVector instances = workspace.getObjectsByType(IddObjectType::ElectricEquipment_Instance);
+  ASSERT_EQ(1, instances.size());
+  const WorkspaceObject& instanceObject = instances[0];
+  EXPECT_EQ(electricEquipment.nameString(), instanceObject.nameString());
+
+  boost::optional<WorkspaceObject> definitionTarget_ = instanceObject.getTarget(ElectricEquipment_InstanceFields::ElectricEquipmentDefinitionName);
+  ASSERT_TRUE(definitionTarget_);
+  EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+  EXPECT_EQ(space->nameString(), instanceObject.getString(ElectricEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+  EXPECT_EQ(schedule.nameString(), instanceObject.getString(ElectricEquipment_InstanceFields::ScheduleName, true).get());
+  EXPECT_EQ(2.0, instanceObject.getDouble(ElectricEquipment_InstanceFields::Multiplier, true).get());
+  EXPECT_EQ("My End Use", instanceObject.getString(ElectricEquipment_InstanceFields::EndUseSubcategory, true).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_Instance_SharedDefinition) {
+  Model model;
+  ThermalZone zone(model);
+
+  Point3dVector floorPrint{
+    {0, 10, 0},
+    {10, 10, 0},
+    {10, 0, 0},
+    {0, 0, 0},
+  };
+
+  boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space1);
+  space1->setThermalZone(zone);
+
+  boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, model);
+  ASSERT_TRUE(space2);
+  space2->setThermalZone(zone);
+
+  ElectricEquipmentDefinition definition(model);
+  definition.setDesignLevel(100.0);
+
+  ElectricEquipment electricEquipment1(definition);
+  electricEquipment1.setSpace(*space1);
+
+  ElectricEquipment electricEquipment2(definition);
+  electricEquipment2.setSpace(*space2);
+  electricEquipment2.setMultiplier(3.0);
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(false);
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0, forwardTranslator.errors().size());
+
+  // The shared Definition is only translated (and shared) once
+  WorkspaceObjectVector definitions = workspace.getObjectsByType(IddObjectType::ElectricEquipment_Definition);
+  ASSERT_EQ(1, definitions.size());
+  const WorkspaceObject& definitionObject = definitions[0];
+  EXPECT_EQ(100.0, definitionObject.getDouble(ElectricEquipment_DefinitionFields::DesignLevel, true).get());
+
+  WorkspaceObjectVector instances = workspace.getObjectsByType(IddObjectType::ElectricEquipment_Instance);
+  ASSERT_EQ(2, instances.size());
+  for (const auto& instance : instances) {
+    boost::optional<WorkspaceObject> definitionTarget_ = instance.getTarget(ElectricEquipment_InstanceFields::ElectricEquipmentDefinitionName);
+    ASSERT_TRUE(definitionTarget_);
+    EXPECT_EQ(definitionObject.handle(), definitionTarget_->handle());
+
+    if (instance.nameString() == electricEquipment1.nameString()) {
+      EXPECT_EQ(space1->nameString(), instance.getString(ElectricEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+      EXPECT_EQ(1.0, instance.getDouble(ElectricEquipment_InstanceFields::Multiplier, true).get());
+    } else {
+      EXPECT_EQ(space2->nameString(), instance.getString(ElectricEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, true).get());
+      EXPECT_EQ(3.0, instance.getDouble(ElectricEquipment_InstanceFields::Multiplier, true).get());
     }
   }
 }

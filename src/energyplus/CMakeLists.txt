@@ -150,6 +150,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeatingSteam.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
+  ForwardTranslator/ForwardTranslateElectricEquipmentDefinition.cpp
   ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
