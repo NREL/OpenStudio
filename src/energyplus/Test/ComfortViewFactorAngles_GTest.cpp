@@ -16,6 +16,7 @@
 #include "../../model/PeopleDefinition.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
 #include "../../model/ThermalZone.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -59,6 +60,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles) {
   ASSERT_EQ(1u, angleFactorObject.numExtensibleGroups());
   const auto group = angleFactorObject.extensibleGroups().front();
   EXPECT_EQ("Radiant Surface", group.getString(0).get());
+  EXPECT_DOUBLE_EQ(1.0, group.getDouble(1).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_SubSurface) {
+  Model model;
+  ThermalZone zone(model);
+  Space space(model);
+  ASSERT_TRUE(space.setThermalZone(zone));
+
+  Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
+  Surface surface(points, model);
+  ASSERT_TRUE(surface.setSpace(space));
+  SubSurface subSurface(points, model);
+  subSurface.setName("Radiant SubSurface");
+  ASSERT_TRUE(subSurface.setSurface(surface));
+
+  ComfortViewFactorAngles comfortViewFactorAngles(model);
+  ASSERT_TRUE(comfortViewFactorAngles.addAngleFactor(subSurface, 1.0));
+
+  PeopleDefinition definition(model);
+  ASSERT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  People people(definition);
+  ASSERT_TRUE(people.setSpace(space));
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  const auto angleFactorObjects = workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles);
+  ASSERT_EQ(1u, angleFactorObjects.size());
+  const auto group = angleFactorObjects.front().extensibleGroups().front();
+  EXPECT_EQ("Radiant SubSurface", group.getString(0).get());
   EXPECT_DOUBLE_EQ(1.0, group.getDouble(1).get());
 }
 

@@ -8,6 +8,11 @@
 
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
+#include "InternalMass.hpp"
+#include "InternalMass_Impl.hpp"
+#include "PlanarSurface.hpp"
 #include "Space.hpp"
 #include "ThermalZone.hpp"
 #include "Model.hpp"
@@ -23,13 +28,31 @@
 namespace openstudio {
 namespace model {
 
-  AngleFactor::AngleFactor(const Surface& surface, double angleFactor) : m_surface(surface), m_angleFactor(angleFactor) {
+  namespace {
+    // Resolves the Space that owns a valid EnergyPlus heat-transfer surface target.
+    boost::optional<Space> spaceForSurface(const ModelObject& surface) {
+      if (auto planarSurface = surface.optionalCast<PlanarSurface>()) {
+        return planarSurface->space();
+      }
+      if (auto internalMass = surface.optionalCast<InternalMass>()) {
+        return internalMass->space();
+      }
+      return boost::none;
+    }
+
+    // Matches the model objects accepted by EnergyPlus AllHeatTranSurfNames.
+    bool isHeatTransferSurface(const ModelObject& surface) {
+      return surface.optionalCast<Surface>() || surface.optionalCast<SubSurface>() || surface.optionalCast<InternalMass>();
+    }
+  }  // namespace
+
+  AngleFactor::AngleFactor(const ModelObject& surface, double angleFactor) : m_surface(surface), m_angleFactor(angleFactor) {
     if (!((m_angleFactor >= 0.0) && (m_angleFactor <= 1.0))) {
       LOG_AND_THROW("Angle Factor must be between 0 and 1.");
     }
   }
 
-  Surface AngleFactor::surface() const {
+  ModelObject AngleFactor::surface() const {
     return m_surface;
   }
 
@@ -82,7 +105,7 @@ namespace model {
       return numExtensibleGroups();
     }
 
-    boost::optional<unsigned> ComfortViewFactorAngles_Impl::angleFactorIndex(const Surface& surface) const {
+    boost::optional<unsigned> ComfortViewFactorAngles_Impl::angleFactorIndex(const ModelObject& surface) const {
       for (unsigned i = 0; i < numberofAngleFactors(); ++i) {
         if (auto existingSurface = getSurface(i); existingSurface && (existingSurface->handle() == surface.handle())) {
           return i;
@@ -91,8 +114,8 @@ namespace model {
       return boost::none;
     }
 
-    boost::optional<Surface> ComfortViewFactorAngles_Impl::getSurface(unsigned groupIndex) const {
-      boost::optional<Surface> result;
+    boost::optional<ModelObject> ComfortViewFactorAngles_Impl::getSurface(unsigned groupIndex) const {
+      boost::optional<ModelObject> result;
 
       if (groupIndex >= numberofAngleFactors()) {
         LOG(Error, "Asked to get Surface with index " << groupIndex << ", but " << briefDescription() << " has just " << numberofAngleFactors()
@@ -100,7 +123,7 @@ namespace model {
         return result;
       }
       auto group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
-      result = group.getModelObjectTarget<Surface>(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName);
+      result = group.getModelObjectTarget<ModelObject>(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName);
 
       if (!result) {
         LOG(Error, "Could not retrieve Surface Name for extensible group " << group.groupIndex() << ".");
@@ -134,13 +157,19 @@ namespace model {
     bool ComfortViewFactorAngles_Impl::addAngleFactor(const AngleFactor& angleFactor) {
       bool result = false;
 
-      Surface surface = angleFactor.surface();
+      ModelObject surface = angleFactor.surface();
       if (surface.model() != model()) {
         LOG(Error, "Cannot add a Surface from another Model to " << briefDescription() << ".");
         return result;
       }
 
-      boost::optional<Space> space = surface.space();
+      if (!isHeatTransferSurface(surface)) {
+        LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription()
+                                  << " because it is not a Surface, SubSurface, or InternalMass object.");
+        return result;
+      }
+
+      boost::optional<Space> space = spaceForSurface(surface);
       if (!space) {
         LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription() << " because it is not assigned to a Space.");
         return result;
@@ -154,7 +183,7 @@ namespace model {
       }
 
       for (const auto& existingAngleFactor : angleFactors()) {
-        const auto existingSpace = existingAngleFactor.surface().space();
+        const auto existingSpace = spaceForSurface(existingAngleFactor.surface());
         const auto existingThermalZone = existingSpace ? existingSpace->thermalZone() : boost::none;
         if (!existingThermalZone || (existingThermalZone->handle() != thermalZone->handle())) {
           LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription() << " because it is assigned to ThermalZone '"
@@ -215,7 +244,7 @@ namespace model {
       return result;
     }
 
-    bool ComfortViewFactorAngles_Impl::addAngleFactor(const Surface& surface, double angleFactor) {
+    bool ComfortViewFactorAngles_Impl::addAngleFactor(const ModelObject& surface, double angleFactor) {
       return addAngleFactor(AngleFactor(surface, angleFactor));
     }
 
@@ -263,7 +292,7 @@ namespace model {
     return getImpl<detail::ComfortViewFactorAngles_Impl>()->numberofAngleFactors();
   }
 
-  boost::optional<unsigned> ComfortViewFactorAngles::angleFactorIndex(const Surface& surface) const {
+  boost::optional<unsigned> ComfortViewFactorAngles::angleFactorIndex(const ModelObject& surface) const {
     return getImpl<detail::ComfortViewFactorAngles_Impl>()->angleFactorIndex(surface);
   }
 
@@ -275,7 +304,7 @@ namespace model {
     return getImpl<detail::ComfortViewFactorAngles_Impl>()->addAngleFactor(angleFactor);
   }
 
-  bool ComfortViewFactorAngles::addAngleFactor(const Surface& surface, double angleFactor) {
+  bool ComfortViewFactorAngles::addAngleFactor(const ModelObject& surface, double angleFactor) {
     return getImpl<detail::ComfortViewFactorAngles_Impl>()->addAngleFactor(surface, angleFactor);
   }
 

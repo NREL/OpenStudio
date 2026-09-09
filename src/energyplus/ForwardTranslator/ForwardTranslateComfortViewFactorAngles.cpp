@@ -8,6 +8,9 @@
 #include "../../model/Model.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/InternalMass.hpp"
+#include "../../model/InternalMass_Impl.hpp"
+#include "../../model/PlanarSurface.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ComfortViewFactorAngles.hpp"
@@ -37,8 +40,13 @@ namespace energyplus {
     boost::optional<ThermalZone> thermalZone;
 
     for (const AngleFactor& angleFactor : angleFactors) {
-      Surface surface = angleFactor.surface();
-      const auto space = surface.space();
+      ModelObject surface = angleFactor.surface();
+      boost::optional<Space> space;
+      if (auto planarSurface = surface.optionalCast<PlanarSurface>()) {
+        space = planarSurface->space();
+      } else if (auto internalMass = surface.optionalCast<InternalMass>()) {
+        space = internalMass->space();
+      }
       const auto surfaceThermalZone = space ? space->thermalZone() : boost::none;
       if (!surfaceThermalZone || (thermalZone && (surfaceThermalZone->handle() != thermalZone->handle()))) {
         LOG(Error, modelObject.briefDescription()

@@ -13,7 +13,7 @@ namespace openstudio {
 namespace model {
 
   class AngleFactor;
-  class Surface;
+  class ModelObject;
 
   namespace detail {
     class MODEL_API ComfortViewFactorAngles_Impl : public ModelObject_Impl
@@ -30,11 +30,11 @@ namespace model {
 
       std::vector<AngleFactor> angleFactors() const;
       unsigned int numberofAngleFactors() const;
-      boost::optional<unsigned> angleFactorIndex(const Surface& surface) const;
+      boost::optional<unsigned> angleFactorIndex(const ModelObject& surface) const;
       boost::optional<AngleFactor> getAngleFactor(unsigned groupIndex) const;
 
       bool addAngleFactor(const AngleFactor& angleFactor);
-      bool addAngleFactor(const Surface& surface, double angleFactor);
+      bool addAngleFactor(const ModelObject& surface, double angleFactor);
       bool addAngleFactors(const std::vector<AngleFactor>& angleFactors);
       bool removeAngleFactor(unsigned groupIndex);
       void removeAllAngleFactors();
@@ -42,7 +42,7 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.ComfortViewFactorAngles");
 
-      boost::optional<Surface> getSurface(unsigned groupIndex) const;
+      boost::optional<ModelObject> getSurface(unsigned groupIndex) const;
       boost::optional<double> getAngleFactorValue(unsigned groupIndex) const;
     };
   }

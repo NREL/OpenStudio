@@ -11,10 +11,13 @@
 #include "ModelFixture.hpp"
 
 #include "../ComfortViewFactorAngles.hpp"
+#include "../InternalMass.hpp"
+#include "../InternalMassDefinition.hpp"
 #include "../Model.hpp"
 #include "../PeopleDefinition.hpp"
 #include "../Space.hpp"
 #include "../Surface.hpp"
+#include "../SubSurface.hpp"
 #include "../ThermalZone.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
@@ -102,4 +105,29 @@ TEST_F(ModelFixture, ComfortViewFactorAngles) {
   EXPECT_DOUBLE_EQ(0.75, comfortViewFactorAngles.getAngleFactor(1)->angleFactor());
   comfortViewFactorAngles.removeAllAngleFactors();
   EXPECT_TRUE(comfortViewFactorAngles.angleFactors().empty());
+}
+
+TEST_F(ModelFixture, ComfortViewFactorAngles_HeatTransferSurfaceTargets) {
+  Model model;
+  ThermalZone thermalZone(model);
+  Space space(model);
+  ASSERT_TRUE(space.setThermalZone(thermalZone));
+  Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
+
+  Surface surface(points, model);
+  ASSERT_TRUE(surface.setSpace(space));
+  SubSurface subSurface(points, model);
+  ASSERT_TRUE(subSurface.setSurface(surface));
+  InternalMassDefinition internalMassDefinition(model);
+  InternalMass internalMass(internalMassDefinition);
+  ASSERT_TRUE(internalMass.setSpace(space));
+
+  ComfortViewFactorAngles comfortViewFactorAngles(model);
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(subSurface, 0.5));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(internalMass, 0.5));
+
+  const auto angleFactors = comfortViewFactorAngles.angleFactors();
+  ASSERT_EQ(2u, angleFactors.size());
+  EXPECT_EQ(subSurface.handle(), angleFactors[0].surface().handle());
+  EXPECT_EQ(internalMass.handle(), angleFactors[1].surface().handle());
 }

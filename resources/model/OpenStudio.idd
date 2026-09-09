@@ -3987,7 +3987,7 @@ OS:ComfortViewFactorAngles,
        \reference AllHeatTranAngFacNames
   A3,  \field Surface 1 Name
        \type object-list
-       \object-list SurfaceNames
+       \object-list AllHeatTranSurfNames
        \begin-extensible
        \required-field
   N1;  \field Angle Factor 1

@@ -8,7 +8,6 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
-#include "Surface.hpp"
 
 namespace openstudio {
 namespace model {
@@ -20,16 +19,16 @@ namespace model {
   class MODEL_API AngleFactor
   {
    public:
-    AngleFactor(const Surface& surface, double angleFactor);
+    AngleFactor(const ModelObject& surface, double angleFactor);
 
-    Surface surface() const;
+    ModelObject surface() const;
     double angleFactor() const;
 
     bool operator==(const AngleFactor& other) const = default;
     bool operator!=(const AngleFactor& other) const;
 
    private:
-    Surface m_surface;
+    ModelObject m_surface;
     double m_angleFactor;
     REGISTER_LOGGER("openstudio.model.AngleFactor");
   };
@@ -48,11 +47,11 @@ namespace model {
 
     std::vector<AngleFactor> angleFactors() const;
     unsigned int numberofAngleFactors() const;
-    boost::optional<unsigned> angleFactorIndex(const Surface& surface) const;
+    boost::optional<unsigned> angleFactorIndex(const ModelObject& surface) const;
     boost::optional<AngleFactor> getAngleFactor(unsigned groupIndex) const;
 
     bool addAngleFactor(const AngleFactor& angleFactor);
-    bool addAngleFactor(const Surface& surface, double angleFactor);
+    bool addAngleFactor(const ModelObject& surface, double angleFactor);
     bool addAngleFactors(const std::vector<AngleFactor>& angleFactors);
     void removeAngleFactor(int groupIndex);
     void removeAllAngleFactors();
