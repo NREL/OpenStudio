@@ -76,6 +76,10 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
   EXPECT_TRUE(definition.surfaceNameAngleFactorListName());
 
+  definition.resetMeanRadiantTemperatureCalculationType();
+  EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_FALSE(definition.surfaceNameAngleFactorListName());
+
   // Backward compat
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("ZoneAveraged"));
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());

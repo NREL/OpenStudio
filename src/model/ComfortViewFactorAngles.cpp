@@ -24,7 +24,7 @@ namespace openstudio {
 namespace model {
 
   AngleFactor::AngleFactor(const Surface& surface, double angleFactor) : m_surface(surface), m_angleFactor(angleFactor) {
-    if ((m_angleFactor < 0.0) || (m_angleFactor > 1.0)) {
+    if (!((m_angleFactor >= 0.0) && (m_angleFactor <= 1.0))) {
       LOG_AND_THROW("Angle Factor must be between 0 and 1.");
     }
   }

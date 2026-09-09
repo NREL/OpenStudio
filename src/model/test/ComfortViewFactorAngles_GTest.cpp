@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include <limits>
 #include <sstream>
 
 #include "ModelFixture.hpp"
@@ -34,6 +35,7 @@ TEST_F(ModelFixture, ComfortViewFactorAngles) {
   // Individual angle factors must remain within the IDD's inclusive range.
   EXPECT_THROW(AngleFactor(surface, -0.01), openstudio::Exception);
   EXPECT_THROW(AngleFactor(surface, 1.01), openstudio::Exception);
+  EXPECT_THROW(AngleFactor(surface, std::numeric_limits<double>::quiet_NaN()), openstudio::Exception);
 
   // A valid group is stored, indexed by its Surface, and returned as an AngleFactor.
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 0.25));

@@ -269,6 +269,7 @@ namespace model {
     void PeopleDefinition_Impl::resetMeanRadiantTemperatureCalculationType() {
       bool result = setString(OS_People_DefinitionFields::MeanRadiantTemperatureCalculationType, "");
       OS_ASSERT(result);
+      resetSurfaceNameAngleFactorListName();
     }
 
     bool PeopleDefinition_Impl::setSurfaceNameAngleFactorListName(const ModelObject& modelObject) {
