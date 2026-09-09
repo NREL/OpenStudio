@@ -12158,16 +12158,16 @@ People:Definition,
        \note optional (seventh thermal comfort model and report type)
 
 ComfortViewFactorAngles,
+       \min-fields 3
        \memo Used to specify radiant view factors for thermal comfort calculations.
        \memo Note that the following angle factor fractions must sum up to 1.0
-       \memo The number of surfaces can be expanded beyond 100, if necessary, by adding more
-       \memo groups to the end of the list.
-       \extensible:2
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+       \memo All surfaces must be in the same enclosure.
   A1 , \field Name
+       \required-field
        \type alpha
        \reference AllHeatTranAngFacNames
-       \object-list ZoneNames
-  A3 , \field Surface 1 Name
+  A2 , \field Surface 1 Name
        \type object-list
        \object-list AllHeatTranSurfNames
        \begin-extensible
