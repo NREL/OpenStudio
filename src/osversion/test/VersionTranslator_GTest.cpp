@@ -5113,7 +5113,10 @@ TEST_F(OSVersionFixture, update_3_11_0_to_3_12_0_People) {
   ASSERT_EQ(1u, definitions.size());
   const auto& definition = definitions.front();
   EXPECT_EQ("SurfaceWeighted", definition.getString(10).get());  // Mean Radiant Temperature Calculation Type
-  EXPECT_TRUE(definition.isEmpty(11));                             // Surface Name/Angle Factor List Name
+  const auto mrtTarget = definition.getTarget(11);  // Surface Name/Angle Factor List Name
+  ASSERT_TRUE(mrtTarget);
+  EXPECT_EQ("OS:Surface", mrtTarget->iddObject().name());
+  EXPECT_EQ("Radiant Surface", mrtTarget->nameString());
   EXPECT_EQ("Fanger", definition.getString(12).get());            // Thermal Comfort Model 1 Type
 
   std::vector<WorkspaceObject> people = model->getObjectsByType("OS:People");

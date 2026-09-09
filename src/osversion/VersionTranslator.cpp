@@ -10234,6 +10234,27 @@ namespace osversion {
     IdfFile targetIdf(idd_3_12_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    // The MRT target moves from each People instance to its shared PeopleDefinition. Preserve it when all instances agree,
+    // and record conflicting definitions because one target cannot represent multiple legacy values.
+    std::map<std::string, std::string> peopleDefinitionMRTTargets;
+    std::set<std::string> conflictingPeopleDefinitions;
+    for (const IdfObject& object : idf_3_11_0.objects()) {
+      if (object.iddObject().name() != "OS:People") {
+        continue;
+      }
+
+      const auto peopleDefinitionHandle = object.getString(2);
+      if (!peopleDefinitionHandle) {
+        continue;
+      }
+
+      const std::string mrtTarget = object.getString(6).get_value_or("");
+      const auto [it, inserted] = peopleDefinitionMRTTargets.emplace(*peopleDefinitionHandle, mrtTarget);
+      if (!inserted && (it->second != mrtTarget)) {
+        conflictingPeopleDefinitions.insert(*peopleDefinitionHandle);
+      }
+    }
+
     for (const IdfObject& object : idf_3_11_0.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -10326,6 +10347,17 @@ namespace osversion {
               newObject.setString(i + 1, value.get());
             }
           }
+        }
+
+        const auto peopleDefinitionHandle = object.getString(0);
+        if (peopleDefinitionHandle && (conflictingPeopleDefinitions.find(*peopleDefinitionHandle) == conflictingPeopleDefinitions.end())) {
+          if (const auto it = peopleDefinitionMRTTargets.find(*peopleDefinitionHandle);
+              (it != peopleDefinitionMRTTargets.end()) && !it->second.empty()) {
+            newObject.setString(11, it->second);
+          }
+        } else if (peopleDefinitionHandle) {
+          LOG(Error, "Cannot migrate Surface Name/Angle Factor List Name for " << object.briefDescription()
+                                                                                  << " because its People instances have conflicting targets.");
         }
 
         ss << newObject;
