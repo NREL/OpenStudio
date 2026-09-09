@@ -8,6 +8,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/ThermalZone.hpp"
 #include "../../model/ComfortViewFactorAngles.hpp"
 #include "../../model/ComfortViewFactorAngles_Impl.hpp"
 
@@ -32,9 +34,18 @@ namespace energyplus {
     std::vector<std::pair<std::string, double>> translatedAngleFactors;
     double sum = 0.0;
     constexpr double tolerance = 0.000001;
+    boost::optional<ThermalZone> thermalZone;
 
     for (const AngleFactor& angleFactor : angleFactors) {
       Surface surface = angleFactor.surface();
+      const auto space = surface.space();
+      const auto surfaceThermalZone = space ? space->thermalZone() : boost::none;
+      if (!surfaceThermalZone || (thermalZone && (surfaceThermalZone->handle() != thermalZone->handle()))) {
+        LOG(Error, modelObject.briefDescription()
+                     << " has surfaces that are not all assigned to the same ThermalZone and will not be translated.");
+        return boost::none;
+      }
+      thermalZone = surfaceThermalZone;
       if (auto idfSurface = translateAndMapModelObject(surface)) {
         const double value = angleFactor.angleFactor();
         sum += value;

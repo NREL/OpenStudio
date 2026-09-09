@@ -103,7 +103,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_Untranslated
   Surface surface(points, model);
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
-  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
+  EXPECT_FALSE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
 
   PeopleDefinition definition(model);
   EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
@@ -115,7 +115,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_Untranslated
   EXPECT_TRUE(workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles).empty());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_SkipsUntranslatedSurface) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_RejectsSurfacesInDifferentThermalZones) {
   Model model;
   ThermalZone zone(model);
   Space space(model);
@@ -125,11 +125,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_SkipsUntrans
   Surface translatedSurface(points, model);
   translatedSurface.setName("Translated Surface");
   EXPECT_TRUE(translatedSurface.setSpace(space));
-  Surface untranslatedSurface(points, model);
+  Surface surfaceToMove(points, model);
+  EXPECT_TRUE(surfaceToMove.setSpace(space));
+  ThermalZone otherThermalZone(model);
+  Space otherSpace(model);
+  EXPECT_TRUE(otherSpace.setThermalZone(otherThermalZone));
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
-  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(translatedSurface, 1.0));
-  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(untranslatedSurface, 0.0));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(translatedSurface, 0.5));
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surfaceToMove, 0.5));
+  EXPECT_TRUE(surfaceToMove.setSpace(otherSpace));
 
   PeopleDefinition definition(model);
   EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
@@ -140,11 +145,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ComfortViewFactorAngles_SkipsUntrans
   Workspace workspace = forwardTranslator.translateModel(model);
 
   const auto angleFactorObjects = workspace.getObjectsByType(IddObjectType::ComfortViewFactorAngles);
-  ASSERT_EQ(1u, angleFactorObjects.size());
-  ASSERT_EQ(1u, angleFactorObjects.front().numExtensibleGroups());
-  const auto group = angleFactorObjects.front().extensibleGroups().front();
-  EXPECT_EQ("Translated Surface", group.getString(0).get());
-  EXPECT_DOUBLE_EQ(1.0, group.getDouble(1).get());
+  EXPECT_TRUE(angleFactorObjects.empty());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ComfortViewFactorAngles) {
