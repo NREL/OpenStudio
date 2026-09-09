@@ -8,6 +8,8 @@
 
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
+#include "Space.hpp"
+#include "ThermalZone.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -45,7 +47,6 @@ namespace model {
   }
 
   namespace detail {
-
     ComfortViewFactorAngles_Impl::ComfortViewFactorAngles_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == ComfortViewFactorAngles::iddObjectType());
@@ -53,9 +54,7 @@ namespace model {
 
     ComfortViewFactorAngles_Impl::ComfortViewFactorAngles_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
                                                                  bool keepHandle)
-      : ModelObject_Impl(other, model, keepHandle) {
-      OS_ASSERT(other.iddObject().type() == ComfortViewFactorAngles::iddObjectType());
-    }
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     ComfortViewFactorAngles_Impl::ComfortViewFactorAngles_Impl(const ComfortViewFactorAngles_Impl& other, Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
@@ -133,11 +132,46 @@ namespace model {
     }
 
     bool ComfortViewFactorAngles_Impl::addAngleFactor(const AngleFactor& angleFactor) {
-      if (angleFactor.surface().model() != model()) {
+      bool result = false;
+
+      Surface surface = angleFactor.surface();
+      if (surface.model() != model()) {
         LOG(Error, "Cannot add a Surface from another Model to " << briefDescription() << ".");
-        return false;
+        return result;
       }
-      const auto existingIndex = angleFactorIndex(angleFactor.surface());
+
+      boost::optional<Space> space = surface.space();
+      if (!space) {
+        LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription() << " because it is not assigned to a Space.");
+        return result;
+      }
+
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (!thermalZone) {
+        LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription()
+                                  << " because it is not assigned to any ThermalZone.");
+        return result;
+      }
+
+      for (const auto& existingAngleFactor : angleFactors()) {
+        const auto existingSpace = existingAngleFactor.surface().space();
+        const auto existingThermalZone = existingSpace ? existingSpace->thermalZone() : boost::none;
+        if (!existingThermalZone || (existingThermalZone->handle() != thermalZone->handle())) {
+          LOG(Error, "Cannot add " << surface.briefDescription() << " to " << briefDescription() << " because it is assigned to ThermalZone '"
+                                    << thermalZone->nameString()
+                                    << "' instead of '"
+                                    << (existingThermalZone ? existingThermalZone->nameString() : "an unassigned ThermalZone") << "'.");
+          return result;
+        }
+      }
+
+      boost::optional<unsigned> existingIndex = angleFactorIndex(surface);
+      if (existingIndex) {
+        boost::optional<AngleFactor> existingAngleFactor = getAngleFactor(existingIndex.get());
+        OS_ASSERT(existingAngleFactor);
+        LOG(Warn, "For " << briefDescription() << ", AngleFactor already exists, will be modified in place from " << existingAngleFactor.get()
+                          << " to " << angleFactor << ".");
+      }
 
       double sum = angleFactor.angleFactor();
       for (unsigned i = 0; i < numberofAngleFactors(); ++i) {
@@ -147,7 +181,7 @@ namespace model {
         auto existingValue = getAngleFactorValue(i);
         if (!existingValue || (*existingValue < 0.0) || (*existingValue > 1.0)) {
           LOG(Error, "Cannot add an AngleFactor to " << briefDescription() << " because an existing Angle Factor is invalid.");
-          return false;
+          return result;
         }
         sum += *existingValue;
       }
@@ -156,20 +190,29 @@ namespace model {
       if (sum > 1.0 + tolerance) {
         LOG(Error, "Cannot add an AngleFactor to " << briefDescription() << " because the Angle Factors would sum to " << sum
                                                       << ", which is greater than 1.");
-        return false;
+        return result;
       }
 
-      auto group = (existingIndex ? getExtensibleGroup(*existingIndex).cast<ModelExtensibleGroup>()
-                  : pushExtensibleGroup({}, false).cast<ModelExtensibleGroup>());
-      bool surfaceSet = group.setPointer(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName, angleFactor.surface().handle(), false);
+      std::vector<std::string> temp;
+      ModelExtensibleGroup group = (existingIndex ? getExtensibleGroup(existingIndex.get()).cast<ModelExtensibleGroup>()
+                                                  : pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>());
+
+      bool surfaceSet = group.setPointer(OS_ComfortViewFactorAnglesExtensibleFields::SurfaceName, surface.handle(), false);
+      if (!surfaceSet) {
+        LOG(Error, "Unable to add AngleFactor which has an incompatible Surface object to " << briefDescription());
+        OS_ASSERT(false);
+      }
+
       bool angleFactorSet = group.setDouble(OS_ComfortViewFactorAnglesExtensibleFields::AngleFactor, angleFactor.angleFactor());
       if (surfaceSet && angleFactorSet) {
-        return true;
+        result = true;
+      } else {
+        if (!existingIndex) {
+          getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+        }
       }
-      if (!existingIndex) {
-        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
-      }
-      return false;
+
+      return result;
     }
 
     bool ComfortViewFactorAngles_Impl::addAngleFactor(const Surface& surface, double angleFactor) {
@@ -181,17 +224,21 @@ namespace model {
       for (const auto& angleFactor : angleFactors) {
         if (!addAngleFactor(angleFactor)) {
           result = false;
+          LOG(Error, "Could not add AngleFactor " << angleFactor << " to " << briefDescription() << ". Continuing with others.");
         }
       }
       return result;
     }
 
     bool ComfortViewFactorAngles_Impl::removeAngleFactor(unsigned groupIndex) {
-      if (groupIndex >= numberofAngleFactors()) {
-        return false;
+      bool result = false;
+
+      if (groupIndex < numberofAngleFactors()) {
+        getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+        result = true;
       }
-      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      return true;
+
+      return result;
     }
 
     void ComfortViewFactorAngles_Impl::removeAllAngleFactors() {

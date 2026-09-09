@@ -12,7 +12,9 @@
 #include "../ComfortViewFactorAngles.hpp"
 #include "../Model.hpp"
 #include "../PeopleDefinition.hpp"
+#include "../Space.hpp"
 #include "../Surface.hpp"
+#include "../ThermalZone.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -21,8 +23,12 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, ComfortViewFactorAngles) {
   Model model;
+  ThermalZone thermalZone(model);
+  Space space(model);
+  ASSERT_TRUE(space.setThermalZone(thermalZone));
   Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
   Surface surface(points, model);
+  ASSERT_TRUE(surface.setSpace(space));
   ComfortViewFactorAngles comfortViewFactorAngles(model);
 
   // Individual angle factors must remain within the IDD's inclusive range.
@@ -52,10 +58,21 @@ TEST_F(ModelFixture, ComfortViewFactorAngles) {
 
   // New groups may bring the total to one, but cannot make it exceed one.
   Surface otherSurfaceInModel(points, model);
+  ASSERT_TRUE(otherSurfaceInModel.setSpace(space));
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(otherSurfaceInModel, 0.5));
   EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
   Surface thirdSurfaceInModel(points, model);
+  ASSERT_TRUE(thirdSurfaceInModel.setSpace(space));
   EXPECT_FALSE(comfortViewFactorAngles.addAngleFactor(thirdSurfaceInModel, 0.01));
+  EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
+
+  // Every referenced Surface must belong to the same ThermalZone.
+  ThermalZone otherThermalZone(model);
+  Space otherSpace(model);
+  ASSERT_TRUE(otherSpace.setThermalZone(otherThermalZone));
+  Surface surfaceInOtherThermalZone(points, model);
+  ASSERT_TRUE(surfaceInOtherThermalZone.setSpace(otherSpace));
+  EXPECT_FALSE(comfortViewFactorAngles.addAngleFactor(surfaceInOtherThermalZone, 0.0));
   EXPECT_EQ(2u, comfortViewFactorAngles.numberofAngleFactors());
 
   // A Surface in another Model cannot be referenced.

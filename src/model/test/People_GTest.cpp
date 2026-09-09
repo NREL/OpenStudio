@@ -14,6 +14,7 @@
 #include "../PeopleDefinition_Impl.hpp"
 #include "../ComfortViewFactorAngles.hpp"
 #include "../Surface.hpp"
+#include "../ThermalZone.hpp"
 
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleDay.hpp"
@@ -54,6 +55,10 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
 
   Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
   Surface surface(points, model);
+  ThermalZone thermalZone(model);
+  Space space(model);
+  ASSERT_TRUE(space.setThermalZone(thermalZone));
+  ASSERT_TRUE(surface.setSpace(space));
 
   ComfortViewFactorAngles comfortViewFactorAngles(model);
   EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
