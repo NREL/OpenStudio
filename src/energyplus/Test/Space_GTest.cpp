@@ -286,6 +286,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
   auto spaceWithDirectElectricEquipment = eqSpace.space().get();
 
   ForwardTranslator ft;
+  ft.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights/People/ElectricEquipment translation specifically
 
   {
     ft.setExcludeSpaceTranslation(false);

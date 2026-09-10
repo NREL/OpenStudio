@@ -21,6 +21,7 @@
 #include "../../model/LifeCycleCost.hpp"
 
 #include <utilities/idd/HotWaterEquipment_FieldEnums.hxx>
+#include <utilities/idd/HotWaterEquipment_Instance_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -33,6 +34,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipment(HotWaterEquipment& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateHotWaterEquipmentLegacy(modelObject);
+    }
+    return translateHotWaterEquipmentInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipmentLegacy(HotWaterEquipment& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::HotWaterEquipment);
     m_idfObjects.push_back(idfObject);
 
@@ -86,6 +94,37 @@ namespace energyplus {
 
     if (!modelObject.isEndUseSubcategoryDefaulted()) {
       idfObject.setString(HotWaterEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipmentInstance(HotWaterEquipment& modelObject) {
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HotWaterEquipment_Instance, modelObject);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    HotWaterEquipmentDefinition definition = modelObject.hotWaterEquipmentDefinition();
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(HotWaterEquipment_InstanceFields::HotWaterEquipmentDefinitionName, definitionIdfObject_->nameString());
+
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(HotWaterEquipment_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(HotWaterEquipment_InstanceFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setDouble(HotWaterEquipment_InstanceFields::Multiplier, modelObject.multiplier());
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(HotWaterEquipment_InstanceFields::EndUseSubcategory, modelObject.endUseSubcategory());
     }
 
     return idfObject;

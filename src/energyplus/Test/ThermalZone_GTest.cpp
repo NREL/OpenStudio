@@ -85,6 +85,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_SameSp
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -146,6 +147,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -206,6 +208,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_SameSp
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -268,6 +271,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -330,6 +334,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Differ
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -398,6 +403,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -462,6 +468,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -518,6 +525,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(2, space.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -571,6 +579,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(1, space.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -623,6 +632,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(1, space.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -700,6 +710,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
   EXPECT_EQ(3, space3.lightingPowerPerFloorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -792,6 +803,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedu
   }
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -889,6 +901,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSch
   }
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People/Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {

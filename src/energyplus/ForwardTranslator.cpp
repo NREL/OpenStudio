@@ -176,6 +176,10 @@ namespace energyplus {
     m_forwardTranslatorOptions.setExcludeSpaceTranslation(excludeSpaceTranslation);
   }
 
+  void ForwardTranslator::setExcludeSpaceLoadInstances(bool excludeSpaceLoadInstances) {
+    m_forwardTranslatorOptions.setExcludeSpaceLoadInstances(excludeSpaceLoadInstances);
+  }
+
   // #5510 - Sort by name first, then by reporting frequency
   // This is a weird case where the "Name" field is actually not unique
   bool OutputMeterSorterPredicate(const WorkspaceObject& a, const WorkspaceObject& b) {
@@ -1575,7 +1579,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_ElectricEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<ElectricEquipmentDefinition>();
+        retVal = translateElectricEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled: {
@@ -1584,7 +1589,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition: {
-        // no-op
+        auto definition = modelObject.cast<ElectricEquipmentITEAirCooledDefinition>();
+        retVal = translateElectricEquipmentITEAirCooledDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution: {
@@ -2045,7 +2051,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_HotWaterEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<HotWaterEquipmentDefinition>();
+        retVal = translateHotWaterEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Humidifier_Steam_Electric: {
@@ -2069,7 +2076,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_GasEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<GasEquipmentDefinition>();
+        retVal = translateGasEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_IlluminanceMap: {
@@ -2178,7 +2186,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Lights_Definition: {
-        // no-op
+        auto definition = modelObject.cast<LightsDefinition>();
+        retVal = translateLightsDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Luminaire: {
@@ -2275,7 +2284,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_OtherEquipment_Definition: {
-        //no-op
+        auto definition = modelObject.cast<OtherEquipmentDefinition>();
+        retVal = translateOtherEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_PlantLoop: {
@@ -2454,7 +2464,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_People_Definition: {
-        // no-op
+        auto definition = modelObject.cast<PeopleDefinition>();
+        retVal = translatePeopleDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs: {
@@ -2951,7 +2962,8 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_SteamEquipment_Definition: {
-        // no-op
+        auto definition = modelObject.cast<SteamEquipmentDefinition>();
+        retVal = translateSteamEquipmentDefinition(definition);
         break;
       }
       case openstudio::IddObjectType::OS_Surface: {

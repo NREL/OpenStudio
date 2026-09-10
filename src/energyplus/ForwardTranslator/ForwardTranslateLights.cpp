@@ -12,6 +12,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/LifeCycleCost.hpp"
 #include <utilities/idd/Lights_FieldEnums.hxx>
+#include <utilities/idd/Lights_Instance_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -23,6 +24,13 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateLights(Lights& modelObject) {
+    if (m_forwardTranslatorOptions.excludeSpaceLoadInstances()) {
+      return translateLightsLegacy(modelObject);
+    }
+    return translateLightsInstance(modelObject);
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateLightsLegacy(Lights& modelObject) {
     // create, register, and name object
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights, modelObject);
 
@@ -96,6 +104,41 @@ namespace energyplus {
     if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted()) {
       idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,
                           definition.returnAirFractionFunctionofPlenumTemperatureCoefficient2());
+    }
+
+    return idfObject;
+  }
+
+  boost::optional<IdfObject> ForwardTranslator::translateLightsInstance(Lights& modelObject) {
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights_Instance, modelObject);
+
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
+    }
+
+    LightsDefinition definition = modelObject.lightsDefinition();
+    auto definitionIdfObject_ = translateAndMapModelObject(definition);
+    OS_ASSERT(definitionIdfObject_);
+    idfObject.setString(Lights_InstanceFields::LightsDefinitionName, definitionIdfObject_->nameString());
+
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
+    idfObject.setString(Lights_InstanceFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(Lights_InstanceFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    if (!modelObject.isFractionReplaceableDefaulted()) {
+      idfObject.setDouble(Lights_InstanceFields::FractionReplaceable, modelObject.fractionReplaceable());
+    }
+
+    idfObject.setDouble(Lights_InstanceFields::Multiplier, modelObject.multiplier());
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(Lights_InstanceFields::EndUseSubcategory, modelObject.endUseSubcategory());
     }
 
     return idfObject;
