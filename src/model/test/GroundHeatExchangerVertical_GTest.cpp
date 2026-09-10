@@ -338,6 +338,18 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());
+
+  ModelObject undisturbedGroundTemperatureModelClone = testObjectClone.undisturbedGroundTemperatureModel();
+  boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> sgtClone =
+    undisturbedGroundTemperatureModelClone.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+  ASSERT_TRUE(sgtClone);
+  EXPECT_EQ(2u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
+
+  ModelObject undisturbedGroundTemperatureModelClone2 = testObjectClone2.undisturbedGroundTemperatureModel();
+  boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> sgtClone2 =
+    undisturbedGroundTemperatureModelClone2.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+  ASSERT_TRUE(sgtClone2);
+  EXPECT_EQ(1u, m2.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerVertical_GFunctions) {

@@ -38,6 +38,10 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<ModelObject> children() const override;
+
       virtual unsigned inletPort() const override;
 
       virtual unsigned outletPort() const override;

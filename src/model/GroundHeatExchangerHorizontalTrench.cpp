@@ -9,6 +9,8 @@
 #include "PlantLoop_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
 #include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
@@ -257,6 +259,22 @@ namespace model {
       }
 
       return false;
+    }
+
+    ModelObject GroundHeatExchangerHorizontalTrench_Impl::clone(Model model) const {
+      auto groundHeatExchangerClone = StraightComponent_Impl::clone(model).cast<GroundHeatExchangerHorizontalTrench>();
+
+      groundHeatExchangerClone.setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel().clone(model));
+
+      return std::move(groundHeatExchangerClone);
+    }
+
+    std::vector<ModelObject> GroundHeatExchangerHorizontalTrench_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      result.push_back(undisturbedGroundTemperatureModel());
+
+      return result;
     }
 
     ComponentType GroundHeatExchangerHorizontalTrench_Impl::componentType() const {
