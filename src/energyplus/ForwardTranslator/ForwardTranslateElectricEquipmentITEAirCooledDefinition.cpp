@@ -12,6 +12,8 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
+
 #include <utilities/idd/ElectricEquipment_ITE_AirCooled_Definition_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -28,8 +30,13 @@ namespace energyplus {
 
     idfObject.setString(ElectricEquipment_ITE_AirCooled_DefinitionFields::AirFlowCalculationMethod, modelObject.airFlowCalculationMethod());
 
-    idfObject.setString(ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignPowerInputCalculationMethod,
-                         modelObject.designPowerInputCalculationMethod());
+    // The model (like the legacy ElectricEquipment:ITE:AirCooled object) uses 'Watts/Unit', but the E+ ...:Definition object
+    // renamed that choice to 'EquipmentLevel' to match the naming convention used by the other *:Definition objects.
+    std::string designPowerInputCalculationMethod = modelObject.designPowerInputCalculationMethod();
+    if (istringEqual(designPowerInputCalculationMethod, "Watts/Unit")) {
+      designPowerInputCalculationMethod = "EquipmentLevel";
+    }
+    idfObject.setString(ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignPowerInputCalculationMethod, designPowerInputCalculationMethod);
 
     if (boost::optional<double> d = modelObject.designLevel()) {
       idfObject.setDouble(ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperUnit, *d);

@@ -176,6 +176,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Instan
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Definition).size());
   WorkspaceObject definitionObject = workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled_Definition)[0];
   EXPECT_EQ(definition.nameString(), definitionObject.nameString());
+  // The model (like the legacy object) uses 'Watts/Unit', but the E+ ...:Definition object calls that choice 'EquipmentLevel'
+  EXPECT_EQ("Watts/Unit", definition.designPowerInputCalculationMethod());
+  EXPECT_EQ("EquipmentLevel",
+            definitionObject.getString(ElectricEquipment_ITE_AirCooled_DefinitionFields::DesignPowerInputCalculationMethod, true).get());
   // Definition values are NOT multiplied
   EXPECT_EQ(100.0, definitionObject.getDouble(ElectricEquipment_ITE_AirCooled_DefinitionFields::WattsperUnit, true).get());
   ASSERT_TRUE(
