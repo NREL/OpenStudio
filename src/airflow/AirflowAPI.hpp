@@ -12,6 +12,12 @@
 #  else
 #    define AIRFLOW_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_airflow_EXPORTS) || defined(openstudio_EXPORTS)
+#    define AIRFLOW_API __attribute__((visibility("default")))
+#  else
+#    define AIRFLOW_API
+#  endif
 #else
 #  define AIRFLOW_API
 #endif

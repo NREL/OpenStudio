@@ -12,6 +12,12 @@
 #  else
 #    define ENERGYPLUS_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_energyplus_EXPORTS) || defined(openstudio_EXPORTS)
+#    define ENERGYPLUS_API __attribute__((visibility("default")))
+#  else
+#    define ENERGYPLUS_API
+#  endif
 #else
 #  define ENERGYPLUS_API
 #endif

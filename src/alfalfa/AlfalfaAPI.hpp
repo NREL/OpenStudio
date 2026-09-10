@@ -12,6 +12,12 @@
 #  else
 #    define ALFALFA_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_alfalfa_EXPORTS) || defined(openstudio_EXPORTS)
+#    define ALFALFA_API __attribute__((visibility("default")))
+#  else
+#    define ALFALFA_API
+#  endif
 #else
 #  define ALFALFA_API
 #endif

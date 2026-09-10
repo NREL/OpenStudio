@@ -12,6 +12,12 @@
 #  else
 #    define GBXML_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_gbxml_EXPORTS) || defined(openstudio_EXPORTS)
+#    define GBXML_API __attribute__((visibility("default")))
+#  else
+#    define GBXML_API
+#  endif
 #else
 #  define GBXML_API
 #endif

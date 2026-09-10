@@ -29,6 +29,16 @@
 
 #  endif
 
+#elif defined(__GNUC__) || defined(__clang__)
+
+#  if defined(openstudio_utilities_EXPORTS) || defined(openstudio_EXPORTS)
+#    define UTILITIES_API __attribute__((visibility("default")))
+#    define UTILITIES_TEMPLATE_EXT
+#  else
+#    define UTILITIES_API
+#    define UTILITIES_TEMPLATE_EXT extern
+#  endif
+
 #else
 
 #  define UTILITIES_API

@@ -12,6 +12,12 @@
 #  else
 #    define RADIANCE_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_radiance_EXPORTS) || defined(openstudio_EXPORTS)
+#    define RADIANCE_API __attribute__((visibility("default")))
+#  else
+#    define RADIANCE_API
+#  endif
 #else
 #  define RADIANCE_API
 #endif

@@ -12,6 +12,12 @@
 #  else
 #    define CSHARP_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  ifdef openstudio_csharp_EXPORTS
+#    define CSHARP_API __attribute__((visibility("default")))
+#  else
+#    define CSHARP_API
+#  endif
 #else
 #  define CSHARP_API
 #endif

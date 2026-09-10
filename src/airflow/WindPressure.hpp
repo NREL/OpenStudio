@@ -8,6 +8,12 @@
 
 #if _WIN32 || _MSC_VER
 #  define WIND_API __declspec(dllexport)
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_airflow_EXPORTS) || defined(openstudio_EXPORTS)
+#    define WIND_API __attribute__((visibility("default")))
+#  else
+#    define WIND_API
+#  endif
 #else
 #  define WIND_API
 #endif

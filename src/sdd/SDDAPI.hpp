@@ -12,6 +12,12 @@
 #  else
 #    define SDD_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_sdd_EXPORTS) || defined(openstudio_EXPORTS)
+#    define SDD_API __attribute__((visibility("default")))
+#  else
+#    define SDD_API
+#  endif
 #else
 #  define SDD_API
 #endif

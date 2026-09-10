@@ -12,6 +12,12 @@
 #  else
 #    define ISOMODEL_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_isomodel_EXPORTS) || defined(openstudio_EXPORTS)
+#    define ISOMODEL_API __attribute__((visibility("default")))
+#  else
+#    define ISOMODEL_API
+#  endif
 #else
 #  define ISOMODEL_API
 #endif

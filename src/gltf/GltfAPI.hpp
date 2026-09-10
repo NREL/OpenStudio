@@ -12,6 +12,12 @@
 #  else
 #    define GLTF_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_gltf_EXPORTS) || defined(openstudio_EXPORTS)
+#    define GLTF_API __attribute__((visibility("default")))
+#  else
+#    define GLTF_API
+#  endif
 #else
 #  define GLTF_API
 #endif

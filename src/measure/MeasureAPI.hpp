@@ -12,6 +12,12 @@
 #  else
 #    define MEASURE_API __declspec(dllimport)
 #  endif
+#elif defined(__GNUC__) || defined(__clang__)
+#  if defined(openstudio_measure_EXPORTS) || defined(openstudio_EXPORTS)
+#    define MEASURE_API __attribute__((visibility("default")))
+#  else
+#    define MEASURE_API
+#  endif
 #else
 #  define MEASURE_API
 #endif
