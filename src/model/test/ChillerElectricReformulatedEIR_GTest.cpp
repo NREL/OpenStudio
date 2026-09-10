@@ -914,3 +914,21 @@ TEST_F(ModelFixture, ChillerElectricReformulatedEIR_PlantLoopConnections_addToNo
   ASSERT_TRUE(chiller.heatRecoveryLoop());
   EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
 }
+
+TEST_F(ModelFixture, ChillerElectricReformulatedEIR_referenceConditionsCurveOutput) {
+
+  // Test for #2093, #2957
+  Model model;
+  ChillerElectricReformulatedEIR chiller(model);
+
+  double ref_lchwt = chiller.referenceLeavingChilledWaterTemperature();
+  double ref_lcnwt = chiller.referenceLeavingCondenserWaterTemperature();
+
+  Curve capft = chiller.coolingCapacityFunctionOfTemperature();
+  Curve eirft = chiller.electricInputToCoolingOutputRatioFunctionOfTemperature();
+  Curve eirfplr = chiller.electricInputToCoolingOutputRatioFunctionOfPLR();
+
+  EXPECT_NEAR(1.0, capft.evaluate(ref_lchwt, ref_lcnwt), 0.01);
+  EXPECT_NEAR(1.0, eirft.evaluate(ref_lchwt, ref_lcnwt), 0.01);
+  EXPECT_NEAR(1.0, eirfplr.evaluate(35.0, 1.0), 0.01);
+}

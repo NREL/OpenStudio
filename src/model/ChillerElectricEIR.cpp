@@ -999,6 +999,16 @@ namespace model {
   ChillerElectricEIR::ChillerElectricEIR(const Model& model) : WaterToWaterComponent(ChillerElectricEIR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ChillerElectricEIR_Impl>());
 
+    // Both of the following test files have capft and eirft curves with the ctor values below:
+    // - DOAS_wNeutralSupplyAir_wFanCoilUnits.idf
+    // - WaterCooledChillerWithVSCondenserControl.idf
+    // But the curves are unused in the test files.
+
+    // The following test files have curve values shown in the E+ documentation:
+    // - ElectricEIRChiller.idf (WaterCooled)
+    // - ElectricEIRChillerHeatRecoveryAuto.idf (WaterCooled)
+    // - ElectricEIRChiller_EvapCooledCondenser.idf (EvaporativelyCooled)
+
     CurveBiquadratic ccFofT(model);
     ccFofT.setCoefficient1Constant(1.0215158);
     ccFofT.setCoefficient2x(0.037035864);

@@ -1117,3 +1117,23 @@ TEST_F(ModelFixture, ChillerElectricEIR_HeatRecoverySetpointNode) {
   ASSERT_TRUE(chiller.heatRecoveryLeavingTemperatureSetpointNode());
   EXPECT_EQ(hrOutletNode, chiller.heatRecoveryLeavingTemperatureSetpointNode().get());
 }
+
+TEST_F(ModelFixture, ChillerElectricEIR_referenceConditionsCurveOutput) {
+
+  // Test for #2093, #2957
+  Model model;
+  ChillerElectricEIR chiller(model);
+
+  double ref_lchwt = chiller.referenceLeavingChilledWaterTemperature();
+  double ref_ecnwt = chiller.referenceEnteringCondenserFluidTemperature();
+
+  Curve capft = chiller.coolingCapacityFunctionOfTemperature();
+  Curve eirft = chiller.electricInputToCoolingOutputRatioFunctionOfTemperature();
+  Curve eirfplr = chiller.electricInputToCoolingOutputRatioFunctionOfPLR();
+
+  EXPECT_NEAR(1.0, capft.evaluate(ref_lchwt, ref_ecnwt), 0.01);  // 85F (water cooled)
+  EXPECT_NEAR(1.0, eirft.evaluate(ref_lchwt, ref_ecnwt), 0.01);  // 85F (water cooled)
+  EXPECT_NEAR(1.0, capft.evaluate(ref_lchwt, 35.0), 0.01);       // 95F (air cooled)
+  EXPECT_NEAR(1.0, eirft.evaluate(ref_lchwt, 35.0), 0.01);       // 95F (air cooled)
+  EXPECT_NEAR(1.0, eirfplr.evaluate(1.0), 0.01);
+}
