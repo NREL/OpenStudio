@@ -129,6 +129,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
   electricEquipmentITEAirCooled.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
 
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -218,6 +219,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   {
     // Translate to EnergyPlus Space
     ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -240,6 +242,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   {
     // Historical method prior to EnergyPlus Space
     ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -301,6 +304,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   {
     // Translate to EnergyPlus Space
     ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -330,6 +334,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
   {
     // Historical method prior to EnergyPlus Space
     ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -391,6 +396,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
   {
     // Historical method prior to EnergyPlus Space
     ForwardTranslator forwardTranslator;
+    forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -439,6 +445,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Supply
   electricEquipmentITEAirCooled.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
 
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -486,6 +493,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   electricEquipmentITEAirCooled2.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -559,6 +567,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   definition3.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures");
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   Workspace workspace = forwardTranslator.translateModel(model);
 
   // electricEquipmentITEAirCooled2 and 3 were not translated because the terminal is not single duct VAV terminal
@@ -693,6 +702,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   EXPECT_EQ(750.0, modelWatts);
 
   ForwardTranslator ft;
+  ft.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
 
   // When excluding space translation (historical behavior)
   {

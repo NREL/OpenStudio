@@ -99,6 +99,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   lights.setSpace(space);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -148,6 +149,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   lights.setSpaceType(spaceType);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -228,6 +230,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -344,6 +347,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -456,6 +460,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -556,6 +561,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
   EXPECT_EQ(spaceType.handle(), lights.spaceType()->handle());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
 
@@ -593,6 +599,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Building_Schedule) {
   EXPECT_EQ(schedule2.handle(), lights.schedule()->handle());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
@@ -645,6 +652,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
   EXPECT_DOUBLE_EQ(1000.00, space2.lightingPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -730,6 +738,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   EXPECT_DOUBLE_EQ(2, definition.floorArea());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy Lights translation specifically
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
 

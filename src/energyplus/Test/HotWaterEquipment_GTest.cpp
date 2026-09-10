@@ -61,9 +61,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HotWaterEquipment_Legacy) {
   hotWaterEquipment.setMultiplier(2.0);
 
   ForwardTranslator forwardTranslator;
-  // Default: preserves historical behavior
-  ASSERT_TRUE(forwardTranslator.forwardTranslatorOptions().isExcludeSpaceLoadInstancesDefaulted());
-  ASSERT_TRUE(forwardTranslator.forwardTranslatorOptions().excludeSpaceLoadInstances());
+  // Opt into the legacy (historical) behavior; new default is to use Instance/Definition objects
+  forwardTranslator.setExcludeSpaceLoadInstances(true);
 
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0, forwardTranslator.errors().size());

@@ -136,6 +136,17 @@ namespace cli {
         "Add individual E+ Space [Default: True]")
       ->group(ftGroupName);
 
+    app
+      ->add_flag(
+        "--space-load-instances,!--no-space-load-instances",
+        [opt](std::int64_t val) {
+          if (val != 0) {
+            opt->runOptions.forwardTranslatorOptions().setExcludeSpaceLoadInstances((val != 1));
+          }
+        },
+        "Translate SpaceLoads (People, Lights, ElectricEquipment, etc) to the E+ Instance / Definition object pairs [Default: True]")
+      ->group(ftGroupName);
+
     // Subcommand callback
     app->callback([opt, &ruby, &python] {
       openstudio::OSWorkflow workflow(*opt, ruby, python);

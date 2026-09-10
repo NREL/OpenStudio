@@ -74,6 +74,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   EXPECT_EQ(200.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -172,6 +173,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   EXPECT_EQ(300.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -293,6 +295,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   EXPECT_EQ(300.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -404,6 +407,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
   EXPECT_EQ(200.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
 
   // When excluding space translation (historical behavior)
   {
@@ -501,6 +505,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   EXPECT_EQ(300.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
@@ -618,6 +623,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   EXPECT_EQ(300.0, building.electricEquipmentPower());
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment translation specifically
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);

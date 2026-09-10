@@ -84,8 +84,7 @@ namespace detail {
     static constexpr bool DEFAULT_NO_HTML_OUTPUT = false;
     static constexpr bool DEFAULT_NO_VARIABLE_DICTIONARY = false;
     static constexpr bool DEFAULT_NO_SPACE_TRANSLATION = false;  // At 3.4.1, this was changed to false.
-    // People/Lights/etc still translate to the legacy People/Lights/... objects by default until instance-based FT is implemented.
-    static constexpr bool DEFAULT_NO_SPACE_LOAD_INSTANCES = true;
+    static constexpr bool DEFAULT_NO_SPACE_LOAD_INSTANCES = false;
 
     bool m_runcontrolspecialdays = DEFAULT_RUNCONTROLSPECIALDAYS;
     bool m_is_runcontrolspecialdays_defaulted = true;

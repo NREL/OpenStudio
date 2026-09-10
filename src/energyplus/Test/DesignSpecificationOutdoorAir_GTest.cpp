@@ -265,6 +265,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   DesignDay d(m);
 
   ForwardTranslator ft;
+  ft.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People translation specifically
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);

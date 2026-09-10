@@ -102,6 +102,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_People) {
   EXPECT_TRUE(p.setHeatStressTemperatureThreshold(31.0));
 
   ForwardTranslator ft;
+  ft.setExcludeSpaceLoadInstances(true);  // Test targets the legacy People translation specifically
   Workspace workspace = ft.translateModel(m);
 
   std::vector<WorkspaceObject> peopleObjects = workspace.getObjectsByType(IddObjectType::People);
