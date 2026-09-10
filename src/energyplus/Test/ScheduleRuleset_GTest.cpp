@@ -30,8 +30,10 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Year_Rules_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Rule_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <sstream>
@@ -67,32 +69,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Simple) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(2u, extensibleGroups.size());
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(2u, scheduleWeekRules.size());
 
-  // based on 2009 assumed year
-
-  // 1/1-1/3
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(3, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 1/4-12/31
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(4, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(31, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleWeekRule.extensibleGroups();
+    ASSERT_EQ(1u, extensibleGroups.size());
+    if (rulePriorityOrder == 0 || rulePriorityOrder == 1) {
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+      EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+      EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+      EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+      EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
+    }
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Bug804) {
@@ -146,72 +142,35 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Bug804) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(6u, extensibleGroups.size());
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(4u, scheduleWeekRules.size());
 
-  // based on 2009 assumed year
-
-  // 1/1-1/3
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(3, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 1/4-4/25
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(4, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(4, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(25, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 4/26-5/2
-  ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(4, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(26, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(5, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(2, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 5/3-12/12
-  ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(5, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(3, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 12/13-12/19
-  ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(13, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(19, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  // 12/20-12/31
-  ASSERT_TRUE(extensibleGroups[5].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(12, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[5].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(20, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(31, extensibleGroups[5].getInt(Schedule_YearExtensibleFields::EndDay).get());
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleWeekRule.extensibleGroups();
+    ASSERT_EQ(1u, extensibleGroups.size());
+    if (rulePriorityOrder == 0 || rulePriorityOrder == 1) {
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+      EXPECT_EQ(5, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+      EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+      EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+      EXPECT_EQ(13, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
+    } else {
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+      EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+      EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+      EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+      ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+      EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
+    }
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322) {
@@ -287,34 +246,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(1u, extensibleGroups.size());
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(1u, scheduleWeekRules.size());
 
-  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
-  ASSERT_EQ(1u, scheduleWeekDailys.size());
-  WorkspaceObject scheduleWeekDaily(scheduleWeekDailys[0]);
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleWeekRule.extensibleGroups();
+    ASSERT_EQ(1u, extensibleGroups.size());
 
-  // 1/1 to 12/31
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+    EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
 
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+    EXPECT_EQ("All Days Schedule", scheduleWeekRule.getString(Schedule_Week_RuleFields::DayScheduleName).get());
 
-  EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Dec31", scheduleWeekDaily.nameString());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySunday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyMonday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyTuesday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyWednesday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyThursday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyFriday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySaturday).get());
+
+    EXPECT_EQ("All Days Rule", scheduleWeekRule.nameString());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2) {
@@ -350,58 +312,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(2u, extensibleGroups.size());
-  std::vector<WorkspaceExtensibleGroup> workspaceExtensibleGroups = subsetCastVector<WorkspaceExtensibleGroup>(extensibleGroups);
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(1u, scheduleWeekRules.size());
 
-  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
-  ASSERT_EQ(2u, scheduleWeekDailys.size());
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleWeekRule.extensibleGroups();
+    ASSERT_EQ(1u, extensibleGroups.size());
 
-  // 1/1 to 1/4
-  WorkspaceExtensibleGroup w_eg(workspaceExtensibleGroups[0]);
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(4, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+    EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
 
-  boost::optional<WorkspaceObject> _scheduleWeekDaily1 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+    EXPECT_EQ("All Days Except Mon and Wed Schedule", scheduleWeekRule.getString(Schedule_Week_RuleFields::DayScheduleName).get());
 
-  EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Jan4", _scheduleWeekDaily1->nameString());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySunday).get());
+    EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyMonday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyTuesday).get());
+    EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyWednesday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyThursday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyFriday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySaturday).get());
 
-  // 1/4 to 12/31
-  w_eg = workspaceExtensibleGroups[1];
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(5, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(31, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  boost::optional<WorkspaceObject> _scheduleWeekDaily2 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
-
-  EXPECT_EQ("Schedule Ruleset Week Rule - Jan5-Dec31", _scheduleWeekDaily2->nameString());
+    EXPECT_EQ("All Days Except Mon and Wed Rule", scheduleWeekRule.nameString());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3) {
@@ -439,83 +380,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(3u, extensibleGroups.size());
-  std::vector<WorkspaceExtensibleGroup> workspaceExtensibleGroups = subsetCastVector<WorkspaceExtensibleGroup>(extensibleGroups);
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(1u, scheduleWeekRules.size());
 
-  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
-  ASSERT_EQ(3u, scheduleWeekDailys.size());
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleWeekRule.extensibleGroups();
+    ASSERT_EQ(1u, extensibleGroups.size());
 
-  // 1/1 to 1/4
-  WorkspaceExtensibleGroup w_eg(workspaceExtensibleGroups[0]);
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(4, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth));
+    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay));
+    EXPECT_EQ(3, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::StartDay).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth));
+    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndMonth).get());
+    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay));
+    EXPECT_EQ(29, extensibleGroups[0].getInt(Schedule_Week_RuleExtensibleFields::EndDay).get());
 
-  boost::optional<WorkspaceObject> _scheduleWeekDaily1 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+    EXPECT_EQ("All Days Except Mon and Wed Schedule", scheduleWeekRule.getString(Schedule_Week_RuleFields::DayScheduleName).get());
 
-  EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Jan4", _scheduleWeekDaily1->nameString());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySunday).get());
+    EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyMonday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyTuesday).get());
+    EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyWednesday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyThursday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyFriday).get());
+    EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySaturday).get());
 
-  // 1/5 to 12/27
-  w_eg = workspaceExtensibleGroups[1];
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(5, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(27, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  boost::optional<WorkspaceObject> _scheduleWeekDaily2 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
-
-  EXPECT_EQ("Schedule Ruleset Week Rule - Jan5-Dec27", _scheduleWeekDaily2->nameString());
-
-  // 12/28 to 12/31
-  w_eg = workspaceExtensibleGroups[2];
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
-  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
-  EXPECT_EQ(28, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
-  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
-  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
-  EXPECT_EQ(31, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-  boost::optional<WorkspaceObject> _scheduleWeekDaily3 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
-  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
-
-  EXPECT_EQ("Schedule Ruleset Week Rule - Dec28-Dec31", _scheduleWeekDaily3->nameString());
+    EXPECT_EQ("1/3 - 12/29 Days Except Mon and Wed Rule", scheduleWeekRule.nameString());
+  }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_SpecialDays) {
 
   Model model;
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -576,31 +474,42 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-  ASSERT_EQ(1u, scheduleYears.size());
-  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-  ASSERT_EQ(1u, extensibleGroups.size());
-  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
-  ASSERT_EQ(1u, scheduleWeekDailys.size());
-  WorkspaceObject scheduleWeekDaily(scheduleWeekDailys[0]);
+  std::vector<WorkspaceObject> scheduleYearRules = workspace.getObjectsByType(IddObjectType::Schedule_Year_Rules);
+  ASSERT_EQ(1u, scheduleYearRules.size());
+  std::vector<WorkspaceObject> scheduleWeekRules = workspace.getObjectsByType(IddObjectType::Schedule_Week_Rule);
+  ASSERT_EQ(2u, scheduleWeekRules.size());
 
-  // Weekdays
-  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
-  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  for (const WorkspaceObject& scheduleWeekRule : scheduleWeekRules) {
+    const int rulePriorityOrder = scheduleWeekRule.getInt(Schedule_Week_RuleFields::RulePriorityOrder).get();
+    if (rulePriorityOrder == 0) { // Weekends
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySunday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyMonday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyTuesday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyWednesday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyThursday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyFriday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySaturday).get());
+      EXPECT_EQ(weekendSchedule.nameString(), scheduleWeekRule.getString(Schedule_Week_RuleFields::DayScheduleName).get());
+    } else if (rulePriorityOrder == 1) { // Weekdays
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySunday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyMonday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyTuesday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyWednesday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyThursday).get());
+      EXPECT_EQ("Yes", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplyFriday).get());
+      EXPECT_EQ("No", scheduleWeekRule.getString(Schedule_Week_RuleFields::ApplySaturday).get());
+      EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekRule.getString(Schedule_Week_RuleFields::DayScheduleName).get());
+    }
+  }
 
-  // Weekends
-  EXPECT_EQ(weekendSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
-  EXPECT_EQ(weekendSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::DefaultDayScheduleName).get());
 
   // Special Days
-  EXPECT_EQ(holidaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::HolidaySchedule_DayName).get());
-  EXPECT_EQ(summerDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SummerDesignDaySchedule_DayName).get());
-  EXPECT_EQ(winterDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName).get());
-  EXPECT_EQ(customDay1Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
-  EXPECT_EQ(customDay2Schedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
+  EXPECT_EQ(holidaySchedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::HolidayScheduleName).get());
+  EXPECT_EQ(summerDesignDaySchedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::SummerDesignDayScheduleName).get());
+  EXPECT_EQ(winterDesignDaySchedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::WinterDesignDayScheduleName).get());
+  EXPECT_EQ(customDay1Schedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::CustomDay1ScheduleName).get());
+  EXPECT_EQ(customDay2Schedule.nameString(), scheduleYearRules[0].getString(Schedule_Year_RulesFields::CustomDay2ScheduleName).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple) {
@@ -1299,556 +1208,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
 
   std::vector<ScheduleWeek> scheduleWeeks = model.getConcreteModelObjects<ScheduleWeek>();
   ASSERT_EQ(0u, scheduleWeeks.size());
-}
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Bug5113) {
-  Model model;
-  ScheduleRuleset scheduleRuleset(model);
-
-  ScheduleRule rule1(scheduleRuleset);
-  rule1.setName("Annual Rule");
-  rule1.setApplySunday(true);
-  rule1.setApplyMonday(true);
-  rule1.setApplyTuesday(true);
-  rule1.setApplyWednesday(true);
-  rule1.setApplyThursday(true);
-  rule1.setApplyFriday(true);
-  rule1.setApplySaturday(true);
-  rule1.setStartDate(Date(1, 1));
-  rule1.setEndDate(Date(12, 31));
-
-  ScheduleRule rule2(scheduleRuleset);
-  rule2.setName("Dec Rule");
-  rule2.setApplySunday(true);
-  rule2.setApplyMonday(true);
-  rule2.setApplyTuesday(true);
-  rule2.setApplyWednesday(true);
-  rule2.setApplyThursday(true);
-  rule2.setApplyFriday(true);
-  rule2.setApplySaturday(true);
-  rule2.setStartDate(Date(12, 15));
-  rule2.setEndDate(Date(12, 21));
-
-  {  // year ends on Thursday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_EQ(2009, yd.assumedYear());
-    EXPECT_FALSE(yd.calendarYear());
-    EXPECT_TRUE(yd.setCalendarYear(2009));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2009, yd.calendarYear().get());
-    EXPECT_EQ(2009, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(4u, extensibleGroups.size());
-
-    // 1/1-12/12
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/13-12/19
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(13, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(19, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/20-12/26
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(20, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(26, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/27-12/31
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(27, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // year ends on Saturday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2011));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2011, yd.calendarYear().get());
-    EXPECT_EQ(2011, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(4u, extensibleGroups.size());
-
-    // 1/1-12/10
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(10, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/11-12/17
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(11, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(17, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/18-12/24
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(18, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(24, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/25-12/31
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(25, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // year ends on Sunday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2023));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2023, yd.calendarYear().get());
-    EXPECT_EQ(2023, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(4u, extensibleGroups.size());
-
-    // 1/1-12/9
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(9, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/10-12/16
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(10, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(16, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/17-12/23
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(17, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(23, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/24-12/31
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(24, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // (leap) year ends on Monday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2012));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2012, yd.calendarYear().get());
-    EXPECT_EQ(2012, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(4u, extensibleGroups.size());
-
-    // 1/1-12/8
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(8, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/9-12/15
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(9, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(15, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/16-12/22
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(16, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(22, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/23-12/31
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(23, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-}
-
-TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleRuleset_Bug5113_2) {
-  Model model;
-  ScheduleRuleset scheduleRuleset(model);
-
-  ScheduleRule rule1(scheduleRuleset);
-  rule1.setName("Annual Rule");
-  rule1.setApplySunday(true);
-  rule1.setApplyMonday(true);
-  rule1.setApplyTuesday(true);
-  rule1.setApplyWednesday(true);
-  rule1.setApplyThursday(true);
-  rule1.setApplyFriday(true);
-  rule1.setApplySaturday(true);
-  rule1.setStartDate(Date(1, 1));
-  rule1.setEndDate(Date(12, 31));
-
-  ScheduleRule rule2(scheduleRuleset);
-  rule2.setName("Dec Rule1");
-  rule2.setApplySunday(true);
-  rule2.setApplyMonday(true);
-  rule2.setApplyTuesday(true);
-  rule2.setApplyWednesday(true);
-  rule2.setApplyThursday(true);
-  rule2.setApplyFriday(true);
-  rule2.setApplySaturday(true);
-  rule2.setStartDate(Date(12, 10));
-  rule2.setEndDate(Date(12, 16));
-
-  ScheduleRule rule3(scheduleRuleset);
-  rule3.setName("Dec Rule2");
-  rule3.setApplySunday(true);
-  rule3.setApplyMonday(true);
-  rule3.setApplyTuesday(true);
-  rule3.setApplyWednesday(true);
-  rule3.setApplyThursday(true);
-  rule3.setApplyFriday(true);
-  rule3.setApplySaturday(true);
-  rule3.setStartDate(Date(12, 31));
-  rule3.setEndDate(Date(12, 31));
-
-  {  // year ends on Thursday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_EQ(2009, yd.assumedYear());
-    EXPECT_FALSE(yd.calendarYear());
-    EXPECT_TRUE(yd.setCalendarYear(2009));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2009, yd.calendarYear().get());
-    EXPECT_EQ(2009, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(5u, extensibleGroups.size());
-
-    // 1/1-12/5
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(5, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/6-12/12
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(6, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/13-12/19
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(13, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(19, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/20-12/26
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(20, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(26, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/27-12/31
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(27, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // year ends on Saturday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2011));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2011, yd.calendarYear().get());
-    EXPECT_EQ(2011, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(5u, extensibleGroups.size());
-
-    // 1/1-12/3
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(3, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/4-12/10
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(4, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(10, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/11-12/17
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(11, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(17, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/18-12/24
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(18, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(24, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/25-12/31
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(25, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // year ends on Sunday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2023));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2023, yd.calendarYear().get());
-    EXPECT_EQ(2023, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(4u, extensibleGroups.size());
-
-    // 1/1-12/9
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(9, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/10-12/16
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(10, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(16, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/17-12/30
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(17, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(30, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/31-12/31
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
-
-  {  // (leap) year ends on Monday
-    model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
-    EXPECT_TRUE(yd.setCalendarYear(2012));
-    ASSERT_TRUE(yd.calendarYear());
-    EXPECT_EQ(2012, yd.calendarYear().get());
-    EXPECT_EQ(2012, yd.assumedYear());
-
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
-    ASSERT_EQ(1u, scheduleYears.size());
-    std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
-    ASSERT_EQ(5u, extensibleGroups.size());
-
-    // 1/1-12/8
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(8, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/9-12/15
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(9, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(15, extensibleGroups[1].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/16-12/22
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(16, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(22, extensibleGroups[2].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/23-12/29
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(23, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(29, extensibleGroups[3].getInt(Schedule_YearExtensibleFields::EndDay).get());
-
-    // 12/30-12/31
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay));
-    EXPECT_EQ(30, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::StartDay).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth));
-    EXPECT_EQ(12, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndMonth).get());
-    ASSERT_TRUE(extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay));
-    EXPECT_EQ(31, extensibleGroups[4].getInt(Schedule_YearExtensibleFields::EndDay).get());
-  }
 }
