@@ -78,8 +78,6 @@ namespace model {
       /** Returns true if this object does not specify an activity directly. */
       bool isActivityLevelScheduleDefaulted() const;
 
-      // TODO: Handle Non-Extensible IddField Surface Name/Angle Factor List Name.
-
       /** Returns the work efficiency schedule. */
       boost::optional<Schedule> workEfficiencySchedule() const;
 

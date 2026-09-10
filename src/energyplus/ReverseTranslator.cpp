@@ -1054,6 +1054,10 @@ namespace energyplus {
         modelObject = translateZoneMixing(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::ComfortViewFactorAngles: {
+        modelObject = translateComfortViewFactorAngles(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::ZoneMRTCalculation: {
         modelObject = translateZoneMRTCalculation(workspaceObject);
         break;

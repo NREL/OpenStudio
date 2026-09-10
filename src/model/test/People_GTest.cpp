@@ -12,11 +12,16 @@
 #include "../People_Impl.hpp"
 #include "../PeopleDefinition.hpp"
 #include "../PeopleDefinition_Impl.hpp"
+#include "../ComfortViewFactorAngles.hpp"
+#include "../Surface.hpp"
+#include "../ThermalZone.hpp"
 
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleDay.hpp"
 #include "../ScheduleTypeRegistry.hpp"
 #include "../ScheduleConstant.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -48,12 +53,37 @@ TEST_F(ModelFixture, People_DefaultConstructor) {
   EXPECT_NE("ZoneAveraged", definition.meanRadiantTemperatureCalculationType());
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
 
-  EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));
+  Point3dVector points{{0, 0, 0}, {1, 0, 0}, {1, 1, 0}};
+  Surface surface(points, model);
+  ThermalZone thermalZone(model);
+  Space space(model);
+  ASSERT_TRUE(space.setThermalZone(thermalZone));
+  ASSERT_TRUE(surface.setSpace(space));
+
+  ComfortViewFactorAngles comfortViewFactorAngles(model);
+  EXPECT_TRUE(comfortViewFactorAngles.addAngleFactor(surface, 1.0));
+  EXPECT_EQ(1u, comfortViewFactorAngles.numberofAngleFactors());
+  const auto angleFactors = comfortViewFactorAngles.angleFactors();
+  ASSERT_EQ(1u, angleFactors.size());
+  EXPECT_EQ(surface.handle(), angleFactors.front().surface().handle());
+  EXPECT_DOUBLE_EQ(1.0, angleFactors.front().angleFactor());
+
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(comfortViewFactorAngles));
+  EXPECT_EQ("AngleFactor", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_TRUE(definition.surfaceNameAngleFactorListName());
+
+  EXPECT_TRUE(definition.setSurfaceNameAngleFactorListName(surface));
   EXPECT_EQ("SurfaceWeighted", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_TRUE(definition.surfaceNameAngleFactorListName());
+
+  definition.resetMeanRadiantTemperatureCalculationType();
+  EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_FALSE(definition.surfaceNameAngleFactorListName());
 
   // Backward compat
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("ZoneAveraged"));
   EXPECT_EQ("EnclosureAveraged", definition.meanRadiantTemperatureCalculationType());
+  EXPECT_FALSE(definition.surfaceNameAngleFactorListName());
 
   EXPECT_FALSE(definition.isMeanRadiantTemperatureCalculationTypeDefaulted());
   EXPECT_TRUE(definition.setMeanRadiantTemperatureCalculationType("SurfaceWeighted"));

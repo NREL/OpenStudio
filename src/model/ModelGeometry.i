@@ -199,6 +199,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::AngleFactor {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -254,6 +263,8 @@ MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
+MODELOBJECT_TEMPLATES(AngleFactor); // Helper class defined in ComfortViewFactorAngles
+MODELOBJECT_TEMPLATES(ComfortViewFactorAngles);
 MODELOBJECT_TEMPLATES(MRTWeightingFactor); // Helper class defined in ZoneMRTCalculation
 MODELOBJECT_TEMPLATES(ZoneMRTCalculation);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
@@ -313,6 +324,7 @@ SWIG_MODELOBJECT(FoundationKiva, 1);
 SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
 SWIG_MODELOBJECT(ZonePropertyUserViewFactorsBySurfaceName, 1);
 SWIG_MODELOBJECT(ZoneMRTCalculation, 1);
+SWIG_MODELOBJECT(ComfortViewFactorAngles, 1);
 SWIG_MODELOBJECT(ExteriorLoadInstance, 0);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);

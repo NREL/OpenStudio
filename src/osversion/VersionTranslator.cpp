@@ -10234,6 +10234,27 @@ namespace osversion {
     IdfFile targetIdf(idd_3_12_0.iddFile());
     ss << targetIdf.versionObject().get();
 
+    // The MRT target moves from each People instance to its shared PeopleDefinition. Preserve it when all instances agree,
+    // and record conflicting definitions because one target cannot represent multiple legacy values.
+    std::map<std::string, std::string> peopleDefinitionMRTTargets;
+    std::set<std::string> conflictingPeopleDefinitions;
+    for (const IdfObject& object : idf_3_11_0.objects()) {
+      if (object.iddObject().name() != "OS:People") {
+        continue;
+      }
+
+      const auto peopleDefinitionHandle = object.getString(2);
+      if (!peopleDefinitionHandle) {
+        continue;
+      }
+
+      const std::string mrtTarget = object.getString(6).get_value_or("");
+      const auto [it, inserted] = peopleDefinitionMRTTargets.emplace(*peopleDefinitionHandle, mrtTarget);
+      if (!inserted && (it->second != mrtTarget)) {
+        conflictingPeopleDefinitions.insert(*peopleDefinitionHandle);
+      }
+    }
+
     for (const IdfObject& object : idf_3_11_0.objects()) {
       auto iddname = object.iddObject().name();
 
@@ -10309,7 +10330,60 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
 
-        // No-op
+      } else if (iddname == "OS:People:Definition") {
+
+        // 1 Field has been added from 3.11.0 to 3.12.0:
+        // ------------------------------------------------
+        // * Surface Name/Angle Factor List Name * 11
+
+        auto iddObject = idd_3_12_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        const auto peopleDefinitionHandle = object.getString(0);
+        if (peopleDefinitionHandle && (conflictingPeopleDefinitions.find(*peopleDefinitionHandle) == conflictingPeopleDefinitions.end())) {
+          if (const auto it = peopleDefinitionMRTTargets.find(*peopleDefinitionHandle);
+              (it != peopleDefinitionMRTTargets.end()) && !it->second.empty()) {
+            newObject.setString(11, it->second);
+          }
+        } else if (peopleDefinitionHandle) {
+          LOG(Error, "Cannot migrate Surface Name/Angle Factor List Name for " << object.briefDescription()
+                                                                                  << " because its People instances have conflicting targets.");
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
+
+      } else if (iddname == "OS:People") {
+
+        // 1 Field has been removed from 3.11.0 to 3.12.0:
+        // --------------------------------------------------
+        // * Surface Name/Angle Factor List Name * 6
+
+        auto iddObject = idd_3_12_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else if (i > 6) {
+              newObject.setString(i - 1, value.get());
+            }
+          }
+        }
+
+        ss << newObject;
+        m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else {
         ss << object;
       }
