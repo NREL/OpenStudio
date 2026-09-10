@@ -464,6 +464,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneMixing.cpp
+  ForwardTranslator/ForwardTranslateZoneMRTCalculation.cpp
   ForwardTranslator/ForwardTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationWindandStackOpenArea.cpp
@@ -650,6 +651,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneInfiltrationFlowCoefficient.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
+  ReverseTranslator/ReverseTranslateZoneMRTCalculation.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationWindandStackOpenArea.cpp
@@ -875,6 +877,7 @@ set(${target_name}_test_src
   Test/ZoneHVACUnitHeater_GTest.cpp
   Test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   Test/ZoneMixing_GTest.cpp
+  Test/ZoneMRTCalculation_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationDesignFlowRate_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp

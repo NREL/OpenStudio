@@ -4479,6 +4479,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_CONSTRUCTOR(ZoneHVACUnitVentilator);
     REGISTER_CONSTRUCTOR(ZoneMixing);
+    REGISTER_CONSTRUCTOR(ZoneMRTCalculation);
     REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
     REGISTER_CONSTRUCTOR(ZoneVentilationWindandStackOpenArea);
@@ -5063,6 +5064,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACEnergyRecoveryVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACUnitVentilator);
     REGISTER_COPYCONSTRUCTORS(ZoneMixing);
+    REGISTER_COPYCONSTRUCTORS(ZoneMRTCalculation);
     REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
     REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);
     REGISTER_COPYCONSTRUCTORS(ZoneVentilationWindandStackOpenArea);

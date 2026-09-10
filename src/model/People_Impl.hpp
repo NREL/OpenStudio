@@ -15,6 +15,8 @@ namespace model {
   class Schedule;
   class PeopleDefinition;
   class People;
+  class Space;
+  class SpaceType;
 
   namespace detail {
 
@@ -38,6 +40,8 @@ namespace model {
       //@{
 
       virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
       virtual IddObjectType iddObjectType() const override;
 
@@ -196,6 +200,8 @@ namespace model {
 
      private:
       REGISTER_LOGGER("openstudio.model.People");
+
+      void removeZoneMRTCalculationReferences();
 
       boost::optional<ModelObject> peopleDefinitionAsModelObject() const;
       boost::optional<ModelObject> numberofPeopleScheduleAsModelObject() const;

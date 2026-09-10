@@ -28,6 +28,7 @@ namespace model {
   class ZoneHVACEquipmentList;
   class AirflowNetworkZone;
   class ZonePropertyUserViewFactorsBySurfaceName;
+  class ZoneMRTCalculation;
   class Schedule;
 
   namespace detail {
@@ -122,6 +123,8 @@ namespace model {
       virtual std::vector<std::string> emsInternalVariableNames() const override;
 
       ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
+
+      ZoneMRTCalculation getZoneMRTCalculation() const;
 
       //@}
       /** @name Setters */

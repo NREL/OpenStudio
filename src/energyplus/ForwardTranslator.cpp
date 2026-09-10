@@ -3348,6 +3348,11 @@ namespace energyplus {
         retVal = translateZoneMixing(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_ZoneMRTCalculation: {
+        auto mo = modelObject.cast<ZoneMRTCalculation>();
+        retVal = translateZoneMRTCalculation(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName: {
         auto mo = modelObject.cast<ZonePropertyUserViewFactorsBySurfaceName>();
         retVal = translateZonePropertyUserViewFactorsBySurfaceName(mo);

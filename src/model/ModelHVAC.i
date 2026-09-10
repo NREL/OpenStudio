@@ -433,6 +433,10 @@ SWIG_MODELOBJECT(LoadingIndex, 1);
           return zoneProp.thermalZone();
         }
 
+        openstudio::model::ThermalZone getThermalZone(const openstudio::model::ZoneMRTCalculation& zoneMRTCalculation){
+          return zoneMRTCalculation.thermalZone();
+        }
+
         // EMS Actuator getter/setter for ThermalZone (reimplemented from ModelCore.i)
         boost::optional<ThermalZone> getThermalZoneForEMSActuator(const openstudio::model::EnergyManagementSystemActuator& actuator) {
           return actuator.thermalZone();
@@ -561,6 +565,13 @@ SWIG_MODELOBJECT(LoadingIndex, 1);
     }
 
     public partial class ZonePropertyUserViewFactorsBySurfaceName : ModelObject {
+      public ThermalZone thermalZone()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);
+      }
+    }
+
+    public partial class ZoneMRTCalculation : ModelObject {
       public ThermalZone thermalZone()
       {
         return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);

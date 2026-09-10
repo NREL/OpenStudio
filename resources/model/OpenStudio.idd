@@ -6851,6 +6851,37 @@ OS:ZoneProperty:UserViewFactors:BySurfaceName,
        \type real
        \maximum 1.0
 
+OS:ZoneMRTCalculation,
+       \min-fields 4
+       \memo Blends MRT values calculated for People instances into one Zone MRT.
+       \memo The weighting factors must sum to a value from 0.0 through 1.0.
+       \extensible:2 - repeat last two fields, remembering to remove ; from "inner" fields.
+       \memo Only one ZoneMRTCalculation object is allowed for each Zone.
+       \memo All referenced People instances must be in the named Zone and must select at least
+       \memo one Thermal Comfort Model Type.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Thermal Zone Name
+       \type object-list
+       \object-list ThermalZoneNames
+       \required-field
+       \note This field accepts a Zone name only, not a Space or SpaceList name.
+  A3,  \field People 1 Name
+       \begin-extensible
+       \type object-list
+       \object-list PeopleNames
+       \required-field
+       \note A People object assigned directly to a Space retains its input name.
+       \note A People object expanded across multiple Spaces must use an expanded instance name
+       \note formed as "<Space Name> <People Name>"; its original input name is not accepted.
+       \note People instances in automatically generated remainder Spaces are not supported.
+  N1;  \field MRT Weighting Factor 1
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+
 OS:SurfaceProperty:SurroundingSurfaces,
        \min-fields 9
        \memo This object defines a list of surrounding surfaces for an exterior surface.

@@ -27,6 +27,7 @@ namespace model {
   class ZoneMixing;
   class AirflowNetworkZone;
   class ZonePropertyUserViewFactorsBySurfaceName;
+  class ZoneMRTCalculation;
   class Schedule;
 
   namespace detail {
@@ -103,6 +104,8 @@ namespace model {
     SizingZone sizingZone() const;
 
     ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
+
+    ZoneMRTCalculation getZoneMRTCalculation() const;
 
     //@}
     /** @name Setters */

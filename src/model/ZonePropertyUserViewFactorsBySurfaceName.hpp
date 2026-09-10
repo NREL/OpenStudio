@@ -61,7 +61,7 @@ class InternalMass; */
     //@{
 
     /*
-   * This constructor shouldn't be used, ThermalZone::getZonePropertyUserViewFactorsBySurfaceName should be prefered
+   * This constructor shouldn't be used, ThermalZone::getZonePropertyUserViewFactorsBySurfaceName should be preferred
    * as it will either instantiate a new object or return the existing one.
    * A ThermalZone should not have more than one ZonePropertyUserViewFactorsBySurfaceName. If you try to instantiate a second one for a given
    * ThermalZone this constructor will throw

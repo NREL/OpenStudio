@@ -87,6 +87,8 @@
 #include "AirflowNetworkZone_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "ZoneMRTCalculation.hpp"
+#include "ZoneMRTCalculation_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
@@ -188,7 +190,7 @@ namespace model {
         // Temperatures and RH
         "Zone Mean Air Temperature",  // Zone level
         "Zone Air Temperature",       // HVAC level
-        "Zone Mean Air Dewpoint Temperature", "Zone Mean Radiant Temperature", "Zone Operative Temperature", "Zone Air Humidity Ratio",
+        "Zone Mean Air Dewpoint Temperature", "Zone Mean Radiant Temperature", "Zone Standard Mean Radiant Temperature", "Zone Operative Temperature", "Zone Air Humidity Ratio",
         "Zone Air Relative Humidity",
 
         // Heat Balance
@@ -1671,6 +1673,11 @@ namespace model {
         mixing.remove();
       }
 
+      // remove ZoneMRTCalculation objects before the required Thermal Zone pointer is cleared
+      for (auto& zoneMRTCalculation : thermalZone.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType())) {
+        zoneMRTCalculation.remove();
+      }
+
       return HVACComponent_Impl::remove();
     }
 
@@ -2650,6 +2657,22 @@ namespace model {
       return zoneProp;
     }
 
+    ZoneMRTCalculation ThermalZone_Impl::getZoneMRTCalculation() const {
+      auto thisThermalZone = getObject<ThermalZone>();
+      std::vector<ZoneMRTCalculation> zoneMRTCalculations =
+        thisThermalZone.getModelObjectSources<ZoneMRTCalculation>(ZoneMRTCalculation::iddObjectType());
+      if (!zoneMRTCalculations.empty()) {
+        if (zoneMRTCalculations.size() > 1u) {
+          OS_ASSERT(false);
+          LOG(Error, briefDescription() << " is referenced by more than one ZoneMRTCalculation, returning the first");
+        }
+        return zoneMRTCalculations[0];
+      }
+
+      ZoneMRTCalculation zoneMRTCalculation(thisThermalZone);
+      return zoneMRTCalculation;
+    }
+
     boost::optional<double> ThermalZone_Impl::getAutosizedValueFromZoneSizes(const std::string& columnName, const std::string& loadType) const {
       // Check that the model has a sql file
       if (!model().sqlFile()) {
@@ -3392,6 +3415,10 @@ SELECT {} FROM ZoneSizes
 
   ZonePropertyUserViewFactorsBySurfaceName ThermalZone::getZonePropertyUserViewFactorsBySurfaceName() const {
     return getImpl<detail::ThermalZone_Impl>()->getZonePropertyUserViewFactorsBySurfaceName();
+  }
+
+  ZoneMRTCalculation ThermalZone::getZoneMRTCalculation() const {
+    return getImpl<detail::ThermalZone_Impl>()->getZoneMRTCalculation();
   }
 
   /// @cond

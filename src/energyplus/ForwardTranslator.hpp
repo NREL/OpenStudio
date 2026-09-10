@@ -503,6 +503,7 @@ namespace model {
   class ZoneHVACUnitVentilator;
   class ZoneHVACWaterToAirHeatPump;
   class ZoneMixing;
+  class ZoneMRTCalculation;
   class ZonePropertyUserViewFactorsBySurfaceName;
   class ZoneVentilationDesignFlowRate;
   class ZoneVentilationWindandStackOpenArea;
@@ -1615,6 +1616,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump(model::ZoneHVACWaterToAirHeatPump& modelObject);
 
     boost::optional<IdfObject> translateZoneMixing(model::ZoneMixing& modelObject);
+
+    boost::optional<IdfObject> translateZoneMRTCalculation(model::ZoneMRTCalculation& modelObject);
 
     boost::optional<IdfObject> translateZonePropertyUserViewFactorsBySurfaceName(model::ZonePropertyUserViewFactorsBySurfaceName& modelObject);
 

@@ -411,6 +411,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateZoneMixing(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateZoneMRTCalculation(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateZonePropertyUserViewFactorsBySurfaceName(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateZoneVentilationDesignFlowRate(const WorkspaceObject& workspaceObject);
