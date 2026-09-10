@@ -148,7 +148,6 @@ namespace model {
 
     bool CoilHeatingElectric_Impl::setTemperatureSetpointNode(Node& temperatureSetpointNode) {
       return setPointer(OS_Coil_Heating_ElectricFields::TemperatureSetpointNodeName, temperatureSetpointNode.handle());
-      ;
     }
 
     void CoilHeatingElectric_Impl::resetTemperatureSetpointNode() {

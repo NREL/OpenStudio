@@ -360,7 +360,7 @@ namespace model {
         }
       }
 
-      // ZoneHVACUnitHeater
+      // ZoneHVACUnitVentilator
 
       std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilators;
 

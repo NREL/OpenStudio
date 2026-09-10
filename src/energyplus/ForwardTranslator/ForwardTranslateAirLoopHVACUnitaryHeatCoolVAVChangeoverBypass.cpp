@@ -25,6 +25,8 @@
 #include "../../model/CoilHeatingElectric_Impl.hpp"
 #include "../../model/CoilHeatingWater.hpp"
 #include "../../model/CoilHeatingWater_Impl.hpp"
+#include "../../model/CoilHeatingSteam.hpp"
+#include "../../model/CoilHeatingSteam_Impl.hpp"
 #include "../../model/AirToAirComponent.hpp"
 #include "../../model/AirToAirComponent_Impl.hpp"
 #include "../../model/Node.hpp"
@@ -43,6 +45,7 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
@@ -202,7 +205,7 @@ namespace energyplus {
         _heatingCoil = translateCoilHeatingDXVariableSpeedWithoutUnitary(dxCoil.get());
         m_map.insert(std::make_pair(heatingCoil->handle(), _heatingCoil.get()));
       } else if ((heatingCoil->optionalCast<CoilHeatingGas>()) || (heatingCoil->optionalCast<CoilHeatingElectric>())
-                 || (heatingCoil->optionalCast<CoilHeatingWater>())) {
+                 || (heatingCoil->optionalCast<CoilHeatingWater>()) || (heatingCoil->optionalCast<CoilHeatingSteam>())) {
         // translateAndMapModelObject already inserts into m_map
         _heatingCoil = translateAndMapModelObject(heatingCoil.get());
       } else {
@@ -356,6 +359,9 @@ namespace energyplus {
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
         _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, heatInletNodeName);
         _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatOutletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+        _heatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, heatInletNodeName);
+        _heatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, heatOutletNodeName);
       }
 
       IdfObject _outdoorAirMixer(IddObjectType::OutdoorAir_Mixer);

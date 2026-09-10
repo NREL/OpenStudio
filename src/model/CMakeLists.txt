@@ -425,6 +425,9 @@ set(${target_name}_src
   CoilHeatingWater.hpp
   CoilHeatingWater_Impl.hpp
   CoilHeatingWater.cpp
+  CoilHeatingSteam.hpp
+  CoilHeatingSteam_Impl.hpp
+  CoilHeatingSteam.cpp
   CoilHeatingWaterToAirHeatPumpEquationFit.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit_Impl.hpp
   CoilHeatingWaterToAirHeatPumpEquationFit.cpp
@@ -440,6 +443,9 @@ set(${target_name}_src
   CoilHeatingWaterBaseboardRadiant.hpp
   CoilHeatingWaterBaseboardRadiant_Impl.hpp
   CoilHeatingWaterBaseboardRadiant.cpp
+  CoilHeatingSteamBaseboardRadiant.hpp
+  CoilHeatingSteamBaseboardRadiant_Impl.hpp
+  CoilHeatingSteamBaseboardRadiant.cpp
   CoilPerformanceDXCooling.hpp
   CoilPerformanceDXCooling_Impl.hpp
   CoilPerformanceDXCooling.cpp
@@ -1243,6 +1249,9 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
+  PumpVariableSpeedCondensate.hpp
+  PumpVariableSpeedCondensate_Impl.hpp
+  PumpVariableSpeedCondensate.cpp
   PythonPluginInstance.hpp
   PythonPluginInstance_Impl.hpp
   PythonPluginInstance.cpp
@@ -1786,6 +1795,9 @@ set(${target_name}_src
   ZoneHVACBaseboardRadiantConvectiveWater.hpp
   ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp
   ZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ZoneHVACBaseboardRadiantConvectiveSteam.hpp
+  ZoneHVACBaseboardRadiantConvectiveSteam_Impl.hpp
+  ZoneHVACBaseboardRadiantConvectiveSteam.cpp
   ZoneHVACCoolingPanelRadiantConvectiveWater.hpp
   ZoneHVACCoolingPanelRadiantConvectiveWater_Impl.hpp
   ZoneHVACCoolingPanelRadiantConvectiveWater.cpp
@@ -2028,11 +2040,13 @@ set(${target_name}_test_src
   test/CoilHeatingLowTempRadiantConstFlow_GTest.cpp
   test/CoilHeatingLowTempRadiantVarFlow_GTest.cpp
   test/CoilHeatingWater_GTest.cpp
+  test/CoilHeatingSteam_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
+  test/CoilHeatingSteamBaseboardRadiant_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWater_GTest.cpp
@@ -2262,6 +2276,7 @@ set(${target_name}_test_src
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
+  test/PumpVariableSpeedCondensate_GTest.cpp
   test/PythonPluginInstance_GTest.cpp
   test/PythonPluginVariable_GTest.cpp
   test/PythonPluginTrendVariable_GTest.cpp
@@ -2403,6 +2418,7 @@ set(${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  test/ZoneHVACBaseboardRadiantConvectiveSteam_GTest.cpp
   test/ZoneHVACCoolingPanelRadiantConvectiveWater_GTest.cpp
   test/ZoneHVACDehumidifierDX_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp

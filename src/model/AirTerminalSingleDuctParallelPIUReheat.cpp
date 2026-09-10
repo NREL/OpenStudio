@@ -394,6 +394,8 @@ namespace model {
         isTypeCorrect = true;
       } else if (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Water) {
         isTypeCorrect = true;
+      } else if (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_Steam) {
+        isTypeCorrect = true;
       }
 
       if (isTypeCorrect) {

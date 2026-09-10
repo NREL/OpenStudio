@@ -25,6 +25,7 @@
 #include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -325,12 +326,15 @@ namespace energyplus {
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric_MultiStage) {
         _heatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, heatingCoilInletNodeName);
         _heatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, heatingCoilOutletNodeName);
-      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
-        _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, heatingCoilInletNodeName);
-        _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatingCoilOutletNodeName);
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_DX_MultiSpeed) {
         _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirInletNodeName, heatingCoilInletNodeName);
         _heatingCoil->setString(Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName, heatingCoilOutletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
+        _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, heatingCoilInletNodeName);
+        _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatingCoilOutletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+        _heatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, heatingCoilInletNodeName);
+        _heatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, heatingCoilOutletNodeName);
       }
     }
 
@@ -338,6 +342,9 @@ namespace energyplus {
       if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
         _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, suppCoilInletNodeName);
         _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, suppCoilOutletNodeName);
+      } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+        _supplementalHeatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, suppCoilInletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, suppCoilOutletNodeName);
       } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
         _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, suppCoilInletNodeName);
         _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, suppCoilOutletNodeName);

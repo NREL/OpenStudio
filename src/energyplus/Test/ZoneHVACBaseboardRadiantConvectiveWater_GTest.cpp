@@ -31,6 +31,8 @@
 
 #include <utilities/idd/ZoneHVAC_Baseboard_RadiantConvective_Water_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_Baseboard_RadiantConvective_Water_Design_FieldEnums.hxx>
+#include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/Pipe_Adiabatic_Steam_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -75,6 +77,8 @@ TEST_F(EnergyPlusFixture, ZoneHVACBaseboardRadiantConvectiveWater) {
   Workspace w = ft.translateModel(m);
 
   ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water_Design).size());
+  ASSERT_EQ(6u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic).size());
+  ASSERT_EQ(0u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic_Steam).size());
   WorkspaceObjectVector idfBaseboards = w.getObjectsByType(IddObjectType::ZoneHVAC_Baseboard_RadiantConvective_Water);
   ASSERT_EQ(1u, idfBaseboards.size());
   WorkspaceObject idfBaseboard(idfBaseboards[0]);

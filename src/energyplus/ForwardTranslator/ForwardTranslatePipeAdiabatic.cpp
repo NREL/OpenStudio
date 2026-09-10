@@ -14,26 +14,61 @@
 #include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../../model/BoilerSteam.hpp"
+#include "../../model/BoilerSteam_Impl.hpp"
+#include "../../model/DistrictHeatingSteam.hpp"
+#include "../../model/DistrictHeatingSteam_Impl.hpp"
+#include "../../model/PumpVariableSpeedCondensate.hpp"
+#include "../../model/PumpVariableSpeedCondensate_Impl.hpp"
+#include "../../model/CoilHeatingSteam.hpp"
+#include "../../model/CoilHeatingSteam_Impl.hpp"
+#include "../../model/CoilHeatingSteamBaseboardRadiant.hpp"
+#include "../../model/CoilHeatingSteamBaseboardRadiant_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
+#include "../../model/Splitter.hpp"
+#include "../../model/Splitter_Impl.hpp"
+#include "../../model/Mixer.hpp"
+#include "../../model/Mixer_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/PlantLoop_Impl.hpp"
+
 using namespace openstudio::model;
 
 namespace openstudio {
 
 namespace energyplus {
 
+  boost::optional<IdfObject> ForwardTranslator::createPipeAdiabatic(bool hasSteam) {
+    // PipeAdiabatic or PipeAdiabaticSteam
+
+    boost::optional<IdfObject> idfObject;
+    idfObject = IdfObject(IddObjectType::Pipe_Adiabatic);
+    if (hasSteam) {
+      idfObject = IdfObject(IddObjectType::Pipe_Adiabatic_Steam);
+    } else {
+      idfObject = IdfObject(IddObjectType::Pipe_Adiabatic);
+    }
+
+    return idfObject;
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translatePipeAdiabatic(PipeAdiabatic& modelObject) {
     OptionalString s;
     OptionalDouble d;
     OptionalModelObject temp;
 
-    IdfObject idfObject(IddObjectType::Pipe_Adiabatic);
+    boost::optional<PlantLoop> plantLoop = modelObject.plantLoop();
+    auto [hasWater, hasSteam] = hasWaterAndSteam(*plantLoop);
+    boost::optional<IdfObject> idfObject = createPipeAdiabatic(hasSteam);
 
-    m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(*idfObject);
 
     ///////////////////////////////////////////////////////////////////////////
     // Field: Name ////////////////////////////////////////////////////////////
     s = modelObject.name();
     if (s) {
-      idfObject.setName(*s);
+      idfObject->setName(*s);
     }
     ///////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +78,7 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::Pipe_AdiabaticFields::InletNodeName, *s);
+        idfObject->setString(openstudio::Pipe_AdiabaticFields::InletNodeName, *s);
       }
     }
     ///////////////////////////////////////////////////////////////////////////
@@ -54,13 +89,13 @@ namespace energyplus {
     if (temp) {
       s = temp->name();
       if (s) {
-        idfObject.setString(openstudio::Pipe_AdiabaticFields::OutletNodeName, *s);
+        idfObject->setString(openstudio::Pipe_AdiabaticFields::OutletNodeName, *s);
       }
     }
     ///
     ////////////////////////////////////////////////////////////////////////
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

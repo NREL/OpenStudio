@@ -11390,6 +11390,8 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \object-list HeatingCoilsElectricMultiStage
         \object-list HeatingCoilsGasMultiStage
         \object-list HeatingCoilsDXMultiSpeed
+        \object-list HeatingCoilsWater
+        \object-list HeatingCoilsSteam
    N1,  \field DX Heating Coil Sizing Ratio
         \type real
         \required-field
@@ -21848,6 +21850,66 @@ OS:Coil:Heating:Water,
        \minimum> 0
        \default 0.5
 
+OS:Coil:Heating:Steam,
+      \memo Steam heating coil. Condenses and sub-cools steam at loop pressure and discharges
+      \memo condensate through steam traps to low pressure condensate line.
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference HeatingCoilName
+      \reference HeatingCoilsSteam
+      \reference ConnectionObject
+  A3, \field Availability Schedule Name
+      \type object-list
+      \object-list ScheduleNames
+      \required-field
+  N1, \field Maximum Steam Flow Rate
+      \type real
+      \autosizable
+      \units m3/s
+      \ip-units gal/min
+      \required-field
+  N2, \field Degree of SubCooling
+      \units C
+      \minimum 1.0
+      \maximum 5.0
+      \required-field
+  N3, \field Degree of Loop SubCooling
+      \units C
+      \minimum 10.0
+      \required-field
+  A4, \field Water Inlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A5, \field Water Outlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A6, \field Air Inlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A7, \field Air Outlet Node Name
+      \type object-list
+      \required-field
+      \object-list ConnectionNames
+  A8, \field Coil Control Type
+      \note Use ZoneLoadControl if the coil is contained within another component such as an air
+      \note terminal unit, zone HVAC equipment, or unitary system. Use TemperatureSetpointControl
+      \note if the coil is located directly in an air loop branch or outdoor air equipment list.
+      \type choice
+      \key TemperatureSetpointControl
+      \key ZoneLoadControl
+      \required-field
+  A9; \field Temperature Setpoint Node Name
+      \type object-list
+      \note Required if Coil Control Type is TemperatureSetpointControl
+      \object-list Node
+
 OS:Coil:Heating:Water:Baseboard,
   A1, \field Handle
       \type handle
@@ -21921,7 +21983,7 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
   A2, \field Name
       \type alpha
       \required-field
-      \reference RadiantBaseboardHeatingCoil
+      \reference RadiantBaseboardHeatingCoilWater
       \reference ConnectionObject
   A3, \field Inlet Node Name
       \required-field
@@ -21972,6 +22034,61 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \units m3/s
       \ip-units gal/min
   N7; \field Convergence Tolerance
+      \required-field
+      \type real
+      \minimum> 0.0
+
+OS:Coil:Heating:Steam:Baseboard:Radiant,
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Name
+      \type alpha
+      \required-field
+      \reference RadiantBaseboardHeatingCoilSteam
+      \reference ConnectionObject
+  A3, \field Inlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  A4, \field Outlet Node Name
+      \required-field
+      \type object-list
+      \object-list ConnectionNames
+  A5, \field Heating Design Capacity Method
+      \required-field
+      \type choice
+      \key HeatingDesignCapacity
+      \key CapacityPerFloorArea
+      \key FractionOfAutosizedHeatingCapacity
+  N1, \field Heating Design Capacity
+      \required-field
+      \type real
+      \units W
+      \minimum 0.0
+      \autosizable
+      \ip-units W
+  N2, \field Heating Design Capacity Per Floor Area
+      \required-field
+      \type real
+      \units W/m2
+      \minimum 0.0
+  N3, \field Fraction of Autosized Heating Design Capacity
+      \required-field
+      \type real
+      \minimum 0.0
+  N4, \field Degree of SubCooling
+      \type real
+      \minimum 1.0
+      \required-field
+      \units deltaC
+  N5, \field Maximum Steam Flow Rate
+      \required-field
+      \autosizable
+      \type real
+      \units m3/s
+      \ip-units gal/min
+  N6; \field Convergence Tolerance
       \required-field
       \type real
       \minimum> 0.0
@@ -27789,6 +27906,112 @@ OS:Pump:VariableSpeed,
         \retaincase
         \default General
 
+OS:Pump:VariableSpeed:Condensate,
+       \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
+       \memo Variable Speed Condensate pump for Steam Systems
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  A4,  \field Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+  N1,  \field Rated Steam Volume Flow Rate
+       \note this is the volume of steam before condensation, the volume of condensate is much lower and calculated from steam density
+       \units m3/s
+       \autosizable
+       \ip-units gal/min
+       \minimum> 0
+       \required-field
+  N2,  \field Rated Pump Head
+       \units Pa
+       \required-field
+       \note default head is 60 feet
+       \ip-units ftH2O
+  N3,  \field Rated Power Consumption
+       \note When autosized the type of scaling factor is chosen in the input field Design Power Sizing Method
+       \units W
+       \autosizable
+       \ip-units W
+       \required-field
+  N4 , \field Motor Efficiency
+       \note This is the motor efficiency only. When the Design Power Consumption is autosized using PowerPerFlowPerPressure,
+       \note the Design Shaft Power per Unit Flow Rate per Unit Head is used in addition to the motor efficiency.
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \required-field
+  N5,  \field Fraction of Motor Inefficiencies to Fluid Stream
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N6,  \field Coefficient 1 of the Part Load Performance Curve
+       \type real
+       \required-field
+  N7,  \field Coefficient 2 of the Part Load Performance Curve
+       \type real
+       \required-field
+  N8,  \field Coefficient 3 of the Part Load Performance Curve
+       \type real
+       \required-field
+  N9,  \field Coefficient 4 of the Part Load Performance Curve
+       \type real
+       \required-field
+  A5,  \field Pump Flow Rate Schedule Name
+       \note Modifies the rated flow rate of the pump on a time basis. Default is
+       \note that the pump is on and runs according to its other operational requirements
+       \note specified above. The schedule is for special pump operations.
+       \type object-list
+       \object-list ScheduleNames
+  A6,  \field Zone Name
+       \note optional, if used pump losses transferred to zone as internal gains
+       \type object-list
+       \object-list ThermalZoneNames
+  N10, \field Skin Loss Radiative Fraction
+       \required-field
+       \note optional. If zone identified in previous field then this determines
+       \note the split between convection and radiation for the skin losses
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A7,  \field Design Power Sizing Method
+       \note Used to indicate which sizing factor is used to calculate Design Power Consumption.
+       \type choice
+       \key PowerPerFlow
+       \note PowerPerFlow indicates that Design Electric Power per Unit Flow Rate is used as scaling factor.
+       \note Design Power Consumption = Design Maximum Flow Rate * scaling factor
+       \key PowerPerFlowPerPressure
+       \note PowerPerFlowPerPressure indicates that Design Shaft Power per Unit Flow Rate per Unit Head is used as scaling factor.
+       \note Design Power Consumption = Design Maximum Flow Rate * Design Pump Head * scaling factor / Motor Efficiency
+       \required-field
+  N11, \field Design Electric Power per Unit Flow Rate
+       \type real
+       \note Used to size Design Power Consumption from design flow rate
+       \required-field
+       \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \minimum> 0
+  N12, \field Design Shaft Power per Unit Flow Rate per Unit Head
+       \type real
+       \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
+       \required-field
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
+       \minimum> 0
+  A8;  \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \required-field
+
 OS:HeaderedPumps:ConstantSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
   A1, \field Handle
@@ -31866,7 +32089,36 @@ OS:ZoneHVAC:Baseboard:RadiantConvective:Water,
   A4,  \field Heating Coil Name
        \type object-list
        \required-field
-       \object-list RadiantBaseboardHeatingCoil
+       \object-list RadiantBaseboardHeatingCoilWater
+  N1,  \field Fraction Radiant
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+  N2;  \field Fraction of Radiant Energy Incident on People
+       \required-field
+       \type real
+       \minimum 0
+       \maximum 1
+
+OS:ZoneHVAC:Baseboard:RadiantConvective:Steam,
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A4,  \field Heating Coil Name
+       \type object-list
+       \required-field
+       \object-list RadiantBaseboardHeatingCoilSteam
   N1,  \field Fraction Radiant
        \required-field
        \type real

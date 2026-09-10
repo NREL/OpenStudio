@@ -23,6 +23,8 @@
 #include "ZoneHVACUnitHeater_Impl.hpp"
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACUnitVentilator_Impl.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -516,6 +518,20 @@ namespace model {
 
       for (const auto& elem : zoneHVACUnitVentilator) {
         if (boost::optional<HVACComponent> coil = elem.heatingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return elem;
+          }
+        }
+      }
+
+      // ZoneHVACTerminalUnitVariableRefrigerantFlow
+
+      std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> zoneHVACTerminalUnitVariableRefrigerantFlow;
+
+      zoneHVACTerminalUnitVariableRefrigerantFlow = this->model().getConcreteModelObjects<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+
+      for (const auto& elem : zoneHVACTerminalUnitVariableRefrigerantFlow) {
+        if (boost::optional<HVACComponent> coil = elem.supplementalHeatingCoil()) {
           if (coil->handle() == this->handle()) {
             return elem;
           }

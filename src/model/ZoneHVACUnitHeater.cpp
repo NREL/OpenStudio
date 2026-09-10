@@ -12,6 +12,8 @@
 #include "HVACComponent_Impl.hpp"
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
+#include "CoilHeatingSteam.hpp"
+#include "CoilHeatingSteam_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include "Model.hpp"
@@ -68,6 +70,11 @@ namespace model {
 
     std::vector<IdfObject> ZoneHVACUnitHeater_Impl::remove() {
       if (boost::optional<CoilHeatingWater> waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
+        }
+      }
+      if (boost::optional<CoilHeatingSteam> waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingSteam>()) {
         if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
           plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
         }

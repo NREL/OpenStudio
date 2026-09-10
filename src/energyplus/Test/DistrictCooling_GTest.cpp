@@ -10,6 +10,8 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/DistrictCooling.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/DistrictCooling_FieldEnums.hxx>
 

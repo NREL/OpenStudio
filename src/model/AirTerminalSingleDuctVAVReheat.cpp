@@ -492,6 +492,11 @@ namespace model {
 
           break;
         }
+        case openstudio::IddObjectType::OS_Coil_Heating_Steam: {
+          result = true;
+
+          break;
+        }
         default: {
           LOG(Warn, "Unsupported or invalid IddObjectType: '" << coil.iddObject().name() << "'");
 

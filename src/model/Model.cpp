@@ -4032,11 +4032,13 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableSpeedSpeedData);
     REGISTER_CONSTRUCTOR(CoilHeatingWater);
+    REGISTER_CONSTRUCTOR(CoilHeatingSteam);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterToAirHeatPumpEquationFit);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterBaseboard);
     REGISTER_CONSTRUCTOR(CoilHeatingWaterBaseboardRadiant);
+    REGISTER_CONSTRUCTOR(CoilHeatingSteamBaseboardRadiant);
     REGISTER_CONSTRUCTOR(CoilPerformanceDXCooling);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWater);
     REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
@@ -4281,6 +4283,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
     REGISTER_CONSTRUCTOR(PumpVariableSpeed);
+    REGISTER_CONSTRUCTOR(PumpVariableSpeedCondensate);
     REGISTER_CONSTRUCTOR(PythonPluginInstance);
     REGISTER_CONSTRUCTOR(PythonPluginVariable);
     REGISTER_CONSTRUCTOR(PythonPluginTrendVariable);
@@ -4462,6 +4465,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveSteam);
     REGISTER_CONSTRUCTOR(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_CONSTRUCTOR(ZoneHVACIdealLoadsAirSystem);
     REGISTER_CONSTRUCTOR(ZoneHVACFourPipeFanCoil);
@@ -4617,11 +4621,13 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableSpeedSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWater);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingSteam);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterToAirHeatPumpEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterBaseboard);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterBaseboardRadiant);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingSteamBaseboardRadiant);
     REGISTER_COPYCONSTRUCTORS(CoilPerformanceDXCooling);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWater);
     REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
@@ -4866,6 +4872,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
     REGISTER_COPYCONSTRUCTORS(PumpVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(PumpVariableSpeedCondensate);
     REGISTER_COPYCONSTRUCTORS(PythonPluginInstance);
     REGISTER_COPYCONSTRUCTORS(PythonPluginVariable);
     REGISTER_COPYCONSTRUCTORS(PythonPluginTrendVariable);
@@ -5047,6 +5054,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
+    REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveSteam);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACCoolingPanelRadiantConvectiveWater);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACIdealLoadsAirSystem);
     REGISTER_COPYCONSTRUCTORS(ZoneHVACFourPipeFanCoil);

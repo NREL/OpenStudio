@@ -25,6 +25,8 @@
 #include "CoilHeatingGas_Impl.hpp"
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
+#include "CoilHeatingSteam.hpp"
+#include "CoilHeatingSteam_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -122,6 +124,11 @@ namespace model {
         }
       }
       if (boost::optional<CoilHeatingWater> t_supplementalHeatingCoil = supplementalHeatingCoil().optionalCast<CoilHeatingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = t_supplementalHeatingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent(t_supplementalHeatingCoil.get());
+        }
+      }
+      if (boost::optional<CoilHeatingSteam> t_supplementalHeatingCoil = supplementalHeatingCoil().optionalCast<CoilHeatingSteam>()) {
         if (boost::optional<PlantLoop> plantLoop = t_supplementalHeatingCoil->plantLoop()) {
           plantLoop->removeDemandBranchWithComponent(t_supplementalHeatingCoil.get());
         }

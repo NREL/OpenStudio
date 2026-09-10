@@ -33,6 +33,7 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
@@ -270,6 +271,10 @@ namespace energyplus {
           _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, coolingCoilOutletNodeName);
 
           _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, airOutletNodeName);
+        } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+          _heatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, coolingCoilOutletNodeName);
+
+          _heatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, airOutletNodeName);
         } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
           _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, coolingCoilOutletNodeName);
 
@@ -284,6 +289,10 @@ namespace energyplus {
           _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, coolingCoilOutletNodeName);
 
           _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatingCoilOutletNodeName);
+        } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+          _heatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, coolingCoilOutletNodeName);
+
+          _heatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, heatingCoilOutletNodeName);
         } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
           _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, coolingCoilOutletNodeName);
 

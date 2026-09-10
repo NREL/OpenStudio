@@ -94,6 +94,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingGasMultiStage.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingSteam.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.cpp
   ForwardTranslator/ForwardTranslateCoilPerformanceDXCooling.cpp
@@ -303,6 +304,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePortList.cpp
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
+  ForwardTranslator/ForwardTranslatePumpVariableSpeedCondensate.cpp
   ForwardTranslator/ForwardTranslatePythonPluginInstance.cpp
   ForwardTranslator/ForwardTranslatePythonPluginVariable.cpp
   ForwardTranslator/ForwardTranslatePythonPluginTrendVariable.cpp
@@ -445,6 +447,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardRadiantConvectiveElectric.cpp
   ForwardTranslator/ForwardTranslateZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ForwardTranslator/ForwardTranslateZoneHVACBaseboardRadiantConvectiveSteam.cpp
   ForwardTranslator/ForwardTranslateZoneHVACCoolingPanelRadiantConvectiveWater.cpp
   ForwardTranslator/ForwardTranslateZoneHVACDehumidifierDX.cpp
   ForwardTranslator/ForwardTranslateZoneHVACEnergyRecoveryVentilator.cpp
@@ -703,6 +706,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/AvailabilityManagerHybridVentilation_GTest.cpp
   Test/BoilerHotWater_GTest.cpp
+  Test/BoilerSteam_GTest.cpp
   Test/Building_GTest.cpp
   Test/ChillerElectricASHRAE205_GTest.cpp
   Test/ChillerElectricEIR_GTest.cpp
@@ -729,6 +733,7 @@ set(${target_name}_test_src
   Test/CoilHeatingGasMultiStage_GTest.cpp
   Test/CoilHeatingWaterToAirHeatPumpEquationFit_GTest.cpp
   Test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
+  Test/CoilHeatingSteam_GTest.cpp
   Test/CoilSystemCoolingWater_GTest.cpp
   Test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
@@ -749,6 +754,9 @@ set(${target_name}_test_src
   Test/DaylightingDeviceLightWell_GTest.cpp
   Test/DesignDay_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
+  Test/DistrictCooling_GTest.cpp
+  Test/DistrictHeatingWater_GTest.cpp
+  Test/DistrictHeatingSteam_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
   Test/ElectricLoadCenterDistribution_GTest.cpp
@@ -866,6 +874,7 @@ set(${target_name}_test_src
   Test/WaterUseConnections_GTest.cpp
   Test/ZoneAirHeatBalanceAlgorithm_GTest.cpp
   Test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  Test/ZoneHVACBaseboardRadiantConvectiveSteam_GTest.cpp
   Test/ZoneHVACEvaporativeCoolerUnit_GTest.cpp
   Test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp

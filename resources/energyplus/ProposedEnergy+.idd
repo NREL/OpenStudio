@@ -27781,7 +27781,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Water:Design,
   A1,  \field Name
        \required-field
        \type alpha
-       \reference RadiantDesignObject
+       \reference RadiantWaterDesignObject
   A2,  \field Heating Design Capacity Method
        \type choice
        \key HeatingDesignCapacity
@@ -27833,7 +27833,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
   A2,  \field Design Object
        \required-field
        \type object-list
-       \object-list RadiantDesignObject
+       \object-list RadiantWaterDesignObject
   A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
@@ -27893,12 +27893,11 @@ ZoneHVAC:Baseboard:RadiantConvective:Water,
 
 ZoneHVAC:Baseboard:RadiantConvective:Steam:Design,
        \min-fields 7
-  A1, \field Name
+  A1,  \field Name
        \required-field
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
-       \reference ZoneEquipmentNames
-  A2, \field Heating Design Capacity Method
+       \type alpha
+       \reference RadiantSteamDesignObject
+  A2,  \field Heating Design Capacity Method
        \type choice
        \key HeatingDesignCapacity
        \key CapacityPerFloorArea
@@ -27949,7 +27948,7 @@ ZoneHVAC:Baseboard:RadiantConvective:Steam,
   A2,  \field Design Object
        \required-field
        \type object-list
-       \object-list RadiantDesignObject
+       \object-list RadiantSteamDesignObject
   A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
@@ -34010,6 +34009,7 @@ Coil:Heating:Steam,
        \required-field
        \type alpha
        \reference HeatingCoilName
+       \reference HeatingCoilsSteam
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
        \reference-class-name validOASysEquipmentTypes
@@ -40765,6 +40765,8 @@ AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \object-list HeatingCoilsDXMultiSpeed
         \object-list HeatingCoilsElectricMultiStage
         \object-list HeatingCoilsGasMultiStage
+        \object-list HeatingCoilsWater
+        \object-list HeatingCoilsSteam
    N1 , \field DX Heating Coil Sizing Ratio
         \type real
         \default 1.0

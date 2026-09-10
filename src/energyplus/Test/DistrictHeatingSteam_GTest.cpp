@@ -10,8 +10,12 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/DistrictHeatingSteam.hpp"
+#include "../../model/PlantLoop.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/DistrictHeating_Steam_FieldEnums.hxx>
+#include <utilities/idd/Pipe_Adiabatic_FieldEnums.hxx>
+#include <utilities/idd/Pipe_Adiabatic_Steam_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -41,7 +45,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DistrictHeatingSteam) {
   Workspace w = ft.translateModel(m);
 
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::DistrictHeating_Steam).size());
-
+  ASSERT_EQ(0u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic).size());
+  ASSERT_EQ(6u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic_Steam).size());
   IdfObject idf_dhs = w.getObjectsByType(IddObjectType::DistrictHeating_Steam)[0];
 
   EXPECT_EQ(districtHeatingSteam.nameString(), idf_dhs.getString(DistrictHeating_SteamFields::Name, false).get());

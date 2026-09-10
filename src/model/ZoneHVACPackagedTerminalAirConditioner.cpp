@@ -14,6 +14,8 @@
 #include "WaterToAirComponent_Impl.hpp"
 #include "CoilHeatingWater.hpp"
 #include "CoilHeatingWater_Impl.hpp"
+#include "CoilHeatingSteam.hpp"
+#include "CoilHeatingSteam_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -80,6 +82,12 @@ namespace model {
 
     std::vector<IdfObject> ZoneHVACPackagedTerminalAirConditioner_Impl::remove() {
       if (boost::optional<CoilHeatingWater> waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingWater>()) {
+        if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
+          plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
+        }
+      }
+
+      if (boost::optional<CoilHeatingSteam> waterHeatingCoil = heatingCoil().optionalCast<CoilHeatingSteam>()) {
         if (boost::optional<PlantLoop> plantLoop = waterHeatingCoil->plantLoop()) {
           plantLoop->removeDemandBranchWithComponent(waterHeatingCoil.get());
         }
@@ -449,14 +457,14 @@ namespace model {
 
       auto iddObjectType = heatingCoil.iddObjectType();
       if ((iddObjectType == IddObjectType::OS_Coil_Heating_Gas) || (iddObjectType == IddObjectType::OS_Coil_Heating_Electric)
-          || (iddObjectType == IddObjectType::OS_Coil_Heating_Water)) {
+          || (iddObjectType == IddObjectType::OS_Coil_Heating_Water) || (iddObjectType == IddObjectType::OS_Coil_Heating_Steam)) {
         isAllowedType = true;
       }
 
       if (isAllowedType) {
         return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::HeatingCoilName, heatingCoil.handle());
       } else {
-        LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingGas, CoilHeatingElectric, or CoilHeatingWater, not '"
+        LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingGas, CoilHeatingElectric, CoilHeatingWater, or CoilHeatingSteam, not '"
                     << heatingCoil.iddObjectType().valueName() << "')  for " << briefDescription());
         return false;
       }

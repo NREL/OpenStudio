@@ -23,6 +23,7 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -152,6 +153,9 @@ namespace energyplus {
         } else if (_reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Water) {
           _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, fanOutletNodeName);
           _reheatCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, outletNodeName.get());
+        } else if (_reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam) {
+          _reheatCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, fanOutletNodeName);
+          _reheatCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, outletNodeName.get());
         }
       }
     }

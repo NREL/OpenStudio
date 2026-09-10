@@ -20,6 +20,8 @@
 #include "../../model/AvailabilityManagerScheduledOff.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/ScheduleCompact.hpp"
+#include "../../model/BoilerSteam.hpp"
+#include "../../model/CoilHeatingWater.hpp"
 
 #include "../../model/PumpVariableSpeed.hpp"
 #include "../../model/PumpVariableSpeed_Impl.hpp"
@@ -162,4 +164,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_createFluidProperties) {
     // EXPECT_TRUE(false) << "Failed for " << n << " PlantLoops";
     ASSERT_NO_THROW(ft.translateModel(m)) << "Failed for " << n << " PlantLoops";
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_WaterAndSteam) {
+  Model m;
+
+  PlantLoop plant_loop(m);
+
+  BoilerSteam bs(m);
+  CoilHeatingWater chw(m);
+
+  EXPECT_TRUE(plant_loop.addSupplyBranchForComponent(bs));
+  EXPECT_TRUE(plant_loop.addDemandBranchForComponent(chw));
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(2u, ft.errors().size());
+  EXPECT_EQ("Did not translate Object of type 'OS:PlantLoop' and named 'Plant Loop 1' because there is a mix of Water and Steam components.",
+            ft.errors().front().logMessage());
+
+  EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::PlantLoop).size());
+  ASSERT_EQ(0u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic).size());
+  ASSERT_EQ(0u, w.getObjectsByType(IddObjectType::Pipe_Adiabatic_Steam).size());
 }

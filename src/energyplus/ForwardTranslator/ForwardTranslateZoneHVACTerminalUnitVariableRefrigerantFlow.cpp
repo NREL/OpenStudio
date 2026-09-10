@@ -44,6 +44,7 @@
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -351,8 +352,7 @@ namespace energyplus {
           } else if (idf_coil.iddObject().type() == IddObjectType::Coil_Heating_Water) {
             return std::pair<unsigned, unsigned>{Coil_Heating_WaterFields::AirInletNodeName, Coil_Heating_WaterFields::AirOutletNodeName};
           } else if (idf_coil.iddObject().type() == IddObjectType::Coil_Heating_Steam) {
-            // Not yet supported in OS
-            OS_ASSERT(false);
+            return std::pair<unsigned, unsigned>{Coil_Heating_SteamFields::AirInletNodeName, Coil_Heating_SteamFields::AirOutletNodeName};
           } else {
             LOG(Error, "Unsupported supplemental heating Coil type for " << modelObject.briefDescription());
             OS_ASSERT(false);

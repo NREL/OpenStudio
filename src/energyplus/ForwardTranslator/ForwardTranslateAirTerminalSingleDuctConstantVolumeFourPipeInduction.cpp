@@ -15,6 +15,7 @@
 #include <utilities/idd/AirLoopHVAC_ZoneMixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Steam_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_AirDistributionUnit_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -175,6 +176,9 @@ namespace energyplus {
     if (_heatingCoil && (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water)) {
       _heatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, heatingCoilInlet);
       _heatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, heatingCoilOutlet);
+    } else if (_heatingCoil && (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam)) {
+      _heatingCoil->setString(Coil_Heating_SteamFields::AirInletNodeName, heatingCoilInlet);
+      _heatingCoil->setString(Coil_Heating_SteamFields::AirOutletNodeName, heatingCoilOutlet);
     }
 
     if (_coolingCoil && (_coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_Water)) {

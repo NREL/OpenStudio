@@ -184,24 +184,34 @@ namespace energyplus {
       idfObject.setString(Pump_VariableSpeedFields::MaximumRPMSchedule, schedule->name().get());
     }
 
+    // SkinLossRadiativeFraction
+
     if ((value = modelObject.skinLossRadiativeFraction())) {
       idfObject.setDouble(Pump_VariableSpeedFields::SkinLossRadiativeFraction, value.get());
     }
+
+    // DesignPowerSizingMethod
 
     {
       s = modelObject.designPowerSizingMethod();
       idfObject.setString(Pump_VariableSpeedFields::DesignPowerSizingMethod, s.get());
     }
 
+    // DesignElectricPowerperUnitFlowRate
+
     {
       value = modelObject.designElectricPowerPerUnitFlowRate();
       idfObject.setDouble(Pump_VariableSpeedFields::DesignElectricPowerperUnitFlowRate, value.get());
     }
 
+    // DesignShaftPowerperUnitFlowRateperUnitHead
+
     {
       value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
       idfObject.setDouble(Pump_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead, value.get());
     }
+
+    // DesignMinimumFlowRateFraction
 
     {
       value = modelObject.designMinimumFlowRateFraction();
