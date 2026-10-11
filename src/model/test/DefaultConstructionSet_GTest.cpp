@@ -561,3 +561,70 @@ TEST_F(ModelFixture, DefaultConstructionSet_CloneBadName) {
   clone = defaultSurfaceConstructions.clone(model);
   EXPECT_EQ("*H.a.r.d.e.s.t*^\\1|-|8/_#($name$)?# 2", clone.name().get());
 }
+
+TEST_F(ModelFixture, DefaultConstructionSet_Merge) {
+  Model model;
+
+  Construction c1(model);
+  Construction c2(model);
+
+  DefaultConstructionSet dcs1(model);
+  DefaultConstructionSet dcs2(model);
+
+  // dcs1 has some direct constructions set, dcs2 has all of them
+  EXPECT_TRUE(dcs1.setInteriorPartitionConstruction(c1));
+  EXPECT_TRUE(dcs1.setAdiabaticSurfaceConstruction(c1));
+
+  EXPECT_TRUE(dcs2.setInteriorPartitionConstruction(c2));
+  EXPECT_TRUE(dcs2.setSpaceShadingConstruction(c2));
+  EXPECT_TRUE(dcs2.setBuildingShadingConstruction(c2));
+  EXPECT_TRUE(dcs2.setSiteShadingConstruction(c2));
+  EXPECT_TRUE(dcs2.setAdiabaticSurfaceConstruction(c2));
+
+  // dcs1 has no exterior surface constructions, both have (different) interior ones
+  DefaultSurfaceConstructions ext2(model);
+  EXPECT_TRUE(ext2.setWallConstruction(c2));
+  EXPECT_TRUE(dcs2.setDefaultExteriorSurfaceConstructions(ext2));
+
+  DefaultSurfaceConstructions int1(model);
+  EXPECT_TRUE(int1.setFloorConstruction(c1));
+  EXPECT_TRUE(dcs1.setDefaultInteriorSurfaceConstructions(int1));
+  DefaultSurfaceConstructions int2(model);
+  EXPECT_TRUE(int2.setFloorConstruction(c2));
+  EXPECT_TRUE(int2.setWallConstruction(c2));
+  EXPECT_TRUE(dcs2.setDefaultInteriorSurfaceConstructions(int2));
+
+  dcs1.merge(dcs2);
+
+  // Existing fields of this win, missing ones are taken from other
+  ASSERT_TRUE(dcs1.interiorPartitionConstruction());
+  EXPECT_EQ(c1, dcs1.interiorPartitionConstruction().get());
+  ASSERT_TRUE(dcs1.adiabaticSurfaceConstruction());
+  EXPECT_EQ(c1, dcs1.adiabaticSurfaceConstruction().get());
+  ASSERT_TRUE(dcs1.spaceShadingConstruction());
+  EXPECT_EQ(c2, dcs1.spaceShadingConstruction().get());
+  ASSERT_TRUE(dcs1.buildingShadingConstruction());
+  EXPECT_EQ(c2, dcs1.buildingShadingConstruction().get());
+  ASSERT_TRUE(dcs1.siteShadingConstruction());
+  EXPECT_EQ(c2, dcs1.siteShadingConstruction().get());
+
+  // Missing sub-object: points to other's, no clone
+  ASSERT_TRUE(dcs1.defaultExteriorSurfaceConstructions());
+  EXPECT_EQ(ext2, dcs1.defaultExteriorSurfaceConstructions().get());
+
+  // Both have one, not shared: merged in place
+  ASSERT_TRUE(dcs1.defaultInteriorSurfaceConstructions());
+  EXPECT_EQ(int1, dcs1.defaultInteriorSurfaceConstructions().get());
+  ASSERT_TRUE(int1.floorConstruction());
+  EXPECT_EQ(c1, int1.floorConstruction().get());
+  ASSERT_TRUE(int1.wallConstruction());
+  EXPECT_EQ(c2, int1.wallConstruction().get());
+
+  // Adiabatic is taken from other when missing
+  DefaultConstructionSet dcs3(model);
+  dcs3.merge(dcs2);
+  ASSERT_TRUE(dcs3.adiabaticSurfaceConstruction());
+  EXPECT_EQ(c2, dcs3.adiabaticSurfaceConstruction().get());
+
+  EXPECT_EQ(3u, model.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+}

@@ -416,6 +416,13 @@ namespace model {
           this->setSiteShadingConstruction(*construction);
         }
       }
+
+      if (!(this->adiabaticSurfaceConstruction())) {
+        construction = other.adiabaticSurfaceConstruction();
+        if (construction) {
+          this->setAdiabaticSurfaceConstruction(*construction);
+        }
+      }
     }
 
     boost::optional<ModelObject> DefaultConstructionSet_Impl::defaultExteriorSurfaceConstructionsAsModelObject() const {
