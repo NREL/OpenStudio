@@ -1444,6 +1444,191 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(merged, space2.defaultConstructionSet().get());
 }
 
+// Space group, pruning is by slot: a lower level DCS that fills the same surface type in another category, or a slot of
+// another kind, is not redundant and gets merged in. Each test has the SpaceType (2) and the BuildingStory (3) fill
+// different slots, with no Space DCS, so the merge always starts from the SpaceType DCS
+
+namespace {
+
+// A Space with an explicit SpaceType "Office" and a BuildingStory "L1", each with the given DCS
+Space makeSpaceWithSpaceTypeAndStory(Model& m, const DefaultConstructionSet& stDCS, const DefaultConstructionSet& bsDCS) {
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  BuildingStory story(m);
+  story.setName("L1");
+  EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+  Space space(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+  EXPECT_TRUE(space.setBuildingStory(story));
+  return space;
+}
+
+}  // namespace
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_NotPruned_SameTypeOtherCategory) {
+
+  // SpaceType fills the exterior wall, BuildingStory the interior wall
+  Model m;
+  Construction stExtWall(m);
+  Construction bsIntWall(m);
+  auto space = makeSpaceWithSpaceTypeAndStory(m, makeDCS(m, {.extWall = stExtWall}), makeDCS(m, {.intWall = bsIntWall}));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  EXPECT_EQ("SpaceType Office @ BuildingStory L1", merged.nameString());
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions()->wallConstruction());
+  EXPECT_EQ(stExtWall, merged.defaultExteriorSurfaceConstructions()->wallConstruction().get());
+  ASSERT_TRUE(merged.defaultInteriorSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultInteriorSurfaceConstructions()->wallConstruction());
+  EXPECT_EQ(bsIntWall, merged.defaultInteriorSurfaceConstructions()->wallConstruction().get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_NotPruned_GroundVsExteriorFloor) {
+
+  // SpaceType fills the exterior floor, BuildingStory the ground contact floor
+  Model m;
+  Construction stExtFloor(m);
+  Construction bsGroundFloor(m);
+  auto space = makeSpaceWithSpaceTypeAndStory(m, makeDCS(m, {.extFloor = stExtFloor}), makeDCS(m, {.groundFloor = bsGroundFloor}));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions()->floorConstruction());
+  EXPECT_EQ(stExtFloor, merged.defaultExteriorSurfaceConstructions()->floorConstruction().get());
+  ASSERT_TRUE(merged.defaultGroundContactSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultGroundContactSurfaceConstructions()->floorConstruction());
+  EXPECT_EQ(bsGroundFloor, merged.defaultGroundContactSurfaceConstructions()->floorConstruction().get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_NotPruned_SubSurfaceSlot) {
+
+  // SpaceType fills the exterior wall, BuildingStory only the exterior fixed window
+  Model m;
+  Construction stExtWall(m);
+  Construction bsFixedWindow(m);
+  auto space = makeSpaceWithSpaceTypeAndStory(m, makeDCS(m, {.extWall = stExtWall}), makeDCS(m, {.extFixedWindow = bsFixedWindow}));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions()->wallConstruction());
+  EXPECT_EQ(stExtWall, merged.defaultExteriorSurfaceConstructions()->wallConstruction().get());
+  ASSERT_TRUE(merged.defaultExteriorSubSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultExteriorSubSurfaceConstructions()->fixedWindowConstruction());
+  EXPECT_EQ(bsFixedWindow, merged.defaultExteriorSubSurfaceConstructions()->fixedWindowConstruction().get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_NotPruned_InteriorPartitionSlot) {
+
+  // SpaceType fills the exterior wall, BuildingStory only the interior partition
+  Model m;
+  Construction stExtWall(m);
+  Construction bsPartition(m);
+  auto space = makeSpaceWithSpaceTypeAndStory(m, makeDCS(m, {.extWall = stExtWall}), makeDCS(m, {.interiorPartition = bsPartition}));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions()->wallConstruction());
+  EXPECT_EQ(stExtWall, merged.defaultExteriorSurfaceConstructions()->wallConstruction().get());
+  ASSERT_TRUE(merged.interiorPartitionConstruction());
+  EXPECT_EQ(bsPartition, merged.interiorPartitionConstruction().get());
+}
+
+// Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
+// their Default(Sub)SurfaceConstructions if nothing else uses them anymore
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_Purge_MovedDownSetKept) {
+
+  // The SpaceType DCS is moved down to the Space: the SpaceType is reset, but its DCS is still used by the Space so it stays
+  Model m;
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+  Construction stWall(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+  auto stExt = stDCS.defaultExteriorSurfaceConstructions().get();
+
+  EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m, true).empty());
+
+  EXPECT_FALSE(spaceType.defaultConstructionSet());
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(stDCS, space.defaultConstructionSet().get());
+  EXPECT_FALSE(stDCS.handle().isNull());
+  EXPECT_FALSE(stExt.handle().isNull());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_Purge_MergedOriginalsRemoved) {
+
+  // SpaceType fills the exterior wall, BuildingStory the exterior roof and the interior wall: they get merged, then both
+  // originals are removed. Their sub-objects go too, except the ones the merged set still uses:
+  // - The exterior ones were both filled, so the merged set got its own (a clone of the SpaceType's): both originals are removed
+  // - The interior one was only filled by the BuildingStory, so the merged set points to it as is: it stays
+  Model m;
+  Construction stWall(m);
+  Construction bsRoof(m);
+  Construction bsIntWall(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall});
+  auto bsDCS = makeDCS(m, {.extRoof = bsRoof, .intWall = bsIntWall});
+  auto stExt = stDCS.defaultExteriorSurfaceConstructions().get();
+  auto bsExt = bsDCS.defaultExteriorSurfaceConstructions().get();
+  auto bsInt = bsDCS.defaultInteriorSurfaceConstructions().get();
+  auto space = makeSpaceWithSpaceTypeAndStory(m, stDCS, bsDCS);
+  auto spaceType = space.spaceType().get();
+  auto story = space.buildingStory().get();
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m, true);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+
+  EXPECT_FALSE(spaceType.defaultConstructionSet());
+  EXPECT_FALSE(story.defaultConstructionSet());
+  EXPECT_TRUE(stDCS.handle().isNull());
+  EXPECT_TRUE(bsDCS.handle().isNull());
+  EXPECT_TRUE(stExt.handle().isNull());
+  EXPECT_TRUE(bsExt.handle().isNull());
+  EXPECT_FALSE(bsInt.handle().isNull());
+
+  // The merged set is intact
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  auto mergedExt = merged.defaultExteriorSurfaceConstructions().get();
+  ASSERT_TRUE(mergedExt.wallConstruction());
+  EXPECT_EQ(stWall, mergedExt.wallConstruction().get());
+  ASSERT_TRUE(mergedExt.roofCeilingConstruction());
+  EXPECT_EQ(bsRoof, mergedExt.roofCeilingConstruction().get());
+  ASSERT_TRUE(merged.defaultInteriorSurfaceConstructions());
+  EXPECT_EQ(bsInt, merged.defaultInteriorSurfaceConstructions().get());
+
+  EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());       // merged
+  EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());  // mergedExt, bsInt
+}
+
 namespace {
 
 // Four 10x10x3 Spaces in a row, every level of the inheritance chain winning at least one surface:
