@@ -30,6 +30,7 @@
 #include "../../model/ShadingSurfaceGroup.hpp"
 #include "../../model/InteriorPartitionSurfaceGroup.hpp"
 #include "../../model/Surface.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
 
 #include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/Space_FieldEnums.hxx>
@@ -84,6 +85,16 @@ namespace energyplus {
     if (boost::optional<SpaceType> spaceType_ = modelObject.spaceType()) {
       if (auto idf_spaceType_ = translateAndMapModelObject(spaceType_.get())) {
         idfObject.setString(SpaceFields::SpaceType, idf_spaceType_->nameString());
+      }
+    }
+
+    // Construction Assignment Set Name
+    if (!m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      // NOTE: the DefaultConstructionSet of the Space is already merged with the DCS of its SpaceType and BuildingStory if needed (collapseToSpaceAndBuilding)
+      if (auto defaultConstructionSet_ = modelObject.defaultConstructionSet()) {
+        if (auto wo_ = translateAndMapModelObject(*defaultConstructionSet_)) {
+          idfObject.setString(SpaceFields::ConstructionAssignmentSetName, wo_->nameString());
+        }
       }
     }
 

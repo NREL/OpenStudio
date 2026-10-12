@@ -28,11 +28,30 @@
 #include "ShadingSurface_Impl.hpp"
 #include "ShadingSurfaceGroup.hpp"
 #include "ShadingSurfaceGroup_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
+#include "BuildingStory.hpp"
+#include "BuildingStory_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "SpaceType.hpp"
+#include "SpaceType_Impl.hpp"
 
 #include <utilities/idd/OS_DefaultConstructionSet_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Logger.hpp"
+
+#include <bitset>
+#include <iterator>
+#include <map>
+#include <set>
+#include <string>
+#include <string_view>
+#include <type_traits>
+#include <utility>
+#include <vector>
 
 using openstudio::istringEqual;
 
@@ -416,6 +435,13 @@ namespace model {
           this->setSiteShadingConstruction(*construction);
         }
       }
+
+      if (!(this->adiabaticSurfaceConstruction())) {
+        construction = other.adiabaticSurfaceConstruction();
+        if (construction) {
+          this->setAdiabaticSurfaceConstruction(*construction);
+        }
+      }
     }
 
     boost::optional<ModelObject> DefaultConstructionSet_Impl::defaultExteriorSurfaceConstructionsAsModelObject() const {
@@ -786,6 +812,316 @@ namespace model {
 
   void DefaultConstructionSet::merge(const DefaultConstructionSet& other) {
     getImpl<detail::DefaultConstructionSet_Impl>()->merge(other);
+  }
+
+  // Helpers for DefaultConstructionSet::collapseToSpaceAndBuilding
+  namespace {
+
+    constexpr auto collapseLogChannel = "openstudio.model.DefaultConstructionSet";
+
+    // Set to false once shading constructions are hard-assigned before collapsing: E+ has no shading slot, so a set that only
+    // contributes shading constructions shouldn't keep a level in the chain
+    constexpr bool countShadingSlots = true;
+
+    // 3 surface categories x 3 types, 2 sub-surface categories x 8 types, interior partition, [space, building, site shading], adiabatic
+    constexpr size_t nSlots = (3 * 3) + (2 * 8) + 1 + (countShadingSlots ? 3 : 0) + 1;
+
+    using SlotMask = std::bitset<nSlots>;
+
+    SlotMask filledSlots(const DefaultConstructionSet& dcs) {
+      SlotMask mask;
+      size_t i = 0;
+
+      for (const auto& d_ :
+           {dcs.defaultExteriorSurfaceConstructions(), dcs.defaultInteriorSurfaceConstructions(), dcs.defaultGroundContactSurfaceConstructions()}) {
+        if (d_) {
+          mask[i] = d_->floorConstruction().has_value();
+          mask[i + 1] = d_->wallConstruction().has_value();
+          mask[i + 2] = d_->roofCeilingConstruction().has_value();
+        }
+        i += 3;
+      }
+
+      for (const auto& d_ : {dcs.defaultExteriorSubSurfaceConstructions(), dcs.defaultInteriorSubSurfaceConstructions()}) {
+        if (d_) {
+          mask[i] = d_->fixedWindowConstruction().has_value();
+          mask[i + 1] = d_->operableWindowConstruction().has_value();
+          mask[i + 2] = d_->doorConstruction().has_value();
+          mask[i + 3] = d_->glassDoorConstruction().has_value();
+          mask[i + 4] = d_->overheadDoorConstruction().has_value();
+          mask[i + 5] = d_->skylightConstruction().has_value();
+          mask[i + 6] = d_->tubularDaylightDomeConstruction().has_value();
+          mask[i + 7] = d_->tubularDaylightDiffuserConstruction().has_value();
+        }
+        i += 8;
+      }
+
+      mask[i++] = dcs.interiorPartitionConstruction().has_value();
+      if constexpr (countShadingSlots) {
+        mask[i++] = dcs.spaceShadingConstruction().has_value();
+        mask[i++] = dcs.buildingShadingConstruction().has_value();
+        mask[i++] = dcs.siteShadingConstruction().has_value();
+      }
+      mask[i++] = dcs.adiabaticSurfaceConstruction().has_value();
+
+      return mask;
+    }
+
+    struct ChainItem
+    {
+      DefaultConstructionSet dcs;
+      Handle ownerHandle;  // the Space, SpaceType, BuildingStory, or Building that points at dcs
+      std::string owner;   // e.g. "SpaceType Office", used for the merged set name and logging
+    };
+
+    template <typename T>
+    constexpr std::string_view ownerKind() {
+      if constexpr (std::is_same_v<T, Space>) {
+        return "Space";
+      } else if constexpr (std::is_same_v<T, SpaceType>) {
+        return "SpaceType";
+      } else if constexpr (std::is_same_v<T, BuildingStory>) {
+        return "BuildingStory";
+      } else {
+        static_assert(std::is_same_v<T, Building>, "Only Space, SpaceType, BuildingStory and Building own a DefaultConstructionSet");
+        return "Building";
+      }
+    }
+
+    /// Append the owner's DefaultConstructionSet, if any, to the chain
+    template <typename T>
+    void push(std::vector<ChainItem>& chain, const T& owner) {
+      if (auto dcs_ = owner.defaultConstructionSet()) {
+        chain.push_back({*dcs_, owner.handle(), std::string{ownerKind<T>()} + " " + owner.nameString()});
+      }
+    }
+
+    template <typename T>
+    void push(std::vector<ChainItem>& chain, const boost::optional<T>& owner_) {
+      if (owner_) {
+        push(chain, *owner_);
+      }
+    }
+
+    /// DefaultConstructionSet handle -> its directUseCount()
+    using UseCounts = std::map<Handle, unsigned>;
+
+    class Resolver
+    {
+     public:
+      Resolver(Model model, const UseCounts& useCountsBefore) : m_model(std::move(model)), m_useCountsBefore(useCountsBefore) {}
+
+      /// Prunes the chain, then returns: none if empty, the single remaining set, or the merged set for these owners. If the
+      /// first remaining set belongs to inPlaceOwner and nobody else uses it, the lower levels are merged into it in place instead
+      boost::optional<DefaultConstructionSet> resolve(const std::string& groupName, std::vector<ChainItem> chain,
+                                                      const Handle& inPlaceOwner = Handle()) {
+        prune(groupName, chain);
+
+        if (chain.empty()) {
+          return boost::none;
+        }
+        if (chain.size() == 1) {
+          return chain.front().dcs;
+        }
+
+        // The owner's own set (Space or Building), used by nobody else: merge the lower levels into it in place.
+        // Only valid when the owner is a Space or the Building: each stands for itself alone, so a use count of 1 really
+        // means a single user. A SpaceType or BuildingStory is only an intermediate level that fans out to all its Spaces (and
+        // the Building's SpaceType to the Building), so a count of 1 there could hide many Spaces, which is why inPlaceOwner is
+        // only ever a Space or the Building.
+        // The use count is the one from before the call: counts drop as owners get pointed to merged clones, which would make the
+        // outcome depend on the order the Spaces are processed in (2 Spaces sharing a set: the first one gets a clone, the second
+        // one would then merge in place)
+        auto& front = chain.front();
+        if (front.ownerHandle == inPlaceOwner && m_useCountsBefore.at(front.dcs.handle()) == 1) {
+          for (auto it = std::next(chain.cbegin()); it != chain.cend(); ++it) {
+            front.dcs.merge(it->dcs);
+          }
+          LOG_FREE(Info, collapseLogChannel, groupName << ": merged lower levels into '" << front.dcs.nameString() << "' in place");
+          return front.dcs;
+        }
+
+        std::vector<Handle> key;
+        key.reserve(chain.size());
+        for (const auto& item : chain) {
+          key.push_back(item.ownerHandle);
+        }
+        if (auto it = m_byOwners.find(key); it != m_byOwners.end()) {
+          return it->second;
+        }
+
+        // Miss: create it. The clone still points at the original Default(Sub)SurfaceConstructions; merge() only clones one of
+        // those when it has to fill it from another partial one, so sub-object cloning is already minimal.
+        auto merged = chain.front().dcs.clone(m_model).cast<DefaultConstructionSet>();
+        std::string name = chain.front().owner;
+        for (auto it = std::next(chain.cbegin()); it != chain.cend(); ++it) {
+          merged.merge(it->dcs);
+          name += " @ " + it->owner;
+        }
+        merged.setName(name);
+        LOG_FREE(Info, collapseLogChannel, groupName << ": created merged DefaultConstructionSet '" << merged.nameString() << "'");
+
+        m_byOwners.emplace(std::move(key), merged);
+        m_created.push_back(merged);
+        return merged;
+      }
+
+      std::vector<DefaultConstructionSet> created() const {
+        return m_created;
+      }
+
+     private:
+      /// Drops every set that fills no slot left empty by the sets kept above it
+      static void prune(const std::string& groupName, std::vector<ChainItem>& chain) {
+        SlotMask covered;
+        std::vector<ChainItem> kept;
+        kept.reserve(chain.size());
+        for (auto& item : chain) {
+          const SlotMask filled = filledSlots(item.dcs);
+          if ((filled & ~covered).none()) {
+            LOG_FREE(Trace, collapseLogChannel,
+                     groupName << ": ignoring " << item.owner << "'s DefaultConstructionSet '" << item.dcs.nameString()
+                               << "', every slot it fills is already filled higher up");
+            continue;
+          }
+          covered |= filled;
+          kept.push_back(std::move(item));
+        }
+        chain = std::move(kept);
+      }
+
+      Model m_model;
+      const UseCounts& m_useCountsBefore;
+      std::map<std::vector<Handle>, DefaultConstructionSet> m_byOwners;
+      std::vector<DefaultConstructionSet> m_created;
+    };
+
+    /// Building group: Building (search distance 4), then Building SpaceType (5), collapsed onto the Building. Returns the created sets
+    std::vector<DefaultConstructionSet> collapseToBuilding(Model& model, const UseCounts& useCountsBefore) {
+      // model.building(), not getUniqueModelObject, so we don't instantiate a Building
+      auto building_ = model.building();
+      if (!building_) {
+        return {};
+      }
+
+      Resolver resolver(model, useCountsBefore);
+      std::vector<ChainItem> chain;
+      push(chain, *building_);
+      push(chain, building_->spaceType());
+      if (auto dcs_ = resolver.resolve("Building", std::move(chain), building_->handle())) {
+        building_->setDefaultConstructionSet(*dcs_);
+      } else {
+        building_->resetDefaultConstructionSet();
+      }
+
+      return resolver.created();
+    }
+
+    /// Space group, per Space: Space (1), then its SpaceType if explicit (2), then its BuildingStory (3), collapsed onto the Space.
+    /// Returns the created sets
+    std::vector<DefaultConstructionSet> collapseToSpaces(Model& model, const UseCounts& useCountsBefore) {
+      Resolver resolver(model, useCountsBefore);
+
+      for (auto& space : model.getConcreteModelObjects<Space>()) {
+        const std::string groupName = "Space '" + space.nameString() + "'";
+        std::vector<ChainItem> chain;
+        push(chain, space);
+        if (!space.isSpaceTypeDefaulted()) {  // defaulted == Building's SpaceType, which is in the Building group
+          push(chain, space.spaceType());
+        }
+        push(chain, space.buildingStory());
+
+        if (auto dcs_ = resolver.resolve(groupName, std::move(chain), space.handle())) {
+          space.setDefaultConstructionSet(*dcs_);  // no-op when it's the Space's own
+        } else {
+          space.resetDefaultConstructionSet();  // no set in the group, or only empty ones
+        }
+      }
+
+      return resolver.created();
+    }
+
+  }  // namespace
+
+  // OS inheritance order (cf Space_Impl::getDefaultConstructionWithSearchDistance):
+  //
+  //   Space -> SpaceType (explicit only) -> BuildingStory -> Building -> Building SpaceType
+  //   \__________________ ___________________________/     \_______________ _____________/
+  //                      V                                                 V
+  //                 Space Group                                     Building Group
+  //
+  // Each group only reads its own levels' sets (the Space group never reads the Building's), and SpaceType / BuildingStory sets
+  // are only reset at the very end (if purging), so assigning as we go is safe. Original sets are only mutated when merged into
+  // in place: a Space's or the Building's own set, with no other user.
+  //
+  // Collapsing preserves every surface's construction, but not its search distance: what came from a SpaceType / BuildingStory
+  // (2, 3) now comes from the Space (1), and what came from the Building's SpaceType (5) now comes from the Building (4).
+  // Purging or not makes no difference to either: a collapsed set's slots are the union of its group's slots, so a slot that
+  // falls through the Space's set also falls through its SpaceType's and BuildingStory's, and is never found there.
+  std::vector<DefaultConstructionSet> DefaultConstructionSet::collapseToSpaceAndBuilding(Model& model, bool purge) {
+
+    // Use counts before the call: they decide what may be merged into in place, and what a purge may remove (sets in use before)
+    UseCounts useCountsBefore;
+    std::vector<DefaultConstructionSet> usedBefore;
+    for (auto& dcs : model.getConcreteModelObjects<DefaultConstructionSet>()) {
+      const unsigned useCount = dcs.directUseCount();
+      useCountsBefore.emplace(dcs.handle(), useCount);
+      if (purge && useCount > 0) {
+        usedBefore.push_back(std::move(dcs));
+      }
+    }
+
+    std::vector<DefaultConstructionSet> created = collapseToBuilding(model, useCountsBefore);
+    const std::vector<DefaultConstructionSet> spaceCreated = collapseToSpaces(model, useCountsBefore);
+    created.insert(created.end(), spaceCreated.begin(), spaceCreated.end());
+
+    if (!purge) {
+      return created;
+    }
+
+    // Purge:
+
+    // 1. Drop the intermediate levels so the model looks like E+: sets only on Spaces and the Building (includes the Building's SpaceType)
+    for (auto& spaceType : model.getConcreteModelObjects<SpaceType>()) {
+      spaceType.resetDefaultConstructionSet();
+    }
+    for (auto& story : model.getConcreteModelObjects<BuildingStory>()) {
+      story.resetDefaultConstructionSet();
+    }
+
+    // 2. Remove the sets this left unused, but capture their sub-objects to see if they are orphaned after
+
+    // A set, since two removed sets can share a sub-object
+    std::set<ResourceObject> subObjects;
+    for (auto& dcs : usedBefore) {
+      if (dcs.directUseCount() > 0) {
+        continue;
+      }
+      for (const auto& d_ :
+           {dcs.defaultExteriorSurfaceConstructions(), dcs.defaultInteriorSurfaceConstructions(), dcs.defaultGroundContactSurfaceConstructions()}) {
+        if (d_) {
+          subObjects.insert(*d_);
+        }
+      }
+      for (const auto& d_ : {dcs.defaultExteriorSubSurfaceConstructions(), dcs.defaultInteriorSubSurfaceConstructions()}) {
+        if (d_) {
+          subObjects.insert(*d_);
+        }
+      }
+      LOG_FREE(Trace, collapseLogChannel, "Removing DefaultConstructionSet '" << dcs.nameString() << "', no longer used");
+      dcs.remove();
+    }
+
+    // 3. Remove the sub-objects that are no longer used
+
+    // Copy (cheap handle wrapper): set elements are const, and remove() isn't
+    for (auto subObject : subObjects) {  // NOLINT(performance-for-range-copy)
+      if (subObject.directUseCount() == 0) {
+        subObject.remove();
+      }
+    }
+
+    return created;
   }
 
   boost::optional<ConstructionBase> DefaultConstructionSet::adiabaticSurfaceConstruction() const {

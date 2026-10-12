@@ -76,24 +76,29 @@ namespace energyplus {
     m_map.insert(std::make_pair(modelObject.handle(), idfObject));
 
     std::string subSurfaceType = modelObject.subSurfaceType();
-    if (istringEqual("FixedWindow", subSurfaceType) || istringEqual("OperableWindow", subSurfaceType)) {
-      subSurfaceType = "Window";
-    } else if (istringEqual("OverheadDoor", subSurfaceType)) {
-      subSurfaceType = "Door";
-    } else if (istringEqual("Skylight", subSurfaceType)) {
-      subSurfaceType = "Window";
-    }
 
     boost::optional<ConstructionBase> construction = modelObject.construction();
     if (construction) {
-      idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
 
-      if (subSurfaceType == "Door" && construction->isFenestration()) {
-        LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses fenestration construction, changing SubSurfaceType to GlassDoor");
+      bool typeFlipped = false;
+      const bool isFenestration = construction->isFenestration();
+      if (isFenestration && (istringEqual("Door", subSurfaceType) || istringEqual("OverheadDoor", subSurfaceType))) {
+        LOG(Warn, "SubSurface '" << modelObject.nameString() << "' of type " << subSurfaceType
+                                 << " uses fenestration construction, changing SubSurfaceType to GlassDoor");
         subSurfaceType = "GlassDoor";
-      } else if (subSurfaceType == "GlassDoor" && !construction->isFenestration()) {
-        LOG(Warn, "SubSurface '" << modelObject.name().get() << "' uses non-fenestration construction, changing SubSurfaceType to Door");
+        typeFlipped = true;
+      } else if (!isFenestration && istringEqual("GlassDoor", subSurfaceType)) {
+        LOG(Warn, "SubSurface '" << modelObject.nameString() << "' uses non-fenestration construction, changing SubSurfaceType to Door");
         subSurfaceType = "Door";
+        typeFlipped = true;
+      }
+
+      // Write the construction:
+      // - When it is hard-assigned
+      // - When the SubSurfaceType was changed above: E+ would look it up in a different ConstructionAssignmentSet slot
+      // - When the construction assignment sets are excluded
+      if (typeFlipped || !modelObject.isConstructionDefaulted() || m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+        idfObject.setString(FenestrationSurface_DetailedFields::ConstructionName, construction->name().get());
       }
     }
 

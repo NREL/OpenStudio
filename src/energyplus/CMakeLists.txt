@@ -143,6 +143,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDaylightingDeviceTubular.cpp
   ForwardTranslator/ForwardTranslateDaylightingDeviceLightWell.cpp
   ForwardTranslator/ForwardTranslateDaylightRedirectionDevice.cpp
+  ForwardTranslator/ForwardTranslateDefaultConstructionSet.cpp
+  ForwardTranslator/ForwardTranslateDefaultSubSurfaceConstructions.cpp
+  ForwardTranslator/ForwardTranslateDefaultSurfaceConstructions.cpp
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateDistrictCooling.cpp
@@ -758,6 +761,9 @@ set(${target_name}_test_src
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DaylightingDeviceTubular_GTest.cpp
   Test/DaylightingDeviceLightWell_GTest.cpp
+  Test/DefaultConstructionSet_GTest.cpp
+  Test/DefaultSurfaceConstructions_GTest.cpp
+  Test/DefaultSubSurfaceConstructions_GTest.cpp
   Test/DesignDay_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp

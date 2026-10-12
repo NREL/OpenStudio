@@ -1102,11 +1102,13 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
     EXPECT_FALSE(ftOptions.excludeVariableDictionary());
     EXPECT_FALSE(ftOptions.excludeSpaceTranslation());
     EXPECT_FALSE(ftOptions.excludeSpaceLoadInstances());
+    EXPECT_FALSE(ftOptions.excludeConstructionAssignmentSets());
   }
 
   // This makes no sense, but we picked 3 spaces for some reason... return string is formated with wbuilder["indentation"] = "   ";
   std::string ft_options = R"json({
    "ip_tabular_output" : true,
+   "no_construction_assignment_sets" : true,
    "no_html_output" : true,
    "no_lifecyclecosts" : true,
    "no_space_translation" : true,
@@ -1128,6 +1130,7 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
     EXPECT_TRUE(ftOptions.excludeVariableDictionary());
     EXPECT_TRUE(ftOptions.excludeSpaceTranslation());
     EXPECT_FALSE(ftOptions.excludeSpaceLoadInstances());  // Not in ft_options JSON, so still defaulted (default is also false)
+    EXPECT_TRUE(ftOptions.excludeConstructionAssignmentSets());
   }
 
   workflow.setRunOptions(options);
@@ -1333,7 +1336,6 @@ TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
   ftOptions.resetExcludeHTMLOutputReport();
   ASSERT_FALSE(ftOptions.excludeHTMLOutputReport());
   ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
-  ASSERT_TRUE(ftOptions.isExcludeHTMLOutputReportDefaulted());
 
   // Ctor Default
   ASSERT_FALSE(ftOptions.excludeVariableDictionary());
@@ -1345,7 +1347,6 @@ TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
   // Reset
   ftOptions.resetExcludeVariableDictionary();
   ASSERT_FALSE(ftOptions.excludeVariableDictionary());
-  ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
   ASSERT_TRUE(ftOptions.isExcludeVariableDictionaryDefaulted());
 
   // Ctor Default
@@ -1359,7 +1360,6 @@ TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
   ftOptions.resetExcludeSpaceTranslation();
   ASSERT_FALSE(ftOptions.excludeSpaceTranslation());
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
-  ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
 
   // Ctor Default
   ASSERT_FALSE(ftOptions.excludeSpaceLoadInstances());
@@ -1372,7 +1372,18 @@ TEST(Filetypes, ForwardTranslatorOptions_GettersSetters) {
   ftOptions.resetExcludeSpaceLoadInstances();
   ASSERT_FALSE(ftOptions.excludeSpaceLoadInstances());
   ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
-  ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+
+  // Ctor Default
+  ASSERT_FALSE(ftOptions.excludeConstructionAssignmentSets());
+  ASSERT_TRUE(ftOptions.isExcludeConstructionAssignmentSetsDefaulted());
+  // Set to opposite of default
+  ftOptions.setExcludeConstructionAssignmentSets(true);
+  ASSERT_TRUE(ftOptions.excludeConstructionAssignmentSets());
+  ASSERT_FALSE(ftOptions.isExcludeConstructionAssignmentSetsDefaulted());
+  // Reset
+  ftOptions.resetExcludeConstructionAssignmentSets();
+  ASSERT_FALSE(ftOptions.excludeConstructionAssignmentSets());
+  ASSERT_TRUE(ftOptions.isExcludeConstructionAssignmentSetsDefaulted());
 }
 
 TEST(Filetypes, RunOptions_overrideValuesWith) {
@@ -1413,6 +1424,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
   ASSERT_FALSE(ftOptions.excludeSpaceLoadInstances());
   ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+  ASSERT_FALSE(ftOptions.excludeConstructionAssignmentSets());
+  ASSERT_TRUE(ftOptions.isExcludeConstructionAssignmentSetsDefaulted());
 
   RunOptions otherRunOptions;
   ForwardTranslatorOptions otherftOptions = otherRunOptions.forwardTranslatorOptions();
@@ -1456,6 +1469,8 @@ TEST(Filetypes, RunOptions_overrideValuesWith) {
   ASSERT_TRUE(ftOptions.isExcludeSpaceTranslationDefaulted());
   ASSERT_FALSE(ftOptions.excludeSpaceLoadInstances());
   ASSERT_TRUE(ftOptions.isExcludeSpaceLoadInstancesDefaulted());
+  ASSERT_FALSE(ftOptions.excludeConstructionAssignmentSets());
+  ASSERT_TRUE(ftOptions.isExcludeConstructionAssignmentSetsDefaulted());
 }
 
 TEST(Filetypes, WorkflowJSON_ValidateMeasures_Ok) {

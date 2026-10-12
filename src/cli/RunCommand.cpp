@@ -147,6 +147,17 @@ namespace cli {
         "Translate SpaceLoads (People, Lights, ElectricEquipment, etc) to the E+ Instance / Definition object pairs [Default: True]")
       ->group(ftGroupName);
 
+    app
+      ->add_flag(
+        "--construction-assignment-sets,!--no-construction-assignment-sets",
+        [opt](std::int64_t val) {
+          if (val != 0) {
+            opt->runOptions.forwardTranslatorOptions().setExcludeConstructionAssignmentSets((val != 1));
+          }
+        },
+        "Translate DefaultConstructionSets to the E+ ConstructionAssignmentSet objects referenced by Space/Building [Default: True]")
+      ->group(ftGroupName);
+
     // Subcommand callback
     app->callback([opt, &ruby, &python] {
       openstudio::OSWorkflow workflow(*opt, ruby, python);

@@ -9,6 +9,7 @@
 
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
 #include "../../model/Site.hpp"
 #include "../../model/Site_Impl.hpp"
 #include "../../model/SimulationControl.hpp"
@@ -91,7 +92,16 @@ namespace energyplus {
       translateAndMapModelObject(shadingSurfaceGroup);
     }
 
-    return boost::optional<IdfObject>(idfObject);
+    if (!m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      // NOTE: the DefaultConstructionSet of the Building is already merged with the DCS of the Building's SpaceType if needed (collapseToSpaceAndBuilding)
+      if (auto defaultConstructionSet_ = modelObject.defaultConstructionSet()) {
+        if (auto wo_ = translateAndMapModelObject(*defaultConstructionSet_)) {
+          idfObject.setString(BuildingFields::ConstructionAssignmentSetName, wo_->nameString());
+        }
+      }
+    }
+
+    return idfObject;
   }
 
 }  // namespace energyplus

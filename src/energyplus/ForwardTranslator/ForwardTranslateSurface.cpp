@@ -59,9 +59,22 @@ namespace energyplus {
     }
     idfObject.setString(BuildingSurface_DetailedFields::SurfaceType, surfaceType);
 
-    boost::optional<ConstructionBase> construction = modelObject.construction();
-    if (construction) {
-      idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->nameString());
+    // Write the construction:
+    // - When it is hard-assigned
+    // - When the construction assignment sets are excluded
+    if (!modelObject.isConstructionDefaulted() || m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      if (boost::optional<ConstructionBase> construction = modelObject.construction()) {
+        idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->nameString());
+      }
+    } else if (const std::string obc = modelObject.outsideBoundaryCondition();
+               (istringEqual("GroundFCfactorMethod", obc) || istringEqual("Foundation", obc) || istringEqual("OtherSideCoefficients", obc)
+                || istringEqual("OtherSideConditionsModel", obc))) {
+      // OpenStudio doesn't resolve a default construction for these Outside Boundary Conditions (so there's no need to call construction()),
+      // but EnergyPlus does look them up in the ConstructionAssignmentSet (Ground Contact for GroundFCfactorMethod/Foundation, Exterior for
+      // OtherSideCoefficients, Interior for OtherSideConditionsModel)
+      LOG(Warn, modelObject.briefDescription()
+                  << " with Outside Boundary Condition '" << obc
+                  << "' has no construction in OpenStudio, EnergyPlus may resolve it, and incorrectly, from the ConstructionAssignmentSet");
     }
 
     boost::optional<Space> space = modelObject.space();

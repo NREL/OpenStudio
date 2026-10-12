@@ -121,6 +121,30 @@ namespace model {
     /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
     void merge(const DefaultConstructionSet& other);
 
+    /** Collapses the DefaultConstructionSet inheritance (Space, SpaceType, BuildingStory, Building, Building SpaceType) to the
+     *  Space and Building levels, the only two that the EnergyPlus ConstructionAssignmentSet supports.
+     *
+     *    Space -> SpaceType (explicit only) -> BuildingStory -> Building -> Building SpaceType
+     *    \__________________ ___________________________/      \_______________ _____________/
+     *                       V                                                 V
+     *                  Space Group                                      Building Group
+     *
+     *  For the Building, then for each Space, the sets of the levels it inherits from are considered in priority order. A
+     *  lower-priority set that fills no slot left empty by the ones above it is ignored. If one set remains, it is assigned as is.
+     *  If several remain, they are merged into a new set, created once per combination of owners and shared by all Spaces with
+     *  that combination (e.g. "SpaceType Office @ BuildingStory L1").
+     *
+     *  If purge is false, SpaceType and BuildingStory sets are left in place: they no longer affect any surface.
+     *  If purge is true, they are reset, then the sets that were referenced before the call and are now unused are removed,
+     *  along with their DefaultSurfaceConstructions / DefaultSubSurfaceConstructions if those are now unused too. Sets that were
+     *  already unused before the call are left alone.
+     *
+     *  Every surface resolves to the same construction afterwards, but search distances change, which affects how the
+     *  constructions of matched surfaces are resolved: resolve those first if needed.
+     *  This modifies the model in place: call it on a clone to keep the original.
+     *  Returns the DefaultConstructionSets that were created. */
+    static std::vector<DefaultConstructionSet> collapseToSpaceAndBuilding(Model& model, bool purge = false);
+
    protected:
     /// @cond
     using ImplType = detail::DefaultConstructionSet_Impl;

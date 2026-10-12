@@ -179,6 +179,9 @@ namespace model {
   class DaylightingDeviceTubular;
   class DaylightingDeviceLightWell;
   class DaylightRedirectionDevice;
+  class DefaultConstructionSet;
+  class DefaultSurfaceConstructions;
+  class DefaultSubSurfaceConstructions;
   class DesignDay;
   class DesignSpecificationOutdoorAir;
   class DistrictCooling;
@@ -595,6 +598,14 @@ namespace energyplus {
     *  Use this at your own risks */
     void setExcludeSpaceLoadInstances(bool excludeSpaceLoadInstances);
 
+    /** If excludeConstructionAssignmentSets is false, translate DefaultConstructionSet/DefaultSurfaceConstructions/
+    * DefaultSubSurfaceConstructions to the EnergyPlus ConstructionAssignmentSet / SurfaceConstructionAssignments /
+    * SubSurfaceConstructionAssignments objects referenced by Space, instead of resolving and inlining the Construction
+    * Name directly on each Surface/SubSurface/InternalMass. Only takes effect when excludeSpaceTranslation is false
+    * (E+ Space objects are required to reference a ConstructionAssignmentSet).
+    *  Use this at your own risks */
+    void setExcludeConstructionAssignmentSets(bool excludeConstructionAssignmentSets);
+
     //@}
 
    private:
@@ -958,6 +969,14 @@ namespace energyplus {
     boost::optional<IdfObject> translateDaylightingDeviceLightWell(model::DaylightingDeviceLightWell& modelObject);
 
     boost::optional<IdfObject> translateDaylightRedirectionDevice(model::DaylightRedirectionDevice& modelObject);
+
+    boost::optional<IdfObject> translateDefaultConstructionSet(model::DefaultConstructionSet& modelObject);
+    boost::optional<IdfObject> translateDefaultSurfaceConstructions(model::DefaultSurfaceConstructions& modelObject);
+    boost::optional<IdfObject> translateDefaultSubSurfaceConstructions(model::DefaultSubSurfaceConstructions& modelObject);
+    // When Space translation is excluded there is no E+ Space, so defaulted constructions would end up unresolved. This function hard-assigns
+    // constructions to all surfaces, subsurfaces and interior partitions in the model that have defaulted constructions, using the
+    // DefaultConstructionSet at the Space, SpaceType and BuildingStory level. Implemented in ForwardTranslateDefaultConstructionSet.cpp.
+    static void hardApplyConstructionsWhenSpaceTranslationOff(model::Model& model);
 
     boost::optional<IdfObject> translateDesignDay(model::DesignDay& modelObject);
 

@@ -52,6 +52,7 @@
 #include "../model/OutputMeter_Impl.hpp"
 #include "../model/OutputSQLite.hpp"
 #include "../model/OutputSQLite_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -178,6 +179,10 @@ namespace energyplus {
 
   void ForwardTranslator::setExcludeSpaceLoadInstances(bool excludeSpaceLoadInstances) {
     m_forwardTranslatorOptions.setExcludeSpaceLoadInstances(excludeSpaceLoadInstances);
+  }
+
+  void ForwardTranslator::setExcludeConstructionAssignmentSets(bool excludeConstructionAssignmentSets) {
+    m_forwardTranslatorOptions.setExcludeConstructionAssignmentSets(excludeConstructionAssignmentSets);
   }
 
   // #5510 - Sort by name first, then by reporting frequency
@@ -308,6 +313,17 @@ namespace energyplus {
         LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
         spaceLoad.remove();
       }
+    }
+
+    if (!m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
+        // When Space translation is excluded there is no E+ Space, so defaulted constructions would end up unresolved
+        hardApplyConstructionsWhenSpaceTranslationOff(model);
+      }
+
+      // TODO:  [ConstructionAssignmentSet purge] revisit whether I should purge or not
+      constexpr bool purge = false;
+      DefaultConstructionSet::collapseToSpaceAndBuilding(model, purge);
     }
 
     if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
@@ -1530,20 +1546,23 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_DefaultConstructionSet: {
-        // no-op
-        return retVal;
+        auto defaultConstructionSet = modelObject.cast<DefaultConstructionSet>();
+        retVal = translateDefaultConstructionSet(defaultConstructionSet);
+        break;
       }
       case openstudio::IddObjectType::OS_DefaultScheduleSet: {
         // no-op
         return retVal;
       }
       case openstudio::IddObjectType::OS_DefaultSurfaceConstructions: {
-        // no-op
-        return retVal;
+        auto defaultSurfaceConstructions = modelObject.cast<DefaultSurfaceConstructions>();
+        retVal = translateDefaultSurfaceConstructions(defaultSurfaceConstructions);
+        break;
       }
       case openstudio::IddObjectType::OS_DefaultSubSurfaceConstructions: {
-        // no-op
-        return retVal;
+        auto defaultSubSurfaceConstructions = modelObject.cast<DefaultSubSurfaceConstructions>();
+        retVal = translateDefaultSubSurfaceConstructions(defaultSubSurfaceConstructions);
+        break;
       }
       case openstudio::IddObjectType::OS_DesignSpecification_OutdoorAir: {
         LOG_AND_THROW("Shouldn't get there");
@@ -3753,9 +3772,11 @@ namespace energyplus {
       IddObjectType::OS_Construction_WindowDataFile,
       IddObjectType::OS_StandardsInformation_Construction,
 
+      // TODO: [ConstructionAssignmentSet purge] Probably not wanted, especially with purge = false in DefaultConstructionSet::collapseToSpaceAndBuilding
       IddObjectType::OS_DefaultSubSurfaceConstructions,
       IddObjectType::OS_DefaultSurfaceConstructions,
       IddObjectType::OS_DefaultConstructionSet,
+
       IddObjectType::OS_DefaultScheduleSet,
 
       // Translated by the object it references directly
