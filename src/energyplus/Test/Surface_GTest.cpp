@@ -30,8 +30,13 @@
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../../model/BuildingStory.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/DefaultSubSurfaceConstructions.hpp"
+#include "../../model/SimpleGlazing.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
+#include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -389,4 +394,163 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_ExcludeSpaceTranslation) {
 
   // The input model isn't touched
   EXPECT_TRUE(roof.isConstructionDefaulted());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_ExcludeSpaceTranslation_SearchOrder) {
+  // Without E+ Spaces, the FT hard-assigns the constructions from the Space, SpaceType and BuildingStory levels, following the OpenStudio search
+  // order (Space::getDefaultConstructionWithSearchDistance), for Surfaces and SubSurfaces alike. The Building and Building SpaceType levels are
+  // left to E+, via the Building's ConstructionAssignmentSet
+  Model model;
+  Building building = model.getUniqueModelObject<Building>();
+
+  auto makeExteriorSurfaceConstructions = [&model](DefaultConstructionSet& dcs) {
+    DefaultSurfaceConstructions defaultSurfaceConstructions(model);
+    EXPECT_TRUE(dcs.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions));
+    return defaultSurfaceConstructions;
+  };
+
+  // Building: the door. It needs an opaque layer: a construction without layers is considered fenestration, and the FT would flip the Door to a
+  // GlassDoor (and write the construction)
+  StandardOpaqueMaterial doorMaterial(model);
+  Construction doorConstruction(std::vector<OpaqueMaterial>{doorMaterial});
+  doorConstruction.setName("Building Door");
+  ASSERT_FALSE(doorConstruction.isFenestration());
+  DefaultSubSurfaceConstructions buildingSubSurfaceConstructions(model);
+  EXPECT_TRUE(buildingSubSurfaceConstructions.setDoorConstruction(doorConstruction));
+  DefaultConstructionSet buildingDCS(model);
+  EXPECT_TRUE(buildingDCS.setDefaultExteriorSubSurfaceConstructions(buildingSubSurfaceConstructions));
+  EXPECT_TRUE(building.setDefaultConstructionSet(buildingDCS));
+
+  // Building SpaceType: the ground floor, and a roof that must not be used by the Space with a defaulted SpaceType
+  Construction groundFloorConstruction(model);
+  groundFloorConstruction.setName("Building SpaceType Ground Floor");
+  Construction buildingSpaceTypeRoofConstruction(model);
+  buildingSpaceTypeRoofConstruction.setName("Building SpaceType Roof");
+  DefaultConstructionSet buildingSpaceTypeDCS(model);
+  DefaultSurfaceConstructions groundContactSurfaceConstructions(model);
+  EXPECT_TRUE(groundContactSurfaceConstructions.setFloorConstruction(groundFloorConstruction));
+  EXPECT_TRUE(buildingSpaceTypeDCS.setDefaultGroundContactSurfaceConstructions(groundContactSurfaceConstructions));
+  EXPECT_TRUE(makeExteriorSurfaceConstructions(buildingSpaceTypeDCS).setRoofCeilingConstruction(buildingSpaceTypeRoofConstruction));
+  SpaceType buildingSpaceType(model);
+  EXPECT_TRUE(buildingSpaceType.setDefaultConstructionSet(buildingSpaceTypeDCS));
+  EXPECT_TRUE(building.setSpaceType(buildingSpaceType));
+
+  // BuildingStory: the wall, and a roof that loses to the SpaceType one
+  Construction storyWallConstruction(model);
+  storyWallConstruction.setName("Story Wall");
+  Construction storyRoofConstruction(model);
+  storyRoofConstruction.setName("Story Roof");
+  DefaultConstructionSet storyDCS(model);
+  DefaultSurfaceConstructions storySurfaceConstructions = makeExteriorSurfaceConstructions(storyDCS);
+  EXPECT_TRUE(storySurfaceConstructions.setWallConstruction(storyWallConstruction));
+  EXPECT_TRUE(storySurfaceConstructions.setRoofCeilingConstruction(storyRoofConstruction));
+  BuildingStory story(model);
+  EXPECT_TRUE(story.setDefaultConstructionSet(storyDCS));
+
+  // SpaceType: the roof
+  Construction spaceTypeRoofConstruction(model);
+  spaceTypeRoofConstruction.setName("SpaceType Roof");
+  DefaultConstructionSet spaceTypeDCS(model);
+  EXPECT_TRUE(makeExteriorSurfaceConstructions(spaceTypeDCS).setRoofCeilingConstruction(spaceTypeRoofConstruction));
+  SpaceType spaceType(model);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(spaceTypeDCS));
+
+  // Space: the window
+  SimpleGlazing glazing(model);
+  Construction windowConstruction(std::vector<FenestrationMaterial>{glazing});
+  windowConstruction.setName("Space Window");
+  DefaultSubSurfaceConstructions spaceSubSurfaceConstructions(model);
+  EXPECT_TRUE(spaceSubSurfaceConstructions.setFixedWindowConstruction(windowConstruction));
+  DefaultConstructionSet spaceDCS(model);
+  EXPECT_TRUE(spaceDCS.setDefaultExteriorSubSurfaceConstructions(spaceSubSurfaceConstructions));
+
+  // Space 1 has everything. Each Space is in its own zone, so combineSpaces doesn't hard-assign everything
+  ThermalZone zone1(model);
+  Space space1(model);
+  EXPECT_TRUE(space1.setThermalZone(zone1));
+  EXPECT_TRUE(space1.setBuildingStory(story));
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setDefaultConstructionSet(spaceDCS));
+
+  Surface roof1({{0, 1, 3}, {0, 0, 3}, {1, 0, 3}, {1, 1, 3}}, model);
+  roof1.setName("Space 1 Roof");
+  EXPECT_TRUE(roof1.setSpace(space1));
+  EXPECT_EQ("RoofCeiling", roof1.surfaceType());
+
+  Surface wall({{0, 0, 3}, {0, 0, 0}, {10, 0, 0}, {10, 0, 3}}, model);
+  wall.setName("Space 1 Wall");
+  EXPECT_TRUE(wall.setSpace(space1));
+  EXPECT_EQ("Wall", wall.surfaceType());
+  EXPECT_EQ("Outdoors", wall.outsideBoundaryCondition());
+
+  Surface floor({{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}}, model);
+  floor.setName("Space 1 Floor");
+  EXPECT_TRUE(floor.setSpace(space1));
+  EXPECT_EQ("Floor", floor.surfaceType());
+  EXPECT_EQ("Ground", floor.outsideBoundaryCondition());
+
+  SubSurface window({{1, 0, 2}, {1, 0, 1}, {3, 0, 1}, {3, 0, 2}}, model);
+  window.setName("Space 1 Window");
+  EXPECT_TRUE(window.setSurface(wall));
+  EXPECT_TRUE(window.setSubSurfaceType("FixedWindow"));
+
+  SubSurface door({{5, 0, 2}, {5, 0, 0}, {6, 0, 0}, {6, 0, 2}}, model);
+  door.setName("Space 1 Door");
+  EXPECT_TRUE(door.setSurface(wall));
+  EXPECT_TRUE(door.setSubSurfaceType("Door"));
+
+  // Space 2 has a defaulted SpaceType (the Building's): it's skipped, so the Story roof is used, not the Building SpaceType one
+  ThermalZone zone2(model);
+  Space space2(model);
+  EXPECT_TRUE(space2.setThermalZone(zone2));
+  EXPECT_TRUE(space2.setBuildingStory(story));
+  EXPECT_TRUE(space2.isSpaceTypeDefaulted());
+
+  Surface roof2({{0, 1, 3}, {0, 0, 3}, {1, 0, 3}, {1, 1, 3}}, model);
+  roof2.setName("Space 2 Roof");
+  EXPECT_TRUE(roof2.setSpace(space2));
+  EXPECT_EQ("RoofCeiling", roof2.surfaceType());
+
+  // Sanity check: that's what OpenStudio resolves too
+  ASSERT_TRUE(roof1.construction());
+  EXPECT_EQ(spaceTypeRoofConstruction, roof1.construction().get());
+  ASSERT_TRUE(roof2.construction());
+  EXPECT_EQ(storyRoofConstruction, roof2.construction().get());
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+  // Empty if the construction isn't written
+  auto constructionName = [&workspace](IddObjectType iddObjectType, unsigned constructionFieldIndex, const std::string& name) -> std::string {
+    auto wo_ = workspace.getObjectByTypeAndName(iddObjectType, name);
+    if (!wo_) {
+      ADD_FAILURE() << "Can't find " << iddObjectType.valueName() << " '" << name << "'";
+      return "";
+    }
+    return wo_->getString(constructionFieldIndex).value_or("");
+  };
+  auto surfaceConstructionName = [&](const Surface& surface) {
+    return constructionName(IddObjectType::BuildingSurface_Detailed, BuildingSurface_DetailedFields::ConstructionName, surface.nameString());
+  };
+  auto subSurfaceConstructionName = [&](const SubSurface& subSurface) {
+    return constructionName(IddObjectType::FenestrationSurface_Detailed, FenestrationSurface_DetailedFields::ConstructionName,
+                            subSurface.nameString());
+  };
+
+  EXPECT_EQ(spaceTypeRoofConstruction.nameString(), surfaceConstructionName(roof1));  // SpaceType wins over the Story
+  EXPECT_EQ(storyWallConstruction.nameString(), surfaceConstructionName(wall));        // Falls through to the Story
+  EXPECT_EQ("", surfaceConstructionName(floor));                                       // Building SpaceType: left to E+
+  EXPECT_EQ(windowConstruction.nameString(), subSurfaceConstructionName(window));      // SubSurfaces are hard-assigned too
+  EXPECT_EQ("", subSurfaceConstructionName(door));                                     // Building: left to E+
+  EXPECT_EQ(storyRoofConstruction.nameString(), surfaceConstructionName(roof2));       // Defaulted SpaceType skipped
+
+  // The input model isn't touched
+  for (const auto& surface : {roof1, wall, floor, roof2}) {
+    EXPECT_TRUE(surface.isConstructionDefaulted()) << surface.nameString();
+  }
+  EXPECT_TRUE(window.isConstructionDefaulted());
+  EXPECT_TRUE(door.isConstructionDefaulted());
 }
