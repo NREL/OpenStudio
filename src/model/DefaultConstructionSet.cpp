@@ -989,6 +989,51 @@ namespace model {
       std::vector<DefaultConstructionSet> m_created;
     };
 
+    /// Building group: Building (search distance 4), then Building SpaceType (5), collapsed onto the Building. Returns the created sets
+    std::vector<DefaultConstructionSet> collapseToBuilding(Model& model) {
+      // model.building(), not getUniqueModelObject, so we don't instantiate a Building
+      auto building_ = model.building();
+      if (!building_) {
+        return {};
+      }
+
+      Resolver resolver(model);
+      std::vector<ChainItem> chain;
+      push(chain, *building_);
+      push(chain, building_->spaceType());
+      if (auto dcs_ = resolver.resolve("Building", std::move(chain), building_->handle())) {
+        building_->setDefaultConstructionSet(*dcs_);
+      } else {
+        building_->resetDefaultConstructionSet();
+      }
+
+      return resolver.created();
+    }
+
+    /// Space group, per Space: Space (1), then its SpaceType if explicit (2), then its BuildingStory (3), collapsed onto the Space.
+    /// Returns the created sets
+    std::vector<DefaultConstructionSet> collapseToSpaces(Model& model) {
+      Resolver resolver(model);
+
+      for (auto& space : model.getConcreteModelObjects<Space>()) {
+        const std::string groupName = "Space '" + space.nameString() + "'";
+        std::vector<ChainItem> chain;
+        push(chain, space);
+        if (!space.isSpaceTypeDefaulted()) {  // defaulted == Building's SpaceType, which is in the Building group
+          push(chain, space.spaceType());
+        }
+        push(chain, space.buildingStory());
+
+        if (auto dcs_ = resolver.resolve(groupName, std::move(chain), space.handle())) {
+          space.setDefaultConstructionSet(*dcs_);  // no-op when it's the Space's own
+        } else {
+          space.resetDefaultConstructionSet();  // no set in the group, or only empty ones
+        }
+      }
+
+      return resolver.created();
+    }
+
   }  // namespace
 
   // OS inheritance order (cf Space_Impl::getDefaultConstructionWithSearchDistance):
@@ -999,7 +1044,8 @@ namespace model {
   //                 Space Group                                     Building Group
   //
   // Each group only reads its own levels' sets (the Space group never reads the Building's), and SpaceType / BuildingStory sets
-  // are only reset at the very end (if purging), so assigning as we go is safe. Originals are never mutated.
+  // are only reset at the very end (if purging), so assigning as we go is safe. Original sets are only mutated when merged into
+  // in place: a Space's or the Building's own set, with no other user.
   //
   // Collapsing preserves every surface's construction, but not its search distance: what came from a SpaceType / BuildingStory
   // (2, 3) now comes from the Space (1), and what came from the Building's SpaceType (5) now comes from the Building (4).
@@ -1017,43 +1063,19 @@ namespace model {
       }
     }
 
-    Resolver resolver(model);
-
-    // Building group. model.building(), not getUniqueModelObject, so we don't instantiate a Building
-    if (auto building_ = model.building()) {
-      std::vector<ChainItem> chain;
-      push(chain, *building_);
-      push(chain, building_->spaceType());
-      if (auto dcs_ = resolver.resolve("Building", std::move(chain), building_->handle())) {
-        building_->setDefaultConstructionSet(*dcs_);
-      } else {
-        building_->resetDefaultConstructionSet();
-      }
-    }
-
-    // Space group, per Space
-    for (auto& space : model.getConcreteModelObjects<Space>()) {
-      const std::string groupName = "Space '" + space.nameString() + "'";
-      std::vector<ChainItem> chain;
-      push(chain, space);
-      if (!space.isSpaceTypeDefaulted()) {  // defaulted == Building's SpaceType, which is in the Building group
-        push(chain, space.spaceType());
-      }
-      push(chain, space.buildingStory());
-
-      if (auto dcs_ = resolver.resolve(groupName, std::move(chain), space.handle())) {
-        space.setDefaultConstructionSet(*dcs_);  // no-op when it's the Space's own
-      } else {
-        space.resetDefaultConstructionSet();  // no set in the group, or only empty ones
-      }
-    }
+    // Building first: it can point the Building to an existing set (e.g. its SpaceType's), which the Space group's in place check
+    // must see as another user of that set
+    std::vector<DefaultConstructionSet> created = collapseToBuilding(model);
+    const std::vector<DefaultConstructionSet> spaceCreated = collapseToSpaces(model);
+    created.insert(created.end(), spaceCreated.begin(), spaceCreated.end());
 
     if (!purge) {
-      return resolver.created();
+      return created;
     }
 
-    // Drop the intermediate levels so the model looks like E+: sets only on Spaces and the Building (includes the Building's
-    // SpaceType)
+    // Purge:
+
+    // 1. Drop the intermediate levels so the model looks like E+: sets only on Spaces and the Building (includes the Building's SpaceType)
     for (auto& spaceType : model.getConcreteModelObjects<SpaceType>()) {
       spaceType.resetDefaultConstructionSet();
     }
@@ -1061,7 +1083,8 @@ namespace model {
       story.resetDefaultConstructionSet();
     }
 
-    // Remove the sets this left unused, then their sub-objects if nothing else (e.g. a merged set) still uses them
+    // 2. Remove the sets this left unused, but capture their sub-objects to see if they are orphaned after
+
     // A set, since two removed sets can share a sub-object
     std::set<ResourceObject> subObjects;
     for (auto& dcs : usedBefore) {
@@ -1082,6 +1105,9 @@ namespace model {
       LOG_FREE(Trace, collapseLogChannel, "Removing DefaultConstructionSet '" << dcs.nameString() << "', no longer used");
       dcs.remove();
     }
+
+    // 3. Remove the sub-objects that are no longer used
+
     // Copy (cheap handle wrapper): set elements are const, and remove() isn't
     for (auto subObject : subObjects) {  // NOLINT(performance-for-range-copy)
       if (subObject.directUseCount() == 0) {
@@ -1089,7 +1115,7 @@ namespace model {
       }
     }
 
-    return resolver.created();
+    return created;
   }
 
   boost::optional<ConstructionBase> DefaultConstructionSet::adiabaticSurfaceConstruction() const {
