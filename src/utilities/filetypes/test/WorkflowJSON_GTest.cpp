@@ -1108,6 +1108,7 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
   // This makes no sense, but we picked 3 spaces for some reason... return string is formated with wbuilder["indentation"] = "   ";
   std::string ft_options = R"json({
    "ip_tabular_output" : true,
+   "no_construction_assignment_sets" : true,
    "no_html_output" : true,
    "no_lifecyclecosts" : true,
    "no_space_translation" : true,
@@ -1128,8 +1129,8 @@ TEST(Filetypes, RunOptions_ForwardTranslate_BackwardCompatibility) {
     EXPECT_TRUE(ftOptions.excludeHTMLOutputReport());
     EXPECT_TRUE(ftOptions.excludeVariableDictionary());
     EXPECT_TRUE(ftOptions.excludeSpaceTranslation());
-    EXPECT_FALSE(ftOptions.excludeSpaceLoadInstances());          // Not in ft_options JSON, so still defaulted (default is also false)
-    EXPECT_FALSE(ftOptions.excludeConstructionAssignmentSets());  // Not in ft_options JSON, so still defaulted (default is also false)
+    EXPECT_FALSE(ftOptions.excludeSpaceLoadInstances());  // Not in ft_options JSON, so still defaulted (default is also false)
+    EXPECT_TRUE(ftOptions.excludeConstructionAssignmentSets());
   }
 
   workflow.setRunOptions(options);

@@ -27,6 +27,9 @@
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/FoundationKiva.hpp"
+#include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
+#include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>
@@ -34,6 +37,7 @@
 
 #include <resources.hxx>
 
+#include <algorithm>
 #include <set>
 #include <sstream>
 
@@ -198,7 +202,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_HardAssignedConstruction) {
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_NoOSDefaultConstruction_Warning) {
-  // OpenStudio doesn't resolve a default construction for GroundFCfactorMethod (unlike E+, which uses the Ground Contact slot): the FT warns
+  // OpenStudio doesn't resolve a default construction for GroundFCfactorMethod, Foundation, OtherSideCoefficients and OtherSideConditionsModel
+  // (unlike E+, which looks them up in the ConstructionAssignmentSet): the FT warns
   Model model;
 
   Construction groundFloorConstruction(model);
@@ -227,21 +232,44 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_NoOSDefaultConstruction_Warn
 
   Surface fcFloor = makeFloor("FCfactor Floor");
   EXPECT_TRUE(fcFloor.setOutsideBoundaryCondition("GroundFCfactorMethod"));
-  EXPECT_FALSE(fcFloor.construction());
+
+  Surface foundationFloor = makeFloor("Foundation Floor");
+  FoundationKiva foundationKiva(model);
+  EXPECT_TRUE(foundationFloor.setAdjacentFoundation(foundationKiva));
+  EXPECT_EQ("Foundation", foundationFloor.outsideBoundaryCondition());
+
+  Surface oscFloor = makeFloor("OSC Floor");
+  SurfacePropertyOtherSideCoefficients otherSideCoefficients(model);
+  EXPECT_TRUE(oscFloor.setSurfacePropertyOtherSideCoefficients(otherSideCoefficients));
+  EXPECT_EQ("OtherSideCoefficients", oscFloor.outsideBoundaryCondition());
+
+  Surface oscmFloor = makeFloor("OSCM Floor");
+  SurfacePropertyOtherSideConditionsModel otherSideConditionsModel(model);
+  EXPECT_TRUE(oscmFloor.setSurfacePropertyOtherSideConditionsModel(otherSideConditionsModel));
+  EXPECT_EQ("OtherSideConditionsModel", oscmFloor.outsideBoundaryCondition());
+
+  const std::vector<Surface> warnedFloors{fcFloor, foundationFloor, oscFloor, oscmFloor};
+  for (const auto& floor : warnedFloors) {
+    EXPECT_FALSE(floor.construction()) << floor.nameString();
+  }
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  std::vector<std::string> warnedSurfaces;
+  std::vector<std::string> warnings;
   for (const auto& logMessage : forwardTranslator.warnings()) {
     if (logMessage.logMessage().find("has no construction in OpenStudio") != std::string::npos) {
-      warnedSurfaces.push_back(logMessage.logMessage());
+      warnings.push_back(logMessage.logMessage());
     }
   }
-  ASSERT_EQ(1, warnedSurfaces.size());
-  EXPECT_NE(std::string::npos, warnedSurfaces.front().find(fcFloor.nameString()));
+  EXPECT_EQ(warnedFloors.size(), warnings.size());
+  for (const auto& floor : warnedFloors) {
+    EXPECT_EQ(1, std::count_if(warnings.cbegin(), warnings.cend(),
+                               [&floor](const auto& warning) { return warning.find("'" + floor.nameString() + "'") != std::string::npos; }))
+      << floor.nameString();
+  }
 
-  for (const auto& floor : {groundFloor, fcFloor}) {
+  for (const auto& floor : {groundFloor, fcFloor, foundationFloor, oscFloor, oscmFloor}) {
     auto surfaceObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, floor.nameString());
     ASSERT_TRUE(surfaceObject_);
     EXPECT_TRUE(surfaceObject_->isEmpty(BuildingSurface_DetailedFields::ConstructionName));
