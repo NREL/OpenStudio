@@ -1268,3 +1268,147 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
     EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
   }
 }
+
+// Space group, merged from a lower level (no Space DCS): the merge starts from the SpaceType DCS, which serves every Space of
+// that SpaceType, so it's always cloned. One merged set per combination of owners, shared by every Space with that combination
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedShared_SameSpaceTypeAndStory) {
+
+  // Several Spaces with the same SpaceType and BuildingStory: a single merged set, shared by all
+  Model m;
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  BuildingStory story(m);
+  story.setName("L1");
+
+  Construction stWall(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+  auto stExt = stDCS.defaultExteriorSurfaceConstructions().get();
+
+  Construction bsWall(m);
+  Construction bsRoof(m);
+  auto bsDCS = makeDCS(m, {.extWall = bsWall, .extRoof = bsRoof});
+  EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+  auto bsExt = bsDCS.defaultExteriorSurfaceConstructions().get();
+
+  Space space1(m);
+  Space space2(m);
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setBuildingStory(story));
+  EXPECT_TRUE(space2.setSpaceType(spaceType));
+  EXPECT_TRUE(space2.setBuildingStory(story));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  EXPECT_EQ("SpaceType Office @ BuildingStory L1", merged.nameString());
+
+  ASSERT_TRUE(space1.defaultConstructionSet());
+  EXPECT_EQ(merged, space1.defaultConstructionSet().get());
+  ASSERT_TRUE(space2.defaultConstructionSet());
+  EXPECT_EQ(merged, space2.defaultConstructionSet().get());
+
+  // Merged content: SpaceType's wall wins, roof comes from the BuildingStory
+  ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+  auto mergedExt = merged.defaultExteriorSurfaceConstructions().get();
+  ASSERT_TRUE(mergedExt.wallConstruction());
+  EXPECT_EQ(stWall, mergedExt.wallConstruction().get());
+  ASSERT_TRUE(mergedExt.roofCeilingConstruction());
+  EXPECT_EQ(bsRoof, mergedExt.roofCeilingConstruction().get());
+
+  // Originals untouched, and still referenced by their owners (no purge)
+  EXPECT_NE(stExt, mergedExt);
+  EXPECT_NE(bsExt, mergedExt);
+  EXPECT_FALSE(stExt.roofCeilingConstruction());
+  ASSERT_TRUE(spaceType.defaultConstructionSet());
+  EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+  ASSERT_TRUE(story.defaultConstructionSet());
+  EXPECT_EQ(bsDCS, story.defaultConstructionSet().get());
+  EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedShared_OnePerStory) {
+
+  // Same SpaceType, different BuildingStories: one merged set per BuildingStory
+  Model m;
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  Construction stWall(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  BuildingStory story1(m);
+  story1.setName("L1");
+  Construction bs1Roof(m);
+  auto bs1DCS = makeDCS(m, {.extRoof = bs1Roof});
+  EXPECT_TRUE(story1.setDefaultConstructionSet(bs1DCS));
+
+  BuildingStory story2(m);
+  story2.setName("L2");
+  Construction bs2Roof(m);
+  auto bs2DCS = makeDCS(m, {.extRoof = bs2Roof});
+  EXPECT_TRUE(story2.setDefaultConstructionSet(bs2DCS));
+
+  Space space1(m);
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setBuildingStory(story1));
+  Space space2(m);
+  EXPECT_TRUE(space2.setSpaceType(spaceType));
+  EXPECT_TRUE(space2.setBuildingStory(story2));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  EXPECT_EQ(2u, created.size());
+
+  ASSERT_TRUE(space1.defaultConstructionSet());
+  auto merged1 = space1.defaultConstructionSet().get();
+  EXPECT_EQ("SpaceType Office @ BuildingStory L1", merged1.nameString());
+  ASSERT_TRUE(merged1.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged1.defaultExteriorSurfaceConstructions()->roofCeilingConstruction());
+  EXPECT_EQ(bs1Roof, merged1.defaultExteriorSurfaceConstructions()->roofCeilingConstruction().get());
+
+  ASSERT_TRUE(space2.defaultConstructionSet());
+  auto merged2 = space2.defaultConstructionSet().get();
+  EXPECT_EQ("SpaceType Office @ BuildingStory L2", merged2.nameString());
+  ASSERT_TRUE(merged2.defaultExteriorSurfaceConstructions());
+  ASSERT_TRUE(merged2.defaultExteriorSurfaceConstructions()->roofCeilingConstruction());
+  EXPECT_EQ(bs2Roof, merged2.defaultExteriorSurfaceConstructions()->roofCeilingConstruction().get());
+
+  EXPECT_NE(merged1, merged2);
+  EXPECT_EQ(5u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedShared_KeyAfterPruning) {
+
+  // The key is built after pruning: a Space with an empty DCS of its own shares the merged set of a Space without one
+  Model m;
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  Construction stWall(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  BuildingStory story(m);
+  story.setName("L1");
+  Construction bsRoof(m);
+  auto bsDCS = makeDCS(m, {.extRoof = bsRoof});
+  EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+  Space space1(m);
+  Space space2(m);
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setBuildingStory(story));
+  EXPECT_TRUE(space2.setSpaceType(spaceType));
+  EXPECT_TRUE(space2.setBuildingStory(story));
+  DefaultConstructionSet emptyDCS(m);
+  EXPECT_TRUE(space1.setDefaultConstructionSet(emptyDCS));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  EXPECT_EQ("SpaceType Office @ BuildingStory L1", merged.nameString());
+  ASSERT_TRUE(space1.defaultConstructionSet());
+  EXPECT_EQ(merged, space1.defaultConstructionSet().get());
+  ASSERT_TRUE(space2.defaultConstructionSet());
+  EXPECT_EQ(merged, space2.defaultConstructionSet().get());
+}
