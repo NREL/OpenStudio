@@ -814,7 +814,6 @@ namespace model {
     getImpl<detail::DefaultConstructionSet_Impl>()->merge(other);
   }
 
-
   // Helpers for DefaultConstructionSet::collapseToSpaceAndBuilding
   namespace {
 
@@ -909,8 +908,10 @@ namespace model {
      public:
       explicit Resolver(Model model) : m_model(std::move(model)) {}
 
-      /// Prunes the chain, then returns: none if empty, the single remaining set, or the merged set for these owners
-      boost::optional<DefaultConstructionSet> resolve(const std::string& groupName, std::vector<ChainItem> chain) {
+      /// Prunes the chain, then returns: none if empty, the single remaining set, or the merged set for these owners. If the
+      /// first remaining set belongs to inPlaceOwner and nobody else uses it, the lower levels are merged into it in place instead
+      boost::optional<DefaultConstructionSet> resolve(const std::string& groupName, std::vector<ChainItem> chain,
+                                                      const Handle& inPlaceOwner = Handle()) {
         prune(groupName, chain);
 
         if (chain.empty()) {
@@ -918,6 +919,20 @@ namespace model {
         }
         if (chain.size() == 1) {
           return chain.front().dcs;
+        }
+
+        // The owner's own set (Space or Building), used by nobody else: merge the lower levels into it in place.
+        // Only valid when the owner is a Space or the Building: each stands for itself alone, so directUseCount() == 1 really
+        // means a single user. A SpaceType or BuildingStory is only an intermediate level that fans out to all its Spaces (and
+        // the Building's SpaceType to the Building), so a count of 1 there could hide many Spaces, which is why inPlaceOwner is
+        // only ever a Space or the Building.
+        auto& front = chain.front();
+        if (front.ownerHandle == inPlaceOwner && front.dcs.directUseCount() == 1) {
+          for (auto it = std::next(chain.cbegin()); it != chain.cend(); ++it) {
+            front.dcs.merge(it->dcs);
+          }
+          LOG_FREE(Info, collapseLogChannel, groupName << ": merged lower levels into '" << front.dcs.nameString() << "' in place");
+          return front.dcs;
         }
 
         std::vector<Handle> key;
@@ -1009,7 +1024,7 @@ namespace model {
       std::vector<ChainItem> chain;
       push(chain, *building_);
       push(chain, building_->spaceType());
-      if (auto dcs_ = resolver.resolve("Building", std::move(chain))) {
+      if (auto dcs_ = resolver.resolve("Building", std::move(chain), building_->handle())) {
         building_->setDefaultConstructionSet(*dcs_);
       } else {
         building_->resetDefaultConstructionSet();
@@ -1026,7 +1041,7 @@ namespace model {
       }
       push(chain, space.buildingStory());
 
-      if (auto dcs_ = resolver.resolve(groupName, std::move(chain))) {
+      if (auto dcs_ = resolver.resolve(groupName, std::move(chain), space.handle())) {
         space.setDefaultConstructionSet(*dcs_);  // no-op when it's the Space's own
       } else {
         space.resetDefaultConstructionSet();  // no set in the group, or only empty ones

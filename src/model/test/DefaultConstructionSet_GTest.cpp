@@ -713,6 +713,15 @@ DefaultConstructionSet makeDCS(Model& m, const DCSSpec& spec) {
   return dcs;
 }
 
+// The construction of one slot of the DCS's exterior surface constructions, e.g. extSlot(dcs, &DefaultSurfaceConstructions::wallConstruction)
+boost::optional<ConstructionBase> extSlot(const DefaultConstructionSet& dcs,
+                                          boost::optional<ConstructionBase> (DefaultSurfaceConstructions::*slot)() const) {
+  if (auto ext_ = dcs.defaultExteriorSurfaceConstructions()) {
+    return ((*ext_).*slot)();
+  }
+  return boost::none;
+}
+
 }  // namespace
 
 // Building group: Building DCS (search distance 4), then Building SpaceType DCS (5), collapsed onto the Building
@@ -839,10 +848,53 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingG
   EXPECT_EQ(1u, bDCS.directUseCount());
 }
 
-TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingGroup_Merged) {
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingGroup_MergedInPlace) {
 
-  // The SpaceType DCS fills slots the Building DCS doesn't: a merged clone is created, Building's slots win, and the
-  // originals are untouched
+  // The SpaceType DCS fills slots the Building DCS doesn't, and the Building DCS is used by the Building only: the SpaceType's
+  // slots are merged into the Building DCS itself, Building's slots win, nothing is created and the SpaceType DCS is untouched
+  Model m;
+  auto building = m.getUniqueModelObject<Building>();
+  SpaceType spaceType(m);
+  EXPECT_TRUE(building.setSpaceType(spaceType));
+
+  Construction bWall(m);
+  auto bDCS = makeDCS(m, {.extWall = bWall});
+  bDCS.setName("Building DCS");
+  EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+
+  Construction stWall(m);
+  Construction stRoof(m);
+  Construction stAdiabatic(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall, .extRoof = stRoof, .adiabatic = stAdiabatic});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+  auto stExt = stDCS.defaultExteriorSurfaceConstructions().get();
+
+  EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+
+  ASSERT_TRUE(building.defaultConstructionSet());
+  EXPECT_EQ(bDCS, building.defaultConstructionSet().get());
+  EXPECT_EQ("Building DCS", bDCS.nameString());
+
+  // Merged content: Building's wall wins, roof and adiabatic come from the SpaceType
+  ASSERT_TRUE(extSlot(bDCS, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(bWall, extSlot(bDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(bDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(bDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  ASSERT_TRUE(bDCS.adiabaticSurfaceConstruction());
+  EXPECT_EQ(stAdiabatic, bDCS.adiabaticSurfaceConstruction().get());
+
+  // SpaceType DCS untouched
+  ASSERT_TRUE(stDCS.defaultExteriorSurfaceConstructions());
+  EXPECT_EQ(stExt, stDCS.defaultExteriorSurfaceConstructions().get());
+  ASSERT_TRUE(stExt.wallConstruction());
+  EXPECT_EQ(stWall, stExt.wallConstruction().get());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingGroup_MergedCloned_UsedBySpace) {
+
+  // Same, but a Space also uses the Building DCS directly, so it can't be modified: a merged clone is created, Building's
+  // slots win, and the originals are untouched
   Model m;
   auto building = m.getUniqueModelObject<Building>();
   building.setName("HQ");
@@ -853,6 +905,8 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingG
   Construction bWall(m);
   auto bDCS = makeDCS(m, {.extWall = bWall});
   EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+  Space space(m);
+  EXPECT_TRUE(space.setDefaultConstructionSet(bDCS));
   auto bExt = bDCS.defaultExteriorSurfaceConstructions().get();
 
   Construction stWall(m);
@@ -1559,19 +1613,6 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
 // Space group, merged from the Space DCS: these only check what the Space resolves to, slot by slot. Whether the Space DCS is
 // merged into in place or cloned first is tested separately. The lower level DCSs are never modified either way
 
-namespace {
-
-// The construction of one slot of the DCS's exterior surface constructions, e.g. extSlot(dcs, &DefaultSurfaceConstructions::wallConstruction)
-boost::optional<ConstructionBase> extSlot(const DefaultConstructionSet& dcs,
-                                          boost::optional<ConstructionBase> (DefaultSurfaceConstructions::*slot)() const) {
-  if (auto ext_ = dcs.defaultExteriorSurfaceConstructions()) {
-    return ((*ext_).*slot)();
-  }
-  return boost::none;
-}
-
-}  // namespace
-
 TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedContent_SpaceAndSpaceType) {
 
   // Space fills the exterior wall, SpaceType the exterior wall and roof: Space's wall wins, roof comes from the SpaceType
@@ -1757,6 +1798,37 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
 
   // The other Space has nothing in its Space group, so it stays without a DCS and keeps falling through to the Building's
   EXPECT_FALSE(otherSpace.defaultConstructionSet());
+}
+
+// Space group, merged from the Space DCS: merged into in place when that's safe, cloned otherwise
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedInPlace_SoleUser) {
+
+  // The Space DCS is used by this Space only, and its SpaceType contributes a slot: the SpaceType's slot is merged into the
+  // Space DCS itself, nothing is created
+  Model m;
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  sDCS.setName("Space DCS");
+  EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+  Construction stRoof(m);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(makeDCS(m, {.extRoof = stRoof})));
+
+  EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+  EXPECT_EQ("Space DCS", sDCS.nameString());
+  ASSERT_TRUE(extSlot(sDCS, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(sDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
 }
 
 // Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
