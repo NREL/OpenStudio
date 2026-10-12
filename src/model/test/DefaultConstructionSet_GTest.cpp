@@ -1556,6 +1556,166 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(bsPartition, merged.interiorPartitionConstruction().get());
 }
 
+// Space group, merged from the Space DCS: these only check what the Space resolves to, slot by slot. Whether the Space DCS is
+// merged into in place or cloned first is tested separately. The lower level DCSs are never modified either way
+
+namespace {
+
+// The construction of one slot of the DCS's exterior surface constructions, e.g. extSlot(dcs, &DefaultSurfaceConstructions::wallConstruction)
+boost::optional<ConstructionBase> extSlot(const DefaultConstructionSet& dcs,
+                                          boost::optional<ConstructionBase> (DefaultSurfaceConstructions::*slot)() const) {
+  if (auto ext_ = dcs.defaultExteriorSurfaceConstructions()) {
+    return ((*ext_).*slot)();
+  }
+  return boost::none;
+}
+
+}  // namespace
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedContent_SpaceAndSpaceType) {
+
+  // Space fills the exterior wall, SpaceType the exterior wall and roof: Space's wall wins, roof comes from the SpaceType
+  Model m;
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+
+  Construction sWall(m);
+  EXPECT_TRUE(space.setDefaultConstructionSet(makeDCS(m, {.extWall = sWall})));
+  Construction stWall(m);
+  Construction stRoof(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall, .extRoof = stRoof});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  auto result = space.defaultConstructionSet().get();
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+
+  // SpaceType DCS untouched
+  ASSERT_TRUE(extSlot(stDCS, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(stWall, extSlot(stDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(stDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(stDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedContent_SpaceAndStory) {
+
+  // Space fills the exterior wall, BuildingStory the exterior wall and roof: Space's wall wins, roof comes from the BuildingStory
+  Model m;
+  Space space(m);
+  BuildingStory story(m);
+  EXPECT_TRUE(space.setBuildingStory(story));
+
+  Construction sWall(m);
+  EXPECT_TRUE(space.setDefaultConstructionSet(makeDCS(m, {.extWall = sWall})));
+  Construction bsWall(m);
+  Construction bsRoof(m);
+  auto bsDCS = makeDCS(m, {.extWall = bsWall, .extRoof = bsRoof});
+  EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  auto result = space.defaultConstructionSet().get();
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(bsRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+
+  // BuildingStory DCS untouched
+  ASSERT_TRUE(extSlot(bsDCS, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(bsWall, extSlot(bsDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(bsDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(bsRoof, extSlot(bsDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedContent_AllThree) {
+
+  // Priority Space > SpaceType > BuildingStory, slot by slot:
+  // | Slot           | Space | SpaceType | BuildingStory | Result  |
+  // |----------------|-------|-----------|---------------|---------|
+  // | exterior wall  | sWall | stWall    | bsWall        | sWall   |
+  // | exterior roof  |       | stRoof    | bsRoof        | stRoof  |
+  // | exterior floor |       |           | bsFloor       | bsFloor |
+  Model m;
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+  BuildingStory story(m);
+  EXPECT_TRUE(space.setBuildingStory(story));
+
+  Construction sWall(m);
+  EXPECT_TRUE(space.setDefaultConstructionSet(makeDCS(m, {.extWall = sWall})));
+  Construction stWall(m);
+  Construction stRoof(m);
+  auto stDCS = makeDCS(m, {.extWall = stWall, .extRoof = stRoof});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+  Construction bsFloor(m);
+  Construction bsWall(m);
+  Construction bsRoof(m);
+  auto bsDCS = makeDCS(m, {.extFloor = bsFloor, .extWall = bsWall, .extRoof = bsRoof});
+  EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  auto result = space.defaultConstructionSet().get();
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::floorConstruction));
+  EXPECT_EQ(bsFloor, extSlot(result, &DefaultSurfaceConstructions::floorConstruction).get());
+
+  // Lower level DCSs untouched
+  EXPECT_EQ(stWall, extSlot(stDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  EXPECT_EQ(stRoof, extSlot(stDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  EXPECT_FALSE(extSlot(stDCS, &DefaultSurfaceConstructions::floorConstruction));
+  EXPECT_EQ(bsFloor, extSlot(bsDCS, &DefaultSurfaceConstructions::floorConstruction).get());
+  EXPECT_EQ(bsWall, extSlot(bsDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  EXPECT_EQ(bsRoof, extSlot(bsDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedContent_RedundantSpaceTypeSkipped) {
+
+  // Space fills the exterior wall, SpaceType only the exterior wall too (redundant), BuildingStory the exterior roof: the
+  // SpaceType is left out of the merge, so it doesn't show up in the name of the resulting set either (whether that's the
+  // Space's own set, or a merged clone named after its owners)
+  Model m;
+  Space space(m);
+  space.setName("A");
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+  BuildingStory story(m);
+  story.setName("L1");
+  EXPECT_TRUE(space.setBuildingStory(story));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  sDCS.setName("Space DCS");
+  EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+  Construction stWall(m);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(makeDCS(m, {.extWall = stWall})));
+  Construction bsRoof(m);
+  EXPECT_TRUE(story.setDefaultConstructionSet(makeDCS(m, {.extRoof = bsRoof})));
+
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  auto result = space.defaultConstructionSet().get();
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(bsRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  EXPECT_EQ(std::string::npos, result.nameString().find("Office")) << result.nameString();
+}
+
 // Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
 // their Default(Sub)SurfaceConstructions if nothing else uses them anymore
 
