@@ -52,6 +52,7 @@
 #include "../model/OutputMeter_Impl.hpp"
 #include "../model/OutputSQLite.hpp"
 #include "../model/OutputSQLite_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -312,6 +313,14 @@ namespace energyplus {
         LOG(Warn, spaceLoad.briefDescription() << " is not associated with a Space or SpaceType, it will not be translated.");
         spaceLoad.remove();
       }
+    }
+
+    if (!m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      // TODO: handle excludeSpaceTranslation: Spaces get combined below and are not translated, so there's no E+ Space to hold the
+      // Space level ConstructionAssignmentSet
+      // TODO:  [ConstructionAssignmentSet purge] revisit whether I should purge or not
+      constexpr bool purge = false;
+      DefaultConstructionSet::collapseToSpaceAndBuilding(model, purge);
     }
 
     if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
@@ -3760,9 +3769,11 @@ namespace energyplus {
       IddObjectType::OS_Construction_WindowDataFile,
       IddObjectType::OS_StandardsInformation_Construction,
 
+      // TODO: [ConstructionAssignmentSet purge] Probably not wanted, especially with purge = false in DefaultConstructionSet::collapseToSpaceAndBuilding
       IddObjectType::OS_DefaultSubSurfaceConstructions,
       IddObjectType::OS_DefaultSurfaceConstructions,
       IddObjectType::OS_DefaultConstructionSet,
+
       IddObjectType::OS_DefaultScheduleSet,
 
       // Translated by the object it references directly

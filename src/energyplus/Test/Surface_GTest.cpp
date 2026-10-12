@@ -28,6 +28,7 @@
 #include "../../model/Building_Impl.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
+#include <utilities/idd/Building_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -124,16 +125,39 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_DefaultConstruction) {
   EXPECT_EQ(construction.handle(), surface.construction()->handle());
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  {
+    // Old behavior: construction assignment sets excluded, the defaulted construction is written
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+    EXPECT_EQ(0u, forwardTranslator.errors().size());
+    EXPECT_EQ(0u, forwardTranslator.warnings().size());
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction).size());
 
-  WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
-  WorkspaceObject constructionObject = workspace.getObjectsByType(IddObjectType::Construction)[0];
+    WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
+    WorkspaceObject constructionObject = workspace.getObjectsByType(IddObjectType::Construction)[0];
 
-  ASSERT_TRUE(surfaceObject.getTarget(BuildingSurface_DetailedFields::ConstructionName));
-  EXPECT_EQ(constructionObject.handle(), surfaceObject.getTarget(BuildingSurface_DetailedFields::ConstructionName)->handle());
+    ASSERT_TRUE(surfaceObject.getTarget(BuildingSurface_DetailedFields::ConstructionName));
+    EXPECT_EQ(constructionObject.handle(), surfaceObject.getTarget(BuildingSurface_DetailedFields::ConstructionName)->handle());
+  }
+
+  {
+    // Default: the construction is resolved by E+ via the Building's ConstructionAssignmentSet, so it isn't written
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+    EXPECT_EQ(0u, forwardTranslator.errors().size());
+    EXPECT_EQ(0u, forwardTranslator.warnings().size());
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ConstructionAssignmentSet).size());
+
+    WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
+    EXPECT_FALSE(surfaceObject.getTarget(BuildingSurface_DetailedFields::ConstructionName));
+
+    WorkspaceObject buildingObject = workspace.getObjectsByType(IddObjectType::Building)[0];
+    WorkspaceObject casObject = workspace.getObjectsByType(IddObjectType::ConstructionAssignmentSet)[0];
+    ASSERT_TRUE(buildingObject.getTarget(BuildingFields::ConstructionAssignmentSetName));
+    EXPECT_EQ(casObject.handle(), buildingObject.getTarget(BuildingFields::ConstructionAssignmentSetName)->handle());
+  }
 }

@@ -59,9 +59,13 @@ namespace energyplus {
     }
     idfObject.setString(BuildingSurface_DetailedFields::SurfaceType, surfaceType);
 
-    boost::optional<ConstructionBase> construction = modelObject.construction();
-    if (construction) {
-      idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->nameString());
+    // Write the construction:
+    // - When it is hard-assigned
+    // - When the construction assignment sets are excluded
+    if (!modelObject.isConstructionDefaulted() || m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
+      if (boost::optional<ConstructionBase> construction = modelObject.construction()) {
+        idfObject.setString(BuildingSurface_DetailedFields::ConstructionName, construction->nameString());
+      }
     }
 
     boost::optional<Space> space = modelObject.space();

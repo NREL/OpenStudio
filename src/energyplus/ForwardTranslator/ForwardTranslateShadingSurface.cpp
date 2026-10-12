@@ -153,6 +153,8 @@ namespace energyplus {
     IdfObject shadingPropertyObject = IdfObject(openstudio::IddObjectType::ShadingProperty_Reflectance);
     shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::ShadingSurfaceName, modelObject.name().get());
 
+    // Unlike Surface/SubSurface, in E+, the ConstructionAssignmentSet (= DefaultConstructionSet in OS) does not have the 3 Space/Building/Site
+    // Shading Construction Fields (nor does the E+ Shading:* object have a Construction field): we use the construction it resolves to, to fill the ShadingProperty:Reflectance
     boost::optional<model::ConstructionBase> constructionBase = modelObject.construction();
     if (constructionBase) {
       if (constructionBase->isFenestration()) {
