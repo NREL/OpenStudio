@@ -1716,6 +1716,49 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(std::string::npos, result.nameString().find("Office")) << result.nameString();
 }
 
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_BuildingGroupUntouched) {
+
+  // The Space's own DCS is also the Building's, and its SpaceType contributes a slot: the Space resolves the merged content, but
+  // the Building's DCS must not pick up the SpaceType's slot, or Spaces without a DCS of their own would resolve it
+  Model m;
+  auto building = m.getUniqueModelObject<Building>();
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+
+  Construction wall(m);
+  auto sharedDCS = makeDCS(m, {.extWall = wall});
+  EXPECT_TRUE(space.setDefaultConstructionSet(sharedDCS));
+  EXPECT_TRUE(building.setDefaultConstructionSet(sharedDCS));
+
+  Construction stRoof(m);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(makeDCS(m, {.extRoof = stRoof})));
+
+  // A dumb other Space without a DCS, explicit SpaceType or BuildingStory: it falls through to the Building's DCS, so that DCS
+  // is used by more than the Space, even if the Space is the only one pointing at it directly
+  Space otherSpace(m);
+
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  // The Space resolves the merged content
+  ASSERT_TRUE(space.defaultConstructionSet());
+  auto result = space.defaultConstructionSet().get();
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(wall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+
+  // The Building group has a single set, so the Building keeps it, and its content is unchanged: no roof
+  ASSERT_TRUE(building.defaultConstructionSet());
+  EXPECT_EQ(sharedDCS, building.defaultConstructionSet().get());
+  ASSERT_TRUE(extSlot(sharedDCS, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(wall, extSlot(sharedDCS, &DefaultSurfaceConstructions::wallConstruction).get());
+  EXPECT_FALSE(extSlot(sharedDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+
+  // The other Space has nothing in its Space group, so it stays without a DCS and keeps falling through to the Building's
+  EXPECT_FALSE(otherSpace.defaultConstructionSet());
+}
+
 // Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
 // their Default(Sub)SurfaceConstructions if nothing else uses them anymore
 
