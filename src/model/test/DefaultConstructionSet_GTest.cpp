@@ -1831,6 +1831,43 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
 }
 
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedCloned_UsedByOtherLevel) {
+
+  // The Space DCS is also the DCS of another SpaceType, and the Space's own SpaceType contributes a slot:
+  // the Space DCS can't be modified, so a merged clone is created and the Space DCS is untouched
+  Model m;
+  Space space(m);
+  space.setName("A");
+  SpaceType office(m);
+  office.setName("Office");
+  EXPECT_TRUE(space.setSpaceType(office));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+  SpaceType lab(m);
+  EXPECT_TRUE(lab.setDefaultConstructionSet(sDCS));
+
+  Construction stRoof(m);
+  EXPECT_TRUE(office.setDefaultConstructionSet(makeDCS(m, {.extRoof = stRoof})));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+  ASSERT_EQ(1u, created.size());
+  const auto& merged = created.front();
+  EXPECT_EQ("Space A @ SpaceType Office", merged.nameString());
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(merged, space.defaultConstructionSet().get());
+  ASSERT_TRUE(extSlot(merged, &DefaultSurfaceConstructions::wallConstruction));
+  EXPECT_EQ(sWall, extSlot(merged, &DefaultSurfaceConstructions::wallConstruction).get());
+  ASSERT_TRUE(extSlot(merged, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(stRoof, extSlot(merged, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+
+  // Space DCS untouched, and still the other SpaceType's
+  ASSERT_TRUE(lab.defaultConstructionSet());
+  EXPECT_EQ(sDCS, lab.defaultConstructionSet().get());
+  EXPECT_FALSE(extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+}
+
 // Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
 // their Default(Sub)SurfaceConstructions if nothing else uses them anymore
 
