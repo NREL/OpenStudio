@@ -903,10 +903,13 @@ namespace model {
       }
     }
 
+    /// DefaultConstructionSet handle -> its directUseCount()
+    using UseCounts = std::map<Handle, unsigned>;
+
     class Resolver
     {
      public:
-      explicit Resolver(Model model) : m_model(std::move(model)) {}
+      Resolver(Model model, const UseCounts& useCountsBefore) : m_model(std::move(model)), m_useCountsBefore(useCountsBefore) {}
 
       /// Prunes the chain, then returns: none if empty, the single remaining set, or the merged set for these owners. If the
       /// first remaining set belongs to inPlaceOwner and nobody else uses it, the lower levels are merged into it in place instead
@@ -922,12 +925,15 @@ namespace model {
         }
 
         // The owner's own set (Space or Building), used by nobody else: merge the lower levels into it in place.
-        // Only valid when the owner is a Space or the Building: each stands for itself alone, so directUseCount() == 1 really
+        // Only valid when the owner is a Space or the Building: each stands for itself alone, so a use count of 1 really
         // means a single user. A SpaceType or BuildingStory is only an intermediate level that fans out to all its Spaces (and
         // the Building's SpaceType to the Building), so a count of 1 there could hide many Spaces, which is why inPlaceOwner is
         // only ever a Space or the Building.
+        // The use count is the one from before the call: counts drop as owners get pointed to merged clones, which would make the
+        // outcome depend on the order the Spaces are processed in (2 Spaces sharing a set: the first one gets a clone, the second
+        // one would then merge in place)
         auto& front = chain.front();
-        if (front.ownerHandle == inPlaceOwner && front.dcs.directUseCount() == 1) {
+        if (front.ownerHandle == inPlaceOwner && m_useCountsBefore.at(front.dcs.handle()) == 1) {
           for (auto it = std::next(chain.cbegin()); it != chain.cend(); ++it) {
             front.dcs.merge(it->dcs);
           }
@@ -985,19 +991,20 @@ namespace model {
       }
 
       Model m_model;
+      const UseCounts& m_useCountsBefore;
       std::map<std::vector<Handle>, DefaultConstructionSet> m_byOwners;
       std::vector<DefaultConstructionSet> m_created;
     };
 
     /// Building group: Building (search distance 4), then Building SpaceType (5), collapsed onto the Building. Returns the created sets
-    std::vector<DefaultConstructionSet> collapseToBuilding(Model& model) {
+    std::vector<DefaultConstructionSet> collapseToBuilding(Model& model, const UseCounts& useCountsBefore) {
       // model.building(), not getUniqueModelObject, so we don't instantiate a Building
       auto building_ = model.building();
       if (!building_) {
         return {};
       }
 
-      Resolver resolver(model);
+      Resolver resolver(model, useCountsBefore);
       std::vector<ChainItem> chain;
       push(chain, *building_);
       push(chain, building_->spaceType());
@@ -1012,8 +1019,8 @@ namespace model {
 
     /// Space group, per Space: Space (1), then its SpaceType if explicit (2), then its BuildingStory (3), collapsed onto the Space.
     /// Returns the created sets
-    std::vector<DefaultConstructionSet> collapseToSpaces(Model& model) {
-      Resolver resolver(model);
+    std::vector<DefaultConstructionSet> collapseToSpaces(Model& model, const UseCounts& useCountsBefore) {
+      Resolver resolver(model, useCountsBefore);
 
       for (auto& space : model.getConcreteModelObjects<Space>()) {
         const std::string groupName = "Space '" + space.nameString() + "'";
@@ -1053,20 +1060,19 @@ namespace model {
   // falls through the Space's set also falls through its SpaceType's and BuildingStory's, and is never found there.
   std::vector<DefaultConstructionSet> DefaultConstructionSet::collapseToSpaceAndBuilding(Model& model, bool purge) {
 
-    // Sets in use before the call: the only ones a purge may remove
+    // Use counts before the call: they decide what may be merged into in place, and what a purge may remove (sets in use before)
+    UseCounts useCountsBefore;
     std::vector<DefaultConstructionSet> usedBefore;
-    if (purge) {
-      for (auto& dcs : model.getConcreteModelObjects<DefaultConstructionSet>()) {
-        if (dcs.directUseCount() > 0) {
-          usedBefore.push_back(std::move(dcs));
-        }
+    for (auto& dcs : model.getConcreteModelObjects<DefaultConstructionSet>()) {
+      const unsigned useCount = dcs.directUseCount();
+      useCountsBefore.emplace(dcs.handle(), useCount);
+      if (purge && useCount > 0) {
+        usedBefore.push_back(std::move(dcs));
       }
     }
 
-    // Building first: it can point the Building to an existing set (e.g. its SpaceType's), which the Space group's in place check
-    // must see as another user of that set
-    std::vector<DefaultConstructionSet> created = collapseToBuilding(model);
-    const std::vector<DefaultConstructionSet> spaceCreated = collapseToSpaces(model);
+    std::vector<DefaultConstructionSet> created = collapseToBuilding(model, useCountsBefore);
+    const std::vector<DefaultConstructionSet> spaceCreated = collapseToSpaces(model, useCountsBefore);
     created.insert(created.end(), spaceCreated.begin(), spaceCreated.end());
 
     if (!purge) {

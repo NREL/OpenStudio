@@ -1831,6 +1831,49 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
 }
 
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedCloned_SharedSameKey) {
+
+  // Two Spaces share the same Space DCS and the same SpaceType, which contributes a slot: the shared Space DCS has 2 users
+  // before the call, so it isn't merged into in place, and since merged sets are keyed by owner (each Space is its own), each
+  // Space gets its own identical clone
+  Model m;
+  SpaceType spaceType(m);
+  spaceType.setName("Office");
+  Construction stRoof(m);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(makeDCS(m, {.extRoof = stRoof})));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  sDCS.setName("Space DCS");
+
+  Space space1(m);
+  space1.setName("A");
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setDefaultConstructionSet(sDCS));
+  Space space2(m);
+  space2.setName("B");
+  EXPECT_TRUE(space2.setSpaceType(spaceType));
+  EXPECT_TRUE(space2.setDefaultConstructionSet(sDCS));
+
+  EXPECT_EQ(2u, DefaultConstructionSet::collapseToSpaceAndBuilding(m).size());
+
+  for (const auto& [space, expectedName] : {std::pair{space1, "Space A @ SpaceType Office"}, std::pair{space2, "Space B @ SpaceType Office"}}) {
+    ASSERT_TRUE(space.defaultConstructionSet());
+    auto merged = space.defaultConstructionSet().get();
+    EXPECT_NE(sDCS, merged);
+    EXPECT_EQ(expectedName, merged.nameString());
+    ASSERT_TRUE(extSlot(merged, &DefaultSurfaceConstructions::wallConstruction));
+    EXPECT_EQ(sWall, extSlot(merged, &DefaultSurfaceConstructions::wallConstruction).get());
+    ASSERT_TRUE(extSlot(merged, &DefaultSurfaceConstructions::roofCeilingConstruction));
+    EXPECT_EQ(stRoof, extSlot(merged, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  }
+
+  // Space DCS untouched, and no longer used
+  EXPECT_FALSE(extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_EQ(0u, sDCS.directUseCount());
+  EXPECT_EQ(4u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+}
+
 TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedCloned_UsedByOtherLevel) {
 
   // The Space DCS is also the DCS of another SpaceType, and the Space's own SpaceType contributes a slot:
