@@ -7,12 +7,10 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/DefaultConstructionSet.hpp"
-#include "../../model/DefaultConstructionSet_Impl.hpp"
 
 #include "../../model/DefaultSurfaceConstructions.hpp"
 #include "../../model/DefaultSubSurfaceConstructions.hpp"
 #include "../../model/ConstructionBase.hpp"
-#include "../../model/Building.hpp"
 #include "../../model/BuildingStory.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"

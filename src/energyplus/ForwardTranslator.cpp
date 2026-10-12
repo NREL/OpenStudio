@@ -318,7 +318,7 @@ namespace energyplus {
     if (!m_forwardTranslatorOptions.excludeConstructionAssignmentSets()) {
       if (m_forwardTranslatorOptions.excludeSpaceTranslation()) {
         // When Space translation is excluded there is no E+ Space, so defaulted constructions would end up unresolved
-        ForwardTranslator::hardApplyConstructionsWhenSpaceTranslationOff(model);
+        hardApplyConstructionsWhenSpaceTranslationOff(model);
       }
 
       // TODO:  [ConstructionAssignmentSet purge] revisit whether I should purge or not

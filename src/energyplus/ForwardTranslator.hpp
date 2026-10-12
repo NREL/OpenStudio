@@ -976,7 +976,7 @@ namespace energyplus {
     // When Space translation is excluded there is no E+ Space, so defaulted constructions would end up unresolved. This function hard-assigns
     // constructions to all surfaces, subsurfaces and interior partitions in the model that have defaulted constructions, using the
     // DefaultConstructionSet at the Space, SpaceType and BuildingStory level. Implemented in ForwardTranslateDefaultConstructionSet.cpp.
-    void hardApplyConstructionsWhenSpaceTranslationOff(model::Model& model);
+    static void hardApplyConstructionsWhenSpaceTranslationOff(model::Model& model);
 
     boost::optional<IdfObject> translateDesignDay(model::DesignDay& modelObject);
 
