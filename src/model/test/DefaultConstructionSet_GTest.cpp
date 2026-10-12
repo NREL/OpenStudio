@@ -2317,3 +2317,57 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_Idempoten
     EXPECT_EQ(nSubSurfaceConstructions, m.getConcreteModelObjects<DefaultSubSurfaceConstructions>().size());
   }
 }
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_MatchedPairCanFlip) {
+
+  // Known limitation, documented here. For a matched pair (2 surfaces that are the 2 sides of the same wall) whose sides resolve
+  // different constructions, Surface::construction() picks the side with the lower search distance. Collapsing changes search
+  // distances (2, 3 -> 1 and 5 -> 4), so it can change which side wins. Callers that care (the ForwardTranslator) must resolve
+  // matched pairs before collapsing.
+  Model m;
+
+  // Two 10x10 Spaces side by side, sharing the wall at x = 10
+  std::vector<Point3d> floorPoints{{0.0, 0.0, 0.0}, {0.0, 10.0, 0.0}, {10.0, 10.0, 0.0}, {10.0, 0.0, 0.0}};
+  auto spaceA = Space::fromFloorPrint(floorPoints, 3.0, m).get();
+  auto spaceB = Space::fromFloorPrint(floorPoints, 3.0, m).get();
+  spaceB.setXOrigin(10.0);
+  spaceA.matchSurfaces(spaceB);
+
+  // B's side of the shared wall, and A's side
+  boost::optional<Surface> wallB;
+  for (const auto& surface : spaceB.surfaces()) {
+    if (surface.adjacentSurface()) {
+      wallB = surface;
+    }
+  }
+  ASSERT_TRUE(wallB);
+  auto wallA = wallB->adjacentSurface().get();
+
+  // A's interior wall construction comes from A's own DCS: search distance 1
+  Construction aIntWall(m);
+  EXPECT_TRUE(spaceA.setDefaultConstructionSet(makeDCS(m, {.intWall = aIntWall})));
+
+  // B's interior wall construction comes from B's SpaceType DCS: search distance 2
+  SpaceType spaceType(m);
+  Construction stIntWall(m);
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(makeDCS(m, {.intWall = stIntWall})));
+  EXPECT_TRUE(spaceB.setSpaceType(spaceType));
+
+  // Before: each side's own lookup...
+  EXPECT_EQ(1, wallA.constructionWithSearchDistance()->second);
+  EXPECT_EQ(2, wallB->constructionWithSearchDistance()->second);
+  EXPECT_EQ(stIntWall, wallB->constructionWithSearchDistance()->first);
+  // ... but the matched pair resolution picks A's (1 < 2), for both sides
+  EXPECT_EQ(aIntWall, wallA.construction().get());
+  EXPECT_EQ(aIntWall, wallB->construction().get());
+
+  // Collapsing moves the SpaceType's DCS down onto B
+  DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+
+  // After: B's own lookup now comes from B's DCS, at search distance 1 too
+  EXPECT_EQ(1, wallA.constructionWithSearchDistance()->second);
+  EXPECT_EQ(1, wallB->constructionWithSearchDistance()->second);
+  // It's a tie, so each side keeps its own: B's side flipped from A's construction to its SpaceType's
+  EXPECT_EQ(aIntWall, wallA.construction().get());
+  EXPECT_EQ(stIntWall, wallB->construction().get());
+}
