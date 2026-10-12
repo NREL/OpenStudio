@@ -303,23 +303,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_MatchedPair) {
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_ExcludeSpaceTranslation) {
-  // Without E+ Spaces there's no Space level ConstructionAssignmentSet: the FT excludes them for that translation, so the constructions are written
+  // Without E+ Spaces there's no Space level ConstructionAssignmentSet: the FT hard-assigns the constructions resolved from the Space, SpaceType and
+  // BuildingStory levels, while the Building level ones are still resolved by E+ via the Building's ConstructionAssignmentSet
   Model model;
 
-  Construction construction(model);
-  DefaultSurfaceConstructions defaultSurfaceConstructions(model);
-  EXPECT_TRUE(defaultSurfaceConstructions.setRoofCeilingConstruction(construction));
-  DefaultConstructionSet defaultConstructionSet(model);
-  EXPECT_TRUE(defaultConstructionSet.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions));
+  Construction roofConstruction(model);
+  DefaultSurfaceConstructions spaceSurfaceConstructions(model);
+  EXPECT_TRUE(spaceSurfaceConstructions.setRoofCeilingConstruction(roofConstruction));
+  DefaultConstructionSet spaceConstructionSet(model);
+  EXPECT_TRUE(spaceConstructionSet.setDefaultExteriorSurfaceConstructions(spaceSurfaceConstructions));
+
+  Construction wallConstruction(model);
+  DefaultSurfaceConstructions buildingSurfaceConstructions(model);
+  EXPECT_TRUE(buildingSurfaceConstructions.setWallConstruction(wallConstruction));
+  DefaultConstructionSet buildingConstructionSet(model);
+  EXPECT_TRUE(buildingConstructionSet.setDefaultExteriorSurfaceConstructions(buildingSurfaceConstructions));
+  EXPECT_TRUE(model.getUniqueModelObject<Building>().setDefaultConstructionSet(buildingConstructionSet));
 
   ThermalZone zone(model);
   Space space(model);
   EXPECT_TRUE(space.setThermalZone(zone));
-  EXPECT_TRUE(space.setDefaultConstructionSet(defaultConstructionSet));
+  EXPECT_TRUE(space.setDefaultConstructionSet(spaceConstructionSet));
 
-  Surface surface({{0, 1, 0}, {0, 0, 0}, {1, 0, 0}, {1, 1, 0}}, model);
-  EXPECT_TRUE(surface.setSpace(space));
-  EXPECT_TRUE(surface.isConstructionDefaulted());
+  Surface roof({{0, 1, 0}, {0, 0, 0}, {1, 0, 0}, {1, 1, 0}}, model);
+  EXPECT_TRUE(roof.setSpace(space));
+  EXPECT_EQ("RoofCeiling", roof.surfaceType());
+  EXPECT_TRUE(roof.isConstructionDefaulted());
+
+  Surface wall({{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}}, model);
+  EXPECT_TRUE(wall.setSpace(space));
+  EXPECT_EQ("Wall", wall.surfaceType());
+  EXPECT_TRUE(wall.isConstructionDefaulted());
 
   ForwardTranslator forwardTranslator;
   forwardTranslator.setExcludeSpaceTranslation(true);
@@ -327,17 +341,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_ExcludeSpaceTranslation) {
 
   Workspace workspace = forwardTranslator.translateModel(model);
 
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(0u, forwardTranslator.warnings().size());
-  ASSERT_EQ(1u, forwardTranslator.errors().size());
-  EXPECT_EQ("Space Translation is excluded, so Construction Assignment Sets are excluded too: all constructions are written to the Surfaces",
-            forwardTranslator.errors().front().logMessage());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
-  WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
-  ASSERT_TRUE(surfaceObject.getString(BuildingSurface_DetailedFields::ConstructionName));
-  EXPECT_EQ(construction.nameString(), surfaceObject.getString(BuildingSurface_DetailedFields::ConstructionName).get());
+  // The Space level construction is hard-assigned
+  auto roofObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, roof.nameString());
+  ASSERT_TRUE(roofObject_);
+  ASSERT_TRUE(roofObject_->getString(BuildingSurface_DetailedFields::ConstructionName));
+  EXPECT_EQ(roofConstruction.nameString(), roofObject_->getString(BuildingSurface_DetailedFields::ConstructionName).get());
 
-  // The user's option is restored
-  EXPECT_FALSE(forwardTranslator.forwardTranslatorOptions().excludeConstructionAssignmentSets());
+  // The Building level construction is left for E+ to resolve via the Building's ConstructionAssignmentSet
+  auto wallObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, wall.nameString());
+  ASSERT_TRUE(wallObject_);
+  EXPECT_TRUE(wallObject_->isEmpty(BuildingSurface_DetailedFields::ConstructionName));
+
+  WorkspaceObject buildingObject = workspace.getObjectsByType(IddObjectType::Building)[0];
+  ASSERT_TRUE(buildingObject.getTarget(BuildingFields::ConstructionAssignmentSetName));
+
+  // The input model isn't touched
+  EXPECT_TRUE(roof.isConstructionDefaulted());
 }

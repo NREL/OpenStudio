@@ -7,10 +7,21 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
 
 #include "../../model/DefaultSurfaceConstructions.hpp"
 #include "../../model/DefaultSubSurfaceConstructions.hpp"
 #include "../../model/ConstructionBase.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/BuildingStory.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/PlanarSurface.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../../model/InteriorPartitionSurface.hpp"
 
 #include <utilities/idd/ConstructionAssignmentSet_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -20,6 +31,73 @@ using namespace openstudio::model;
 namespace openstudio {
 
 namespace energyplus {
+
+  // When Space translation is excluded there is no E+ Space, so defaulted constructions would end up unresolved. This function hard-assigns
+  // constructions to all surfaces, subsurfaces and interior partitions in the model that have defaulted constructions, using the
+  // DefaultConstructionSet at the Space, SpaceType and BuildingStory level.
+  void ForwardTranslator::hardApplyConstructionsWhenSpaceTranslationOff(model::Model& model) {
+    for (auto& space : model.getConcreteModelObjects<model::Space>()) {
+
+      // Step 1: Collect PlanarSurfaces with defaulted constructions (Surface, SubSurface, InteriorPartitionSurface)
+      std::vector<PlanarSurface> planarSurfaces;
+      auto surfaces = space.surfaces();
+      planarSurfaces.reserve(2 * surfaces.size());  // Initial guess
+      for (Surface& surface : surfaces) {
+        if (surface.isConstructionDefaulted()) {
+          planarSurfaces.push_back(surface);
+        }
+        for (SubSurface& subSurface : surface.subSurfaces()) {
+          if (subSurface.isConstructionDefaulted()) {
+            planarSurfaces.push_back(subSurface);
+          }
+        }
+      }
+
+      for (const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup : space.interiorPartitionSurfaceGroups()) {
+        for (InteriorPartitionSurface& interiorPartitionSurface : interiorPartitionSurfaceGroup.interiorPartitionSurfaces()) {
+          if (interiorPartitionSurface.isConstructionDefaulted()) {
+            planarSurfaces.push_back(interiorPartitionSurface);
+          }
+        }
+      }
+
+      if (planarSurfaces.empty()) {
+        LOG(Trace, "Space '" << space.nameString() << "' has no surfaces, subsurfaces or interior partitions with defaulted constructions, skipping");
+        continue;
+      }
+
+      // Gather candidates DCS from Space, SpaceType and BuildingStory, instead of doing it for each planar surface to limit waste.
+      // I also don't call Space::getDefaultConstructionWithSearchDistance to avoid looking at the Building/Building SpaceType Level, which would be
+      // another waste
+      std::vector<DefaultConstructionSet> candidateDCSs;
+      if (auto dcs_ = space.defaultConstructionSet()) {
+        candidateDCSs.push_back(*dcs_);
+      }
+      if (auto spaceType_ = space.spaceType(); spaceType_ && !space.isSpaceTypeDefaulted()) {
+        if (auto dcs_ = spaceType_->defaultConstructionSet()) {
+          candidateDCSs.push_back(*dcs_);
+        }
+      }
+      if (auto buildingStory_ = space.buildingStory()) {
+        if (auto dcs_ = buildingStory_->defaultConstructionSet()) {
+          candidateDCSs.push_back(*dcs_);
+        }
+      }
+
+      if (candidateDCSs.empty()) {
+        LOG(Trace, "Space '" << space.nameString() << "' has no DefaultConstructionSet at the Space, SpaceType or BuildingStory level, skipping");
+        continue;
+      }
+      for (PlanarSurface& planarSurface : planarSurfaces) {
+        for (const auto& dcs_ : candidateDCSs) {
+          if (auto construction_ = dcs_.getDefaultConstruction(planarSurface)) {
+            planarSurface.setConstruction(*construction_);
+            break;  // Stop at the first DCS that provides a construction for this planar surface
+          }
+        }
+      }
+    }
+  }
 
   boost::optional<IdfObject> ForwardTranslator::translateDefaultConstructionSet(model::DefaultConstructionSet& modelObject) {
 
