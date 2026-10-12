@@ -24,14 +24,27 @@
 #include "../InteriorPartitionSurfaceGroup.hpp"
 #include "../ShadingSurface.hpp"
 #include "../ShadingSurfaceGroup.hpp"
+#include "../PlanarSurface.hpp"
+#include "../PlanarSurface_Impl.hpp"
 #include "../Space.hpp"
+#include "../Space_Impl.hpp"
 #include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
 #include "../Building.hpp"
+#include "../Building_Impl.hpp"
 #include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
 
+#include "../../utilities/core/Compare.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
+#include "../../utilities/geometry/Vector3d.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+
+#include <fmt/format.h>
+
+#include <map>
+#include <set>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -643,8 +656,11 @@ struct DCSSpec
   boost::optional<Construction> extFloor;
   boost::optional<Construction> extWall;
   boost::optional<Construction> extRoof;
+  boost::optional<Construction> intWall;
+  boost::optional<Construction> groundFloor;
   boost::optional<Construction> extFixedWindow;
   boost::optional<Construction> interiorPartition;
+  boost::optional<Construction> spaceShading;
   boost::optional<Construction> adiabatic;
 };
 
@@ -666,6 +682,18 @@ DefaultConstructionSet makeDCS(Model& m, const DCSSpec& spec) {
     EXPECT_TRUE(dcs.setDefaultExteriorSurfaceConstructions(ext));
   }
 
+  if (spec.intWall) {
+    DefaultSurfaceConstructions interior(m);
+    EXPECT_TRUE(interior.setWallConstruction(*spec.intWall));
+    EXPECT_TRUE(dcs.setDefaultInteriorSurfaceConstructions(interior));
+  }
+
+  if (spec.groundFloor) {
+    DefaultSurfaceConstructions ground(m);
+    EXPECT_TRUE(ground.setFloorConstruction(*spec.groundFloor));
+    EXPECT_TRUE(dcs.setDefaultGroundContactSurfaceConstructions(ground));
+  }
+
   if (spec.extFixedWindow) {
     DefaultSubSurfaceConstructions extSub(m);
     EXPECT_TRUE(extSub.setFixedWindowConstruction(*spec.extFixedWindow));
@@ -674,6 +702,9 @@ DefaultConstructionSet makeDCS(Model& m, const DCSSpec& spec) {
 
   if (spec.interiorPartition) {
     EXPECT_TRUE(dcs.setInteriorPartitionConstruction(*spec.interiorPartition));
+  }
+  if (spec.spaceShading) {
+    EXPECT_TRUE(dcs.setSpaceShadingConstruction(*spec.spaceShading));
   }
   if (spec.adiabatic) {
     EXPECT_TRUE(dcs.setAdiabaticSurfaceConstruction(*spec.adiabatic));
@@ -1411,4 +1442,232 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(merged, space1.defaultConstructionSet().get());
   ASSERT_TRUE(space2.defaultConstructionSet());
   EXPECT_EQ(merged, space2.defaultConstructionSet().get());
+}
+
+namespace {
+
+// Four 10x10x3 Spaces in a row, every level of the inheritance chain winning at least one surface:
+//
+//            y (=North)
+//   ▲
+//   │                  building height = 3m
+// 10├────────┼────────┼────────┼────────┤
+//   │        ║        │        │        │
+//   │   A    ║   B    │   C    │   D    │
+//   │        ║        │        │        │
+//   └────────┴────────┴────────┴────────┴──► x
+//  0        10       20        30       40
+//
+// Only A and B are matched (║), and both resolve their interior wall from the same BuildingStory, so the matched pair resolution
+// in Surface::construction doesn't come into play
+//
+// | Level                  | Owner of               | Fills                                                 |
+// |------------------------|------------------------|-------------------------------------------------------|
+// | 1 Space                | A, D (shared)          | ext wall                                              |
+// | 2 SpaceType Office     | A, B (explicit)        | ext wall (hidden behind A's), ext fixed window        |
+// | 3 BuildingStory L1     | A, B                   | ext roof, int wall                                    |
+// | 4 Building             |                        | ground floor, interior partition                      |
+// | 5 Building SpaceType   | C, D (defaulted)       | ext wall, ext roof, space shading, adiabatic          |
+//
+// Plus: a fixed window on an exterior wall of A and of B, an interior partition in A, a space shading surface on B, and one
+// adiabatic wall in C
+Model makeEquivalenceModel() {
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.0;
+
+  // Counterclockwise points
+  std::vector<Point3d> floorPoints{{0.0, 0.0, 0.0}, {0.0, width, 0.0}, {width, width, 0.0}, {width, 0.0, 0.0}};
+
+  auto spaceA = Space::fromFloorPrint(floorPoints, height, m).get();
+  spaceA.setName("A");
+  auto spaceB = Space::fromFloorPrint(floorPoints, height, m).get();
+  spaceB.setName("B");
+  spaceB.setXOrigin(width);
+  auto spaceC = Space::fromFloorPrint(floorPoints, height, m).get();
+  spaceC.setName("C");
+  spaceC.setXOrigin(width * 2);
+  auto spaceD = Space::fromFloorPrint(floorPoints, height, m).get();
+  spaceD.setName("D");
+  spaceD.setXOrigin(width * 3);
+
+  spaceA.matchSurfaces(spaceB);
+
+  // Exterior wall facing South (outward normal -y), on which we put a window or which we make adiabatic
+  auto southWall = [](const Space& space) {
+    boost::optional<Surface> result;
+    for (const auto& surface : space.surfaces()) {
+      if (istringEqual("Wall", surface.surfaceType()) && istringEqual("Outdoors", surface.outsideBoundaryCondition())
+          && surface.outwardNormal().y() < -0.5) {
+        result = surface;
+      }
+    }
+    EXPECT_TRUE(result) << space.nameString() << " has no exterior wall facing South";
+    return result.value();
+  };
+
+  EXPECT_TRUE(southWall(spaceA).setWindowToWallRatio(0.4));
+  EXPECT_TRUE(southWall(spaceB).setWindowToWallRatio(0.4));
+  EXPECT_TRUE(southWall(spaceC).setOutsideBoundaryCondition("Adiabatic"));
+
+  InteriorPartitionSurfaceGroup partitionGroup(m);
+  EXPECT_TRUE(partitionGroup.setSpace(spaceA));
+  InteriorPartitionSurface partition({{5.0, 2.0, height}, {5.0, 2.0, 0.0}, {5.0, 8.0, 0.0}, {5.0, 8.0, height}}, m);
+  EXPECT_TRUE(partition.setInteriorPartitionSurfaceGroup(partitionGroup));
+
+  ShadingSurfaceGroup shadingGroup(m);
+  EXPECT_TRUE(shadingGroup.setSpace(spaceB));
+  ShadingSurface overhang({{0.0, 0.0, height}, {0.0, -1.0, height}, {width, -1.0, height}, {width, 0.0, height}}, m);
+  EXPECT_TRUE(overhang.setShadingSurfaceGroup(shadingGroup));
+
+  // Level 1: Space
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  EXPECT_TRUE(spaceA.setDefaultConstructionSet(sDCS));
+  EXPECT_TRUE(spaceD.setDefaultConstructionSet(sDCS));
+
+  // Level 2: SpaceType
+  SpaceType office(m);
+  office.setName("Office");
+  Construction stWall(m);
+  Construction stWindow(m);
+  EXPECT_TRUE(office.setDefaultConstructionSet(makeDCS(m, {.extWall = stWall, .extFixedWindow = stWindow})));
+  EXPECT_TRUE(spaceA.setSpaceType(office));
+  EXPECT_TRUE(spaceB.setSpaceType(office));
+
+  // Level 3: BuildingStory
+  BuildingStory story(m);
+  story.setName("L1");
+  Construction bsRoof(m);
+  Construction bsIntWall(m);
+  EXPECT_TRUE(story.setDefaultConstructionSet(makeDCS(m, {.extRoof = bsRoof, .intWall = bsIntWall})));
+  EXPECT_TRUE(spaceA.setBuildingStory(story));
+  EXPECT_TRUE(spaceB.setBuildingStory(story));
+
+  // Level 4: Building
+  auto building = m.getUniqueModelObject<Building>();
+  Construction bGroundFloor(m);
+  Construction bPartition(m);
+  EXPECT_TRUE(building.setDefaultConstructionSet(makeDCS(m, {.groundFloor = bGroundFloor, .interiorPartition = bPartition})));
+
+  // Level 5: Building SpaceType, inherited by C and D whose SpaceType is defaulted
+  SpaceType buildingSpaceType(m);
+  buildingSpaceType.setName("Building SpaceType");
+  Construction bstWall(m);
+  Construction bstRoof(m);
+  Construction bstShading(m);
+  Construction bstAdiabatic(m);
+  EXPECT_TRUE(buildingSpaceType.setDefaultConstructionSet(
+    makeDCS(m, {.extWall = bstWall, .extRoof = bstRoof, .spaceShading = bstShading, .adiabatic = bstAdiabatic})));
+  EXPECT_TRUE(building.setSpaceType(buildingSpaceType));
+  EXPECT_TRUE(spaceC.isSpaceTypeDefaulted());
+  EXPECT_TRUE(spaceD.isSpaceTypeDefaulted());
+
+  return m;
+}
+
+// PlanarSurface handle -> its resolved construction (null Handle if none) and search distance (-1 if none)
+struct Resolved
+{
+  Handle construction;
+  int searchDistance = -1;
+};
+
+std::map<Handle, Resolved> resolveAll(const Model& m) {
+  std::map<Handle, Resolved> result;
+  for (const auto& planarSurface : m.getModelObjects<PlanarSurface>()) {
+    Resolved r;
+    // Not redundant: Surface and SubSurface override `construction()` to resolve matched pairs (the side with the lower search
+    // distance wins, so it can return the adjacent surface's construction). `construction()` is what OS and the FT use.
+    // `constructionWithSearchDistance()` is the surface's own lookup, and tells which level it came from
+    if (auto c_ = planarSurface.construction()) {
+      r.construction = c_->handle();
+    }
+    if (auto cwsd_ = planarSurface.constructionWithSearchDistance()) {
+      r.searchDistance = cwsd_->second;
+    }
+    result.emplace(planarSurface.handle(), r);
+  }
+  return result;
+}
+
+}  // namespace
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_Equivalence) {
+
+  // The contract: collapsing never changes what any surface resolves to, and afterwards every defaulted construction comes from
+  // the Space (1) or the Building (4), the only two levels E+ has. Same with or without purge
+
+  for (const bool purge : {false, true}) {
+    SCOPED_TRACE(fmt::format("purge = {}", purge));
+
+    Model m = makeEquivalenceModel();
+    const auto before = resolveAll(m);
+
+    // Sanity checks so the test can't pass vacuously: every surface resolves, and every level wins at least one
+    std::set<int> distancesBefore;
+    for (const auto& [handle, r] : before) {
+      EXPECT_FALSE(r.construction.isNull()) << m.getModelObject<ModelObject>(handle)->briefDescription() << " has no construction";
+      distancesBefore.insert(r.searchDistance);
+    }
+    EXPECT_EQ((std::set<int>{1, 2, 3, 4, 5}), distancesBefore);
+
+    DefaultConstructionSet::collapseToSpaceAndBuilding(m, purge);
+
+    const auto after = resolveAll(m);
+    ASSERT_EQ(before.size(), after.size());
+    for (const auto& [handle, rBefore] : before) {
+      auto it = after.find(handle);
+      ASSERT_NE(after.end(), it);
+      const auto& rAfter = it->second;
+      const auto description = m.getModelObject<ModelObject>(handle)->briefDescription();
+
+      EXPECT_EQ(rBefore.construction, rAfter.construction) << description << " resolves to a different construction";
+      EXPECT_TRUE(rAfter.searchDistance == 1 || rAfter.searchDistance == 4)
+        << description << " resolves at search distance " << rAfter.searchDistance << " (from " << rBefore.searchDistance << ")";
+    }
+  }
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_Idempotence) {
+
+  // Collapsing an already collapsed model is a no-op: nothing created, no pointer changed, no object added or removed
+
+  // Owner (Space, SpaceType, BuildingStory, Building) handle -> its DCS handle (null Handle if none)
+  auto ownerSets = [](const Model& m) {
+    std::map<Handle, Handle> result;
+    auto record = [&result](const auto& owners) {
+      for (const auto& owner : owners) {
+        auto dcs_ = owner.defaultConstructionSet();
+        result.emplace(owner.handle(), dcs_ ? dcs_->handle() : Handle{});
+      }
+    };
+    record(m.getConcreteModelObjects<Space>());
+    record(m.getConcreteModelObjects<SpaceType>());
+    record(m.getConcreteModelObjects<BuildingStory>());
+    if (auto building_ = m.building()) {
+      record(std::vector<Building>{*building_});
+    }
+    return result;
+  };
+
+  for (const bool purge : {false, true}) {
+    SCOPED_TRACE(fmt::format("purge = {}", purge));
+
+    Model m = makeEquivalenceModel();
+    EXPECT_FALSE(DefaultConstructionSet::collapseToSpaceAndBuilding(m, purge).empty());  // Sanity check: the first call does merge
+
+    const auto setsBefore = ownerSets(m);
+    const auto nDCS = m.getConcreteModelObjects<DefaultConstructionSet>().size();
+    const auto nSurfaceConstructions = m.getConcreteModelObjects<DefaultSurfaceConstructions>().size();
+    const auto nSubSurfaceConstructions = m.getConcreteModelObjects<DefaultSubSurfaceConstructions>().size();
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m, purge).empty());
+
+    EXPECT_EQ(setsBefore, ownerSets(m));
+    EXPECT_EQ(nDCS, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+    EXPECT_EQ(nSurfaceConstructions, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+    EXPECT_EQ(nSubSurfaceConstructions, m.getConcreteModelObjects<DefaultSubSurfaceConstructions>().size());
+  }
 }
