@@ -26,6 +26,7 @@
 #include "../../model/Construction_Impl.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/Building_FieldEnums.hxx>
@@ -33,6 +34,7 @@
 
 #include <resources.hxx>
 
+#include <set>
 #include <sstream>
 
 using namespace openstudio::energyplus;
@@ -160,4 +162,142 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_DefaultConstruction) {
     ASSERT_TRUE(buildingObject.getTarget(BuildingFields::ConstructionAssignmentSetName));
     EXPECT_EQ(casObject.handle(), buildingObject.getTarget(BuildingFields::ConstructionAssignmentSetName)->handle());
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_HardAssignedConstruction) {
+  // A hard-assigned construction is still written when the construction assignment sets are enabled
+  Model model;
+
+  Construction defaultConstruction(model);
+  DefaultSurfaceConstructions defaultSurfaceConstructions(model);
+  EXPECT_TRUE(defaultSurfaceConstructions.setRoofCeilingConstruction(defaultConstruction));
+  DefaultConstructionSet defaultConstructionSet(model);
+  EXPECT_TRUE(defaultConstructionSet.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions));
+  EXPECT_TRUE(model.getUniqueModelObject<Building>().setDefaultConstructionSet(defaultConstructionSet));
+
+  ThermalZone zone(model);
+  Space space(model);
+  EXPECT_TRUE(space.setThermalZone(zone));
+
+  Surface surface({{0, 1, 0}, {0, 0, 0}, {1, 0, 0}, {1, 1, 0}}, model);
+  EXPECT_TRUE(surface.setSpace(space));
+  EXPECT_EQ("RoofCeiling", surface.surfaceType());
+  EXPECT_EQ("Outdoors", surface.outsideBoundaryCondition());
+
+  Construction hardAssignedConstruction(model);
+  EXPECT_TRUE(surface.setConstruction(hardAssignedConstruction));
+  EXPECT_FALSE(surface.isConstructionDefaulted());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  auto surfaceObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, surface.nameString());
+  ASSERT_TRUE(surfaceObject_);
+  ASSERT_TRUE(surfaceObject_->getString(BuildingSurface_DetailedFields::ConstructionName));
+  EXPECT_EQ(hardAssignedConstruction.nameString(), surfaceObject_->getString(BuildingSurface_DetailedFields::ConstructionName).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_NoOSDefaultConstruction_Warning) {
+  // OpenStudio doesn't resolve a default construction for GroundFCfactorMethod (unlike E+, which uses the Ground Contact slot): the FT warns
+  Model model;
+
+  Construction groundFloorConstruction(model);
+  DefaultSurfaceConstructions groundContactSurfaceConstructions(model);
+  EXPECT_TRUE(groundContactSurfaceConstructions.setFloorConstruction(groundFloorConstruction));
+  DefaultConstructionSet defaultConstructionSet(model);
+  EXPECT_TRUE(defaultConstructionSet.setDefaultGroundContactSurfaceConstructions(groundContactSurfaceConstructions));
+  EXPECT_TRUE(model.getUniqueModelObject<Building>().setDefaultConstructionSet(defaultConstructionSet));
+
+  ThermalZone zone(model);
+  Space space(model);
+  EXPECT_TRUE(space.setThermalZone(zone));
+
+  auto makeFloor = [&model, &space](const std::string& name) {
+    Surface floor({{0, 0, 0}, {0, 1, 0}, {1, 1, 0}, {1, 0, 0}}, model);
+    floor.setName(name);
+    EXPECT_TRUE(floor.setSpace(space));
+    EXPECT_EQ("Floor", floor.surfaceType());
+    EXPECT_EQ("Ground", floor.outsideBoundaryCondition());
+    return floor;
+  };
+
+  Surface groundFloor = makeFloor("Ground Floor");
+  ASSERT_TRUE(groundFloor.construction());
+  EXPECT_EQ(groundFloorConstruction, groundFloor.construction().get());
+
+  Surface fcFloor = makeFloor("FCfactor Floor");
+  EXPECT_TRUE(fcFloor.setOutsideBoundaryCondition("GroundFCfactorMethod"));
+  EXPECT_FALSE(fcFloor.construction());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  std::vector<std::string> warnedSurfaces;
+  for (const auto& logMessage : forwardTranslator.warnings()) {
+    if (logMessage.logMessage().find("has no construction in OpenStudio") != std::string::npos) {
+      warnedSurfaces.push_back(logMessage.logMessage());
+    }
+  }
+  ASSERT_EQ(1, warnedSurfaces.size());
+  EXPECT_NE(std::string::npos, warnedSurfaces.front().find(fcFloor.nameString()));
+
+  for (const auto& floor : {groundFloor, fcFloor}) {
+    auto surfaceObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, floor.nameString());
+    ASSERT_TRUE(surfaceObject_);
+    EXPECT_TRUE(surfaceObject_->isEmpty(BuildingSurface_DetailedFields::ConstructionName));
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_MatchedPair) {
+  // resolveMatchedSurfaceConstructionConflicts hard-assigns both sides of a matched pair with a non-symmetric construction (one gets the reversed
+  // construction), so both are written even though they were defaulted
+  Model model;
+
+  StandardOpaqueMaterial outer(model);
+  StandardOpaqueMaterial inner(model);
+  inner.setThickness(outer.thickness() * 2);
+  Construction interiorWallConstruction(std::vector<OpaqueMaterial>{outer, inner});
+  ASSERT_FALSE(interiorWallConstruction.isSymmetric());
+
+  DefaultSurfaceConstructions interiorSurfaceConstructions(model);
+  EXPECT_TRUE(interiorSurfaceConstructions.setWallConstruction(interiorWallConstruction));
+  DefaultConstructionSet defaultConstructionSet(model);
+  EXPECT_TRUE(defaultConstructionSet.setDefaultInteriorSurfaceConstructions(interiorSurfaceConstructions));
+  EXPECT_TRUE(model.getUniqueModelObject<Building>().setDefaultConstructionSet(defaultConstructionSet));
+
+  ThermalZone zone(model);
+  std::vector<Space> spaces;
+  for (double x0 : {0.0, 10.0}) {
+    auto space_ = Space::fromFloorPrint({{x0, 0, 0}, {x0, 10, 0}, {x0 + 10, 10, 0}, {x0 + 10, 0, 0}}, 3.0, model);
+    ASSERT_TRUE(space_);
+    EXPECT_TRUE(space_->setThermalZone(zone));
+    spaces.push_back(*space_);
+  }
+  matchSurfaces(spaces);
+
+  std::vector<std::string> matchedNames;
+  for (const auto& surface : model.getConcreteModelObjects<Surface>()) {
+    if (surface.adjacentSurface()) {
+      EXPECT_TRUE(surface.isConstructionDefaulted());
+      matchedNames.push_back(surface.nameString());
+    }
+  }
+  ASSERT_EQ(2, matchedNames.size());
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  std::set<std::string> constructionNames;
+  for (const auto& name : matchedNames) {
+    SCOPED_TRACE(name);
+    auto surfaceObject_ = workspace.getObjectByTypeAndName(IddObjectType::BuildingSurface_Detailed, name);
+    ASSERT_TRUE(surfaceObject_);
+    auto constructionName_ = surfaceObject_->getString(BuildingSurface_DetailedFields::ConstructionName, false, true);
+    ASSERT_TRUE(constructionName_);
+    EXPECT_FALSE(constructionName_->empty());
+    constructionNames.insert(*constructionName_);
+  }
+  // One side has the construction, the other its reverse
+  EXPECT_EQ(2, constructionNames.size());
+  EXPECT_EQ(1, constructionNames.count(interiorWallConstruction.nameString()));
 }
