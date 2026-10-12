@@ -25,8 +25,12 @@
 #include "../ShadingSurface.hpp"
 #include "../ShadingSurfaceGroup.hpp"
 #include "../Space.hpp"
+#include "../SpaceType.hpp"
+#include "../Building.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -627,4 +631,215 @@ TEST_F(ModelFixture, DefaultConstructionSet_Merge) {
   EXPECT_EQ(c2, dcs3.adiabaticSurfaceConstruction().get());
 
   EXPECT_EQ(3u, model.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_BuildingGroup) {
+
+  // Building group: Building DCS (search distance 4), then Building SpaceType DCS (5), collapsed onto the Building
+
+  // No Building: nothing to do, and no Building gets instantiated
+  {
+    Model m;
+    SpaceType spaceType(m);
+    DefaultConstructionSet stDCS(m);
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(m.building());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Building without any DCS, and no SpaceType
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(building.defaultConstructionSet());
+    EXPECT_EQ(0u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Building DCS only: kept as is
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    DefaultConstructionSet bDCS(m);
+    Construction adiabatic(m);
+    EXPECT_TRUE(bDCS.setAdiabaticSurfaceConstruction(adiabatic));
+    EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(bDCS, building.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Building has an empty DCS: it contributes nothing, so it's reset
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    DefaultConstructionSet bDCS(m);
+    EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(building.defaultConstructionSet());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());  // not removed, just no longer referenced
+  }
+
+  // Building SpaceType DCS only: moved up to the Building, no clone. The SpaceType keeps it (no purge)
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    SpaceType spaceType(m);
+    EXPECT_TRUE(building.setSpaceType(spaceType));
+    DefaultConstructionSet stDCS(m);
+    Construction adiabatic(m);
+    EXPECT_TRUE(stDCS.setAdiabaticSurfaceConstruction(adiabatic));
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(stDCS, building.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Both point to the same DCS: kept as is
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    SpaceType spaceType(m);
+    EXPECT_TRUE(building.setSpaceType(spaceType));
+    DefaultConstructionSet dcs(m);
+    Construction adiabatic(m);
+    EXPECT_TRUE(dcs.setAdiabaticSurfaceConstruction(adiabatic));
+    EXPECT_TRUE(building.setDefaultConstructionSet(dcs));
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(dcs));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(dcs, building.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(dcs, spaceType.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Both, but the SpaceType DCS only fills slots the Building DCS already fills (with different constructions): it's
+  // ignored, the Building keeps its own, no clone
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    SpaceType spaceType(m);
+    EXPECT_TRUE(building.setSpaceType(spaceType));
+
+    DefaultConstructionSet bDCS(m);
+    DefaultSurfaceConstructions bExt(m);
+    Construction bWall(m);
+    EXPECT_TRUE(bExt.setWallConstruction(bWall));
+    EXPECT_TRUE(bDCS.setDefaultExteriorSurfaceConstructions(bExt));
+    EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+
+    DefaultConstructionSet stDCS(m);
+    DefaultSurfaceConstructions stExt(m);
+    Construction stWall(m);
+    EXPECT_TRUE(stExt.setWallConstruction(stWall));
+    EXPECT_TRUE(stDCS.setDefaultExteriorSurfaceConstructions(stExt));
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(bDCS, building.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+
+    // No purge: the SpaceType keeps its DCS
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+    EXPECT_EQ(1u, stDCS.directUseCount());
+    EXPECT_EQ(1u, stExt.directUseCount());
+    EXPECT_EQ(1u, bDCS.directUseCount());
+
+    // A DCS that was already unused before the call must survive a purge
+    DefaultConstructionSet unusedDCS(m);
+    DefaultSurfaceConstructions unusedExt(m);
+    EXPECT_TRUE(unusedDCS.setDefaultExteriorSurfaceConstructions(unusedExt));
+    EXPECT_EQ(0u, unusedDCS.directUseCount());
+
+    // Collapsing again with purge: same result for the Building, then the SpaceType's DCS is reset and removed, along with
+    // its now unused DefaultSurfaceConstructions
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m, true).empty());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(bDCS, building.defaultConstructionSet().get());
+    EXPECT_FALSE(spaceType.defaultConstructionSet());
+    EXPECT_TRUE(stDCS.handle().isNull());
+    EXPECT_TRUE(stExt.handle().isNull());
+
+    EXPECT_FALSE(unusedDCS.handle().isNull());
+    EXPECT_FALSE(unusedExt.handle().isNull());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());       // bDCS, unusedDCS
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());  // bExt, unusedExt
+  }
+
+  // Both, and the SpaceType DCS fills slots the Building DCS doesn't: a merged clone is created, Building's slots win,
+  // and the originals are untouched
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    building.setName("HQ");
+    SpaceType spaceType(m);
+    spaceType.setName("Office");
+    EXPECT_TRUE(building.setSpaceType(spaceType));
+
+    DefaultConstructionSet bDCS(m);
+    DefaultSurfaceConstructions bExt(m);
+    Construction bWall(m);
+    EXPECT_TRUE(bExt.setWallConstruction(bWall));
+    EXPECT_TRUE(bDCS.setDefaultExteriorSurfaceConstructions(bExt));
+    EXPECT_TRUE(building.setDefaultConstructionSet(bDCS));
+
+    DefaultConstructionSet stDCS(m);
+    DefaultSurfaceConstructions stExt(m);
+    Construction stWall(m);
+    Construction stRoof(m);
+    EXPECT_TRUE(stExt.setWallConstruction(stWall));
+    EXPECT_TRUE(stExt.setRoofCeilingConstruction(stRoof));
+    EXPECT_TRUE(stDCS.setDefaultExteriorSurfaceConstructions(stExt));
+    Construction stAdiabatic(m);
+    EXPECT_TRUE(stDCS.setAdiabaticSurfaceConstruction(stAdiabatic));
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m);
+    ASSERT_EQ(1u, created.size());
+    const auto& merged = created.front();
+    EXPECT_EQ("Building HQ @ SpaceType Office", merged.nameString());
+    EXPECT_NE(bDCS, merged);
+    EXPECT_NE(stDCS, merged);
+
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(merged, building.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+
+    // Merged content: Building's wall wins, roof and adiabatic come from the SpaceType
+    ASSERT_TRUE(merged.defaultExteriorSurfaceConstructions());
+    auto mergedExt = merged.defaultExteriorSurfaceConstructions().get();
+    ASSERT_TRUE(mergedExt.wallConstruction());
+    EXPECT_EQ(bWall, mergedExt.wallConstruction().get());
+    ASSERT_TRUE(mergedExt.roofCeilingConstruction());
+    EXPECT_EQ(stRoof, mergedExt.roofCeilingConstruction().get());
+    EXPECT_FALSE(mergedExt.floorConstruction());
+    ASSERT_TRUE(merged.adiabaticSurfaceConstruction());
+    EXPECT_EQ(stAdiabatic, merged.adiabaticSurfaceConstruction().get());
+
+    // Originals untouched: the shared exterior surface constructions got cloned before being merged into
+    EXPECT_NE(bExt, mergedExt);
+    EXPECT_NE(stExt, mergedExt);
+    ASSERT_TRUE(bDCS.defaultExteriorSurfaceConstructions());
+    EXPECT_EQ(bExt, bDCS.defaultExteriorSurfaceConstructions().get());
+    EXPECT_FALSE(bExt.roofCeilingConstruction());
+    EXPECT_FALSE(bDCS.adiabaticSurfaceConstruction());
+    EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+    EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+  }
 }
