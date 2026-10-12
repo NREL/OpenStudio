@@ -301,3 +301,43 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_MatchedPair) {
   EXPECT_EQ(2, constructionNames.size());
   EXPECT_EQ(1, constructionNames.count(interiorWallConstruction.nameString()));
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_Surface_ExcludeSpaceTranslation) {
+  // Without E+ Spaces there's no Space level ConstructionAssignmentSet: the FT excludes them for that translation, so the constructions are written
+  Model model;
+
+  Construction construction(model);
+  DefaultSurfaceConstructions defaultSurfaceConstructions(model);
+  EXPECT_TRUE(defaultSurfaceConstructions.setRoofCeilingConstruction(construction));
+  DefaultConstructionSet defaultConstructionSet(model);
+  EXPECT_TRUE(defaultConstructionSet.setDefaultExteriorSurfaceConstructions(defaultSurfaceConstructions));
+
+  ThermalZone zone(model);
+  Space space(model);
+  EXPECT_TRUE(space.setThermalZone(zone));
+  EXPECT_TRUE(space.setDefaultConstructionSet(defaultConstructionSet));
+
+  Surface surface({{0, 1, 0}, {0, 0, 0}, {1, 0, 0}, {1, 1, 0}}, model);
+  EXPECT_TRUE(surface.setSpace(space));
+  EXPECT_TRUE(surface.isConstructionDefaulted());
+
+  ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
+  EXPECT_FALSE(forwardTranslator.forwardTranslatorOptions().excludeConstructionAssignmentSets());
+
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  ASSERT_EQ(1u, forwardTranslator.errors().size());
+  EXPECT_EQ("Space Translation is excluded, so Construction Assignment Sets are excluded too: all constructions are written to the Surfaces",
+            forwardTranslator.errors().front().logMessage());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+  WorkspaceObject surfaceObject = workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed)[0];
+  ASSERT_TRUE(surfaceObject.getString(BuildingSurface_DetailedFields::ConstructionName));
+  EXPECT_EQ(construction.nameString(), surfaceObject.getString(BuildingSurface_DetailedFields::ConstructionName).get());
+
+  // The user's option is restored
+  EXPECT_FALSE(forwardTranslator.forwardTranslatorOptions().excludeConstructionAssignmentSets());
+}

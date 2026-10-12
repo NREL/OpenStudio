@@ -658,6 +658,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = ft.translateModel(model);
     EXPECT_EQ(0, ft.errors().size());
@@ -683,6 +684,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = ft.translateModel(model);
     EXPECT_EQ(0u, ft.errors().size());
@@ -785,6 +787,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = ft.translateModel(model);
     EXPECT_EQ(0u, ft.errors().size());
@@ -811,6 +814,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = ft.translateModel(model);
     EXPECT_EQ(0u, ft.errors().size());
@@ -911,8 +915,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
-
-    ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = ft.translateModel(model);
     //expect an error since there are 2 spaces with the same spaceType that resolve to two dfferent zones, so the fallback is less safe than it there
     // was only one, hence an error not a warning
@@ -940,6 +943,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = ft.translateModel(model);
     //expect an error since there are 2 spaces with the same spaceType that resolve to two dfferent zones
@@ -1977,6 +1981,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     // We get only a warning, since we can recover from it easily
     Workspace workspace = ft.translateModel(model);
@@ -2005,6 +2010,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     // No warnings here (from EMS), the space is set
     Workspace workspace = ft.translateModel(model);
@@ -2075,6 +2081,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = ft.translateModel(model);
 
@@ -2103,6 +2110,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = ft.translateModel(model);
 
     // NOTE: the space is NOT set on the Space Type one, and it has multiple spaces, so there will be an error. It will end up selecting the Space 1
@@ -2198,6 +2206,7 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = ft.translateModel(model);
 
@@ -2228,6 +2237,7 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = ft.translateModel(model);
 
     // We get only a warning, since we can recover from it easily
@@ -2326,6 +2336,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = ft.translateModel(model);
 
@@ -2364,6 +2375,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = ft.translateModel(model);
 
     // We get only a warning, since we can recover from it easily

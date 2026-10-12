@@ -432,6 +432,7 @@ bool OSWorkflow::run() {
     jobMap.at("Cleanup").selected = true;
 
     workflowJSON.runOptions()->forwardTranslatorOptions().setExcludeSpaceTranslation(true);
+    workflowJSON.runOptions()->forwardTranslatorOptions().setExcludeConstructionAssignmentSets(true);
   } else if (m_no_simulation) {
     jobMap.at("Initialization").selected = true;
     jobMap.at("OpenStudioMeasures").selected = true;

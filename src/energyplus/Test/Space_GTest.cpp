@@ -144,6 +144,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
 
   ForwardTranslator ft;
   ft.setExcludeSpaceTranslation(false);
+  ft.setExcludeConstructionAssignmentSets(false);
 
   Workspace workspace = ft.translateModel(model);
 
@@ -290,6 +291,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
 
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(0U, ft.errors().size());
@@ -517,6 +519,7 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Geometry) {
 
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     // In this case, the surface between the two spaces does exist. Each space is its own enclosure
     Workspace w = ft.translateModel(m);

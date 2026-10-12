@@ -68,12 +68,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_OneControl) {
   ForwardTranslator forwardTranslator;
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
   }
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
@@ -96,12 +98,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_TwoControl) {
   ForwardTranslator forwardTranslator;
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
   }
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
@@ -124,6 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   ForwardTranslator ft;
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(model);
 
@@ -137,6 +142,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
 
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(model);
 
@@ -151,6 +157,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
   daylightingControl.setPhiRotationAroundZAxis(45.0);
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(model);
 
@@ -164,6 +171,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_3216) {
 
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(model);
 
@@ -191,6 +199,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
   {
 
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -203,6 +212,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -218,6 +228,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
 
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::Daylighting_Controls);
@@ -229,6 +240,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_AvailabilitySched
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -347,6 +359,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
     auto ds = w.getObjectsByType(IddObjectType::Daylighting_Controls);
@@ -416,6 +429,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
   // same thing as before: we place them for the Zone itself
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
     auto ds = w.getObjectsByType(IddObjectType::Daylighting_Controls);

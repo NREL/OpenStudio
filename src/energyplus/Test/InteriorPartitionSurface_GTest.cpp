@@ -121,6 +121,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     // In this case, the surface between the two spaces does exist. Each space is its own enclosure
     Workspace workspace = forwardTranslator.translateModel(model);

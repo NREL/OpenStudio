@@ -172,6 +172,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -216,6 +217,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
   // same thing as before: we place them for the Zone itself
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 

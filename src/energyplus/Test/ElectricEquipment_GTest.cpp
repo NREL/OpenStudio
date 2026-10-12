@@ -79,6 +79,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -106,6 +107,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Desi
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -178,6 +180,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -207,6 +210,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -300,6 +304,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -328,6 +333,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Desi
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -412,6 +418,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -438,6 +445,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_SameSpaceType_Dens
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -509,6 +517,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -537,6 +546,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -627,6 +637,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
+    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -655,6 +666,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipment_DiffSpaceType_Dens
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
+    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());

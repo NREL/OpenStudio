@@ -52,6 +52,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate) {
 
   ForwardTranslator ft;
   ft.setExcludeSpaceTranslation(true);
+  ft.setExcludeConstructionAssignmentSets(true);
   Workspace workspace = ft.translateModel(model);
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
@@ -207,6 +208,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
+    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -252,6 +254,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
   // same thing as before: we place them for the Zone itself
   {
     ft.setExcludeSpaceTranslation(false);
+    ft.setExcludeConstructionAssignmentSets(false);
 
     // This object actually accepts a ZoneList as a target...
     Workspace w = ft.translateModel(m);
