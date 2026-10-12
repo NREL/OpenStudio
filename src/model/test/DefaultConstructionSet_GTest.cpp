@@ -1788,6 +1788,8 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_EQ(wall, extSlot(result, &DefaultSurfaceConstructions::wallConstruction).get());
   ASSERT_TRUE(extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction));
   EXPECT_EQ(stRoof, extSlot(result, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  // ... through a clone: the shared DCS has 2 users (the Space and the Building), so it can't be merged into in place
+  EXPECT_NE(sharedDCS, result);
 
   // The Building group has a single set, so the Building keeps it, and its content is unchanged: no roof
   ASSERT_TRUE(building.defaultConstructionSet());
@@ -1911,6 +1913,54 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
   EXPECT_FALSE(extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
 }
 
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_MergedCloned_SharedDifferentKeys) {
+
+  // Two Spaces share the same Space DCS but have different SpaceTypes, each contributing a different slot: one clone per Space,
+  // each with its own SpaceType's slot, and the shared Space DCS is untouched
+  Model m;
+  SpaceType office(m);
+  office.setName("Office");
+  Construction officeRoof(m);
+  EXPECT_TRUE(office.setDefaultConstructionSet(makeDCS(m, {.extRoof = officeRoof})));
+  SpaceType lab(m);
+  lab.setName("Lab");
+  Construction labFloor(m);
+  EXPECT_TRUE(lab.setDefaultConstructionSet(makeDCS(m, {.extFloor = labFloor})));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+
+  Space space1(m);
+  space1.setName("A");
+  EXPECT_TRUE(space1.setSpaceType(office));
+  EXPECT_TRUE(space1.setDefaultConstructionSet(sDCS));
+  Space space2(m);
+  space2.setName("B");
+  EXPECT_TRUE(space2.setSpaceType(lab));
+  EXPECT_TRUE(space2.setDefaultConstructionSet(sDCS));
+
+  EXPECT_EQ(2u, DefaultConstructionSet::collapseToSpaceAndBuilding(m).size());
+
+  ASSERT_TRUE(space1.defaultConstructionSet());
+  auto merged1 = space1.defaultConstructionSet().get();
+  EXPECT_EQ("Space A @ SpaceType Office", merged1.nameString());
+  EXPECT_EQ(sWall, extSlot(merged1, &DefaultSurfaceConstructions::wallConstruction).get());
+  EXPECT_EQ(officeRoof, extSlot(merged1, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  EXPECT_FALSE(extSlot(merged1, &DefaultSurfaceConstructions::floorConstruction));
+
+  ASSERT_TRUE(space2.defaultConstructionSet());
+  auto merged2 = space2.defaultConstructionSet().get();
+  EXPECT_EQ("Space B @ SpaceType Lab", merged2.nameString());
+  EXPECT_EQ(sWall, extSlot(merged2, &DefaultSurfaceConstructions::wallConstruction).get());
+  EXPECT_EQ(labFloor, extSlot(merged2, &DefaultSurfaceConstructions::floorConstruction).get());
+  EXPECT_FALSE(extSlot(merged2, &DefaultSurfaceConstructions::roofCeilingConstruction));
+
+  // Space DCS untouched, and no longer used
+  EXPECT_FALSE(extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction));
+  EXPECT_FALSE(extSlot(sDCS, &DefaultSurfaceConstructions::floorConstruction));
+  EXPECT_EQ(0u, sDCS.directUseCount());
+}
+
 // Space group, purge: SpaceType and BuildingStory sets are reset, then the sets that this left unused are removed, along with
 // their Default(Sub)SurfaceConstructions if nothing else uses them anymore
 
@@ -1982,6 +2032,62 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGrou
 
   EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());       // merged
   EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());  // mergedExt, bsInt
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_Purge_MergedInPlaceKept) {
+
+  // The Space DCS is merged into in place: it's still used, so it survives the purge. The SpaceType DCS is now unused and removed
+  Model m;
+  Space space(m);
+  SpaceType spaceType(m);
+  EXPECT_TRUE(space.setSpaceType(spaceType));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+  Construction stRoof(m);
+  auto stDCS = makeDCS(m, {.extRoof = stRoof});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m, true).empty());
+
+  ASSERT_TRUE(space.defaultConstructionSet());
+  EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+  EXPECT_EQ(stRoof, extSlot(sDCS, &DefaultSurfaceConstructions::roofCeilingConstruction).get());
+  EXPECT_FALSE(spaceType.defaultConstructionSet());
+  EXPECT_TRUE(stDCS.handle().isNull());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_Purge_ClonedOriginalRemoved) {
+
+  // Two Spaces share the Space DCS, so each gets a clone: the shared Space DCS is no longer used by anyone and gets removed,
+  // along with the SpaceType DCS
+  Model m;
+  SpaceType spaceType(m);
+  Construction stRoof(m);
+  auto stDCS = makeDCS(m, {.extRoof = stRoof});
+  EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+  Construction sWall(m);
+  auto sDCS = makeDCS(m, {.extWall = sWall});
+  Space space1(m);
+  EXPECT_TRUE(space1.setSpaceType(spaceType));
+  EXPECT_TRUE(space1.setDefaultConstructionSet(sDCS));
+  Space space2(m);
+  EXPECT_TRUE(space2.setSpaceType(spaceType));
+  EXPECT_TRUE(space2.setDefaultConstructionSet(sDCS));
+
+  auto created = DefaultConstructionSet::collapseToSpaceAndBuilding(m, true);
+  EXPECT_EQ(2u, created.size());
+
+  EXPECT_TRUE(sDCS.handle().isNull());
+  EXPECT_TRUE(stDCS.handle().isNull());
+  EXPECT_FALSE(spaceType.defaultConstructionSet());
+  ASSERT_TRUE(space1.defaultConstructionSet());
+  ASSERT_TRUE(space2.defaultConstructionSet());
+  EXPECT_NE(space1.defaultConstructionSet().get(), space2.defaultConstructionSet().get());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());  // the 2 clones
 }
 
 namespace {
