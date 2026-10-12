@@ -39,7 +39,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap_NoZone) {
   ForwardTranslator forwardTranslator;
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
@@ -47,7 +46,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap_NoZone) {
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
@@ -67,7 +65,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
   ForwardTranslator forwardTranslator;
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
@@ -78,7 +75,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
 
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());

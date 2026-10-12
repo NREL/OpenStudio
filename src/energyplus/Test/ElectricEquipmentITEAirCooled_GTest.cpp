@@ -131,7 +131,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Space)
   ForwardTranslator forwardTranslator;
   forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
-  forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -166,7 +165,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Instan
 
   ForwardTranslator forwardTranslator;
   forwardTranslator.setExcludeSpaceTranslation(true);
-  forwardTranslator.setExcludeConstructionAssignmentSets(true);
   forwardTranslator.setExcludeSpaceLoadInstances(false);
 
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -227,7 +225,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
     ForwardTranslator forwardTranslator;
     forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
@@ -251,7 +248,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
     ForwardTranslator forwardTranslator;
     forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
@@ -314,7 +310,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
     ForwardTranslator forwardTranslator;
     forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
@@ -345,7 +340,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_OneSpa
     ForwardTranslator forwardTranslator;
     forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
@@ -408,7 +402,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_TwoSpa
     ForwardTranslator forwardTranslator;
     forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
@@ -458,7 +451,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Supply
   ForwardTranslator forwardTranslator;
   forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
-  forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
   Workspace workspace = forwardTranslator.translateModel(model);
   // get the thermal zone inlet node
@@ -507,7 +499,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   ForwardTranslator forwardTranslator;
   forwardTranslator.setExcludeSpaceLoadInstances(true);  // Test targets the legacy ElectricEquipment:ITE:AirCooled translation specifically
   forwardTranslator.setExcludeSpaceTranslation(true);
-  forwardTranslator.setExcludeConstructionAssignmentSets(true);
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
@@ -720,7 +711,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -779,7 +769,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_SpaceT
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     // This object actually accepts a Zone or Space as a target... But not ZoneList/SpaceList
     Workspace w = ft.translateModel(m);

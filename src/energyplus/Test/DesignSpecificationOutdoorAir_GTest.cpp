@@ -269,7 +269,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -350,7 +349,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 
@@ -577,7 +575,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir_NoDSOA
   // When excluding space translation (historical behavior)
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -602,7 +599,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir_NoDSOA
   // When including Space translation (new E+ 9.6.0)
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 

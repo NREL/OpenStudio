@@ -176,7 +176,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneMixing_DifferentZones) {
   ForwardTranslator ft;
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 
@@ -272,7 +271,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneMixing_DifferentZones) {
 
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -410,7 +408,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneMixing_SameZone) {
   ForwardTranslator ft;
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 
@@ -455,7 +452,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneMixing_SameZone) {
 
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 

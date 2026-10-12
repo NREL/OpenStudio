@@ -104,7 +104,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -121,7 +120,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -156,7 +154,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
@@ -180,7 +177,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -239,7 +235,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -270,7 +265,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) 
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -358,7 +352,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
@@ -391,7 +384,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -473,7 +465,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
     Workspace workspace = forwardTranslator.translateModel(model);
 
     ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
@@ -506,7 +497,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -667,7 +657,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
   // When excluding space translation (historical behavior)
   {
     forwardTranslator.setExcludeSpaceTranslation(true);
-    forwardTranslator.setExcludeConstructionAssignmentSets(true);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());
@@ -689,7 +678,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
   // When including Space translation (new E+ 9.6.0)
   {
     forwardTranslator.setExcludeSpaceTranslation(false);
-    forwardTranslator.setExcludeConstructionAssignmentSets(false);
 
     Workspace workspace = forwardTranslator.translateModel(model);
     EXPECT_EQ(0, forwardTranslator.errors().size());

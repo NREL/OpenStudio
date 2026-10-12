@@ -261,14 +261,6 @@ namespace energyplus {
   Workspace ForwardTranslator::translateModelPrivate(model::Model& model, bool fullModelTranslation) {
     reset();
 
-    // ConstructionAssignmentSets rely on E+ Spaces (the Space level set). Not worth supporting the old translation without Spaces (see #5514):
-    // exclude them for this translation only, the user's options are restored at the end
-    const bool userExcludeConstructionAssignmentSets = m_forwardTranslatorOptions.excludeConstructionAssignmentSets();
-    if (m_forwardTranslatorOptions.excludeSpaceTranslation() && !userExcludeConstructionAssignmentSets) {
-      LOG(Error, "Space Translation is excluded, so Construction Assignment Sets are excluded too: all constructions are written to the Surfaces");
-      m_forwardTranslatorOptions.setExcludeConstructionAssignmentSets(true);
-    }
-
     // translate Version first
     auto version = model.getUniqueModelObject<model::Version>();
     translateAndMapModelObject(version);
@@ -691,8 +683,6 @@ namespace energyplus {
     workspace.addObjects(m_idfObjects);
     workspace.setFastNaming(false);
     OS_ASSERT(workspace.getObjectsByType(IddObjectType::Version).size() == 1U);
-
-    m_forwardTranslatorOptions.setExcludeConstructionAssignmentSets(userExcludeConstructionAssignmentSets);
 
     return workspace;
   }
@@ -3748,8 +3738,6 @@ namespace energyplus {
   }
 
   void ForwardTranslator::translateConstructions(const model::Model& model) {
-    // TODO: [ConstructionAssignmentSet purge] The DefaultConstructionSet related objects are probably not wanted, especially with purge = false in
-    // DefaultConstructionSet::collapseToSpaceAndBuilding
     std::vector<IddObjectType> iddObjectTypes{
       IddObjectType::OS_MaterialProperty_GlazingSpectralData,
       IddObjectType::OS_Material,
@@ -3779,6 +3767,7 @@ namespace energyplus {
       IddObjectType::OS_Construction_WindowDataFile,
       IddObjectType::OS_StandardsInformation_Construction,
 
+      // TODO: [ConstructionAssignmentSet purge] Probably not wanted, especially with purge = false in DefaultConstructionSet::collapseToSpaceAndBuilding
       IddObjectType::OS_DefaultSubSurfaceConstructions,
       IddObjectType::OS_DefaultSurfaceConstructions,
       IddObjectType::OS_DefaultConstructionSet,

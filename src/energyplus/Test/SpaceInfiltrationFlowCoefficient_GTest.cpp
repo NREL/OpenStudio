@@ -85,7 +85,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient) {
 
   for (bool excludeSpaceTranslation : {true, false}) {
     ft.setExcludeSpaceTranslation(excludeSpaceTranslation);
-    ft.setExcludeConstructionAssignmentSets(excludeSpaceTranslation);
 
     Workspace w = ft.translateModel(model);
     EXPECT_EQ(0u, ft.errors().size());
@@ -333,7 +332,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
   //
   {
     ft.setExcludeSpaceTranslation(true);
-    ft.setExcludeConstructionAssignmentSets(true);
 
     Workspace w = ft.translateModel(m);
 
@@ -385,7 +383,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
   // same thing as before: we place them for the Zone itself. Note that this object DOES NOT ACCEPT a ZoneList, only a Zone!
   {
     ft.setExcludeSpaceTranslation(false);
-    ft.setExcludeConstructionAssignmentSets(false);
 
     Workspace w = ft.translateModel(m);
 
