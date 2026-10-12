@@ -27,6 +27,7 @@
 #include "../Space.hpp"
 #include "../SpaceType.hpp"
 #include "../Building.hpp"
+#include "../BuildingStory.hpp"
 
 #include "../../utilities/geometry/Point3d.hpp"
 
@@ -916,4 +917,354 @@ TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_Purge) {
   EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());          // bDCS, unusedDCS
   EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());     // bExt, unusedExt
   EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultSubSurfaceConstructions>().size());  // sharedExtSub
+}
+
+// Space group: Space DCS (search distance 1), then its SpaceType DCS if explicitly set (2), then its BuildingStory DCS (3),
+// collapsed onto the Space
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_Noop) {
+
+  // A SpaceType and a BuildingStory, but no DCS anywhere: nothing to do
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(space.defaultConstructionSet());
+    EXPECT_EQ(0u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space DCS only: kept as is
+  {
+    Model m;
+    Space space(m);
+    Construction adiabatic(m);
+    auto sDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space, its SpaceType and its BuildingStory all point to the same DCS: kept as is
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+    Construction adiabatic(m);
+    auto dcs = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(space.setDefaultConstructionSet(dcs));
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(dcs));
+    EXPECT_TRUE(story.setDefaultConstructionSet(dcs));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(dcs, space.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(dcs, spaceType.defaultConstructionSet().get());
+    ASSERT_TRUE(story.defaultConstructionSet());
+    EXPECT_EQ(dcs, story.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Several Spaces sharing the same Space DCS, nothing below: all kept as is
+  {
+    Model m;
+    Space space1(m);
+    Space space2(m);
+    Construction adiabatic(m);
+    auto sDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(space1.setDefaultConstructionSet(sDCS));
+    EXPECT_TRUE(space2.setDefaultConstructionSet(sDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space1.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space1.defaultConstructionSet().get());
+    ASSERT_TRUE(space2.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space2.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_LowerSetMovedDown) {
+
+  // Only one level below the Space has a DCS: it's assigned to the Space as is, no clone. The lower level keeps it (no purge)
+
+  // SpaceType DCS only
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    Construction adiabatic(m);
+    auto stDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(stDCS, space.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // BuildingStory DCS only
+  {
+    Model m;
+    Space space(m);
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+    Construction adiabatic(m);
+    auto bsDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(bsDCS, space.defaultConstructionSet().get());
+    ASSERT_TRUE(story.defaultConstructionSet());
+    EXPECT_EQ(bsDCS, story.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Several Spaces sharing a SpaceType with a DCS: they all get that same DCS
+  {
+    Model m;
+    Space space1(m);
+    Space space2(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space1.setSpaceType(spaceType));
+    EXPECT_TRUE(space2.setSpaceType(spaceType));
+    Construction adiabatic(m);
+    auto stDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space1.defaultConstructionSet());
+    EXPECT_EQ(stDCS, space1.defaultConstructionSet().get());
+    ASSERT_TRUE(space2.defaultConstructionSet());
+    EXPECT_EQ(stDCS, space2.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_DefaultedSpaceTypeIgnored) {
+
+  // A Space without an explicit SpaceType inherits the Building's SpaceType, whose DCS is at search distance 5: it belongs to
+  // the Building group, never to the Space group
+
+  // Space without a DCS: it stays without one, the Building picks up its SpaceType's DCS
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    SpaceType buildingSpaceType(m);
+    EXPECT_TRUE(building.setSpaceType(buildingSpaceType));
+    Construction adiabatic(m);
+    auto bstDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(buildingSpaceType.setDefaultConstructionSet(bstDCS));
+
+    Space space(m);
+    EXPECT_TRUE(space.isSpaceTypeDefaulted());
+    ASSERT_TRUE(space.spaceType());
+    EXPECT_EQ(buildingSpaceType, space.spaceType().get());
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(space.defaultConstructionSet());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(bstDCS, building.defaultConstructionSet().get());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space with its own DCS, and the Building's SpaceType DCS fills other slots: no merge into the Space's DCS, the Building
+  // picks up its SpaceType's DCS
+  {
+    Model m;
+    auto building = m.getUniqueModelObject<Building>();
+    SpaceType buildingSpaceType(m);
+    EXPECT_TRUE(building.setSpaceType(buildingSpaceType));
+    Construction bstWall(m);
+    auto bstDCS = makeDCS(m, {.extWall = bstWall});
+    EXPECT_TRUE(buildingSpaceType.setDefaultConstructionSet(bstDCS));
+
+    Space space(m);
+    EXPECT_TRUE(space.isSpaceTypeDefaulted());
+    Construction sAdiabatic(m);
+    auto sDCS = makeDCS(m, {.adiabatic = sAdiabatic});
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+    EXPECT_FALSE(sDCS.defaultExteriorSurfaceConstructions());
+    ASSERT_TRUE(building.defaultConstructionSet());
+    EXPECT_EQ(bstDCS, building.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_RedundantSetIgnored) {
+
+  // A lower level DCS that only fills slots already filled higher up (with different constructions) is ignored: no clone
+
+  // Space DCS and SpaceType DCS both fill the exterior wall: the Space keeps its own
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+
+    Construction sWall(m);
+    auto sDCS = makeDCS(m, {.extWall = sWall});
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+    Construction stWall(m);
+    auto stDCS = makeDCS(m, {.extWall = stWall});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+    ASSERT_TRUE(spaceType.defaultConstructionSet());
+    EXPECT_EQ(stDCS, spaceType.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+  }
+
+  // No Space DCS, SpaceType DCS and BuildingStory DCS both fill the exterior wall: the Space gets the SpaceType's
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+
+    Construction stWall(m);
+    auto stDCS = makeDCS(m, {.extWall = stWall});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    Construction bsWall(m);
+    auto bsDCS = makeDCS(m, {.extWall = bsWall});
+    EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(stDCS, space.defaultConstructionSet().get());
+    ASSERT_TRUE(story.defaultConstructionSet());
+    EXPECT_EQ(bsDCS, story.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space DCS fills the exterior wall and roof, the SpaceType DCS the wall, the BuildingStory DCS the roof: each lower set is
+  // redundant on its own slots, the Space keeps its own
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+
+    Construction sWall(m);
+    Construction sRoof(m);
+    auto sDCS = makeDCS(m, {.extWall = sWall, .extRoof = sRoof});
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+    Construction stWall(m);
+    auto stDCS = makeDCS(m, {.extWall = stWall});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    Construction bsRoof(m);
+    auto bsDCS = makeDCS(m, {.extRoof = bsRoof});
+    EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(sDCS, space.defaultConstructionSet().get());
+    EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_collapseToSpaceAndBuilding_SpaceGroup_EmptySetIsReset) {
+
+  // An empty DCS fills no slot, so it's ignored like any redundant set. Empty sets are not removed (no purge), just no longer
+  // referenced by the Space
+
+  // Space has an empty DCS, nothing below: the Space is reset
+  {
+    Model m;
+    Space space(m);
+    DefaultConstructionSet sDCS(m);
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(space.defaultConstructionSet());
+    EXPECT_EQ(1u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space has an empty DCS, its SpaceType a non-empty one: the Space gets the SpaceType's
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    DefaultConstructionSet sDCS(m);
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+    Construction adiabatic(m);
+    auto stDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(stDCS, space.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // SpaceType has an empty DCS, BuildingStory a non-empty one: the Space gets the BuildingStory's
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+    DefaultConstructionSet stDCS(m);
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+    Construction adiabatic(m);
+    auto bsDCS = makeDCS(m, {.adiabatic = adiabatic});
+    EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    ASSERT_TRUE(space.defaultConstructionSet());
+    EXPECT_EQ(bsDCS, space.defaultConstructionSet().get());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
+
+  // Space, SpaceType and BuildingStory all have an empty DCS: the Space stays without one
+  {
+    Model m;
+    Space space(m);
+    SpaceType spaceType(m);
+    EXPECT_TRUE(space.setSpaceType(spaceType));
+    BuildingStory story(m);
+    EXPECT_TRUE(space.setBuildingStory(story));
+    DefaultConstructionSet sDCS(m);
+    EXPECT_TRUE(space.setDefaultConstructionSet(sDCS));
+    DefaultConstructionSet stDCS(m);
+    EXPECT_TRUE(spaceType.setDefaultConstructionSet(stDCS));
+    DefaultConstructionSet bsDCS(m);
+    EXPECT_TRUE(story.setDefaultConstructionSet(bsDCS));
+
+    EXPECT_TRUE(DefaultConstructionSet::collapseToSpaceAndBuilding(m).empty());
+    EXPECT_FALSE(space.defaultConstructionSet());
+    EXPECT_EQ(3u, m.getConcreteModelObjects<DefaultConstructionSet>().size());
+  }
 }
