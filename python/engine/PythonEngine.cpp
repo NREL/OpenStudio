@@ -8,6 +8,7 @@
 #include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
 
+#include <algorithm>
 #include <stdexcept>
 #include <string>
 #include <type_traits>

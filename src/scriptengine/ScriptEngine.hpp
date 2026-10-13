@@ -8,14 +8,17 @@
 
 #include "../utilities/core/ApplicationPathHelpers.hpp"
 #include "../utilities/core/DynamicLibrary.hpp"
+#include <algorithm>
 #include <any>
 #include <functional>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 #include <typeinfo>
+#include <vector>
 
 namespace openstudio {
 
