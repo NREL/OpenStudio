@@ -244,3 +244,8 @@ ctest -j8 --output-on-failure  # Run with 8 parallel jobs
 ```
 
 **Note**: Some tests may interfere with each other when run in parallel. If you encounter issues, run tests serially or use labels to isolate problematic tests.
+
+## Known issues with the Conan `ruby/3.2.2` package
+
+* `lib/ruby/3.2.0/rubygems.rb` in `ruby/3.2.2#e349279c358fd8f54d83446a3af8ecfe` replaces upstream's `autoload :SpecFetcher` with eager `require`s (e.g. `rubygems/spec_fetcher`) before `Gem::Specification.load_defaults` runs. This loads stdlib `securerandom` (0.2.2) first, so `Bundler.setup` fails with `You have already activated securerandom 0.2.2, but your Gemfile requires securerandom 0.4.1` when a `Gemfile.lock` pins a newer version. The fix belongs in the Conan recipe (restore the `autoload`, or run `load_defaults` first); see #5666.
+* Portable macOS Ruby tarballs (e.g. `ruby-3.2.2-darwin-arm64.tar.gz`) must be created with `COPYFILE_DISABLE=1 tar -czf ...` to avoid `._*` AppleDouble files. Check with `tar -tzf <archive> | grep -E '(^|/)\._'`.
