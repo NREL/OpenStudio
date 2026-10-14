@@ -340,6 +340,8 @@ jobs:
     - name: Zip the wheel to maintain case sensitivy and file permissions
       working-directory: ./build/Products/python_package/
       shell: bash
+      env:
+        COPYFILE_DISABLE: 1  # avoid macOS AppleDouble ._* files in the archive
       run: |
         tar -cvzf openstudio-${{ matrix.name }}.tar.gz dist/
 
