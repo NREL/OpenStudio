@@ -283,6 +283,16 @@ jobs:
           wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
           apt-get update
 
+      - name: Add libc setting to Conan (CentOS)
+        # nrel-v2's gcc 14 binaries are built on ubuntu-24.04 with GLIBC 2.39 (AlmaLinux 9 has 2.34). Making the libc version part of the
+        # package_id means they never match, so we build from source (or pull the glibc 2.34 ones once uploaded to nrel-v2).
+        # See https://github.com/NatLabRockies/openstudio-cmake-tools/issues/6
+        if: matrix.platform == 'centos-9-x64'
+        run: |
+          conan config install developer/conan/config
+          conan profile show -pr:a glibc | grep "os.libc"
+          echo "CONAN_EXTRA_ARGS=-pr:a glibc" >> $GITHUB_ENV
+
       - name: Conan install
         env:
           CONAN_BUILD_POLICY: ${{ contains(inputs.conan_build_all, matrix.platform) && '*' || 'missing' }}
@@ -292,7 +302,8 @@ jobs:
             --build="$CONAN_BUILD_POLICY" \
             -c tools.cmake.cmaketoolchain:generator=Ninja \
             -s compiler.cppstd=20 \
-            -s build_type=${{ env.BUILD_TYPE }}
+            -s build_type=${{ env.BUILD_TYPE }} \
+            ${CONAN_EXTRA_ARGS:-}
 
       - name: Locate Ruby
         run: |

@@ -1,0 +1,11 @@
+include(default)
+
+{% set libc, libc_version = detect_api.detect_libc() %}
+
+[settings]
+os.libc={{ libc }}
+os.libc.version={{ libc_version }}
+
+[buildenv]
+# CMake 4 removed compatibility with cmake_minimum_required(VERSION < 3.5), which many older recipes still use
+CMAKE_POLICY_VERSION_MINIMUM=3.5

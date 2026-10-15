@@ -21,6 +21,13 @@
 #include <vector>
 #include <string_view>
 
+// GCC >= 14: tells -Wdangling-reference that the returned reference does not bind to any temporary argument
+#if defined(__has_cpp_attribute) && __has_cpp_attribute(gnu::no_dangling)
+#  define OS_NO_DANGLING [[gnu::no_dangling]]
+#else
+#  define OS_NO_DANGLING
+#endif
+
 namespace openstudio::epJSON {
 
 template <typename... KeyType>
@@ -61,7 +68,7 @@ enum class JSONValueType
   NumberOrString
 };
 
-const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldNames, const std::string& fieldNameInput) {
+OS_NO_DANGLING const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldNames, const std::string& fieldNameInput) {
 
   if (const auto& cached_value = fieldNames.find(fieldNameInput); cached_value != fieldNames.end()) {
     return cached_value->second;
@@ -160,8 +167,9 @@ JSONValueType schemaPropertyTypeDecode(const Json::Value& type) {
  * else:
  *  getSchemaObjectProperties > [group_name] > items > properties > [field_name] > [field_property_name]
  */
-const Json::Value& getSchemaObjectFieldProperty(const Json::Value& schema, const std::string& type_description, const std::string& group_name,
-                                                const std::string& field_name, const std::string& field_property_name) {
+OS_NO_DANGLING const Json::Value& getSchemaObjectFieldProperty(const Json::Value& schema, const std::string& type_description,
+                                                               const std::string& group_name, const std::string& field_name,
+                                                               const std::string& field_property_name) {
 
   const auto& objectProperties = getSchemaObjectProperties(schema, type_description);
 
@@ -250,9 +258,9 @@ std::string fixupEnumerationValue(const Json::Value& schema, const std::string& 
 }
 
 /* Find name of an extensible group and cache it */
-auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>>& group_names,
-                  std::map<std::string, std::string>& /*field_names*/, const Json::Value& schema, const std::string& type_description,
-                  const std::string& group_name) -> const auto& {
+OS_NO_DANGLING auto getGroupName(std::map<std::pair<std::string, std::string>, std::pair<std::string, bool>>& group_names,
+                                 std::map<std::string, std::string>& /*field_names*/, const Json::Value& schema, const std::string& type_description,
+                                 const std::string& group_name) -> const auto& {
 
   const auto key = std::pair{type_description, group_name};
 
@@ -444,12 +452,13 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
     };
 
     std::size_t cur_group_number = 0;
+    const auto idd_eg = obj.iddObject().extensibleGroup();
 
     for (const auto& g : obj.extensibleGroups()) {
       ++cur_group_number;
       // get first field and try to make a group name out of it
       const auto& [group_name, is_array_group] =
-        openstudio::epJSON::getGroupName(group_names, field_names, schema, type_description, obj.iddObject().extensibleGroup()[0].name());
+        openstudio::epJSON::getGroupName(group_names, field_names, schema, type_description, idd_eg[0].name());
 
       auto& containing_json = [&json_object, &group_name = group_name, is_array_group = is_array_group]() -> auto& {
         if (is_array_group) {
@@ -461,7 +470,7 @@ Json::Value toJSON(const openstudio::IdfFile& idf, const openstudio::path& schem
       }();
 
       for (unsigned int idx = 0; idx < g.numFields(); ++idx) {
-        const auto& iddField = obj.iddObject().extensibleGroup()[idx];
+        const auto& iddField = idd_eg[idx];
 
         const auto fieldName = getFieldName(is_array_group, obj.iddObject(), schema, type_description, cur_group_number, idx,
                                             toJSONFieldName(field_names, iddField.name()));
