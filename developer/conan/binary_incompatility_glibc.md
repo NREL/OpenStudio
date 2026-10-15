@@ -39,7 +39,7 @@ But nothing stops Conan from downloading an incompatible binary again next time 
 ```shell
 conan config install developer/conan/config
 conan install . --build=missing -pr:a glibc -s compiler.cppstd=20 -s build_type=Release
-conan upload "*" -r nrel-v2 -c -p "os.libc.version=2.34
+conan upload "*" -r nrel-v2 -c -p "os.libc.version=2.34"
 ```
 
 Since `os.libc` is a sub-setting of `os`, every recipe that declares `os` in its `settings` gets a different `package_id` when you pass the `glibc` profile. No existing conancenter or `nrel-v2` binary matches, so `--build=missing` builds them from source against the local glibc, and they can be uploaded to `nrel-v2` and reused by other machines with the same glibc.
