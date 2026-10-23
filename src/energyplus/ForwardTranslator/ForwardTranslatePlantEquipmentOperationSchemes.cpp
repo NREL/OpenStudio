@@ -174,13 +174,17 @@ namespace energyplus {
 
   boost::optional<Node> inletNode(const PlantLoop& plantLoop, const HVACComponent& component) {
     auto comps = plantLoop.supplyComponents(plantLoop.supplyInletNode(), component);
-    OS_ASSERT(comps.size() >= 2u);
+    if (comps.size() < 2u) {
+      return boost::none;
+    }
     return (comps.end() - 2u)->optionalCast<Node>();
   }
 
   boost::optional<Node> outletNode(const PlantLoop& plantLoop, const HVACComponent& component) {
     auto comps = plantLoop.supplyComponents(component, plantLoop.supplyOutletNode());
-    OS_ASSERT(comps.size() >= 2u);
+    if (comps.size() < 2u) {
+      return boost::none;
+    }
     return comps[1].optionalCast<Node>();
   }
 
@@ -437,7 +441,9 @@ namespace energyplus {
     for (const auto& comp : subsetCastVector<HVACComponent>(plantLoop.supplyComponents())) {
       if (!comp.optionalCast<Node>()) {
         if (_isSetpointComponent(plantLoop, comp)) {
-          result.push_back(operationSchemeComponent(comp));
+          // Keep comp as-is (not operationSchemeComponent(comp)): inletNode/outletNode/flowrate
+          // below need the component that's actually on the supply branch.
+          result.push_back(comp);
         }
       }
     }
@@ -543,16 +549,21 @@ namespace energyplus {
         }
 
         for (auto& setpointComponent : t_setpointComponents) {
+          // translationComponent may be a containing component (eg: HeatPumpAirToWater), used only
+          // for translation/naming below; setpointComponent stays the one on the supply branch for
+          // the inletNode/outletNode/flowrate/componentType lookups.
+          auto translationComponent = operationSchemeComponent(setpointComponent);
+
           // TODO: @kbenne, Find the right way to deal with this
           // For now, "dirty" (?) fix for Generator:MicroTurbine
 
           boost::optional<IdfObject> _idfObject;
 
-          if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = setpointComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>()) {
+          if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = translationComponent.optionalCast<GeneratorMicroTurbineHeatRecovery>()) {
             GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
             _idfObject = translateAndMapModelObject(mchp);
           } else {
-            _idfObject = translateAndMapModelObject(setpointComponent);
+            _idfObject = translateAndMapModelObject(translationComponent);
           }
 
           OS_ASSERT(_idfObject);
