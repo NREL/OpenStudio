@@ -40,6 +40,8 @@
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
 #include "../../model/GroundHeatExchangerVertical.hpp"
 #include "../../model/HeatExchangerFluidToFluid.hpp"
+#include "../../model/HeatPumpAirToWater.hpp"
+#include "../../model/HeatPumpAirToWaterHeating.hpp"
 #include "../../model/HeatPumpAirToWaterFuelFiredHeating.hpp"
 #include "../../model/HeatPumpAirToWaterFuelFiredCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
@@ -520,6 +522,53 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_
   EXPECT_EQ("ThermalStorage:Ice:Detailed", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType).get());
   EXPECT_EQ(ts.nameString(), w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName).get());
   EXPECT_EQ("Dual", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatPumpAirToWaterHeating_ComponentSetpoint) {
+  // Test for #5665 - segfault when a SetpointManager is on the outlet node of a
+  // HeatPumpAirToWaterHeating, since it isn't itself on the plant loop (its containing
+  // HeatPumpAirToWater is translated/named instead, but node lookups need the actual component)
+
+  Model m;
+
+  HeatPumpAirToWater awhp(m);
+  HeatPumpAirToWaterHeating awhp_hc(m);
+  ASSERT_TRUE(awhp.setHeatingOperationMode(awhp_hc));
+
+  PlantLoop hwLoop(m);
+  ASSERT_TRUE(hwLoop.addSupplyBranchForComponent(awhp_hc));
+
+  ScheduleConstant sch(m);
+  SetpointManagerScheduled spm(m, sch);
+  ASSERT_TRUE(awhp_hc.outletModelObject());
+  Node outletNode = awhp_hc.outletModelObject()->cast<Node>();
+  ASSERT_TRUE(spm.addToNode(outletNode));
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  boost::optional<WorkspaceObject> _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, hwLoop.name().get());
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_loop = _wo.get();
+  WorkspaceObject idf_plant_op = idf_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+  // HeatPumpAirToWaterHeating is Heating type, so it also lands on the default HeatingLoad scheme
+  // in addition to the ComponentSetpoint one created because of the SetpointManager
+  ASSERT_EQ(2u, idf_plant_op.extensibleGroups().size());
+  auto w_eg = idf_plant_op.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+  ASSERT_EQ("PlantEquipmentOperation:ComponentSetpoint",
+            w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+  _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+  ASSERT_TRUE(_wo.is_initialized());
+  WorkspaceObject idf_op_scheme = _wo.get();
+
+  ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+  w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ("HeatPump:AirToWater", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentObjectType).get());
+  EXPECT_EQ(awhp.nameString(), w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::EquipmentName).get());
+  EXPECT_TRUE(w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::DemandCalculationNodeName));
+  EXPECT_TRUE(w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::SetpointNodeName));
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatPumpPlantLoopEIR) {
