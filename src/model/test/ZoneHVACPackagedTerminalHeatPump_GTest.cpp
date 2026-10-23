@@ -40,6 +40,7 @@
 #include "../BoilerHotWater.hpp"
 
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
+#include <utilities/idd/OS_ZoneHVAC_PackagedTerminalHeatPump_FieldEnums.hxx>
 
 using namespace openstudio;
 
@@ -306,6 +307,23 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExc
   model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
   model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+}
+
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_DXHeatingCoilSizingRatio_Unset) {
+  // Test for #5635 - cloning from an object that never had this required field set (eg: an
+  // older template) must not return whatever garbage memory the underlying getter finds
+  model::Model m;
+  model::CoilHeatingDXVariableSpeed heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::ScheduleCompact availabilitySchedule(m);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
+
+  model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_EQ(1.0, pthp.dXHeatingCoilSizingRatio());
+
+  ASSERT_TRUE(pthp.setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::DXHeatingCoilSizingRatio, ""));
+  EXPECT_EQ(1.0, pthp.dXHeatingCoilSizingRatio());
 }
 
 TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_SupplyAirFanOpSch) {

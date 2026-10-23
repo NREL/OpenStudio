@@ -359,6 +359,12 @@ namespace model {
 
     double ZoneHVACPackagedTerminalHeatPump_Impl::dXHeatingCoilSizingRatio() const {
       boost::optional<double> value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::DXHeatingCoilSizingRatio, true);
+      if (!value) {
+        // it is an error if we get here (eg: cloned from an object that had it unset), however we don't want to crash
+        LOG(Error, "Required DX Heating Coil Sizing Ratio not set, defaulting to 1.0");
+        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setDXHeatingCoilSizingRatio(1.0);  // NOLINT
+        value = getDouble(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::DXHeatingCoilSizingRatio, true);
+      }
       OS_ASSERT(value);
       return value.get();
     }
